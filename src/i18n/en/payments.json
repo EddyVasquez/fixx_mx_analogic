@@ -1,0 +1,122 @@
+{
+  "pay.dueBy": {
+    "text": "Pay {amount} by {when}.",
+    "status": "draft"
+  },
+  "pay.waiting": {
+    "text": "Waiting for your payment.",
+    "status": "draft"
+  },
+  "pay.received": {
+    "text": "We received your payment.",
+    "status": "draft"
+  },
+  "pay.cashRef": {
+    "text": "Cash reference: {reference}",
+    "status": "draft"
+  },
+  "pay.cashHow": {
+    "text": "Pay this reference in cash at a participating store, such as OXXO.",
+    "status": "draft"
+  },
+  "pay.speiHow": {
+    "text": "Make a SPEI transfer to the account below, using the concept shown.",
+    "status": "draft"
+  },
+  "pay.speiClabe": {
+    "text": "CLABE: {clabe}",
+    "status": "draft"
+  },
+  "pay.speiConcept": {
+    "text": "Concept: {concept}",
+    "status": "draft"
+  },
+  "pay.speiBeneficiary": {
+    "text": "Beneficiary: {beneficiary}",
+    "status": "draft"
+  },
+  "schedule.title": {
+    "text": "Payment deadlines",
+    "status": "draft"
+  },
+  "schedule.line": {
+    "text": "{label}: {amount} by {when}.",
+    "status": "draft"
+  },
+  "installment.deposit": {
+    "text": "Deposit",
+    "status": "draft"
+  },
+  "installment.balance": {
+    "text": "Balance",
+    "status": "draft"
+  },
+  "installment.full": {
+    "text": "Full amount",
+    "status": "draft"
+  },
+  "consequence.expireBooking": {
+    "text": "If it is not paid by then, the booking expires.",
+    "status": "draft"
+  },
+  "consequence.cancelJobRefundDeposit": {
+    "text": "If it is not paid by then, the job is cancelled and the deposit is refunded.",
+    "status": "draft"
+  },
+  "consequence.expireRequest": {
+    "text": "If it is not paid by then, the request expires.",
+    "status": "draft"
+  },
+  "demo.simulatePayment": {
+    "text": "Demo: mark this payment as received",
+    "status": "draft"
+  },
+  "payment.expiredBody": {
+    "text": "The booking expired because the payment was not made in time. You can start a new request.",
+    "status": "draft"
+  },
+  "balance.title": {
+    "text": "Balance due",
+    "status": "draft"
+  },
+  "refund.title": {
+    "text": "Your refund",
+    "status": "draft"
+  },
+  "refund.clabeIntro": {
+    "text": "You paid in cash or by transfer, so we need an account to send the refund to.",
+    "status": "draft"
+  },
+  "refund.amount": {
+    "text": "Refund amount: {amount}",
+    "status": "draft"
+  },
+  "btn.sendClabe": {
+    "text": "Send account",
+    "status": "draft"
+  },
+  "refund.clabeInvalid": {
+    "text": "A CLABE has 18 digits. Check it and try again.",
+    "status": "draft"
+  },
+  "refund.done": {
+    "text": "Refund issued. It should arrive by {date}.",
+    "status": "draft"
+  },
+  "refund.original": {
+    "text": "Your refund goes back to your original payment method. It should arrive by {date}.",
+    "status": "draft"
+  },
+  "request.emergencyAfterHours": {
+    "text": "It is outside Agent hours. The Assistant and automatic matching will handle your urgent request, and an Agent will follow up on the next support day.",
+    "status": "draft"
+  },
+  "manual.followUpBy": {
+    "text": "We will follow up by {when}.",
+    "status": "draft"
+  },
+  "demo.declineAddress": {
+    "text": "Decline this address",
+    "status": "draft"
+  }
+}

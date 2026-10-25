@@ -1,0 +1,198 @@
+{
+  "btn.cancelJob": {
+    "text": "Cancelar este trabajo",
+    "status": "draft"
+  },
+  "cancel.title": {
+    "text": "¿Cancelar este trabajo?",
+    "status": "draft"
+  },
+  "cancel.beforePaid": {
+    "text": "La persona profesional aún no va en camino, así que cancelar es gratis. Recibes un reembolso completo de {refund}.",
+    "status": "draft"
+  },
+  "cancel.beforeFree": {
+    "text": "La persona profesional aún no va en camino, así que cancelar es gratis. Todavía no has pagado nada.",
+    "status": "draft"
+  },
+  "cancel.afterRefund": {
+    "text": "La persona profesional ya va en camino. Se aplica el costo de traslado de {fee} y te regresan {refund}.",
+    "status": "draft"
+  },
+  "cancel.afterNoRefund": {
+    "text": "La persona profesional ya va en camino. El costo de traslado de {fee} cubre todo lo que pagaste, así que no hay reembolso.",
+    "status": "draft"
+  },
+  "cancel.afterNothing": {
+    "text": "La persona profesional ya va en camino, pero todavía no has pagado nada, así que no hay nada que reembolsar.",
+    "status": "draft"
+  },
+  "btn.confirmCancel": {
+    "text": "Sí, cancelar el trabajo",
+    "status": "draft"
+  },
+  "btn.keepJob": {
+    "text": "Mantener el trabajo",
+    "status": "draft"
+  },
+  "cancel.noRefundBody": {
+    "text": "El trabajo se canceló. No hay reembolso porque el costo de traslado cubre tu pago.",
+    "status": "draft"
+  },
+  "cancel.pro.title": {
+    "text": "¿Cancelar este trabajo?",
+    "status": "draft"
+  },
+  "cancel.pro.late": {
+    "text": "Ya vas en camino. Cancelar ahora baja tu Puntaje de Calidad FIXX. El cliente podrá elegir a otra persona o un reembolso completo.",
+    "status": "draft"
+  },
+  "cancel.pro.early": {
+    "text": "El cliente podrá elegir a otra persona o un reembolso completo.",
+    "status": "draft"
+  },
+  "btn.cancelAsPro": {
+    "text": "Cancelar el trabajo",
+    "status": "draft"
+  },
+  "choice.title": {
+    "text": "¿Qué quieres hacer?",
+    "status": "draft"
+  },
+  "choice.body": {
+    "text": "Elige a otra persona y tu pago de {paid} se conserva. Verás cualquier diferencia de precio antes de confirmar. O pide un reembolso completo.",
+    "status": "draft"
+  },
+  "btn.chooseReplacement": {
+    "text": "Elegir reemplazo",
+    "status": "draft"
+  },
+  "btn.getRefund": {
+    "text": "Pedir reembolso",
+    "status": "draft"
+  },
+  "quote.carryMore": {
+    "text": "Tu pago anterior de {paid} se conserva. Ahora pagas {difference} más.",
+    "status": "draft"
+  },
+  "quote.carryCovered": {
+    "text": "Tu pago anterior de {paid} se conserva y cubre el depósito de {deposit}.",
+    "status": "draft"
+  },
+  "resched.title": {
+    "text": "Cambiar el horario",
+    "status": "draft"
+  },
+  "resched.intro": {
+    "text": "Cambiar el horario es gratis hasta que la persona profesional va en camino. El horario actual sigue reservado hasta que se acepte.",
+    "status": "draft"
+  },
+  "btn.requestTime": {
+    "text": "Pedir este horario",
+    "status": "draft"
+  },
+  "resched.proposed": {
+    "text": "Horario solicitado: {when}",
+    "status": "draft"
+  },
+  "resched.pending": {
+    "text": "Esperando la respuesta de la persona profesional antes del {when}. Tu horario actual sigue reservado.",
+    "status": "draft"
+  },
+  "resched.declined": {
+    "text": "La persona profesional rechazó el nuevo horario. Tu horario actual sigue reservado, o puedes cancelar gratis.",
+    "status": "draft"
+  },
+  "resched.pro.title": {
+    "text": "Solicitud de cambio de horario",
+    "status": "draft"
+  },
+  "resched.pro.body": {
+    "text": "El cliente pidió mover el trabajo al {when}. Responde antes del {deadline}.",
+    "status": "draft"
+  },
+  "btn.acceptTime": {
+    "text": "Aceptar nuevo horario",
+    "status": "draft"
+  },
+  "btn.declineTime": {
+    "text": "Rechazar nuevo horario",
+    "status": "draft"
+  },
+  "addl.pro.request": {
+    "text": "Pedir trabajo adicional",
+    "status": "draft"
+  },
+  "addl.note": {
+    "text": "¿Cuál es el trabajo adicional?",
+    "status": "draft"
+  },
+  "addl.payout": {
+    "text": "Tu pago por el trabajo adicional",
+    "status": "draft"
+  },
+  "addl.invalid": {
+    "text": "Agrega una descripción y un pago mayor que 0.",
+    "status": "draft"
+  },
+  "btn.requestAddl": {
+    "text": "Enviar solicitud",
+    "status": "draft"
+  },
+  "addl.pro.waiting": {
+    "text": "Esperando que el cliente apruebe el trabajo adicional.",
+    "status": "draft"
+  },
+  "addl.pro.unpaid": {
+    "text": "El cliente debe pagar el trabajo adicional antes de que puedas marcar el trabajo como terminado.",
+    "status": "draft"
+  },
+  "addl.approve.title": {
+    "text": "Aprueba el trabajo adicional",
+    "status": "draft"
+  },
+  "addl.amount": {
+    "text": "Monto: {amount}",
+    "status": "draft"
+  },
+  "addl.card": {
+    "text": "Se suma a tu saldo y se cobra cuando termine el trabajo.",
+    "status": "draft"
+  },
+  "addl.cash": {
+    "text": "Lo pagas con una referencia. El trabajo no se puede marcar como terminado hasta que se pague. No hay depósito aparte.",
+    "status": "draft"
+  },
+  "btn.approveAddl": {
+    "text": "Aprobar",
+    "status": "draft"
+  },
+  "btn.declineAddl": {
+    "text": "Rechazar",
+    "status": "draft"
+  },
+  "addl.payTitle": {
+    "text": "Paga el trabajo adicional",
+    "status": "draft"
+  },
+  "demo.trigger.title": {
+    "text": "Provocar un evento",
+    "status": "draft"
+  },
+  "demo.trigger.proCancels": {
+    "text": "La persona profesional cancela",
+    "status": "draft"
+  },
+  "demo.trigger.noShow": {
+    "text": "La persona profesional no llega",
+    "status": "draft"
+  },
+  "notif.reschedule.requested": {
+    "text": "El cliente pidió cambiar el horario. Responde en un máximo de {rescheduleHours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "notif.reschedule.requestSent": {
+    "text": "Tu solicitud se envió. Tu horario actual sigue reservado hasta que la persona profesional acepte.",
+    "status": "draft"
+  }
+}

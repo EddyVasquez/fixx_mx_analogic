@@ -1,0 +1,247 @@
+{
+  "btn.cancelJob": {
+    "text": "작업 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.title": {
+    "text": "작업을 취소할까요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.beforePaid": {
+    "text": "전문가가 아직 이동 전이라 무료로 취소할 수 있어요. {refund} 전액이 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.beforeFree": {
+    "text": "전문가가 아직 이동 전이라 무료로 취소할 수 있어요. 아직 결제한 금액은 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.afterRefund": {
+    "text": "전문가가 이미 이동 중이에요. 이동 비용 {fee}이 적용되고 {refund}이 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.afterNoRefund": {
+    "text": "전문가가 이미 이동 중이에요. 이동 비용 {fee}이 결제 금액 전체와 같아서 환불은 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.afterNothing": {
+    "text": "전문가가 이미 이동 중이지만 아직 결제한 금액이 없어서 환불할 금액이 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.confirmCancel": {
+    "text": "네, 작업을 취소할게요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.keepJob": {
+    "text": "작업 유지",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.noRefundBody": {
+    "text": "작업이 취소됐어요. 이동 비용이 결제 금액과 같아 환불은 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.pro.title": {
+    "text": "작업을 취소할까요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.pro.late": {
+    "text": "이미 이동 중이에요. 지금 취소하면 FIXX 작업 품질 점수가 낮아져요. 고객은 대체 전문가나 전액 환불을 선택할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "cancel.pro.early": {
+    "text": "고객은 대체 전문가나 전액 환불을 선택할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.cancelAsPro": {
+    "text": "작업 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "choice.title": {
+    "text": "어떻게 하시겠어요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "choice.body": {
+    "text": "대체 전문가를 선택하면 결제하신 {paid}이 그대로 이어져요. 가격 차이는 확인 전에 보여 드려요. 또는 전액 환불을 받을 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.chooseReplacement": {
+    "text": "대체 전문가 선택",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.getRefund": {
+    "text": "환불받기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "quote.carryMore": {
+    "text": "이전 결제 {paid}이 이어져요. 지금 {difference}을 더 결제해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "quote.carryCovered": {
+    "text": "이전 결제 {paid}이 이어져 예약금 {deposit}을 충당해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.title": {
+    "text": "시간 변경",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.intro": {
+    "text": "전문가가 이동하기 전까지는 무료로 시간을 바꿀 수 있어요. 수락되기 전까지는 기존 일정이 유지돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.requestTime": {
+    "text": "이 시간으로 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.proposed": {
+    "text": "요청한 시간: {when}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.pending": {
+    "text": "전문가의 답변을 {when}까지 기다리고 있어요. 그때까지 기존 일정이 유지돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.declined": {
+    "text": "전문가가 새 시간을 거절했어요. 기존 일정이 유지되며, 무료로 취소할 수도 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.pro.title": {
+    "text": "시간 변경 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "resched.pro.body": {
+    "text": "고객이 작업을 {when}로 옮기고 싶어 해요. {deadline}까지 답변해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.acceptTime": {
+    "text": "새 시간 수락",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.declineTime": {
+    "text": "새 시간 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.pro.request": {
+    "text": "추가 작업 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.note": {
+    "text": "추가 작업 내용은 무엇인가요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.payout": {
+    "text": "추가 작업에 대한 내 정산금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.invalid": {
+    "text": "설명과 0보다 큰 정산금을 입력해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.requestAddl": {
+    "text": "요청 보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.pro.waiting": {
+    "text": "고객의 추가 작업 승인을 기다리고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.pro.unpaid": {
+    "text": "작업을 완료로 표시하려면 고객이 추가 작업 금액을 먼저 결제해야 해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.approve.title": {
+    "text": "추가 작업에 승인이 필요해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.amount": {
+    "text": "금액: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.card": {
+    "text": "잔금에 더해져 작업이 끝난 뒤 결제돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.cash": {
+    "text": "참조번호로 결제해요. 결제가 끝나기 전에는 작업을 완료로 표시할 수 없어요. 별도의 예약금은 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.approveAddl": {
+    "text": "승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.declineAddl": {
+    "text": "거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.payTitle": {
+    "text": "추가 작업 결제",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.trigger.title": {
+    "text": "이벤트 발생",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.trigger.proCancels": {
+    "text": "전문가가 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.trigger.noShow": {
+    "text": "전문가가 불참",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.reschedule.requested": {
+    "text": "고객이 시간 변경을 요청했어요. {rescheduleHours, plural, other {#시간}} 안에 답변해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.reschedule.requestSent": {
+    "text": "요청을 보냈어요. 전문가가 수락하기 전까지 기존 일정이 유지돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

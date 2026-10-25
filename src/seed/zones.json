@@ -1,0 +1,24 @@
+[
+  {
+    "id": "z1",
+    "name": "Zone 1 (demo)",
+    "adjacentTo": [
+      "z2"
+    ]
+  },
+  {
+    "id": "z2",
+    "name": "Zone 2 (demo)",
+    "adjacentTo": [
+      "z1",
+      "z3"
+    ]
+  },
+  {
+    "id": "z3",
+    "name": "Zone 3 (demo)",
+    "adjacentTo": [
+      "z2"
+    ]
+  }
+]

@@ -1,0 +1,230 @@
+{
+  "scenario.label": {
+    "text": "Escenario",
+    "status": "draft"
+  },
+  "btn.startScenario": {
+    "text": "Iniciar escenario",
+    "status": "draft"
+  },
+  "btn.finishForMe": {
+    "text": "Terminarlo por mí",
+    "status": "draft"
+  },
+  "scenario.handoff": {
+    "text": "Listo. Ahora eres {role}. Prueba el siguiente paso tú mismo.",
+    "status": "draft"
+  },
+  "scenario.finished": {
+    "text": "Listo. El escenario llegó hasta el final.",
+    "status": "draft"
+  },
+  "scenario.notStarted": {
+    "text": "Primero inicia el escenario.",
+    "status": "draft"
+  },
+  "demo.scenarios": {
+    "text": "Escenarios",
+    "status": "draft"
+  },
+  "demo.controls": {
+    "text": "Tiempo, rol e idioma",
+    "status": "draft"
+  },
+  "demo.decisions": {
+    "text": "Decisiones pendientes",
+    "status": "draft"
+  },
+  "demo.paymentDefault": {
+    "text": "Método de pago predeterminado",
+    "status": "draft"
+  },
+  "scenario.s1.title": {
+    "text": "Camino feliz con tarjeta",
+    "status": "draft"
+  },
+  "scenario.s1.try": {
+    "text": "Acepta la cotización, paga el depósito y sigue el trabajo hasta la calificación.",
+    "status": "draft"
+  },
+  "scenario.s2.title": {
+    "text": "Efectivo o SPEI con plazos",
+    "status": "draft"
+  },
+  "scenario.s2.try": {
+    "text": "Lee los plazos, avanza el reloj más allá de uno o marca el pago como recibido.",
+    "status": "draft"
+  },
+  "scenario.s3card.title": {
+    "text": "Trabajo adicional con tarjeta",
+    "status": "draft"
+  },
+  "scenario.s3card.try": {
+    "text": "Como persona profesional, pide trabajo adicional. El cliente lo aprueba primero.",
+    "status": "draft"
+  },
+  "scenario.s3cash.title": {
+    "text": "Trabajo adicional en efectivo",
+    "status": "draft"
+  },
+  "scenario.s3cash.try": {
+    "text": "Pide trabajo adicional. El trabajo no se puede terminar hasta pagar su referencia.",
+    "status": "draft"
+  },
+  "scenario.s4.title": {
+    "text": "Solicitud urgente, plazo de 3 horas",
+    "status": "draft"
+  },
+  "scenario.s4.try": {
+    "text": "Mira el cargo adicional y el monto completo que vence pronto. Avanza el reloj para que venza.",
+    "status": "draft"
+  },
+  "scenario.s5.title": {
+    "text": "Dirección fuera de Apodaca",
+    "status": "draft"
+  },
+  "scenario.s5.try": {
+    "text": "Mira la fecha de seguimiento y aprueba o rechaza la dirección como Administración.",
+    "status": "draft"
+  },
+  "scenario.s6acc.title": {
+    "text": "Cambio de horario aceptado",
+    "status": "draft"
+  },
+  "scenario.s6acc.try": {
+    "text": "Hay una solicitud pendiente. Cambia a la persona profesional y acepta el nuevo horario.",
+    "status": "draft"
+  },
+  "scenario.s6dec.title": {
+    "text": "Cambio de horario rechazado",
+    "status": "draft"
+  },
+  "scenario.s6dec.try": {
+    "text": "Hay una solicitud pendiente. Recházala como persona profesional y conserva el horario actual.",
+    "status": "draft"
+  },
+  "scenario.s6exp.title": {
+    "text": "Cambio de horario sin respuesta",
+    "status": "draft"
+  },
+  "scenario.s6exp.try": {
+    "text": "Avanza el reloj 12 horas. Luego elige un reemplazo o un reembolso.",
+    "status": "draft"
+  },
+  "scenario.s7pre.title": {
+    "text": "Cancelar antes de ir en camino",
+    "status": "draft"
+  },
+  "scenario.s7pre.try": {
+    "text": "Cancela el trabajo. Es gratis, con reembolso completo.",
+    "status": "draft"
+  },
+  "scenario.s7post.title": {
+    "text": "Cancelar después de ir en camino",
+    "status": "draft"
+  },
+  "scenario.s7post.try": {
+    "text": "Cancela el trabajo. Aplica el costo de traslado y el resto se reembolsa.",
+    "status": "draft"
+  },
+  "scenario.s8cancel.title": {
+    "text": "La persona profesional cancela tarde",
+    "status": "draft"
+  },
+  "scenario.s8cancel.try": {
+    "text": "Como persona profesional, lee la advertencia del puntaje y cancela.",
+    "status": "draft"
+  },
+  "scenario.s8noshow.title": {
+    "text": "La persona profesional no llega",
+    "status": "draft"
+  },
+  "scenario.s8noshow.try": {
+    "text": "Usa el panel de la demo para provocar la ausencia y elige un reemplazo o un reembolso.",
+    "status": "draft"
+  },
+  "scenario.s9.title": {
+    "text": "Reporte de problema y caso",
+    "status": "draft"
+  },
+  "scenario.s9.try": {
+    "text": "Reporta un problema en un concepto y sigue el caso y sus revisiones.",
+    "status": "draft"
+  },
+  "scenario.s10.title": {
+    "text": "Reclamo de garantía",
+    "status": "draft"
+  },
+  "scenario.s10.try": {
+    "text": "Abre la pestaña Garantía y presenta un reclamo.",
+    "status": "draft"
+  },
+  "scenario.s11.title": {
+    "text": "Verificación y número perdido",
+    "status": "draft"
+  },
+  "scenario.s11.try": {
+    "text": "Verifica a una persona profesional nueva y recupera la cuenta tras perder el número.",
+    "status": "draft"
+  },
+  "scenario.s12.title": {
+    "text": "Coreano con profesional en español",
+    "status": "draft"
+  },
+  "scenario.s12.try": {
+    "text": "Chatea con las frases de la demo y mira las traducciones automáticas y sus etiquetas.",
+    "status": "draft"
+  },
+  "decisions.title": {
+    "text": "Decisiones pendientes",
+    "status": "draft"
+  },
+  "decisions.intro": {
+    "text": "Estos valores son predeterminados de demostración, no decisiones. La lista completa está en DECISIONS.md.",
+    "status": "draft"
+  },
+  "decisions.surcharge": {
+    "text": "Cargo por urgencia: {value}",
+    "status": "draft"
+  },
+  "decisions.travel": {
+    "text": "Costo de traslado: misma zona {same}, zona contigua {adjacent}, lejos {far}",
+    "status": "draft"
+  },
+  "decisions.limits": {
+    "text": "Límites de precio de la persona profesional: más o menos {pct}%",
+    "status": "draft"
+  },
+  "decisions.warranty": {
+    "text": "Periodos de garantía: de {min} a {max} días",
+    "status": "draft"
+  },
+  "decisions.hours": {
+    "text": "Horario de Agentes: de lunes a sábado, de {start} a {end}",
+    "status": "draft"
+  },
+  "decisions.signIn": {
+    "text": "Código de acceso: válido {valid} min, reenvío tras {resend} s, bloqueo de {lockout} min",
+    "status": "draft"
+  },
+  "decisions.caseReview": {
+    "text": "Fecha límite de revisión del caso: {days} días después de la decisión",
+    "status": "draft"
+  },
+  "decisions.estimate": {
+    "text": "Rango estimado, pintura: de {low} a {high}",
+    "status": "draft"
+  },
+  "a11y.skip": {
+    "text": "Saltar al contenido",
+    "status": "draft"
+  },
+  "a11y.loading": {
+    "text": "Cargando",
+    "status": "draft"
+  },
+  "error.generic": {
+    "text": "Algo salió mal de nuestro lado. Recarga la página e inténtalo de nuevo.",
+    "status": "draft"
+  }
+}

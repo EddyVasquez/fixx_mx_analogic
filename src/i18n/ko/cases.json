@@ -1,0 +1,312 @@
+{
+  "quote.line.additional": {
+    "text": "추가 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.title": {
+    "text": "문제 신고",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.intro": {
+    "text": "문제가 있는 항목을 선택하세요. 해당 금액은 결정이 나올 때까지 보류돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.itemsLegend": {
+    "text": "어떤 부분에 문제가 있나요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.wholeJob": {
+    "text": "작업 전체",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.heldPreview": {
+    "text": "보류 금액: {held}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.description": {
+    "text": "무엇이 잘못됐나요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.needItem": {
+    "text": "항목을 하나 이상 선택하거나 작업 전체를 선택해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.needDescription": {
+    "text": "검토할 수 있도록 무엇이 잘못됐는지 적어 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "issue.separate": {
+    "text": "문제 신고는 작업 후 처음 {issueHours, plural, other {#시간}} 동안 가능해요. 그 이후에 생긴 문제는 보증을 이용해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.reportIssue": {
+    "text": "문제 신고하기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.sendReport": {
+    "text": "신고 보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.title": {
+    "text": "내 케이스",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.status.reported": {
+    "text": "신고 접수됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.status.underReview": {
+    "text": "FIXX 상담원이 검토 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.status.decided": {
+    "text": "결정 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.status.inReview": {
+    "text": "재검토 진행 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.status.final": {
+    "text": "최종 결정",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.held": {
+    "text": "보류 금액: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.heldShare": {
+    "text": "보류된 내 정산금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.resolveBy": {
+    "text": "케이스는 {days, plural, other {영업일 #일}} 이내인 {when}까지 처리해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.decision.refundCustomer": {
+    "text": "결정: 보류 금액이 고객에게 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.decision.releaseProfessional": {
+    "text": "결정: 보류 금액이 전문가에게 지급돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.decision.split": {
+    "text": "결정: 보류 금액을 고객과 전문가가 나눠요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.reviewDeadline": {
+    "text": "{when}까지 재검토를 한 번 요청할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.askReview": {
+    "text": "재검토 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.reviewUsed": {
+    "text": "재검토 기회를 이미 사용했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "case.final": {
+    "text": "이 결정은 최종 확정이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.title": {
+    "text": "데모: 상담원으로 진행하기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.start": {
+    "text": "검토 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.refund": {
+    "text": "결정: 고객에게 환불",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.release": {
+    "text": "결정: 전문가에게 지급",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.split": {
+    "text": "결정: 금액 나누기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.reviewDecide": {
+    "text": "재검토 완료, 결정 유지",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.claimStart": {
+    "text": "청구 검토 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.claimApprove": {
+    "text": "청구 승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.agent.claimReject": {
+    "text": "청구 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "customer.tab.request": {
+    "text": "요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "customer.tab.myHome": {
+    "text": "내 집",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "customer.tab.warranty": {
+    "text": "보증",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.title": {
+    "text": "내 집",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.community": {
+    "text": "주거 단지: {name}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.address": {
+    "text": "주소: {address}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.history": {
+    "text": "서비스 이력",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.noHistory": {
+    "text": "아직 완료된 작업이 없어요. 서비스 이력이 여기에 쌓여요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.entry": {
+    "text": "{category} · {professional}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.total": {
+    "text": "합계: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.completed": {
+    "text": "{date} 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.title": {
+    "text": "보증",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.empty": {
+    "text": "아직 보증이 없어요. 작업 결제가 지급되면 보증이 시작돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.active": {
+    "text": "{date}까지 유효",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.endedOn": {
+    "text": "{date}에 종료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.daysLeft": {
+    "text": "{days, plural, other {#일}} 남음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "warranty.terms": {
+    "text": "보증 기간과 조건은 서비스 종류에 따라 달라요. 표시된 기간은 데모 값이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.fileClaim": {
+    "text": "보증 청구하기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.description": {
+    "text": "무엇이 문제인가요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.different": {
+    "text": "보증 청구는 문제 신고와 달라요. 처음 {issueHours, plural, other {#시간}} 이후에 생긴 문제에 이용해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.needDescription": {
+    "text": "검토할 수 있도록 문제를 적어 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.status.claimFiled": {
+    "text": "청구 접수됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.status.inReview": {
+    "text": "청구 검토 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.outcome.resolved": {
+    "text": "최근 청구: 승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "claim.outcome.rejected": {
+    "text": "최근 청구: 미승인",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "quote.line.additional": {
+    "text": "Trabajo adicional",
+    "status": "draft"
+  },
+  "issue.title": {
+    "text": "Reporta un problema",
+    "status": "draft"
+  },
+  "issue.intro": {
+    "text": "Elige qué tiene el problema. El monto de esos conceptos se retiene hasta que decidamos.",
+    "status": "draft"
+  },
+  "issue.itemsLegend": {
+    "text": "¿Qué tiene el problema?",
+    "status": "draft"
+  },
+  "issue.wholeJob": {
+    "text": "Todo el trabajo",
+    "status": "draft"
+  },
+  "issue.heldPreview": {
+    "text": "Monto retenido: {held}",
+    "status": "draft"
+  },
+  "issue.description": {
+    "text": "¿Qué salió mal?",
+    "status": "draft"
+  },
+  "issue.needItem": {
+    "text": "Elige al menos un concepto o todo el trabajo.",
+    "status": "draft"
+  },
+  "issue.needDescription": {
+    "text": "Describe qué salió mal para poder revisarlo.",
+    "status": "draft"
+  },
+  "issue.separate": {
+    "text": "Los reportes de problemas son para las primeras {issueHours, plural, one {# hora} other {# horas}} después del trabajo. Para problemas posteriores, usa la garantía.",
+    "status": "draft"
+  },
+  "btn.reportIssue": {
+    "text": "Reportar un problema",
+    "status": "draft"
+  },
+  "btn.sendReport": {
+    "text": "Enviar reporte",
+    "status": "draft"
+  },
+  "case.title": {
+    "text": "Tu caso",
+    "status": "draft"
+  },
+  "case.status.reported": {
+    "text": "Reporte recibido",
+    "status": "draft"
+  },
+  "case.status.underReview": {
+    "text": "Un Agente FIXX lo está revisando",
+    "status": "draft"
+  },
+  "case.status.decided": {
+    "text": "Decisión tomada",
+    "status": "draft"
+  },
+  "case.status.inReview": {
+    "text": "Revisión en curso",
+    "status": "draft"
+  },
+  "case.status.final": {
+    "text": "Decisión definitiva",
+    "status": "draft"
+  },
+  "case.held": {
+    "text": "Monto retenido: {amount}",
+    "status": "draft"
+  },
+  "case.heldShare": {
+    "text": "Tu parte retenida: {amount}",
+    "status": "draft"
+  },
+  "case.resolveBy": {
+    "text": "Resolvemos los casos en un máximo de {days, plural, one {# día hábil} other {# días hábiles}}, a más tardar el {when}.",
+    "status": "draft"
+  },
+  "case.decision.refundCustomer": {
+    "text": "Decisión: el monto retenido se reembolsa al cliente.",
+    "status": "draft"
+  },
+  "case.decision.releaseProfessional": {
+    "text": "Decisión: el monto retenido se libera a la persona profesional.",
+    "status": "draft"
+  },
+  "case.decision.split": {
+    "text": "Decisión: el monto retenido se divide entre el cliente y la persona profesional.",
+    "status": "draft"
+  },
+  "case.reviewDeadline": {
+    "text": "Puedes pedir una revisión hasta el {when}.",
+    "status": "draft"
+  },
+  "btn.askReview": {
+    "text": "Pedir una revisión",
+    "status": "draft"
+  },
+  "case.reviewUsed": {
+    "text": "Ya usaste tu única revisión.",
+    "status": "draft"
+  },
+  "case.final": {
+    "text": "Esta decisión es definitiva.",
+    "status": "draft"
+  },
+  "demo.agent.title": {
+    "text": "Demo: actuar como Agente",
+    "status": "draft"
+  },
+  "demo.agent.start": {
+    "text": "Iniciar la revisión",
+    "status": "draft"
+  },
+  "demo.agent.refund": {
+    "text": "Decidir: reembolsar al cliente",
+    "status": "draft"
+  },
+  "demo.agent.release": {
+    "text": "Decidir: liberar a la persona profesional",
+    "status": "draft"
+  },
+  "demo.agent.split": {
+    "text": "Decidir: dividir el monto",
+    "status": "draft"
+  },
+  "demo.agent.reviewDecide": {
+    "text": "Terminar la revisión, mantener la decisión",
+    "status": "draft"
+  },
+  "demo.agent.claimStart": {
+    "text": "Iniciar la revisión del reclamo",
+    "status": "draft"
+  },
+  "demo.agent.claimApprove": {
+    "text": "Aprobar el reclamo",
+    "status": "draft"
+  },
+  "demo.agent.claimReject": {
+    "text": "Rechazar el reclamo",
+    "status": "draft"
+  },
+  "customer.tab.request": {
+    "text": "Solicitud",
+    "status": "draft"
+  },
+  "customer.tab.myHome": {
+    "text": "Mi Casa",
+    "status": "draft"
+  },
+  "customer.tab.warranty": {
+    "text": "Garantía",
+    "status": "draft"
+  },
+  "myhome.title": {
+    "text": "Mi Casa",
+    "status": "draft"
+  },
+  "myhome.community": {
+    "text": "Fraccionamiento: {name}",
+    "status": "draft"
+  },
+  "myhome.address": {
+    "text": "Dirección: {address}",
+    "status": "draft"
+  },
+  "myhome.history": {
+    "text": "Historial de servicios",
+    "status": "draft"
+  },
+  "myhome.noHistory": {
+    "text": "Aún no hay trabajos terminados. Tu historial de servicios se arma aquí.",
+    "status": "draft"
+  },
+  "myhome.entry": {
+    "text": "{category} con {professional}",
+    "status": "draft"
+  },
+  "myhome.total": {
+    "text": "Total: {amount}",
+    "status": "draft"
+  },
+  "myhome.completed": {
+    "text": "Terminado el {date}",
+    "status": "draft"
+  },
+  "warranty.title": {
+    "text": "Garantía",
+    "status": "draft"
+  },
+  "warranty.empty": {
+    "text": "Aún no hay garantías. Una empieza cuando se libera el pago de un trabajo.",
+    "status": "draft"
+  },
+  "warranty.active": {
+    "text": "Vigente hasta el {date}",
+    "status": "draft"
+  },
+  "warranty.endedOn": {
+    "text": "Terminó el {date}",
+    "status": "draft"
+  },
+  "warranty.daysLeft": {
+    "text": "{days, plural, one {# día restante} other {# días restantes}}",
+    "status": "draft"
+  },
+  "warranty.terms": {
+    "text": "La duración y los términos de la garantía dependen de la categoría del servicio. El periodo mostrado es un valor de demostración.",
+    "status": "draft"
+  },
+  "btn.fileClaim": {
+    "text": "Presentar un reclamo",
+    "status": "draft"
+  },
+  "claim.description": {
+    "text": "¿Qué está mal?",
+    "status": "draft"
+  },
+  "claim.different": {
+    "text": "Un reclamo de garantía es distinto de un reporte de problema. Úsalo para problemas que aparecen después de las primeras {issueHours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "claim.needDescription": {
+    "text": "Describe el problema para poder revisarlo.",
+    "status": "draft"
+  },
+  "claim.status.claimFiled": {
+    "text": "Reclamo presentado",
+    "status": "draft"
+  },
+  "claim.status.inReview": {
+    "text": "Reclamo en revisión",
+    "status": "draft"
+  },
+  "claim.outcome.resolved": {
+    "text": "Último reclamo: aprobado",
+    "status": "draft"
+  },
+  "claim.outcome.rejected": {
+    "text": "Último reclamo: no aprobado",
+    "status": "draft"
+  }
+}

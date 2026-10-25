@@ -1,0 +1,542 @@
+{
+  "signin.title": {
+    "text": "Sign in with your phone",
+    "status": "draft"
+  },
+  "signin.phone": {
+    "text": "Phone number",
+    "status": "draft"
+  },
+  "signin.sendBy": {
+    "text": "Send my code by",
+    "status": "draft"
+  },
+  "signin.sms": {
+    "text": "SMS",
+    "status": "draft"
+  },
+  "signin.whatsapp": {
+    "text": "WhatsApp",
+    "status": "draft"
+  },
+  "btn.sendCode": {
+    "text": "Send code",
+    "status": "draft"
+  },
+  "signin.codeSent": {
+    "text": "We sent a code by {channel} to {phone}. It is valid for {minutes, plural, one {# minute} other {# minutes}}.",
+    "status": "draft"
+  },
+  "signin.code": {
+    "text": "Code",
+    "status": "draft"
+  },
+  "signin.demoCode": {
+    "text": "Demo code: {code}",
+    "status": "draft"
+  },
+  "btn.verify": {
+    "text": "Verify code",
+    "status": "draft"
+  },
+  "signin.wrongCode": {
+    "text": "That code does not match. Check it and try again.",
+    "status": "draft"
+  },
+  "signin.phoneInvalid": {
+    "text": "That phone number looks too short. Check it and try again.",
+    "status": "draft"
+  },
+  "signin.email.title": {
+    "text": "Add your email",
+    "status": "draft"
+  },
+  "signin.email": {
+    "text": "Email",
+    "status": "draft"
+  },
+  "signin.emailWhy": {
+    "text": "We send receipts and records here.",
+    "status": "draft"
+  },
+  "signin.emailInvalid": {
+    "text": "That email does not look right. Check it and try again.",
+    "status": "draft"
+  },
+  "signin.emailSent": {
+    "text": "We sent a confirmation to {email}.",
+    "status": "draft"
+  },
+  "btn.continue": {
+    "text": "Continue",
+    "status": "draft"
+  },
+  "home.greeting": {
+    "text": "Hello, {name}",
+    "status": "draft"
+  },
+  "home.choose": {
+    "text": "Choose a service",
+    "status": "draft"
+  },
+  "home.emergencyLine": {
+    "text": "Emergency? Call 911 first. FIXX is not an emergency service.",
+    "status": "draft"
+  },
+  "btn.urgentRequest": {
+    "text": "Urgent request",
+    "status": "draft"
+  },
+  "request.title": {
+    "text": "Tell us about the job",
+    "status": "draft"
+  },
+  "request.category": {
+    "text": "Service",
+    "status": "draft"
+  },
+  "request.description": {
+    "text": "What needs to be done?",
+    "status": "draft"
+  },
+  "request.descriptionHint": {
+    "text": "A few sentences is plenty.",
+    "status": "draft"
+  },
+  "request.photos": {
+    "text": "Photos",
+    "status": "draft"
+  },
+  "btn.addPhoto": {
+    "text": "Add a photo",
+    "status": "draft"
+  },
+  "request.noPhotos": {
+    "text": "No photos yet.",
+    "status": "draft"
+  },
+  "request.photoCount": {
+    "text": "{count, plural, one {# photo added} other {# photos added}}",
+    "status": "draft"
+  },
+  "request.photoDemo": {
+    "text": "Demo photo {n}",
+    "status": "draft"
+  },
+  "request.photoOptional": {
+    "text": "A photo is optional for urgent requests.",
+    "status": "draft"
+  },
+  "request.measurements": {
+    "text": "Measurements (optional)",
+    "status": "draft"
+  },
+  "request.measurementsHint": {
+    "text": "For example: the room is 4 m by 5 m.",
+    "status": "draft"
+  },
+  "request.address": {
+    "text": "Where is the job?",
+    "status": "draft"
+  },
+  "request.zone": {
+    "text": "Area",
+    "status": "draft"
+  },
+  "request.street": {
+    "text": "Street and number",
+    "status": "draft"
+  },
+  "request.outside": {
+    "text": "Outside Apodaca",
+    "status": "draft"
+  },
+  "request.outsideNote": {
+    "text": "We accept addresses outside Apodaca, but our team reviews them first and follows up within {hours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "request.emergency": {
+    "text": "This is urgent",
+    "status": "draft"
+  },
+  "request.emergencyNote": {
+    "text": "Faster matching at a higher price. The surcharge is {amount}.",
+    "status": "draft"
+  },
+  "request.errorDescription": {
+    "text": "Add a short description so professionals know what to expect.",
+    "status": "draft"
+  },
+  "request.errorPhoto": {
+    "text": "Add at least one photo, or mark the request as urgent.",
+    "status": "draft"
+  },
+  "request.errorStreet": {
+    "text": "Add the street and number so we can find the place.",
+    "status": "draft"
+  },
+  "btn.reviewRequest": {
+    "text": "Review request",
+    "status": "draft"
+  },
+  "review.title": {
+    "text": "Check your request",
+    "status": "draft"
+  },
+  "btn.submitRequest": {
+    "text": "Send request",
+    "status": "draft"
+  },
+  "btn.edit": {
+    "text": "Edit",
+    "status": "draft"
+  },
+  "estimate.title": {
+    "text": "Your price range",
+    "status": "draft"
+  },
+  "estimate.range": {
+    "text": "{low} to {high}",
+    "status": "draft"
+  },
+  "estimate.note": {
+    "text": "This is an estimate. The final price comes in the professional's quote.",
+    "status": "draft"
+  },
+  "estimate.urgent": {
+    "text": "Urgent surcharge: {amount}",
+    "status": "draft"
+  },
+  "btn.seeProfessionals": {
+    "text": "See professionals",
+    "status": "draft"
+  },
+  "manual.title": {
+    "text": "We are reviewing your address",
+    "status": "draft"
+  },
+  "manual.body": {
+    "text": "Our team will follow up within {hours, plural, one {# hour} other {# hours}}. You do not need to do anything else.",
+    "status": "draft"
+  },
+  "btn.startOver": {
+    "text": "Start over",
+    "status": "draft"
+  },
+  "recs.title": {
+    "text": "Professionals for your job",
+    "status": "draft"
+  },
+  "recs.empty": {
+    "text": "No professionals are free for this job yet. We will keep looking.",
+    "status": "draft"
+  },
+  "btn.choose": {
+    "text": "Choose",
+    "status": "draft"
+  },
+  "level.verified": {
+    "text": "FIXX Verified",
+    "status": "draft"
+  },
+  "level.pro": {
+    "text": "FIXX Pro",
+    "status": "draft"
+  },
+  "level.expert": {
+    "text": "FIXX Expert",
+    "status": "draft"
+  },
+  "recs.verifiedNote": {
+    "text": "FIXX Verified confirms identity only.",
+    "status": "draft"
+  },
+  "recs.speaks": {
+    "text": "Speaks: {languages}",
+    "status": "draft"
+  },
+  "reason.sameZone": {
+    "text": "Works in your area",
+    "status": "draft"
+  },
+  "reason.nearby": {
+    "text": "Works near you",
+    "status": "draft"
+  },
+  "reason.speaksYourLanguage": {
+    "text": "Speaks your language",
+    "status": "draft"
+  },
+  "reason.topQuality": {
+    "text": "Strong FIXX Job Quality Score",
+    "status": "draft"
+  },
+  "wait.title": {
+    "text": "Waiting for the quote",
+    "status": "draft"
+  },
+  "wait.body": {
+    "text": "{name} is preparing the quote. We will tell you the moment it arrives.",
+    "status": "draft"
+  },
+  "demo.proActing": {
+    "text": "Demo: act as the professional",
+    "status": "draft"
+  },
+  "demo.adminActing": {
+    "text": "Demo: act as Admin",
+    "status": "draft"
+  },
+  "demo.approveAddress": {
+    "text": "Approve this address",
+    "status": "draft"
+  },
+  "demo.pro.SEND_QUOTE": {
+    "text": "Send the quote",
+    "status": "draft"
+  },
+  "demo.pro.ON_THE_WAY": {
+    "text": "I am on my way",
+    "status": "draft"
+  },
+  "demo.pro.CHECK_IN": {
+    "text": "Check in",
+    "status": "draft"
+  },
+  "demo.pro.START_WORK": {
+    "text": "Start work",
+    "status": "draft"
+  },
+  "demo.pro.CHECKLIST_COMPLETE": {
+    "text": "Finish the checklist",
+    "status": "draft"
+  },
+  "demo.pro.MARK_COMPLETE": {
+    "text": "Mark job complete",
+    "status": "draft"
+  },
+  "quote.title": {
+    "text": "Your quote",
+    "status": "draft"
+  },
+  "quote.label.job": {
+    "text": "Job",
+    "status": "draft"
+  },
+  "quote.label.professional": {
+    "text": "Professional",
+    "status": "draft"
+  },
+  "quote.label.date": {
+    "text": "Date",
+    "status": "draft"
+  },
+  "quote.label.total": {
+    "text": "TOTAL",
+    "status": "draft"
+  },
+  "quote.label.deposit": {
+    "text": "Deposit ({pct}%)",
+    "status": "draft"
+  },
+  "quote.label.balance": {
+    "text": "Balance ({pct}%)",
+    "status": "draft"
+  },
+  "quote.label.travelFee": {
+    "text": "Travel fee",
+    "status": "draft"
+  },
+  "quote.label.warranty": {
+    "text": "Warranty",
+    "status": "draft"
+  },
+  "quote.label.language": {
+    "text": "Official language",
+    "status": "draft"
+  },
+  "quote.line.prep": {
+    "text": "Preparation",
+    "status": "draft"
+  },
+  "quote.line.mat": {
+    "text": "Materials",
+    "status": "draft"
+  },
+  "quote.line.work": {
+    "text": "Labor",
+    "status": "draft"
+  },
+  "quote.line.urgent": {
+    "text": "Urgent surcharge",
+    "status": "draft"
+  },
+  "quote.warrantyDays": {
+    "text": "{days, plural, one {# day} other {# days}}",
+    "status": "draft"
+  },
+  "quote.cardTiming": {
+    "text": "Card or wallet: the deposit is charged when you accept. The balance is charged when the professional marks the job complete.",
+    "status": "draft"
+  },
+  "quote.travelTerms": {
+    "text": "The travel fee only applies if you cancel after the professional taps I am on my way. Before that, cancelling is free with a full refund.",
+    "status": "draft"
+  },
+  "quote.identityNote": {
+    "text": "FIXX Verified confirms identity only.",
+    "status": "draft"
+  },
+  "quote.key": {
+    "text": "Key",
+    "status": "draft"
+  },
+  "quote.keyAmounts": {
+    "text": "Amounts you pay",
+    "status": "draft"
+  },
+  "quote.keyOk": {
+    "text": "Needs your OK",
+    "status": "draft"
+  },
+  "quote.keyDates": {
+    "text": "Dates",
+    "status": "draft"
+  },
+  "schedule.label": {
+    "text": "Pick a time",
+    "status": "draft"
+  },
+  "payment.method": {
+    "text": "Payment method",
+    "status": "draft"
+  },
+  "sign.name": {
+    "text": "Type your full name to sign",
+    "status": "draft"
+  },
+  "sign.accept": {
+    "text": "I accept this quote and its terms.",
+    "status": "draft"
+  },
+  "sign.nonLegal": {
+    "text": "Draft terms for the demo. This is not a legal document.",
+    "status": "draft"
+  },
+  "sign.error": {
+    "text": "Type your name and tick the box to continue.",
+    "status": "draft"
+  },
+  "btn.acceptQuote": {
+    "text": "Accept and sign",
+    "status": "draft"
+  },
+  "pay.title": {
+    "text": "Pay the deposit",
+    "status": "draft"
+  },
+  "pay.amount": {
+    "text": "Deposit due now: {amount}",
+    "status": "draft"
+  },
+  "pay.balanceLater": {
+    "text": "The balance of {amount} is charged when the professional marks the job complete.",
+    "status": "draft"
+  },
+  "pay.cardNumber": {
+    "text": "Card number",
+    "status": "draft"
+  },
+  "pay.demoCards": {
+    "text": "Demo cards: {approved} works, {declined} is declined.",
+    "status": "draft"
+  },
+  "btn.payDeposit": {
+    "text": "Pay deposit",
+    "status": "draft"
+  },
+  "btn.payWallet": {
+    "text": "Pay with wallet",
+    "status": "draft"
+  },
+  "pay.declined": {
+    "text": "The card did not go through. Try another card or method.",
+    "status": "draft"
+  },
+  "pay.invalid": {
+    "text": "Check the card number and try again.",
+    "status": "draft"
+  },
+  "timeline.title": {
+    "text": "Your job",
+    "status": "draft"
+  },
+  "timeline.when": {
+    "text": "Scheduled for {when}",
+    "status": "draft"
+  },
+  "timeline.windowEnds": {
+    "text": "Issue window ends {when}",
+    "status": "draft"
+  },
+  "timeline.updates": {
+    "text": "Updates",
+    "status": "draft"
+  },
+  "timeline.balanceCharged": {
+    "text": "We charged the balance of {amount}.",
+    "status": "draft"
+  },
+  "rating.title": {
+    "text": "Rate your professional",
+    "status": "draft"
+  },
+  "rating.overall": {
+    "text": "Overall",
+    "status": "draft"
+  },
+  "rating.quality": {
+    "text": "Quality of work",
+    "status": "draft"
+  },
+  "rating.price": {
+    "text": "Fair price",
+    "status": "draft"
+  },
+  "rating.communication": {
+    "text": "Communication",
+    "status": "draft"
+  },
+  "rating.professionalism": {
+    "text": "Professionalism",
+    "status": "draft"
+  },
+  "rating.punctuality": {
+    "text": "Punctuality",
+    "status": "draft"
+  },
+  "rating.wouldHire": {
+    "text": "Would hire again",
+    "status": "draft"
+  },
+  "rating.scale": {
+    "text": "{n} of 5",
+    "status": "draft"
+  },
+  "btn.sendRating": {
+    "text": "Send rating",
+    "status": "draft"
+  },
+  "rating.thanks": {
+    "text": "Thanks for rating. That helps the next neighbor choose.",
+    "status": "draft"
+  },
+  "rating.warranty": {
+    "text": "Warranty until {date}.",
+    "status": "draft"
+  },
+  "rating.pending": {
+    "text": "Your payment is released when the issue window closes. Then you can rate.",
+    "status": "draft"
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "h-u-c-en",
+    "userId": "u-c-en",
+    "zoneId": "z1",
+    "fraccionamiento": "[Fraccionamiento demo]",
+    "address": "[Calle y número]"
+  },
+  {
+    "id": "h-u-c-es",
+    "userId": "u-c-es",
+    "zoneId": "z2",
+    "fraccionamiento": "[Fraccionamiento demo]",
+    "address": "[Calle y número]"
+  },
+  {
+    "id": "h-u-c-ko",
+    "userId": "u-c-ko",
+    "zoneId": "z3",
+    "fraccionamiento": "[Fraccionamiento demo]",
+    "address": "[Calle y número]"
+  }
+]

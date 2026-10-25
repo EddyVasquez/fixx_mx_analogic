@@ -1,0 +1,170 @@
+{
+  "app.name": {
+    "text": "FIXX",
+    "status": "draft"
+  },
+  "app.tagline": {
+    "text": "Professional work. Fair prices.",
+    "status": "draft"
+  },
+  "demo.badge": {
+    "text": "Demo",
+    "status": "draft"
+  },
+  "demo.badgeHint": {
+    "text": "This is a demo. Payments, messages and AI are simulated.",
+    "status": "draft"
+  },
+  "demo.value": {
+    "text": "Demo value",
+    "status": "draft"
+  },
+  "home.title": {
+    "text": "What do you need to do at home?",
+    "status": "draft"
+  },
+  "lang.label": {
+    "text": "Language",
+    "status": "draft"
+  },
+  "btn.start": {
+    "text": "Start a request",
+    "status": "draft"
+  },
+  "clock.now": {
+    "text": "Demo time: {time}",
+    "status": "draft"
+  },
+  "clock.forward": {
+    "text": "Jump {hours, plural, one {# hour} other {# hours}} ahead",
+    "status": "draft"
+  },
+  "roles.label": {
+    "text": "Role",
+    "status": "draft"
+  },
+  "roles.customer": {
+    "text": "Customer",
+    "status": "draft"
+  },
+  "roles.professional": {
+    "text": "Professional",
+    "status": "draft"
+  },
+  "roles.admin": {
+    "text": "Admin",
+    "status": "draft"
+  },
+  "roles.support": {
+    "text": "Support",
+    "status": "draft"
+  },
+  "roles.adminNote": {
+    "text": "Admin is available in English and Spanish only.",
+    "status": "draft"
+  },
+  "app.demoPanel": {
+    "text": "Demo controls",
+    "status": "draft"
+  },
+  "btn.resetData": {
+    "text": "Reset demo data",
+    "status": "draft"
+  },
+  "btn.back": {
+    "text": "Back",
+    "status": "draft"
+  },
+  "btn.next": {
+    "text": "Next",
+    "status": "draft"
+  },
+  "a11y.title": {
+    "text": "Accessibility",
+    "status": "draft"
+  },
+  "a11y.textSize": {
+    "text": "Text size",
+    "status": "draft"
+  },
+  "a11y.contrast": {
+    "text": "High contrast",
+    "status": "draft"
+  },
+  "a11y.on": {
+    "text": "On",
+    "status": "draft"
+  },
+  "a11y.off": {
+    "text": "Off",
+    "status": "draft"
+  },
+  "a11y.size100": {
+    "text": "Normal",
+    "status": "draft"
+  },
+  "a11y.size125": {
+    "text": "Large",
+    "status": "draft"
+  },
+  "a11y.size150": {
+    "text": "Largest",
+    "status": "draft"
+  },
+  "status.label": {
+    "text": "Job status",
+    "status": "draft"
+  },
+  "status.step": {
+    "text": "Step {current} of {total}",
+    "status": "draft"
+  },
+  "status.requestSubmitted": {
+    "text": "Request sent",
+    "status": "draft"
+  },
+  "status.estimated": {
+    "text": "Price range ready",
+    "status": "draft"
+  },
+  "status.professionalSelected": {
+    "text": "Professional chosen",
+    "status": "draft"
+  },
+  "status.quoteSent": {
+    "text": "Quote sent",
+    "status": "draft"
+  },
+  "status.quoteAccepted": {
+    "text": "Quote accepted",
+    "status": "draft"
+  },
+  "status.scheduled": {
+    "text": "Scheduled",
+    "status": "draft"
+  },
+  "status.onTheWay": {
+    "text": "On the way",
+    "status": "draft"
+  },
+  "status.inProgress": {
+    "text": "In progress",
+    "status": "draft"
+  },
+  "status.markedComplete": {
+    "text": "Marked complete",
+    "status": "draft"
+  },
+  "status.issueWindow": {
+    "text": "Issue window open",
+    "status": "draft"
+  },
+  "status.paymentReleased": {
+    "text": "Payment released",
+    "status": "draft"
+  },
+  "status.rated": {
+    "text": "Rated",
+    "status": "draft"
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "scenario.label": {
+    "text": "시나리오",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.startScenario": {
+    "text": "시나리오 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.finishForMe": {
+    "text": "대신 끝내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.handoff": {
+    "text": "준비됐어요. 이제 {role} 역할이에요. 다음 단계를 직접 해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.finished": {
+    "text": "완료됐어요. 시나리오가 끝까지 진행됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.notStarted": {
+    "text": "먼저 시나리오를 시작해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.scenarios": {
+    "text": "시나리오",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.controls": {
+    "text": "시간, 역할, 언어",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.decisions": {
+    "text": "결정이 필요한 항목",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.paymentDefault": {
+    "text": "기본 결제 방법",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s1.title": {
+    "text": "카드로 진행하는 기본 흐름",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s1.try": {
+    "text": "견적서를 수락하고 예약금을 결제한 뒤 평가까지 진행해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s2.title": {
+    "text": "현금 또는 SPEI 기한",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s2.try": {
+    "text": "기한을 확인하고 시계를 앞당기거나 입금 완료로 표시해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s3card.title": {
+    "text": "카드 결제 추가 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s3card.try": {
+    "text": "전문가로서 추가 작업을 요청해 보세요. 고객이 먼저 승인해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s3cash.title": {
+    "text": "현금 결제 추가 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s3cash.try": {
+    "text": "추가 작업을 요청해 보세요. 참조번호가 결제되기 전에는 작업을 완료할 수 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s4.title": {
+    "text": "긴급 요청, 3시간 기한",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s4.try": {
+    "text": "추가 요금과 곧 마감되는 전체 금액을 확인하고, 시계를 앞당겨 만료시켜 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s5.title": {
+    "text": "아포다카 밖 주소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s5.try": {
+    "text": "후속 연락 기한을 확인하고 관리자로서 주소를 승인하거나 거절해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6acc.title": {
+    "text": "일정 변경 수락",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6acc.try": {
+    "text": "요청이 대기 중이에요. 전문가로 전환해 새 시간을 수락해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6dec.title": {
+    "text": "일정 변경 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6dec.try": {
+    "text": "요청이 대기 중이에요. 전문가로서 거절하고 기존 일정을 유지해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6exp.title": {
+    "text": "일정 변경 무응답",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s6exp.try": {
+    "text": "시계를 12시간 앞당기세요. 그다음 대체 전문가나 환불을 선택해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s7pre.title": {
+    "text": "이동 전 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s7pre.try": {
+    "text": "작업을 취소해 보세요. 무료이고 전액 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s7post.title": {
+    "text": "이동 시작 후 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s7post.try": {
+    "text": "작업을 취소해 보세요. 이동 비용이 적용되고 나머지는 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s8cancel.title": {
+    "text": "전문가의 늦은 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s8cancel.try": {
+    "text": "전문가로서 점수 경고를 읽고 취소해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s8noshow.title": {
+    "text": "전문가 불참",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s8noshow.try": {
+    "text": "데모 패널에서 불참을 발생시키고 대체 전문가나 환불을 선택해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s9.title": {
+    "text": "문제 신고와 케이스",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s9.try": {
+    "text": "한 항목에 문제를 신고하고 케이스와 재검토를 따라가 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s10.title": {
+    "text": "보증 청구",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s10.try": {
+    "text": "보증 탭을 열고 청구해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s11.title": {
+    "text": "신원 확인과 번호 분실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s11.try": {
+    "text": "신규 전문가를 확인한 뒤 번호를 잃어버렸을 때 계정을 복구해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s12.title": {
+    "text": "한국어 고객, 스페인어 전문가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "scenario.s12.try": {
+    "text": "데모 문장으로 대화하며 자동 번역과 안내 문구를 확인해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.title": {
+    "text": "결정이 필요한 항목",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.intro": {
+    "text": "이 값들은 데모 기본값이며 확정된 결정이 아니에요. 전체 목록은 DECISIONS.md에 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.surcharge": {
+    "text": "긴급 추가 요금: {value}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.travel": {
+    "text": "이동 비용: 같은 지역 {same}, 인접 지역 {adjacent}, 먼 지역 {far}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.limits": {
+    "text": "전문가 가격 조정 한도: ±{pct}%",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.warranty": {
+    "text": "보증 기간: {min}일~{max}일",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.hours": {
+    "text": "상담원 운영 시간: 월~토 {start}~{end}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.signIn": {
+    "text": "로그인 코드: 유효 {valid}분, {resend}초 후 재전송, {lockout}분 잠금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.caseReview": {
+    "text": "케이스 재검토 기한: 결정 후 {days}일",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "decisions.estimate": {
+    "text": "예상 범위, 도장: {low} ~ {high}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.skip": {
+    "text": "본문으로 건너뛰기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.loading": {
+    "text": "불러오는 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "error.generic": {
+    "text": "저희 쪽에서 문제가 생겼어요. 페이지를 새로고침하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

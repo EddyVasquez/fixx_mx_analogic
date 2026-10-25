@@ -1,0 +1,98 @@
+[
+  {
+    "id": "u-c-en",
+    "role": "customer",
+    "name": "Jamie Rivera",
+    "language": "en",
+    "phone": "+52 81 5550 0001",
+    "email": "jamie@example.com"
+  },
+  {
+    "id": "u-c-es",
+    "role": "customer",
+    "name": "Sofía Ramírez",
+    "language": "es",
+    "phone": "+52 81 5550 0002",
+    "email": "sofia@example.com"
+  },
+  {
+    "id": "u-c-ko",
+    "role": "customer",
+    "name": "김지우",
+    "language": "ko",
+    "phone": "+52 81 5550 0003",
+    "email": "jiwoo@example.com"
+  },
+  {
+    "id": "u-admin",
+    "role": "admin",
+    "name": "Admin Demo",
+    "language": "en",
+    "phone": "+52 81 5550 0010",
+    "email": "admin@example.com"
+  },
+  {
+    "id": "u-support",
+    "role": "support",
+    "name": "Support Demo",
+    "language": "es",
+    "phone": "+52 81 5550 0011",
+    "email": "support@example.com"
+  },
+  {
+    "id": "u-p1",
+    "role": "professional",
+    "name": "Luis Hernández",
+    "language": "es",
+    "phone": "+52 81 5550 0100",
+    "email": "p1@example.com"
+  },
+  {
+    "id": "u-p2",
+    "role": "professional",
+    "name": "Marisol Treviño",
+    "language": "es",
+    "phone": "+52 81 5550 0101",
+    "email": "p2@example.com"
+  },
+  {
+    "id": "u-p3",
+    "role": "professional",
+    "name": "Jorge Salinas",
+    "language": "es",
+    "phone": "+52 81 5550 0102",
+    "email": "p3@example.com"
+  },
+  {
+    "id": "u-p4",
+    "role": "professional",
+    "name": "Ana Cantú",
+    "language": "es",
+    "phone": "+52 81 5550 0103",
+    "email": "p4@example.com"
+  },
+  {
+    "id": "u-p5",
+    "role": "professional",
+    "name": "Min-jun Kim",
+    "language": "ko",
+    "phone": "+52 81 5550 0104",
+    "email": "p5@example.com"
+  },
+  {
+    "id": "u-p6",
+    "role": "professional",
+    "name": "Seo-yeon Park",
+    "language": "ko",
+    "phone": "+52 81 5550 0105",
+    "email": "p6@example.com"
+  },
+  {
+    "id": "u-p7",
+    "role": "professional",
+    "name": "Diego Garza",
+    "language": "es",
+    "phone": "+52 81 5550 0106",
+    "email": "p7@example.com"
+  }
+]

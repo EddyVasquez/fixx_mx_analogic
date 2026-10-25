@@ -1,0 +1,230 @@
+{
+  "scenario.label": {
+    "text": "Scenario",
+    "status": "draft"
+  },
+  "btn.startScenario": {
+    "text": "Start scenario",
+    "status": "draft"
+  },
+  "btn.finishForMe": {
+    "text": "Finish it for me",
+    "status": "draft"
+  },
+  "scenario.handoff": {
+    "text": "Ready. You are now the {role}. Try the next step yourself.",
+    "status": "draft"
+  },
+  "scenario.finished": {
+    "text": "Done. The scenario ran to its end.",
+    "status": "draft"
+  },
+  "scenario.notStarted": {
+    "text": "Start the scenario first.",
+    "status": "draft"
+  },
+  "demo.scenarios": {
+    "text": "Scenarios",
+    "status": "draft"
+  },
+  "demo.controls": {
+    "text": "Time, role and language",
+    "status": "draft"
+  },
+  "demo.decisions": {
+    "text": "Decisions needed",
+    "status": "draft"
+  },
+  "demo.paymentDefault": {
+    "text": "Default payment method",
+    "status": "draft"
+  },
+  "scenario.s1.title": {
+    "text": "Happy path with a card",
+    "status": "draft"
+  },
+  "scenario.s1.try": {
+    "text": "Accept the quote, pay the deposit, then follow the job to the rating.",
+    "status": "draft"
+  },
+  "scenario.s2.title": {
+    "text": "Cash or SPEI with deadlines",
+    "status": "draft"
+  },
+  "scenario.s2.try": {
+    "text": "Read the deadlines, jump the clock past one, or mark the payment as received.",
+    "status": "draft"
+  },
+  "scenario.s3card.title": {
+    "text": "Additional work, paid by card",
+    "status": "draft"
+  },
+  "scenario.s3card.try": {
+    "text": "As the professional, request additional work. The customer approves it first.",
+    "status": "draft"
+  },
+  "scenario.s3cash.title": {
+    "text": "Additional work, paid in cash",
+    "status": "draft"
+  },
+  "scenario.s3cash.try": {
+    "text": "Request additional work. The job cannot be completed until its reference is paid.",
+    "status": "draft"
+  },
+  "scenario.s4.title": {
+    "text": "Urgent request, 3-hour window",
+    "status": "draft"
+  },
+  "scenario.s4.try": {
+    "text": "See the surcharge and the full amount due soon. Jump the clock to let it expire.",
+    "status": "draft"
+  },
+  "scenario.s5.title": {
+    "text": "Address outside Apodaca",
+    "status": "draft"
+  },
+  "scenario.s5.try": {
+    "text": "See the follow-up deadline, then approve or decline the address as Admin.",
+    "status": "draft"
+  },
+  "scenario.s6acc.title": {
+    "text": "Reschedule accepted",
+    "status": "draft"
+  },
+  "scenario.s6acc.try": {
+    "text": "A request is waiting. Switch to the professional and accept the new time.",
+    "status": "draft"
+  },
+  "scenario.s6dec.title": {
+    "text": "Reschedule declined",
+    "status": "draft"
+  },
+  "scenario.s6dec.try": {
+    "text": "A request is waiting. Decline it as the professional and keep the current time.",
+    "status": "draft"
+  },
+  "scenario.s6exp.title": {
+    "text": "Reschedule unanswered",
+    "status": "draft"
+  },
+  "scenario.s6exp.try": {
+    "text": "Jump the clock 12 hours. Then choose a replacement or a refund.",
+    "status": "draft"
+  },
+  "scenario.s7pre.title": {
+    "text": "Cancel before on the way",
+    "status": "draft"
+  },
+  "scenario.s7pre.try": {
+    "text": "Cancel the job. It is free, with a full refund.",
+    "status": "draft"
+  },
+  "scenario.s7post.title": {
+    "text": "Cancel after on the way",
+    "status": "draft"
+  },
+  "scenario.s7post.try": {
+    "text": "Cancel the job. The travel fee applies and the rest is refunded.",
+    "status": "draft"
+  },
+  "scenario.s8cancel.title": {
+    "text": "Professional cancels late",
+    "status": "draft"
+  },
+  "scenario.s8cancel.try": {
+    "text": "As the professional, read the score warning, then cancel.",
+    "status": "draft"
+  },
+  "scenario.s8noshow.title": {
+    "text": "Professional does not show up",
+    "status": "draft"
+  },
+  "scenario.s8noshow.try": {
+    "text": "Use the demo panel to trigger a no-show, then choose a replacement or a refund.",
+    "status": "draft"
+  },
+  "scenario.s9.title": {
+    "text": "Issue report and case",
+    "status": "draft"
+  },
+  "scenario.s9.try": {
+    "text": "Report an issue on one item, then follow the case and its reviews.",
+    "status": "draft"
+  },
+  "scenario.s10.title": {
+    "text": "Warranty claim",
+    "status": "draft"
+  },
+  "scenario.s10.try": {
+    "text": "Open the Warranty tab and file a claim.",
+    "status": "draft"
+  },
+  "scenario.s11.title": {
+    "text": "Verification and lost number",
+    "status": "draft"
+  },
+  "scenario.s11.try": {
+    "text": "Verify a new professional, then recover the account after losing the number.",
+    "status": "draft"
+  },
+  "scenario.s12.title": {
+    "text": "Korean customer, Spanish professional",
+    "status": "draft"
+  },
+  "scenario.s12.try": {
+    "text": "Chat with the demo lines and see the automatic translations and their labels.",
+    "status": "draft"
+  },
+  "decisions.title": {
+    "text": "Decisions needed",
+    "status": "draft"
+  },
+  "decisions.intro": {
+    "text": "These values are demo defaults, not decisions. The full list is in DECISIONS.md.",
+    "status": "draft"
+  },
+  "decisions.surcharge": {
+    "text": "Urgent surcharge: {value}",
+    "status": "draft"
+  },
+  "decisions.travel": {
+    "text": "Travel fee: same area {same}, adjacent {adjacent}, far {far}",
+    "status": "draft"
+  },
+  "decisions.limits": {
+    "text": "Professional price limits: plus or minus {pct}%",
+    "status": "draft"
+  },
+  "decisions.warranty": {
+    "text": "Warranty periods: {min} to {max} days",
+    "status": "draft"
+  },
+  "decisions.hours": {
+    "text": "Agent hours: Monday to Saturday, {start} to {end}",
+    "status": "draft"
+  },
+  "decisions.signIn": {
+    "text": "Sign-in code: valid {valid} min, resend after {resend} s, lockout {lockout} min",
+    "status": "draft"
+  },
+  "decisions.caseReview": {
+    "text": "Case review deadline: {days} days after the decision",
+    "status": "draft"
+  },
+  "decisions.estimate": {
+    "text": "Estimate range, painting: {low} to {high}",
+    "status": "draft"
+  },
+  "a11y.skip": {
+    "text": "Skip to content",
+    "status": "draft"
+  },
+  "a11y.loading": {
+    "text": "Loading",
+    "status": "draft"
+  },
+  "error.generic": {
+    "text": "Something went wrong on our side. Reload the page and try again.",
+    "status": "draft"
+  }
+}

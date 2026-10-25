@@ -1,0 +1,250 @@
+{
+  "quote.line.additional": {
+    "text": "Additional work",
+    "status": "draft"
+  },
+  "issue.title": {
+    "text": "Report an issue",
+    "status": "draft"
+  },
+  "issue.intro": {
+    "text": "Choose what has a problem. The amount for those items is held until we decide.",
+    "status": "draft"
+  },
+  "issue.itemsLegend": {
+    "text": "What has a problem?",
+    "status": "draft"
+  },
+  "issue.wholeJob": {
+    "text": "The whole job",
+    "status": "draft"
+  },
+  "issue.heldPreview": {
+    "text": "Held amount: {held}",
+    "status": "draft"
+  },
+  "issue.description": {
+    "text": "What went wrong?",
+    "status": "draft"
+  },
+  "issue.needItem": {
+    "text": "Choose at least one item or the whole job.",
+    "status": "draft"
+  },
+  "issue.needDescription": {
+    "text": "Describe what went wrong so we can review it.",
+    "status": "draft"
+  },
+  "issue.separate": {
+    "text": "Issue reports are for the first {issueHours, plural, one {# hour} other {# hours}} after the job. For problems that show up later, use the warranty.",
+    "status": "draft"
+  },
+  "btn.reportIssue": {
+    "text": "Report an issue",
+    "status": "draft"
+  },
+  "btn.sendReport": {
+    "text": "Send report",
+    "status": "draft"
+  },
+  "case.title": {
+    "text": "Your case",
+    "status": "draft"
+  },
+  "case.status.reported": {
+    "text": "Report received",
+    "status": "draft"
+  },
+  "case.status.underReview": {
+    "text": "A FIXX Agent is reviewing",
+    "status": "draft"
+  },
+  "case.status.decided": {
+    "text": "Decision made",
+    "status": "draft"
+  },
+  "case.status.inReview": {
+    "text": "Review in progress",
+    "status": "draft"
+  },
+  "case.status.final": {
+    "text": "Final decision",
+    "status": "draft"
+  },
+  "case.held": {
+    "text": "Held amount: {amount}",
+    "status": "draft"
+  },
+  "case.heldShare": {
+    "text": "Your held share: {amount}",
+    "status": "draft"
+  },
+  "case.resolveBy": {
+    "text": "We resolve cases within {days, plural, one {# business day} other {# business days}}, by {when}.",
+    "status": "draft"
+  },
+  "case.decision.refundCustomer": {
+    "text": "Decision: the held amount is refunded to the customer.",
+    "status": "draft"
+  },
+  "case.decision.releaseProfessional": {
+    "text": "Decision: the held amount is released to the professional.",
+    "status": "draft"
+  },
+  "case.decision.split": {
+    "text": "Decision: the held amount is split between the customer and the professional.",
+    "status": "draft"
+  },
+  "case.reviewDeadline": {
+    "text": "You can ask for one review until {when}.",
+    "status": "draft"
+  },
+  "btn.askReview": {
+    "text": "Ask for a review",
+    "status": "draft"
+  },
+  "case.reviewUsed": {
+    "text": "You already used your one review.",
+    "status": "draft"
+  },
+  "case.final": {
+    "text": "This decision is final.",
+    "status": "draft"
+  },
+  "demo.agent.title": {
+    "text": "Demo: act as an Agent",
+    "status": "draft"
+  },
+  "demo.agent.start": {
+    "text": "Start the review",
+    "status": "draft"
+  },
+  "demo.agent.refund": {
+    "text": "Decide: refund the customer",
+    "status": "draft"
+  },
+  "demo.agent.release": {
+    "text": "Decide: release to the professional",
+    "status": "draft"
+  },
+  "demo.agent.split": {
+    "text": "Decide: split the amount",
+    "status": "draft"
+  },
+  "demo.agent.reviewDecide": {
+    "text": "Finish the review, keep the decision",
+    "status": "draft"
+  },
+  "demo.agent.claimStart": {
+    "text": "Start the claim review",
+    "status": "draft"
+  },
+  "demo.agent.claimApprove": {
+    "text": "Approve the claim",
+    "status": "draft"
+  },
+  "demo.agent.claimReject": {
+    "text": "Reject the claim",
+    "status": "draft"
+  },
+  "customer.tab.request": {
+    "text": "Request",
+    "status": "draft"
+  },
+  "customer.tab.myHome": {
+    "text": "My Home",
+    "status": "draft"
+  },
+  "customer.tab.warranty": {
+    "text": "Warranty",
+    "status": "draft"
+  },
+  "myhome.title": {
+    "text": "My Home",
+    "status": "draft"
+  },
+  "myhome.community": {
+    "text": "Community: {name}",
+    "status": "draft"
+  },
+  "myhome.address": {
+    "text": "Address: {address}",
+    "status": "draft"
+  },
+  "myhome.history": {
+    "text": "Service history",
+    "status": "draft"
+  },
+  "myhome.noHistory": {
+    "text": "No completed jobs yet. Your service history builds up here.",
+    "status": "draft"
+  },
+  "myhome.entry": {
+    "text": "{category} with {professional}",
+    "status": "draft"
+  },
+  "myhome.total": {
+    "text": "Total: {amount}",
+    "status": "draft"
+  },
+  "myhome.completed": {
+    "text": "Completed {date}",
+    "status": "draft"
+  },
+  "warranty.title": {
+    "text": "Warranty",
+    "status": "draft"
+  },
+  "warranty.empty": {
+    "text": "No warranties yet. One starts when a job's payment is released.",
+    "status": "draft"
+  },
+  "warranty.active": {
+    "text": "Active until {date}",
+    "status": "draft"
+  },
+  "warranty.endedOn": {
+    "text": "Ended on {date}",
+    "status": "draft"
+  },
+  "warranty.daysLeft": {
+    "text": "{days, plural, one {# day left} other {# days left}}",
+    "status": "draft"
+  },
+  "warranty.terms": {
+    "text": "Warranty length and terms depend on the service category. The period shown is a demo value.",
+    "status": "draft"
+  },
+  "btn.fileClaim": {
+    "text": "File a warranty claim",
+    "status": "draft"
+  },
+  "claim.description": {
+    "text": "What is wrong?",
+    "status": "draft"
+  },
+  "claim.different": {
+    "text": "A warranty claim is different from an issue report. Use it for problems that show up after the first {issueHours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "claim.needDescription": {
+    "text": "Describe the problem so we can review it.",
+    "status": "draft"
+  },
+  "claim.status.claimFiled": {
+    "text": "Claim filed",
+    "status": "draft"
+  },
+  "claim.status.inReview": {
+    "text": "Claim under review",
+    "status": "draft"
+  },
+  "claim.outcome.resolved": {
+    "text": "Last claim: approved",
+    "status": "draft"
+  },
+  "claim.outcome.rejected": {
+    "text": "Last claim: not approved",
+    "status": "draft"
+  }
+}

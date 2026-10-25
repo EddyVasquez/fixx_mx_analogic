@@ -1,0 +1,31 @@
+import { describe, it, expect } from "vitest";
+import { loadSeed } from "../src/mocks/db/seedData";
+
+describe("seed data", () => {
+  const s = loadSeed();
+  it("has the 8 launch categories with EN/ES/KO names", () => {
+    expect(s.categories).toHaveLength(8);
+    s.categories.forEach((c) => Object.values(c.names).forEach((n) => expect(n.length).toBeGreaterThan(0)));
+  });
+  it("has 6-8 professionals, mixing Korean- and Spanish-speaking", () => {
+    expect(s.professionals.length).toBeGreaterThanOrEqual(6);
+    expect(s.professionals.length).toBeLessThanOrEqual(8);
+    expect(s.professionals.some((p) => p.languages[0] === "ko")).toBe(true);
+    expect(s.professionals.some((p) => p.languages.length === 1 && p.languages[0] === "es")).toBe(true);
+    expect(s.professionals.some((p) => p.verification === "pending")).toBe(true); // scenario 11
+  });
+  it("has customers in all three languages", () => {
+    const langs = new Set(s.users.filter((u) => u.role === "customer").map((u) => u.language));
+    expect(langs).toEqual(new Set(["en", "es", "ko"]));
+  });
+  it("has unique ids and valid references", () => {
+    const ids = [...s.users, ...s.professionals, ...s.homes, ...s.zones, ...s.categories].map((x) => x.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    const zoneIds = new Set(s.zones.map((z) => z.id)), userIds = new Set(s.users.map((u) => u.id)), cat = new Set(s.categories.map((c) => c.id));
+    s.professionals.forEach((p) => { expect(zoneIds.has(p.zoneId)).toBe(true); expect(userIds.has(p.userId)).toBe(true); p.trades.forEach((t) => expect(cat.has(t)).toBe(true)); });
+    s.homes.forEach((h) => { expect(zoneIds.has(h.zoneId)).toBe(true); expect(userIds.has(h.userId)).toBe(true); });
+  });
+  it("has symmetric zone adjacency", () => {
+    s.zones.forEach((z) => z.adjacentTo.forEach((a) => expect(s.zones.find((x) => x.id === a)?.adjacentTo).toContain(z.id)));
+  });
+});
