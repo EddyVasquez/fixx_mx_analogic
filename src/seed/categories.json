@@ -1,0 +1,74 @@
+[
+  {
+    "id": "plumbing",
+    "names": {
+      "en": "Plumbing",
+      "es": "Plomería",
+      "ko": "배관"
+    },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "electrical",
+    "names": {
+      "en": "Electrical",
+      "es": "Electricidad",
+      "ko": "전기"
+    },
+    "lineType": "perPoint"
+  },
+  {
+    "id": "hvac",
+    "names": {
+      "en": "HVAC",
+      "es": "Climatización",
+      "ko": "냉난방"
+    },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "painting",
+    "names": {
+      "en": "Painting",
+      "es": "Pintura",
+      "ko": "도장"
+    },
+    "lineType": "perArea"
+  },
+  {
+    "id": "pest_control",
+    "names": {
+      "en": "Pest control",
+      "es": "Control de plagas",
+      "ko": "해충 방제"
+    },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "gardening",
+    "names": {
+      "en": "Gardening",
+      "es": "Jardinería",
+      "ko": "정원 관리"
+    },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "flooring",
+    "names": {
+      "en": "Flooring",
+      "es": "Pisos",
+      "ko": "바닥 시공"
+    },
+    "lineType": "perArea"
+  },
+  {
+    "id": "concrete",
+    "names": {
+      "en": "Concrete",
+      "es": "Concreto (cocheras y patios)",
+      "ko": "콘크리트"
+    },
+    "lineType": "perArea"
+  }
+]

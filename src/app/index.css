@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { font-size: 100%; }
+body { @apply bg-mist text-ink font-sans text-base; }
+:focus-visible { outline: 3px solid theme("colors.brandDeep"); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.btn-primary { @apply inline-flex items-center justify-center min-h-touch min-w-touch px-5 rounded-full bg-brand text-paper font-semibold; }
+
+/* High-contrast mode (toggled by A11yControl via <html data-contrast="high">) */
+html[data-contrast="high"] body { background: #FFFFFF; color: #000000; }
+html[data-contrast="high"] * { border-color: #000000 !important; }
+html[data-contrast="high"] .text-inkSoft { color: #000000; }

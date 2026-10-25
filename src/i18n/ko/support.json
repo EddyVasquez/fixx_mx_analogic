@@ -1,0 +1,72 @@
+{
+  "support.title": {
+    "text": "도움말",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.you": {
+    "text": "나",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.queued": {
+    "text": "FIXX 상담원을 기다리는 중이에요. 이 채팅에서 답변드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.offlineNote": {
+    "text": "지금은 상담원이 자리에 없어요. 어시스턴트가 계속 도와드리고, 다음 지원일에 상담원이 연락드려요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.agentHere": {
+    "text": "FIXX 상담원이 이 채팅에 참여했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.closed": {
+    "text": "대화가 종료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.talkToAgent": {
+    "text": "FIXX 상담원과 대화",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.newChat": {
+    "text": "새 채팅 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.handoffQueued": {
+    "text": "채팅을 FIXX 상담원에게 넘겼어요. 여기서 잠시만 기다려 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.handoffOffline": {
+    "text": "지금은 상담원이 자리에 없어요. 제가 계속 도와드리고, 다음 지원일에 상담원이 연락드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "rejectReason.mismatch": {
+    "text": "셀카가 신분증과 일치하지 않아요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "customer.tab.help": {
+    "text": "도움말",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pro.tab.help": {
+    "text": "도움말",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.supportNote": {
+    "text": "지원 화면은 영어와 스페인어만 지원해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "pro.demoWho": {
+    "text": "Demo: I am",
+    "status": "draft"
+  },
+  "pro.new": {
+    "text": "New professional (onboarding)",
+    "status": "draft"
+  },
+  "pro.tab.jobs": {
+    "text": "Jobs",
+    "status": "draft"
+  },
+  "pro.tab.schedule": {
+    "text": "Schedule",
+    "status": "draft"
+  },
+  "pro.tab.profile": {
+    "text": "Profile",
+    "status": "draft"
+  },
+  "onboarding.title": {
+    "text": "Verify your identity",
+    "status": "draft"
+  },
+  "onboarding.intro": {
+    "text": "FIXX Verified confirms your identity only. It does not verify skills, licenses, certifications, references or insurance.",
+    "status": "draft"
+  },
+  "onboarding.id": {
+    "text": "Government ID",
+    "status": "draft"
+  },
+  "onboarding.selfie": {
+    "text": "Selfie",
+    "status": "draft"
+  },
+  "onboarding.phone": {
+    "text": "Phone",
+    "status": "draft"
+  },
+  "btn.addId": {
+    "text": "Add ID photo",
+    "status": "draft"
+  },
+  "btn.addSelfie": {
+    "text": "Take a selfie",
+    "status": "draft"
+  },
+  "onboarding.added": {
+    "text": "Added (demo)",
+    "status": "draft"
+  },
+  "onboarding.phoneCode": {
+    "text": "Phone code",
+    "status": "draft"
+  },
+  "btn.verifyPhone": {
+    "text": "Verify phone",
+    "status": "draft"
+  },
+  "onboarding.phoneVerified": {
+    "text": "Phone verified",
+    "status": "draft"
+  },
+  "btn.submitVerification": {
+    "text": "Send for review",
+    "status": "draft"
+  },
+  "onboarding.missing": {
+    "text": "Add your ID, a selfie and verify your phone to continue.",
+    "status": "draft"
+  },
+  "onboarding.pending": {
+    "text": "We are reviewing your documents. This usually does not take long.",
+    "status": "draft"
+  },
+  "onboarding.approved": {
+    "text": "Your identity is verified.",
+    "status": "draft"
+  },
+  "onboarding.rejected": {
+    "text": "We could not verify your identity: {reason}. You can fix it and send your documents again.",
+    "status": "draft"
+  },
+  "demo.verifyApprove": {
+    "text": "Approve identity",
+    "status": "draft"
+  },
+  "demo.verifyReject": {
+    "text": "Reject identity",
+    "status": "draft"
+  },
+  "rejectReason.blurry": {
+    "text": "the photo was blurry",
+    "status": "draft"
+  },
+  "recovery.title": {
+    "text": "Recover your account",
+    "status": "draft"
+  },
+  "recovery.intro": {
+    "text": "Send a new selfie and verify your new number. Our team reviews it before you can take jobs again.",
+    "status": "draft"
+  },
+  "btn.lostNumber": {
+    "text": "I lost my number",
+    "status": "draft"
+  },
+  "btn.sendRecovery": {
+    "text": "Send for review",
+    "status": "draft"
+  },
+  "payout.title": {
+    "text": "Payout account",
+    "status": "draft"
+  },
+  "payout.clabe": {
+    "text": "CLABE (18 digits)",
+    "status": "draft"
+  },
+  "btn.saveAccount": {
+    "text": "Save account",
+    "status": "draft"
+  },
+  "payout.saved": {
+    "text": "Account saved.",
+    "status": "draft"
+  },
+  "payout.invalid": {
+    "text": "A CLABE has 18 digits. Check it and try again.",
+    "status": "draft"
+  },
+  "payout.draftNote": {
+    "text": "Draft copy: the payout account wording is still to be written.",
+    "status": "draft"
+  },
+  "dash.level": {
+    "text": "Level",
+    "status": "draft"
+  },
+  "dash.score": {
+    "text": "FIXX Job Quality Score",
+    "status": "draft"
+  },
+  "dash.noScore": {
+    "text": "No score yet. It starts after your first jobs.",
+    "status": "draft"
+  },
+  "dash.scoreNote": {
+    "text": "The score reflects quality and reliability: the FIXX Standard, checklists and showing up. It is separate from customer ratings.",
+    "status": "draft"
+  },
+  "dash.levelsNote": {
+    "text": "Requirements for FIXX Pro and FIXX Expert are still to be defined.",
+    "status": "draft"
+  },
+  "dash.rating": {
+    "text": "Customer rating",
+    "status": "draft"
+  },
+  "dash.noRatings": {
+    "text": "No ratings yet.",
+    "status": "draft"
+  },
+  "dash.ratingAvg": {
+    "text": "{avg} of 5 from {count, plural, one {# rating} other {# ratings}}",
+    "status": "draft"
+  },
+  "dash.penalties": {
+    "text": "{count, plural, one {# late cancellation or no-show recorded} other {# late cancellations or no-shows recorded}}",
+    "status": "draft"
+  },
+  "dash.noJobs": {
+    "text": "No job requests right now. Quiet day, enjoy the coffee.",
+    "status": "draft"
+  },
+  "dash.noJobsHint": {
+    "text": "Demo: switch to Customer, send a request and choose this professional.",
+    "status": "draft"
+  },
+  "sched.title": {
+    "text": "Availability",
+    "status": "draft"
+  },
+  "sched.morning": {
+    "text": "Morning",
+    "status": "draft"
+  },
+  "sched.afternoon": {
+    "text": "Afternoon",
+    "status": "draft"
+  },
+  "sched.note": {
+    "text": "Customers only see times when you are free.",
+    "status": "draft"
+  },
+  "job.request.title": {
+    "text": "New job request",
+    "status": "draft"
+  },
+  "job.where": {
+    "text": "Area",
+    "status": "draft"
+  },
+  "btn.sendQuote": {
+    "text": "Send quote",
+    "status": "draft"
+  },
+  "btn.decline": {
+    "text": "Decline the job",
+    "status": "draft"
+  },
+  "pquote.title": {
+    "text": "Your quote",
+    "status": "draft"
+  },
+  "pquote.suggested": {
+    "text": "FIXX suggested payout: {amount}",
+    "status": "draft"
+  },
+  "pquote.yourPayout": {
+    "text": "Your payout",
+    "status": "draft"
+  },
+  "pquote.limits": {
+    "text": "You can adjust it between {min} and {max}.",
+    "status": "draft"
+  },
+  "pquote.reason": {
+    "text": "Reason for the adjustment",
+    "status": "draft"
+  },
+  "pquote.reasonNeeded": {
+    "text": "Add a reason when you change the suggested payout.",
+    "status": "draft"
+  },
+  "pquote.outOfLimits": {
+    "text": "That payout is outside the allowed range.",
+    "status": "draft"
+  },
+  "pquote.travel": {
+    "text": "Travel fee you receive if the customer cancels after you are on the way: {amount}",
+    "status": "draft"
+  },
+  "pquote.sent": {
+    "text": "Quote sent. We will tell you when the customer answers.",
+    "status": "draft"
+  },
+  "pquote.waitingDeposit": {
+    "text": "The customer accepted. Waiting for the deposit.",
+    "status": "draft"
+  },
+  "work.scheduled": {
+    "text": "Scheduled for {when}",
+    "status": "draft"
+  },
+  "btn.onMyWay": {
+    "text": "I am on my way",
+    "status": "draft"
+  },
+  "work.onWayNote": {
+    "text": "The customer is notified when you tap this.",
+    "status": "draft"
+  },
+  "btn.checkIn": {
+    "text": "Check in",
+    "status": "draft"
+  },
+  "btn.startWork": {
+    "text": "Start work",
+    "status": "draft"
+  },
+  "work.checklist": {
+    "text": "FIXX Standard checklist",
+    "status": "draft"
+  },
+  "work.fixxStandard": {
+    "text": "The FIXX Standard always wins over your usual method.",
+    "status": "draft"
+  },
+  "checklist.protect": {
+    "text": "Protect floors and furniture",
+    "status": "draft"
+  },
+  "checklist.standard": {
+    "text": "Follow the FIXX Standard",
+    "status": "draft"
+  },
+  "checklist.clean": {
+    "text": "Clean the work area",
+    "status": "draft"
+  },
+  "checklist.walkthrough": {
+    "text": "Walk the customer through the result",
+    "status": "draft"
+  },
+  "work.photosBefore": {
+    "text": "Before photos",
+    "status": "draft"
+  },
+  "work.photosAfter": {
+    "text": "After photos",
+    "status": "draft"
+  },
+  "btn.addBefore": {
+    "text": "Add before photo",
+    "status": "draft"
+  },
+  "btn.addAfter": {
+    "text": "Add after photo",
+    "status": "draft"
+  },
+  "btn.finishChecklist": {
+    "text": "Finish checklist",
+    "status": "draft"
+  },
+  "work.checklistFirst": {
+    "text": "Tick every item to finish the checklist.",
+    "status": "draft"
+  },
+  "btn.markComplete": {
+    "text": "Mark job complete",
+    "status": "draft"
+  },
+  "work.completeNote": {
+    "text": "The customer is charged the balance when you mark the job complete.",
+    "status": "draft"
+  },
+  "work.waitWindow": {
+    "text": "Waiting for the issue window to close. Your payout is released after that.",
+    "status": "draft"
+  },
+  "work.payout": {
+    "text": "Your payout: {amount}",
+    "status": "draft"
+  },
+  "work.payoutReleased": {
+    "text": "Your payout of {amount} was released. It arrives today.",
+    "status": "draft"
+  },
+  "chat.title": {
+    "text": "Chat",
+    "status": "draft"
+  },
+  "chat.placeholder": {
+    "text": "Write a message",
+    "status": "draft"
+  },
+  "btn.send": {
+    "text": "Send",
+    "status": "draft"
+  },
+  "chat.demoLines": {
+    "text": "Demo lines",
+    "status": "draft"
+  },
+  "chat.empty": {
+    "text": "No messages yet. Say hello.",
+    "status": "draft"
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "app.name": {
+    "text": "FIXX",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "app.tagline": {
+    "text": "전문적인 작업. 공정한 가격.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.badge": {
+    "text": "데모",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.badgeHint": {
+    "text": "데모 화면이에요. 결제, 메시지, AI는 모두 모의로 동작해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.value": {
+    "text": "데모 값",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "home.title": {
+    "text": "집에서 무엇을 하고 싶으세요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "lang.label": {
+    "text": "언어",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.start": {
+    "text": "요청 시작하기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.now": {
+    "text": "데모 시간: {time}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.forward": {
+    "text": "{hours, plural, other {#시간}} 앞으로",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.label": {
+    "text": "역할",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.customer": {
+    "text": "고객",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.professional": {
+    "text": "전문가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.admin": {
+    "text": "관리자",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.support": {
+    "text": "지원",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "roles.adminNote": {
+    "text": "관리자 화면은 영어와 스페인어만 지원해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "app.demoPanel": {
+    "text": "데모 설정",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.resetData": {
+    "text": "데이터 초기화",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.back": {
+    "text": "이전",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.next": {
+    "text": "다음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.title": {
+    "text": "접근성",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.textSize": {
+    "text": "글자 크기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.contrast": {
+    "text": "고대비",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.on": {
+    "text": "켜짐",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.off": {
+    "text": "꺼짐",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.size100": {
+    "text": "보통",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.size125": {
+    "text": "크게",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "a11y.size150": {
+    "text": "가장 크게",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.label": {
+    "text": "작업 상태",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.step": {
+    "text": "{total}단계 중 {current}단계",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.requestSubmitted": {
+    "text": "요청 전송됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.estimated": {
+    "text": "예상 가격 범위 준비됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.professionalSelected": {
+    "text": "전문가 선택됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.quoteSent": {
+    "text": "견적서 전송됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.quoteAccepted": {
+    "text": "견적서 수락됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.scheduled": {
+    "text": "일정 확정됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.onTheWay": {
+    "text": "이동 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.inProgress": {
+    "text": "작업 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.markedComplete": {
+    "text": "작업 완료 표시됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.issueWindow": {
+    "text": "문제 신고 가능 기간",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.paymentReleased": {
+    "text": "결제 지급 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.rated": {
+    "text": "평가 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

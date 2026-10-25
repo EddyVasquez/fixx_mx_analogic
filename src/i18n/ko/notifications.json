@@ -1,0 +1,572 @@
+{
+  "notif.request.needsInfo": {
+    "text": "예상 가격 범위를 준비하려면 정보가 조금 더 필요해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.request.manualReview": {
+    "text": "주소가 아포다카 밖이라 팀에서 검토할게요. {followUpHours, plural, other {#시간}} 안에 연락드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.admin.manualReview": {
+    "text": "아포다카 밖 요청에 수동 검토가 필요해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.request.estimated": {
+    "text": "예상 가격 범위가 준비됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.request.outOfArea": {
+    "text": "아직 이 주소는 서비스할 수 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.request.recommendations": {
+    "text": "작업에 맞는 전문가를 찾았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.requestForProfessional": {
+    "text": "답변을 기다리는 새 작업 요청이 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.professionalDeclined": {
+    "text": "이 전문가는 작업을 맡을 수 없어요. 다른 전문가를 선택해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.quote.sent": {
+    "text": "견적서를 확인해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.quote.accepted": {
+    "text": "견적서가 수락됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.quote.declined": {
+    "text": "견적서가 거절됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.partial": {
+    "text": "일부 금액이 입금됐어요. 나머지 금액이 남아 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.booking.expired": {
+    "text": "예약금이 기한 내에 납부되지 않아 예약이 만료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.scheduled": {
+    "text": "작업 일정이 확정됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.balanceReceived": {
+    "text": "잔금이 입금됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledBalanceUnpaid": {
+    "text": "잔금이 기한 내에 납부되지 않아 작업이 취소됐어요. 예약금은 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.reschedule.accepted": {
+    "text": "새 일정이 수락됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.reschedule.declined": {
+    "text": "새 일정이 거절됐어요. 기존 일정이 유지돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.reschedule.expired": {
+    "text": "{rescheduleHours, plural, other {#시간}} 안에 답변이 없어 요청이 만료됐어요. 다른 전문가와 새 일정을 비용 없이 선택할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.onTheWay": {
+    "text": "전문가가 이동 중이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByCustomer": {
+    "text": "고객이 작업을 취소했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByCustomer.customer": {
+    "text": "작업을 취소했어요. 이동 비용: {travelFee}. 환불: {refund}.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByCustomer.professional": {
+    "text": "고객이 작업을 취소했어요. 이동 비용: {travelFee}.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByProfessional": {
+    "text": "전문가가 작업을 취소했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByProfessional.customer": {
+    "text": "전문가가 작업을 취소했어요. 다른 전문가를 선택하거나 전액 환불을 받을 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.cancelledByProfessional.professional": {
+    "text": "작업을 취소했어요. 늦은 취소는 FIXX 작업 품질 점수를 낮춰요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.noShow": {
+    "text": "전문가 불참이 기록됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.noShow.customer": {
+    "text": "전문가가 도착하지 않았어요. 다른 전문가를 선택하거나 전액 환불을 받을 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.noShow.professional": {
+    "text": "이 작업은 불참으로 기록됐어요. FIXX 작업 품질 점수가 낮아져요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.checkedIn": {
+    "text": "전문가가 작업 장소에 도착했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.started": {
+    "text": "작업이 시작됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.additionalWork.requested": {
+    "text": "추가 작업({amount})은 시작 전에 승인이 필요해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.additionalReceived": {
+    "text": "추가 작업 금액이 입금됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.additionalWork.approved": {
+    "text": "추가 작업이 승인됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.additionalWork.approved.customer": {
+    "text": "추가 작업({amount})을 승인했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.additionalWork.declined": {
+    "text": "추가 작업이 거절됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.checklistComplete": {
+    "text": "체크리스트가 완료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.complete": {
+    "text": "작업이 완료됐어요. 문제 신고 기간은 {issueHours, plural, other {#시간}}이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.completeBalanceDue": {
+    "text": "작업 완료로 표시됐어요. 지금 잔금을 결제해야 해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.issueWindow.reminder": {
+    "text": "문제 신고 기간이 {reminderHours, plural, other {#시간}} 후에 끝나요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.issue.reported": {
+    "text": "문제 신고가 접수됐어요. 보류 금액: {held}.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.issue.reported.customer": {
+    "text": "신고를 접수했어요. 보류 금액: {held}.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.issue.reported.professional": {
+    "text": "문제가 신고됐어요. 보류된 정산 금액: {heldPayout}.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.paymentReleased": {
+    "text": "결제 금액이 전문가에게 지급됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payout.released": {
+    "text": "정산금이 지급됐어요. 오늘 입금돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.rated": {
+    "text": "새 평가를 받았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.refund.issued": {
+    "text": "환불이 처리됐어요. {refundDays, plural, other {영업일 #일}} 이내에 입금돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.replacementChosen": {
+    "text": "대체 전문가를 찾고 있어요. 결제 금액은 그대로 이어져요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.refundChosen": {
+    "text": "환불({amount})이 진행 중이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.referenceCreated": {
+    "text": "결제 참조번호가 준비됐어요. 안내된 기한 전에 결제해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.received": {
+    "text": "결제가 확인됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.declined": {
+    "text": "카드 결제가 완료되지 않았어요. 다른 방법으로 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.payment.expired": {
+    "text": "결제 참조번호가 만료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.case.underReview": {
+    "text": "FIXX 상담원이 케이스를 검토하고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.case.decided": {
+    "text": "케이스에 대한 결정이 내려졌어요. 기한 전까지 각자 한 번씩 재검토를 요청할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.case.reviewRequested": {
+    "text": "결정에 대한 재검토가 요청됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.case.reviewDecided": {
+    "text": "재검토가 끝났어요. 케이스에서 새 결정을 확인해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.case.final": {
+    "text": "케이스 결정이 확정됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.warranty.claimFiled": {
+    "text": "보증 청구가 접수됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.warranty.inReview": {
+    "text": "보증 청구를 검토하고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.warranty.claimDecided.resolved": {
+    "text": "보증 청구가 승인됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.warranty.claimDecided.rejected": {
+    "text": "보증 청구가 승인되지 않았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.warranty.ended": {
+    "text": "보증 기간이 끝났어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.verification.submitted": {
+    "text": "서류를 받았어요. 곧 검토할게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.admin.verificationQueue": {
+    "text": "전문가의 신원 확인이 대기 중이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.verification.approved": {
+    "text": "신원 확인이 완료됐어요. 이제 FIXX Verified예요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.verification.rejected": {
+    "text": "신원을 확인하지 못했어요. 사유를 확인하고 서류를 다시 보내 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.verification.recoveryStarted": {
+    "text": "계정을 복구하려면 새 셀카를 보내고 새 번호를 인증해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.support.agentRequested": {
+    "text": "고객이 FIXX 상담원을 요청했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.support.offlineFollowUp": {
+    "text": "상담원 운영 시간이 아니에요. 지금은 어시스턴트가 도와드리고, 다음 지원일에 상담원이 연락드려요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.support.closed": {
+    "text": "대화가 종료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.support.agentJoined": {
+    "text": "FIXX 상담원이 채팅에 참여했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notifications.title": {
+    "text": "알림",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notifications.empty": {
+    "text": "아직 조용하네요. 작업이 진행되면 메시지가 도착해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notifications.demoNote": {
+    "text": "모의 메시지예요. 실제로 전송되지 않아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "channel.push": {
+    "text": "푸시",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "channel.whatsapp": {
+    "text": "WhatsApp",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "channel.email": {
+    "text": "이메일",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "channel.inApp": {
+    "text": "앱 내",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.label": {
+    "text": "FIXX 어시스턴트 (자동)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "agent.label": {
+    "text": "FIXX 상담원 (사람)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.greeting": {
+    "text": "안녕하세요, FIXX 어시스턴트예요. FIXX 이용 방법을 안내해 드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.howItWorks": {
+    "text": "작업을 설명하고, 공정한 가격 범위를 확인하고, 전문가를 선택하고, 견적서를 승인한 뒤 결제해요. 작업이 끝날 때까지 FIXX가 관리해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.hours": {
+    "text": "FIXX 상담원은 월요일부터 토요일까지 {start}~{end}에 근무해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.needsAgent": {
+    "text": "환불, 케이스, 결제는 제가 결정할 수 없어요. FIXX 상담원이 도와드릴 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.emergency": {
+    "text": "응급 상황이면 먼저 911에 전화해 주세요. FIXX는 응급 서비스가 아니에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "assistant.reply.fallback": {
+    "text": "잘 이해하지 못했어요. FIXX 이용 방법을 물어보거나 FIXX 상담원을 요청해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "support.koreanNote": {
+    "text": "한국어 지원은 번역 도구로 제공돼요. 상담원은 영어와 스페인어로 근무해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "translation.auto": {
+    "text": "자동으로 번역됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.seeOriginal": {
+    "text": "원문 보기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.hideOriginal": {
+    "text": "원문 숨기기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "translation.official": {
+    "text": "공식 버전: {language}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "translation.officialNote": {
+    "text": "이 견적서의 공식 버전은 {language}예요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.title": {
+    "text": "데모 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.method": {
+    "text": "결제 방법",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.hoursAway": {
+    "text": "작업 시작까지",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.hoursOption": {
+    "text": "{hours}시간",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.customerLanguage": {
+    "text": "고객 언어",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.professionalLanguage": {
+    "text": "전문가 언어",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.next": {
+    "text": "다음 단계",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.deadlines": {
+    "text": "다가오는 기한",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.none": {
+    "text": "아직 기한이 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demoJob.devNote": {
+    "text": "개발용 도구예요. 이벤트 이름은 코드로 표시돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.newJob": {
+    "text": "데모 작업 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "method.card": {
+    "text": "카드",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "method.wallet": {
+    "text": "Apple Pay / Google Pay",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "method.cash": {
+    "text": "편의점 현금 결제",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "method.spei": {
+    "text": "SPEI 계좌이체",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.cancelled": {
+    "text": "취소됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.professionalCancelled": {
+    "text": "전문가가 취소함",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.noShow": {
+    "text": "전문가 불참",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.rescheduleUnanswered": {
+    "text": "일정 변경 요청 무응답",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.bookingExpired": {
+    "text": "예약 만료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.refunded": {
+    "text": "환불 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

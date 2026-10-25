@@ -1,0 +1,58 @@
+{
+  "support.title": {
+    "text": "Help",
+    "status": "draft"
+  },
+  "support.you": {
+    "text": "You",
+    "status": "draft"
+  },
+  "support.queued": {
+    "text": "Waiting for a FIXX Agent. You will be answered in this chat.",
+    "status": "draft"
+  },
+  "support.offlineNote": {
+    "text": "Agents are away right now. The Assistant keeps helping, and an Agent follows up on the next support day.",
+    "status": "draft"
+  },
+  "support.agentHere": {
+    "text": "A FIXX Agent is in this chat.",
+    "status": "draft"
+  },
+  "support.closed": {
+    "text": "This conversation is closed.",
+    "status": "draft"
+  },
+  "btn.talkToAgent": {
+    "text": "Talk to a FIXX Agent",
+    "status": "draft"
+  },
+  "btn.newChat": {
+    "text": "Start a new chat",
+    "status": "draft"
+  },
+  "assistant.reply.handoffQueued": {
+    "text": "I passed your chat to a FIXX Agent. Please wait here.",
+    "status": "draft"
+  },
+  "assistant.reply.handoffOffline": {
+    "text": "Agents are away right now. I will keep helping, and an Agent will follow up on the next support day.",
+    "status": "draft"
+  },
+  "rejectReason.mismatch": {
+    "text": "the selfie did not match the ID",
+    "status": "draft"
+  },
+  "customer.tab.help": {
+    "text": "Help",
+    "status": "draft"
+  },
+  "pro.tab.help": {
+    "text": "Help",
+    "status": "draft"
+  },
+  "roles.supportNote": {
+    "text": "Support is available in English and Spanish only.",
+    "status": "draft"
+  }
+}

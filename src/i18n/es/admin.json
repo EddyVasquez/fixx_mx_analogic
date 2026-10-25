@@ -1,0 +1,462 @@
+{
+  "admin.title": {
+    "text": "Consola de administración",
+    "status": "draft"
+  },
+  "admin.section": {
+    "text": "Sección",
+    "status": "draft"
+  },
+  "admin.s.requests": {
+    "text": "Solicitudes",
+    "status": "draft"
+  },
+  "admin.s.homeowners": {
+    "text": "Propietarios",
+    "status": "draft"
+  },
+  "admin.s.professionals": {
+    "text": "Profesionales",
+    "status": "draft"
+  },
+  "admin.s.verification": {
+    "text": "Verificación",
+    "status": "draft"
+  },
+  "admin.s.jobs": {
+    "text": "Trabajos",
+    "status": "draft"
+  },
+  "admin.s.quotes": {
+    "text": "Cotizaciones",
+    "status": "draft"
+  },
+  "admin.s.standards": {
+    "text": "Estándares de servicio",
+    "status": "draft"
+  },
+  "admin.s.cases": {
+    "text": "Casos",
+    "status": "draft"
+  },
+  "admin.s.warranties": {
+    "text": "Garantías",
+    "status": "draft"
+  },
+  "admin.s.refunds": {
+    "text": "Reembolsos",
+    "status": "draft"
+  },
+  "admin.s.quality": {
+    "text": "Cambios de Puntaje de Calidad",
+    "status": "draft"
+  },
+  "admin.s.notes": {
+    "text": "Notas internas",
+    "status": "draft"
+  },
+  "admin.empty": {
+    "text": "Aún no hay nada aquí.",
+    "status": "draft"
+  },
+  "admin.yes": {
+    "text": "Sí",
+    "status": "draft"
+  },
+  "admin.no": {
+    "text": "No",
+    "status": "draft"
+  },
+  "admin.col.category": {
+    "text": "Categoría",
+    "status": "draft"
+  },
+  "admin.col.area": {
+    "text": "Zona",
+    "status": "draft"
+  },
+  "admin.col.urgent": {
+    "text": "Urgente",
+    "status": "draft"
+  },
+  "admin.col.state": {
+    "text": "Estado",
+    "status": "draft"
+  },
+  "admin.col.name": {
+    "text": "Nombre",
+    "status": "draft"
+  },
+  "admin.col.language": {
+    "text": "Idioma",
+    "status": "draft"
+  },
+  "admin.col.phone": {
+    "text": "Teléfono",
+    "status": "draft"
+  },
+  "admin.col.email": {
+    "text": "Correo",
+    "status": "draft"
+  },
+  "admin.col.home": {
+    "text": "Casa",
+    "status": "draft"
+  },
+  "admin.col.cancellations": {
+    "text": "Cancelaciones (interno)",
+    "status": "draft"
+  },
+  "admin.col.trades": {
+    "text": "Oficios",
+    "status": "draft"
+  },
+  "admin.col.level": {
+    "text": "Nivel",
+    "status": "draft"
+  },
+  "admin.col.score": {
+    "text": "Puntaje de Calidad",
+    "status": "draft"
+  },
+  "admin.col.verification": {
+    "text": "Verificación",
+    "status": "draft"
+  },
+  "admin.col.penalties": {
+    "text": "Penalizaciones",
+    "status": "draft"
+  },
+  "admin.col.rating": {
+    "text": "Calificación",
+    "status": "draft"
+  },
+  "admin.col.method": {
+    "text": "Método de pago",
+    "status": "draft"
+  },
+  "admin.col.total": {
+    "text": "Total del cliente",
+    "status": "draft"
+  },
+  "admin.col.payout": {
+    "text": "Pago a la persona profesional",
+    "status": "draft"
+  },
+  "admin.col.professional": {
+    "text": "Profesional",
+    "status": "draft"
+  },
+  "admin.col.date": {
+    "text": "Fecha",
+    "status": "draft"
+  },
+  "admin.col.line": {
+    "text": "Concepto",
+    "status": "draft"
+  },
+  "admin.col.amount": {
+    "text": "Monto",
+    "status": "draft"
+  },
+  "admin.col.travelFee": {
+    "text": "Costo de traslado",
+    "status": "draft"
+  },
+  "admin.col.adjustment": {
+    "text": "Motivo del ajuste",
+    "status": "draft"
+  },
+  "admin.col.official": {
+    "text": "Idioma oficial",
+    "status": "draft"
+  },
+  "admin.col.warranty": {
+    "text": "Garantía",
+    "status": "draft"
+  },
+  "admin.col.estimate": {
+    "text": "Rango estimado",
+    "status": "draft"
+  },
+  "admin.col.lineType": {
+    "text": "Tipo de concepto",
+    "status": "draft"
+  },
+  "admin.col.checklist": {
+    "text": "Puntos de la lista",
+    "status": "draft"
+  },
+  "admin.col.decision": {
+    "text": "Decisión",
+    "status": "draft"
+  },
+  "admin.col.held": {
+    "text": "Monto retenido",
+    "status": "draft"
+  },
+  "admin.col.heldShare": {
+    "text": "Parte retenida de la persona profesional",
+    "status": "draft"
+  },
+  "admin.col.deadline": {
+    "text": "Fecha límite",
+    "status": "draft"
+  },
+  "admin.col.destination": {
+    "text": "Destino",
+    "status": "draft"
+  },
+  "admin.col.account": {
+    "text": "Cuenta",
+    "status": "draft"
+  },
+  "admin.col.expected": {
+    "text": "Llega a más tardar",
+    "status": "draft"
+  },
+  "admin.col.status": {
+    "text": "Estado",
+    "status": "draft"
+  },
+  "admin.col.delta": {
+    "text": "Cambio",
+    "status": "draft"
+  },
+  "admin.col.reason": {
+    "text": "Motivo",
+    "status": "draft"
+  },
+  "admin.col.about": {
+    "text": "Sobre",
+    "status": "draft"
+  },
+  "admin.col.note": {
+    "text": "Nota",
+    "status": "draft"
+  },
+  "admin.col.reviews": {
+    "text": "Revisiones usadas",
+    "status": "draft"
+  },
+  "admin.col.claim": {
+    "text": "Reclamo",
+    "status": "draft"
+  },
+  "admin.col.ends": {
+    "text": "Termina",
+    "status": "draft"
+  },
+  "admin.col.actions": {
+    "text": "Acciones",
+    "status": "draft"
+  },
+  "admin.approve": {
+    "text": "Aprobar",
+    "status": "draft"
+  },
+  "admin.reject": {
+    "text": "Rechazar",
+    "status": "draft"
+  },
+  "admin.reason": {
+    "text": "Motivo",
+    "status": "draft"
+  },
+  "admin.followUp": {
+    "text": "Seguimiento antes del {when}",
+    "status": "draft"
+  },
+  "admin.setHeld": {
+    "text": "Monto retenido",
+    "status": "draft"
+  },
+  "admin.saveHeld": {
+    "text": "Guardar monto",
+    "status": "draft"
+  },
+  "admin.heldInvalid": {
+    "text": "Ingresa un monto mayor que 0 y hasta el total del trabajo, antes de decidir.",
+    "status": "draft"
+  },
+  "admin.startReview": {
+    "text": "Iniciar la revisión",
+    "status": "draft"
+  },
+  "admin.decide.refundCustomer": {
+    "text": "Reembolsar al cliente",
+    "status": "draft"
+  },
+  "admin.decide.releaseProfessional": {
+    "text": "Liberar a la persona profesional",
+    "status": "draft"
+  },
+  "admin.decide.split": {
+    "text": "Dividir 50/50",
+    "status": "draft"
+  },
+  "admin.finishReview": {
+    "text": "Terminar la revisión, mantener la decisión",
+    "status": "draft"
+  },
+  "admin.claim.start": {
+    "text": "Iniciar la revisión del reclamo",
+    "status": "draft"
+  },
+  "admin.claim.approve": {
+    "text": "Aprobar el reclamo",
+    "status": "draft"
+  },
+  "admin.claim.reject": {
+    "text": "Rechazar el reclamo",
+    "status": "draft"
+  },
+  "admin.noteAbout": {
+    "text": "Sobre",
+    "status": "draft"
+  },
+  "admin.noteText": {
+    "text": "Nota",
+    "status": "draft"
+  },
+  "admin.addNote": {
+    "text": "Agregar nota",
+    "status": "draft"
+  },
+  "admin.noteInternal": {
+    "text": "Las notas internas nunca se muestran a clientes ni a profesionales.",
+    "status": "draft"
+  },
+  "admin.entity.job": {
+    "text": "Trabajo",
+    "status": "draft"
+  },
+  "admin.entity.professional": {
+    "text": "Profesional",
+    "status": "draft"
+  },
+  "admin.entity.homeowner": {
+    "text": "Propietario",
+    "status": "draft"
+  },
+  "admin.score.pro": {
+    "text": "Profesional",
+    "status": "draft"
+  },
+  "admin.score.delta": {
+    "text": "Cambio en puntos (negativo baja)",
+    "status": "draft"
+  },
+  "admin.score.reason": {
+    "text": "Motivo",
+    "status": "draft"
+  },
+  "admin.score.add": {
+    "text": "Registrar cambio",
+    "status": "draft"
+  },
+  "admin.score.invalid": {
+    "text": "Ingresa un cambio distinto de 0 y un motivo.",
+    "status": "draft"
+  },
+  "admin.score.auto": {
+    "text": "Registrado automáticamente. Cuántos puntos vale una penalización aún está por decidirse.",
+    "status": "draft"
+  },
+  "admin.refund.waiting": {
+    "text": "Esperando la CLABE del cliente",
+    "status": "draft"
+  },
+  "admin.refund.provided": {
+    "text": "Recibida",
+    "status": "draft"
+  },
+  "admin.dest.original": {
+    "text": "Método original",
+    "status": "draft"
+  },
+  "admin.dest.clabe": {
+    "text": "CLABE",
+    "status": "draft"
+  },
+  "admin.vstate.notStarted": {
+    "text": "Sin iniciar",
+    "status": "draft"
+  },
+  "admin.vstate.pending": {
+    "text": "Pendiente de revisión",
+    "status": "draft"
+  },
+  "admin.vstate.approved": {
+    "text": "Aprobada",
+    "status": "draft"
+  },
+  "admin.vstate.rejected": {
+    "text": "Rechazada",
+    "status": "draft"
+  },
+  "admin.vstate.recovery": {
+    "text": "Recuperación",
+    "status": "draft"
+  },
+  "admin.verify.none": {
+    "text": "Aún no hay verificaciones. Abre la app de profesionales e inicia una.",
+    "status": "draft"
+  },
+  "admin.standards.note": {
+    "text": "Las listas y los estándares son genéricos en la demo. Los periodos y rangos son valores de demostración.",
+    "status": "draft"
+  },
+  "admin.support.title": {
+    "text": "Consola de soporte",
+    "status": "draft"
+  },
+  "admin.support.macros": {
+    "text": "Macros",
+    "status": "draft"
+  },
+  "admin.support.join": {
+    "text": "Unirme al chat",
+    "status": "draft"
+  },
+  "admin.support.close": {
+    "text": "Cerrar el chat",
+    "status": "draft"
+  },
+  "admin.support.noChat": {
+    "text": "Aún no hay conversaciones.",
+    "status": "draft"
+  },
+  "admin.support.reply": {
+    "text": "Responder",
+    "status": "draft"
+  },
+  "admin.support.state": {
+    "text": "Estado del chat",
+    "status": "draft"
+  },
+  "admin.support.s.assistant": {
+    "text": "Con el Asistente",
+    "status": "draft"
+  },
+  "admin.support.s.agentQueue": {
+    "text": "Esperando a un Agente",
+    "status": "draft"
+  },
+  "admin.support.s.agent": {
+    "text": "Con un Agente",
+    "status": "draft"
+  },
+  "admin.support.s.offline": {
+    "text": "Fuera del horario de Agentes",
+    "status": "draft"
+  },
+  "admin.support.s.closed": {
+    "text": "Cerrado",
+    "status": "draft"
+  },
+  "admin.support.emergency": {
+    "text": "Emergencia marcada: al cliente se le mostró la línea del 911.",
+    "status": "draft"
+  }
+}

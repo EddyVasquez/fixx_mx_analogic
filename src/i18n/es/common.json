@@ -1,0 +1,170 @@
+{
+  "app.name": {
+    "text": "FIXX",
+    "status": "draft"
+  },
+  "app.tagline": {
+    "text": "Trabajo profesional. Precios justos.",
+    "status": "draft"
+  },
+  "demo.badge": {
+    "text": "Demo",
+    "status": "draft"
+  },
+  "demo.badgeHint": {
+    "text": "Esto es una demo. Los pagos, mensajes y la IA son simulados.",
+    "status": "draft"
+  },
+  "demo.value": {
+    "text": "Valor de prueba",
+    "status": "draft"
+  },
+  "home.title": {
+    "text": "¿Qué necesitas hacer en tu casa?",
+    "status": "draft"
+  },
+  "lang.label": {
+    "text": "Idioma",
+    "status": "draft"
+  },
+  "btn.start": {
+    "text": "Crear una solicitud",
+    "status": "draft"
+  },
+  "clock.now": {
+    "text": "Hora de la demo: {time}",
+    "status": "draft"
+  },
+  "clock.forward": {
+    "text": "Avanzar {hours, plural, one {# hora} other {# horas}}",
+    "status": "draft"
+  },
+  "roles.label": {
+    "text": "Rol",
+    "status": "draft"
+  },
+  "roles.customer": {
+    "text": "Cliente",
+    "status": "draft"
+  },
+  "roles.professional": {
+    "text": "Profesional",
+    "status": "draft"
+  },
+  "roles.admin": {
+    "text": "Administración",
+    "status": "draft"
+  },
+  "roles.support": {
+    "text": "Soporte",
+    "status": "draft"
+  },
+  "roles.adminNote": {
+    "text": "Administración solo está disponible en inglés y español.",
+    "status": "draft"
+  },
+  "app.demoPanel": {
+    "text": "Controles de la demo",
+    "status": "draft"
+  },
+  "btn.resetData": {
+    "text": "Restablecer datos",
+    "status": "draft"
+  },
+  "btn.back": {
+    "text": "Atrás",
+    "status": "draft"
+  },
+  "btn.next": {
+    "text": "Siguiente",
+    "status": "draft"
+  },
+  "a11y.title": {
+    "text": "Accesibilidad",
+    "status": "draft"
+  },
+  "a11y.textSize": {
+    "text": "Tamaño del texto",
+    "status": "draft"
+  },
+  "a11y.contrast": {
+    "text": "Alto contraste",
+    "status": "draft"
+  },
+  "a11y.on": {
+    "text": "Activado",
+    "status": "draft"
+  },
+  "a11y.off": {
+    "text": "Desactivado",
+    "status": "draft"
+  },
+  "a11y.size100": {
+    "text": "Normal",
+    "status": "draft"
+  },
+  "a11y.size125": {
+    "text": "Grande",
+    "status": "draft"
+  },
+  "a11y.size150": {
+    "text": "Muy grande",
+    "status": "draft"
+  },
+  "status.label": {
+    "text": "Estado del trabajo",
+    "status": "draft"
+  },
+  "status.step": {
+    "text": "Paso {current} de {total}",
+    "status": "draft"
+  },
+  "status.requestSubmitted": {
+    "text": "Solicitud enviada",
+    "status": "draft"
+  },
+  "status.estimated": {
+    "text": "Rango de precio listo",
+    "status": "draft"
+  },
+  "status.professionalSelected": {
+    "text": "Profesional elegido",
+    "status": "draft"
+  },
+  "status.quoteSent": {
+    "text": "Cotización enviada",
+    "status": "draft"
+  },
+  "status.quoteAccepted": {
+    "text": "Cotización aceptada",
+    "status": "draft"
+  },
+  "status.scheduled": {
+    "text": "Programado",
+    "status": "draft"
+  },
+  "status.onTheWay": {
+    "text": "En camino",
+    "status": "draft"
+  },
+  "status.inProgress": {
+    "text": "En proceso",
+    "status": "draft"
+  },
+  "status.markedComplete": {
+    "text": "Marcado como terminado",
+    "status": "draft"
+  },
+  "status.issueWindow": {
+    "text": "Plazo para reportar abierto",
+    "status": "draft"
+  },
+  "status.paymentReleased": {
+    "text": "Pago liberado",
+    "status": "draft"
+  },
+  "status.rated": {
+    "text": "Calificado",
+    "status": "draft"
+  }
+}

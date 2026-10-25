@@ -1,0 +1,542 @@
+{
+  "signin.title": {
+    "text": "Inicia sesión con tu teléfono",
+    "status": "draft"
+  },
+  "signin.phone": {
+    "text": "Número de teléfono",
+    "status": "draft"
+  },
+  "signin.sendBy": {
+    "text": "Enviar mi código por",
+    "status": "draft"
+  },
+  "signin.sms": {
+    "text": "SMS",
+    "status": "draft"
+  },
+  "signin.whatsapp": {
+    "text": "WhatsApp",
+    "status": "draft"
+  },
+  "btn.sendCode": {
+    "text": "Enviar código",
+    "status": "draft"
+  },
+  "signin.codeSent": {
+    "text": "Enviamos un código por {channel} a {phone}. Es válido por {minutes, plural, one {# minuto} other {# minutos}}.",
+    "status": "draft"
+  },
+  "signin.code": {
+    "text": "Código",
+    "status": "draft"
+  },
+  "signin.demoCode": {
+    "text": "Código de la demo: {code}",
+    "status": "draft"
+  },
+  "btn.verify": {
+    "text": "Verificar código",
+    "status": "draft"
+  },
+  "signin.wrongCode": {
+    "text": "Ese código no coincide. Revísalo e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "signin.phoneInvalid": {
+    "text": "Ese número parece muy corto. Revísalo e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "signin.email.title": {
+    "text": "Agrega tu correo",
+    "status": "draft"
+  },
+  "signin.email": {
+    "text": "Correo electrónico",
+    "status": "draft"
+  },
+  "signin.emailWhy": {
+    "text": "Aquí te enviamos recibos y registros.",
+    "status": "draft"
+  },
+  "signin.emailInvalid": {
+    "text": "Ese correo no parece correcto. Revísalo e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "signin.emailSent": {
+    "text": "Enviamos una confirmación a {email}.",
+    "status": "draft"
+  },
+  "btn.continue": {
+    "text": "Continuar",
+    "status": "draft"
+  },
+  "home.greeting": {
+    "text": "Hola, {name}",
+    "status": "draft"
+  },
+  "home.choose": {
+    "text": "Elige un servicio",
+    "status": "draft"
+  },
+  "home.emergencyLine": {
+    "text": "¿Emergencia? Llama primero al 911. FIXX no es un servicio de emergencias.",
+    "status": "draft"
+  },
+  "btn.urgentRequest": {
+    "text": "Solicitud urgente",
+    "status": "draft"
+  },
+  "request.title": {
+    "text": "Cuéntanos del trabajo",
+    "status": "draft"
+  },
+  "request.category": {
+    "text": "Servicio",
+    "status": "draft"
+  },
+  "request.description": {
+    "text": "¿Qué hay que hacer?",
+    "status": "draft"
+  },
+  "request.descriptionHint": {
+    "text": "Con unas cuantas frases basta.",
+    "status": "draft"
+  },
+  "request.photos": {
+    "text": "Fotos",
+    "status": "draft"
+  },
+  "btn.addPhoto": {
+    "text": "Agregar una foto",
+    "status": "draft"
+  },
+  "request.noPhotos": {
+    "text": "Aún no hay fotos.",
+    "status": "draft"
+  },
+  "request.photoCount": {
+    "text": "{count, plural, one {# foto agregada} other {# fotos agregadas}}",
+    "status": "draft"
+  },
+  "request.photoDemo": {
+    "text": "Foto de la demo {n}",
+    "status": "draft"
+  },
+  "request.photoOptional": {
+    "text": "La foto es opcional en solicitudes urgentes.",
+    "status": "draft"
+  },
+  "request.measurements": {
+    "text": "Medidas (opcional)",
+    "status": "draft"
+  },
+  "request.measurementsHint": {
+    "text": "Por ejemplo: la sala mide 4 m por 5 m.",
+    "status": "draft"
+  },
+  "request.address": {
+    "text": "¿Dónde es el trabajo?",
+    "status": "draft"
+  },
+  "request.zone": {
+    "text": "Zona",
+    "status": "draft"
+  },
+  "request.street": {
+    "text": "Calle y número",
+    "status": "draft"
+  },
+  "request.outside": {
+    "text": "Fuera de Apodaca",
+    "status": "draft"
+  },
+  "request.outsideNote": {
+    "text": "Aceptamos direcciones fuera de Apodaca, pero nuestro equipo las revisa primero y da seguimiento en un máximo de {hours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "request.emergency": {
+    "text": "Es urgente",
+    "status": "draft"
+  },
+  "request.emergencyNote": {
+    "text": "Asignación más rápida a un precio mayor. El cargo adicional es de {amount}.",
+    "status": "draft"
+  },
+  "request.errorDescription": {
+    "text": "Agrega una descripción breve para que los profesionales sepan qué esperar.",
+    "status": "draft"
+  },
+  "request.errorPhoto": {
+    "text": "Agrega al menos una foto, o marca la solicitud como urgente.",
+    "status": "draft"
+  },
+  "request.errorStreet": {
+    "text": "Agrega la calle y el número para ubicar el lugar.",
+    "status": "draft"
+  },
+  "btn.reviewRequest": {
+    "text": "Revisar solicitud",
+    "status": "draft"
+  },
+  "review.title": {
+    "text": "Revisa tu solicitud",
+    "status": "draft"
+  },
+  "btn.submitRequest": {
+    "text": "Enviar solicitud",
+    "status": "draft"
+  },
+  "btn.edit": {
+    "text": "Editar",
+    "status": "draft"
+  },
+  "estimate.title": {
+    "text": "Tu rango de precio",
+    "status": "draft"
+  },
+  "estimate.range": {
+    "text": "De {low} a {high}",
+    "status": "draft"
+  },
+  "estimate.note": {
+    "text": "Es un estimado. El precio final llega en la cotización de la persona profesional.",
+    "status": "draft"
+  },
+  "estimate.urgent": {
+    "text": "Cargo por urgencia: {amount}",
+    "status": "draft"
+  },
+  "btn.seeProfessionals": {
+    "text": "Ver profesionales",
+    "status": "draft"
+  },
+  "manual.title": {
+    "text": "Estamos revisando tu dirección",
+    "status": "draft"
+  },
+  "manual.body": {
+    "text": "Nuestro equipo te dará seguimiento en un máximo de {hours, plural, one {# hora} other {# horas}}. No necesitas hacer nada más.",
+    "status": "draft"
+  },
+  "btn.startOver": {
+    "text": "Empezar de nuevo",
+    "status": "draft"
+  },
+  "recs.title": {
+    "text": "Profesionales para tu trabajo",
+    "status": "draft"
+  },
+  "recs.empty": {
+    "text": "Todavía no hay profesionales libres para este trabajo. Seguiremos buscando.",
+    "status": "draft"
+  },
+  "btn.choose": {
+    "text": "Elegir",
+    "status": "draft"
+  },
+  "level.verified": {
+    "text": "FIXX Verified",
+    "status": "draft"
+  },
+  "level.pro": {
+    "text": "FIXX Pro",
+    "status": "draft"
+  },
+  "level.expert": {
+    "text": "FIXX Expert",
+    "status": "draft"
+  },
+  "recs.verifiedNote": {
+    "text": "FIXX Verified solo confirma la identidad.",
+    "status": "draft"
+  },
+  "recs.speaks": {
+    "text": "Habla: {languages}",
+    "status": "draft"
+  },
+  "reason.sameZone": {
+    "text": "Trabaja en tu zona",
+    "status": "draft"
+  },
+  "reason.nearby": {
+    "text": "Trabaja cerca de ti",
+    "status": "draft"
+  },
+  "reason.speaksYourLanguage": {
+    "text": "Habla tu idioma",
+    "status": "draft"
+  },
+  "reason.topQuality": {
+    "text": "Puntaje de Calidad FIXX alto",
+    "status": "draft"
+  },
+  "wait.title": {
+    "text": "Esperando la cotización",
+    "status": "draft"
+  },
+  "wait.body": {
+    "text": "{name} está preparando la cotización. Te avisamos en cuanto llegue.",
+    "status": "draft"
+  },
+  "demo.proActing": {
+    "text": "Demo: actuar como la persona profesional",
+    "status": "draft"
+  },
+  "demo.adminActing": {
+    "text": "Demo: actuar como Administración",
+    "status": "draft"
+  },
+  "demo.approveAddress": {
+    "text": "Aprobar esta dirección",
+    "status": "draft"
+  },
+  "demo.pro.SEND_QUOTE": {
+    "text": "Enviar la cotización",
+    "status": "draft"
+  },
+  "demo.pro.ON_THE_WAY": {
+    "text": "Voy en camino",
+    "status": "draft"
+  },
+  "demo.pro.CHECK_IN": {
+    "text": "Registrar llegada",
+    "status": "draft"
+  },
+  "demo.pro.START_WORK": {
+    "text": "Empezar el trabajo",
+    "status": "draft"
+  },
+  "demo.pro.CHECKLIST_COMPLETE": {
+    "text": "Terminar la lista",
+    "status": "draft"
+  },
+  "demo.pro.MARK_COMPLETE": {
+    "text": "Marcar como terminado",
+    "status": "draft"
+  },
+  "quote.title": {
+    "text": "Tu cotización",
+    "status": "draft"
+  },
+  "quote.label.job": {
+    "text": "Trabajo",
+    "status": "draft"
+  },
+  "quote.label.professional": {
+    "text": "Profesional",
+    "status": "draft"
+  },
+  "quote.label.date": {
+    "text": "Fecha",
+    "status": "draft"
+  },
+  "quote.label.total": {
+    "text": "TOTAL",
+    "status": "draft"
+  },
+  "quote.label.deposit": {
+    "text": "Depósito ({pct}%)",
+    "status": "draft"
+  },
+  "quote.label.balance": {
+    "text": "Saldo ({pct}%)",
+    "status": "draft"
+  },
+  "quote.label.travelFee": {
+    "text": "Costo de traslado",
+    "status": "draft"
+  },
+  "quote.label.warranty": {
+    "text": "Garantía",
+    "status": "draft"
+  },
+  "quote.label.language": {
+    "text": "Idioma oficial",
+    "status": "draft"
+  },
+  "quote.line.prep": {
+    "text": "Preparación",
+    "status": "draft"
+  },
+  "quote.line.mat": {
+    "text": "Materiales",
+    "status": "draft"
+  },
+  "quote.line.work": {
+    "text": "Mano de obra",
+    "status": "draft"
+  },
+  "quote.line.urgent": {
+    "text": "Cargo por urgencia",
+    "status": "draft"
+  },
+  "quote.warrantyDays": {
+    "text": "{days, plural, one {# día} other {# días}}",
+    "status": "draft"
+  },
+  "quote.cardTiming": {
+    "text": "Tarjeta o billetera: el depósito se cobra al aceptar. El saldo se cobra cuando la persona profesional marca el trabajo como terminado.",
+    "status": "draft"
+  },
+  "quote.travelTerms": {
+    "text": "El costo de traslado solo aplica si cancelas después de que la persona profesional toque Voy en camino. Antes de eso, cancelar es gratis con reembolso completo.",
+    "status": "draft"
+  },
+  "quote.identityNote": {
+    "text": "FIXX Verified solo confirma la identidad.",
+    "status": "draft"
+  },
+  "quote.key": {
+    "text": "Leyenda",
+    "status": "draft"
+  },
+  "quote.keyAmounts": {
+    "text": "Montos que pagas",
+    "status": "draft"
+  },
+  "quote.keyOk": {
+    "text": "Requiere tu visto bueno",
+    "status": "draft"
+  },
+  "quote.keyDates": {
+    "text": "Fechas",
+    "status": "draft"
+  },
+  "schedule.label": {
+    "text": "Elige un horario",
+    "status": "draft"
+  },
+  "payment.method": {
+    "text": "Método de pago",
+    "status": "draft"
+  },
+  "sign.name": {
+    "text": "Escribe tu nombre completo para firmar",
+    "status": "draft"
+  },
+  "sign.accept": {
+    "text": "Acepto esta cotización y sus términos.",
+    "status": "draft"
+  },
+  "sign.nonLegal": {
+    "text": "Términos de borrador para la demo. No es un documento legal.",
+    "status": "draft"
+  },
+  "sign.error": {
+    "text": "Escribe tu nombre y marca la casilla para continuar.",
+    "status": "draft"
+  },
+  "btn.acceptQuote": {
+    "text": "Aceptar y firmar",
+    "status": "draft"
+  },
+  "pay.title": {
+    "text": "Paga el depósito",
+    "status": "draft"
+  },
+  "pay.amount": {
+    "text": "Depósito a pagar ahora: {amount}",
+    "status": "draft"
+  },
+  "pay.balanceLater": {
+    "text": "El saldo de {amount} se cobra cuando la persona profesional marca el trabajo como terminado.",
+    "status": "draft"
+  },
+  "pay.cardNumber": {
+    "text": "Número de tarjeta",
+    "status": "draft"
+  },
+  "pay.demoCards": {
+    "text": "Tarjetas de la demo: {approved} funciona, {declined} es rechazada.",
+    "status": "draft"
+  },
+  "btn.payDeposit": {
+    "text": "Pagar depósito",
+    "status": "draft"
+  },
+  "btn.payWallet": {
+    "text": "Pagar con billetera",
+    "status": "draft"
+  },
+  "pay.declined": {
+    "text": "La tarjeta no pasó. Prueba con otra tarjeta o método.",
+    "status": "draft"
+  },
+  "pay.invalid": {
+    "text": "Revisa el número de tarjeta e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "timeline.title": {
+    "text": "Tu trabajo",
+    "status": "draft"
+  },
+  "timeline.when": {
+    "text": "Programado para {when}",
+    "status": "draft"
+  },
+  "timeline.windowEnds": {
+    "text": "El plazo para reportar termina {when}",
+    "status": "draft"
+  },
+  "timeline.updates": {
+    "text": "Novedades",
+    "status": "draft"
+  },
+  "timeline.balanceCharged": {
+    "text": "Cobramos el saldo de {amount}.",
+    "status": "draft"
+  },
+  "rating.title": {
+    "text": "Califica a tu profesional",
+    "status": "draft"
+  },
+  "rating.overall": {
+    "text": "General",
+    "status": "draft"
+  },
+  "rating.quality": {
+    "text": "Calidad del trabajo",
+    "status": "draft"
+  },
+  "rating.price": {
+    "text": "Precio justo",
+    "status": "draft"
+  },
+  "rating.communication": {
+    "text": "Comunicación",
+    "status": "draft"
+  },
+  "rating.professionalism": {
+    "text": "Profesionalismo",
+    "status": "draft"
+  },
+  "rating.punctuality": {
+    "text": "Puntualidad",
+    "status": "draft"
+  },
+  "rating.wouldHire": {
+    "text": "Volvería a contratar",
+    "status": "draft"
+  },
+  "rating.scale": {
+    "text": "{n} de 5",
+    "status": "draft"
+  },
+  "btn.sendRating": {
+    "text": "Enviar calificación",
+    "status": "draft"
+  },
+  "rating.thanks": {
+    "text": "Gracias por calificar. Eso ayuda al siguiente vecino a elegir.",
+    "status": "draft"
+  },
+  "rating.warranty": {
+    "text": "Garantía hasta el {date}.",
+    "status": "draft"
+  },
+  "rating.pending": {
+    "text": "Tu pago se libera cuando cierra el plazo para reportar. Después podrás calificar.",
+    "status": "draft"
+  }
+}

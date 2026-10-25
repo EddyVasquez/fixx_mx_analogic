@@ -1,0 +1,58 @@
+{
+  "support.title": {
+    "text": "Ayuda",
+    "status": "draft"
+  },
+  "support.you": {
+    "text": "Tú",
+    "status": "draft"
+  },
+  "support.queued": {
+    "text": "Esperando a un Agente FIXX. Te responderán en este chat.",
+    "status": "draft"
+  },
+  "support.offlineNote": {
+    "text": "Los Agentes no están disponibles ahora. El Asistente sigue ayudándote y un Agente dará seguimiento el siguiente día de soporte.",
+    "status": "draft"
+  },
+  "support.agentHere": {
+    "text": "Un Agente FIXX está en este chat.",
+    "status": "draft"
+  },
+  "support.closed": {
+    "text": "Esta conversación está cerrada.",
+    "status": "draft"
+  },
+  "btn.talkToAgent": {
+    "text": "Hablar con un Agente",
+    "status": "draft"
+  },
+  "btn.newChat": {
+    "text": "Iniciar un chat nuevo",
+    "status": "draft"
+  },
+  "assistant.reply.handoffQueued": {
+    "text": "Pasé tu chat a un Agente FIXX. Espera aquí, por favor.",
+    "status": "draft"
+  },
+  "assistant.reply.handoffOffline": {
+    "text": "Los Agentes no están disponibles ahora. Seguiré ayudándote y un Agente dará seguimiento el siguiente día de soporte.",
+    "status": "draft"
+  },
+  "rejectReason.mismatch": {
+    "text": "la selfie no coincide con la identificación",
+    "status": "draft"
+  },
+  "customer.tab.help": {
+    "text": "Ayuda",
+    "status": "draft"
+  },
+  "pro.tab.help": {
+    "text": "Ayuda",
+    "status": "draft"
+  },
+  "roles.supportNote": {
+    "text": "Soporte solo está disponible en inglés y español.",
+    "status": "draft"
+  }
+}

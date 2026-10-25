@@ -1,0 +1,152 @@
+{
+  "pay.dueBy": {
+    "text": "{when}까지 {amount}을 결제해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.waiting": {
+    "text": "결제를 기다리고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.received": {
+    "text": "결제가 확인됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.cashRef": {
+    "text": "현금 결제 참조번호: {reference}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.cashHow": {
+    "text": "OXXO 같은 제휴 매장에서 이 참조번호로 현금 결제해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.speiHow": {
+    "text": "아래 계좌로 표시된 적요를 사용해 SPEI 이체해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.speiClabe": {
+    "text": "CLABE: {clabe}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.speiConcept": {
+    "text": "적요: {concept}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.speiBeneficiary": {
+    "text": "수취인: {beneficiary}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "schedule.title": {
+    "text": "결제 기한",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "schedule.line": {
+    "text": "{label}: {when}까지 {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "installment.deposit": {
+    "text": "예약금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "installment.balance": {
+    "text": "잔금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "installment.full": {
+    "text": "전체 금액",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "consequence.expireBooking": {
+    "text": "기한 내에 결제하지 않으면 예약이 만료돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "consequence.cancelJobRefundDeposit": {
+    "text": "기한 내에 결제하지 않으면 작업이 취소되고 예약금이 환불돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "consequence.expireRequest": {
+    "text": "기한 내에 결제하지 않으면 요청이 만료돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.simulatePayment": {
+    "text": "데모: 이 결제를 입금 완료로 표시",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payment.expiredBody": {
+    "text": "기한 내에 결제되지 않아 예약이 만료됐어요. 새 요청을 시작할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "balance.title": {
+    "text": "남은 잔금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.title": {
+    "text": "환불",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.clabeIntro": {
+    "text": "현금 또는 계좌이체로 결제하셔서 환불받을 계좌가 필요해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.amount": {
+    "text": "환불 금액: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.sendClabe": {
+    "text": "계좌 보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.clabeInvalid": {
+    "text": "CLABE는 18자리예요. 확인하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.done": {
+    "text": "환불이 처리됐어요. {date}까지 입금될 예정이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.original": {
+    "text": "환불은 원래 결제 수단으로 돌아가요. {date}까지 입금될 예정이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.emergencyAfterHours": {
+    "text": "상담원 운영 시간이 아니에요. 어시스턴트와 자동 매칭이 긴급 요청을 처리하고, 다음 지원일에 상담원이 연락드려요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "manual.followUpBy": {
+    "text": "{when}까지 연락드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.declineAddress": {
+    "text": "이 주소 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

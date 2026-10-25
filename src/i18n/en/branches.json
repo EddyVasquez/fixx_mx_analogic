@@ -1,0 +1,198 @@
+{
+  "btn.cancelJob": {
+    "text": "Cancel this job",
+    "status": "draft"
+  },
+  "cancel.title": {
+    "text": "Cancel this job?",
+    "status": "draft"
+  },
+  "cancel.beforePaid": {
+    "text": "The professional is not on the way yet, so cancelling is free. You get a full refund of {refund}.",
+    "status": "draft"
+  },
+  "cancel.beforeFree": {
+    "text": "The professional is not on the way yet, so cancelling is free. You have not paid anything yet.",
+    "status": "draft"
+  },
+  "cancel.afterRefund": {
+    "text": "The professional is already on the way. The travel fee of {fee} applies, and {refund} comes back to you.",
+    "status": "draft"
+  },
+  "cancel.afterNoRefund": {
+    "text": "The professional is already on the way. The travel fee of {fee} covers everything you paid, so there is no refund.",
+    "status": "draft"
+  },
+  "cancel.afterNothing": {
+    "text": "The professional is already on the way, but you have not paid anything yet, so there is nothing to refund.",
+    "status": "draft"
+  },
+  "btn.confirmCancel": {
+    "text": "Yes, cancel the job",
+    "status": "draft"
+  },
+  "btn.keepJob": {
+    "text": "Keep the job",
+    "status": "draft"
+  },
+  "cancel.noRefundBody": {
+    "text": "The job was cancelled. There is no refund because the travel fee covers your payment.",
+    "status": "draft"
+  },
+  "cancel.pro.title": {
+    "text": "Cancel this job?",
+    "status": "draft"
+  },
+  "cancel.pro.late": {
+    "text": "You are already on the way. Cancelling now lowers your FIXX Job Quality Score. The customer can choose a replacement or a full refund.",
+    "status": "draft"
+  },
+  "cancel.pro.early": {
+    "text": "The customer can then choose a replacement or a full refund.",
+    "status": "draft"
+  },
+  "btn.cancelAsPro": {
+    "text": "Cancel the job",
+    "status": "draft"
+  },
+  "choice.title": {
+    "text": "What would you like to do?",
+    "status": "draft"
+  },
+  "choice.body": {
+    "text": "Choose a replacement and your payment of {paid} carries over. You see any price difference before you confirm. Or take a full refund.",
+    "status": "draft"
+  },
+  "btn.chooseReplacement": {
+    "text": "Choose a replacement",
+    "status": "draft"
+  },
+  "btn.getRefund": {
+    "text": "Get a refund",
+    "status": "draft"
+  },
+  "quote.carryMore": {
+    "text": "Your earlier payment of {paid} carries over. You pay {difference} more now.",
+    "status": "draft"
+  },
+  "quote.carryCovered": {
+    "text": "Your earlier payment of {paid} carries over and covers the deposit of {deposit}.",
+    "status": "draft"
+  },
+  "resched.title": {
+    "text": "Change the time",
+    "status": "draft"
+  },
+  "resched.intro": {
+    "text": "Changing the time is free until the professional is on the way. The current time stays booked until it is accepted.",
+    "status": "draft"
+  },
+  "btn.requestTime": {
+    "text": "Request this time",
+    "status": "draft"
+  },
+  "resched.proposed": {
+    "text": "Requested time: {when}",
+    "status": "draft"
+  },
+  "resched.pending": {
+    "text": "Waiting for the professional to answer by {when}. Your current time stays booked until then.",
+    "status": "draft"
+  },
+  "resched.declined": {
+    "text": "The professional declined the new time. Your current time stays booked, or you can cancel for free.",
+    "status": "draft"
+  },
+  "resched.pro.title": {
+    "text": "Time change request",
+    "status": "draft"
+  },
+  "resched.pro.body": {
+    "text": "The customer asked to move the job to {when}. Please answer by {deadline}.",
+    "status": "draft"
+  },
+  "btn.acceptTime": {
+    "text": "Accept new time",
+    "status": "draft"
+  },
+  "btn.declineTime": {
+    "text": "Decline new time",
+    "status": "draft"
+  },
+  "addl.pro.request": {
+    "text": "Request additional work",
+    "status": "draft"
+  },
+  "addl.note": {
+    "text": "What is the additional work?",
+    "status": "draft"
+  },
+  "addl.payout": {
+    "text": "Your payout for the additional work",
+    "status": "draft"
+  },
+  "addl.invalid": {
+    "text": "Add a description and a payout greater than 0.",
+    "status": "draft"
+  },
+  "btn.requestAddl": {
+    "text": "Send request",
+    "status": "draft"
+  },
+  "addl.pro.waiting": {
+    "text": "Waiting for the customer to approve the additional work.",
+    "status": "draft"
+  },
+  "addl.pro.unpaid": {
+    "text": "The customer must pay the additional work before you can mark the job complete.",
+    "status": "draft"
+  },
+  "addl.approve.title": {
+    "text": "Additional work needs your approval",
+    "status": "draft"
+  },
+  "addl.amount": {
+    "text": "Amount: {amount}",
+    "status": "draft"
+  },
+  "addl.card": {
+    "text": "It is added to your balance and charged after the job is complete.",
+    "status": "draft"
+  },
+  "addl.cash": {
+    "text": "You pay it with a reference. The job cannot be marked complete until it is paid. There is no separate deposit.",
+    "status": "draft"
+  },
+  "btn.approveAddl": {
+    "text": "Approve",
+    "status": "draft"
+  },
+  "btn.declineAddl": {
+    "text": "Decline",
+    "status": "draft"
+  },
+  "addl.payTitle": {
+    "text": "Pay the additional work",
+    "status": "draft"
+  },
+  "demo.trigger.title": {
+    "text": "Trigger an event",
+    "status": "draft"
+  },
+  "demo.trigger.proCancels": {
+    "text": "Professional cancels",
+    "status": "draft"
+  },
+  "demo.trigger.noShow": {
+    "text": "Professional does not show up",
+    "status": "draft"
+  },
+  "notif.reschedule.requested": {
+    "text": "The customer asked to change the time. Please answer within {rescheduleHours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "notif.reschedule.requestSent": {
+    "text": "Your request was sent. Your current time stays booked until the professional accepts.",
+    "status": "draft"
+  }
+}

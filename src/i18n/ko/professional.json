@@ -1,0 +1,452 @@
+{
+  "pro.demoWho": {
+    "text": "데모: 나는",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pro.new": {
+    "text": "신규 전문가 (가입)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pro.tab.jobs": {
+    "text": "작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pro.tab.schedule": {
+    "text": "일정",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pro.tab.profile": {
+    "text": "프로필",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.title": {
+    "text": "신원을 확인하세요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.intro": {
+    "text": "FIXX Verified는 신원만 확인해요. 기술, 자격, 인증, 추천서, 보험은 확인하지 않아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.id": {
+    "text": "신분증",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.selfie": {
+    "text": "셀카",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.phone": {
+    "text": "전화번호",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.addId": {
+    "text": "신분증 사진 추가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.addSelfie": {
+    "text": "셀카 찍기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.added": {
+    "text": "추가됨 (데모)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.phoneCode": {
+    "text": "전화 인증 코드",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.verifyPhone": {
+    "text": "전화번호 인증",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.phoneVerified": {
+    "text": "전화번호 인증됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.submitVerification": {
+    "text": "검토 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.missing": {
+    "text": "계속하려면 신분증, 셀카, 전화번호 인증이 필요해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.pending": {
+    "text": "서류를 검토하고 있어요. 보통 오래 걸리지 않아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.approved": {
+    "text": "신원 확인이 완료됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "onboarding.rejected": {
+    "text": "신원을 확인하지 못했어요: {reason}. 수정해서 서류를 다시 보내 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.verifyApprove": {
+    "text": "신원 승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.verifyReject": {
+    "text": "신원 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "rejectReason.blurry": {
+    "text": "사진이 흐려요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "recovery.title": {
+    "text": "계정 복구",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "recovery.intro": {
+    "text": "새 셀카를 보내고 새 번호를 인증해 주세요. 팀에서 검토한 뒤에 다시 작업을 받을 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.lostNumber": {
+    "text": "번호를 잃어버렸어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.sendRecovery": {
+    "text": "검토 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payout.title": {
+    "text": "정산 계좌",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payout.clabe": {
+    "text": "CLABE (18자리)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.saveAccount": {
+    "text": "계좌 저장",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payout.saved": {
+    "text": "계좌가 저장됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payout.invalid": {
+    "text": "CLABE는 18자리예요. 확인하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "payout.draftNote": {
+    "text": "초안 문구: 정산 계좌 안내 문구는 아직 작성 중이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.level": {
+    "text": "등급",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.score": {
+    "text": "FIXX 작업 품질 점수",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.noScore": {
+    "text": "아직 점수가 없어요. 첫 작업 후에 시작돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.scoreNote": {
+    "text": "점수는 품질과 신뢰도(FIXX 표준, 체크리스트, 약속 이행)를 반영해요. 고객 평가와는 별개예요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.levelsNote": {
+    "text": "FIXX Pro와 FIXX Expert 요건은 아직 정해지지 않았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.rating": {
+    "text": "고객 평가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.noRatings": {
+    "text": "아직 평가가 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.ratingAvg": {
+    "text": "5점 중 {avg}점 (평가 {count, plural, other {#개}})",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.penalties": {
+    "text": "늦은 취소 또는 불참 {count, plural, other {#건}} 기록됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.noJobs": {
+    "text": "지금은 작업 요청이 없어요. 한가한 날이니 커피 한 잔 하세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "dash.noJobsHint": {
+    "text": "데모: 고객으로 전환해 요청을 보내고 이 전문가를 선택해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "sched.title": {
+    "text": "근무 가능 시간",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "sched.morning": {
+    "text": "오전",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "sched.afternoon": {
+    "text": "오후",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "sched.note": {
+    "text": "고객에게는 가능한 시간만 보여요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "job.request.title": {
+    "text": "새 작업 요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "job.where": {
+    "text": "지역",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.sendQuote": {
+    "text": "견적서 보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.decline": {
+    "text": "작업 거절",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.title": {
+    "text": "견적서",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.suggested": {
+    "text": "FIXX 권장 정산금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.yourPayout": {
+    "text": "내 정산금",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.limits": {
+    "text": "{min} ~ {max} 범위에서 조정할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.reason": {
+    "text": "조정 사유",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.reasonNeeded": {
+    "text": "권장 정산금을 바꾸면 사유를 입력해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.outOfLimits": {
+    "text": "허용 범위를 벗어난 정산금이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.travel": {
+    "text": "이동 시작 후 고객이 취소하면 받는 이동 비용: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.sent": {
+    "text": "견적서를 보냈어요. 고객이 답하면 알려 드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pquote.waitingDeposit": {
+    "text": "고객이 수락했어요. 예약금을 기다리고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.scheduled": {
+    "text": "{when}에 예정됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.onMyWay": {
+    "text": "이동 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.onWayNote": {
+    "text": "누르면 고객에게 알림이 가요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.checkIn": {
+    "text": "도착 확인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.startWork": {
+    "text": "작업 시작",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.checklist": {
+    "text": "FIXX 표준 체크리스트",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.fixxStandard": {
+    "text": "FIXX 표준이 평소 작업 방식보다 우선해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "checklist.protect": {
+    "text": "바닥과 가구 보호",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "checklist.standard": {
+    "text": "FIXX 표준 준수",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "checklist.clean": {
+    "text": "작업 구역 청소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "checklist.walkthrough": {
+    "text": "결과를 고객과 함께 확인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.photosBefore": {
+    "text": "작업 전 사진",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.photosAfter": {
+    "text": "작업 후 사진",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.addBefore": {
+    "text": "작업 전 사진 추가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.addAfter": {
+    "text": "작업 후 사진 추가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.finishChecklist": {
+    "text": "체크리스트 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.checklistFirst": {
+    "text": "체크리스트를 끝내려면 모든 항목을 선택해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.markComplete": {
+    "text": "작업 완료 표시",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.completeNote": {
+    "text": "작업 완료로 표시하면 고객에게 잔금이 청구돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.waitWindow": {
+    "text": "문제 신고 기간이 끝나기를 기다리고 있어요. 그 후에 정산금이 지급돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.payout": {
+    "text": "내 정산금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.payoutReleased": {
+    "text": "정산금 {amount}이 지급됐어요. 오늘 입금돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "chat.title": {
+    "text": "채팅",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "chat.placeholder": {
+    "text": "메시지를 입력하세요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.send": {
+    "text": "보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "chat.demoLines": {
+    "text": "데모 문장",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "chat.empty": {
+    "text": "아직 메시지가 없어요. 인사해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

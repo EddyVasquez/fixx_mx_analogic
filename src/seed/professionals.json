@@ -1,0 +1,118 @@
+[
+  {
+    "id": "p1",
+    "userId": "u-p1",
+    "name": "Luis Hernández",
+    "zoneId": "z1",
+    "trades": [
+      "plumbing",
+      "hvac"
+    ],
+    "languages": [
+      "es"
+    ],
+    "verification": "approved",
+    "level": "verified",
+    "qualityScore": 88
+  },
+  {
+    "id": "p2",
+    "userId": "u-p2",
+    "name": "Marisol Treviño",
+    "zoneId": "z2",
+    "trades": [
+      "painting",
+      "flooring"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "verification": "approved",
+    "level": "pro",
+    "qualityScore": 92
+  },
+  {
+    "id": "p3",
+    "userId": "u-p3",
+    "name": "Jorge Salinas",
+    "zoneId": "z1",
+    "trades": [
+      "electrical"
+    ],
+    "languages": [
+      "es"
+    ],
+    "verification": "approved",
+    "level": "expert",
+    "qualityScore": 95
+  },
+  {
+    "id": "p4",
+    "userId": "u-p4",
+    "name": "Ana Cantú",
+    "zoneId": "z3",
+    "trades": [
+      "gardening",
+      "pest_control"
+    ],
+    "languages": [
+      "es",
+      "en"
+    ],
+    "verification": "approved",
+    "level": "verified",
+    "qualityScore": 81
+  },
+  {
+    "id": "p5",
+    "userId": "u-p5",
+    "name": "Min-jun Kim",
+    "zoneId": "z2",
+    "trades": [
+      "concrete",
+      "flooring"
+    ],
+    "languages": [
+      "ko",
+      "es"
+    ],
+    "verification": "approved",
+    "level": "verified",
+    "qualityScore": 86
+  },
+  {
+    "id": "p6",
+    "userId": "u-p6",
+    "name": "Seo-yeon Park",
+    "zoneId": "z1",
+    "trades": [
+      "painting",
+      "plumbing"
+    ],
+    "languages": [
+      "ko",
+      "en",
+      "es"
+    ],
+    "verification": "approved",
+    "level": "pro",
+    "qualityScore": 90
+  },
+  {
+    "id": "p7",
+    "userId": "u-p7",
+    "name": "Diego Garza",
+    "zoneId": "z3",
+    "trades": [
+      "hvac",
+      "electrical"
+    ],
+    "languages": [
+      "es"
+    ],
+    "verification": "pending",
+    "level": null,
+    "qualityScore": null
+  }
+]

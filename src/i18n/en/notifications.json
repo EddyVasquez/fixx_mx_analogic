@@ -1,0 +1,458 @@
+{
+  "notif.request.needsInfo": {
+    "text": "We need a bit more information to prepare your price range.",
+    "status": "draft"
+  },
+  "notif.request.manualReview": {
+    "text": "Your address is outside Apodaca, so our team will review it. We will follow up within {followUpHours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "notif.admin.manualReview": {
+    "text": "A request outside Apodaca needs manual review.",
+    "status": "draft"
+  },
+  "notif.request.estimated": {
+    "text": "Your price range is ready.",
+    "status": "draft"
+  },
+  "notif.request.outOfArea": {
+    "text": "We cannot serve this address yet.",
+    "status": "draft"
+  },
+  "notif.request.recommendations": {
+    "text": "We found professionals for your job.",
+    "status": "draft"
+  },
+  "notif.job.requestForProfessional": {
+    "text": "A new job request is waiting for your reply.",
+    "status": "draft"
+  },
+  "notif.job.professionalDeclined": {
+    "text": "This professional cannot take the job. Please choose another one.",
+    "status": "draft"
+  },
+  "notif.quote.sent": {
+    "text": "Your quote is ready to review.",
+    "status": "draft"
+  },
+  "notif.quote.accepted": {
+    "text": "The quote was accepted.",
+    "status": "draft"
+  },
+  "notif.quote.declined": {
+    "text": "The quote was declined.",
+    "status": "draft"
+  },
+  "notif.payment.partial": {
+    "text": "We received part of the payment. The rest is still due.",
+    "status": "draft"
+  },
+  "notif.booking.expired": {
+    "text": "The booking expired because the deposit was not paid in time.",
+    "status": "draft"
+  },
+  "notif.job.scheduled": {
+    "text": "The job is scheduled.",
+    "status": "draft"
+  },
+  "notif.payment.balanceReceived": {
+    "text": "The balance payment was received.",
+    "status": "draft"
+  },
+  "notif.job.cancelledBalanceUnpaid": {
+    "text": "The job was cancelled because the balance was not paid in time. The deposit will be refunded.",
+    "status": "draft"
+  },
+  "notif.reschedule.accepted": {
+    "text": "The new time was accepted.",
+    "status": "draft"
+  },
+  "notif.reschedule.declined": {
+    "text": "The new time was declined. The current time stays booked.",
+    "status": "draft"
+  },
+  "notif.reschedule.expired": {
+    "text": "There was no answer in {rescheduleHours, plural, one {# hour} other {# hours}}, so the request expired. You can choose another professional and time at no cost.",
+    "status": "draft"
+  },
+  "notif.job.onTheWay": {
+    "text": "Your professional is on the way.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByCustomer": {
+    "text": "A customer cancelled a job.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByCustomer.customer": {
+    "text": "You cancelled this job. Travel fee: {travelFee}. Refund: {refund}.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByCustomer.professional": {
+    "text": "The customer cancelled this job. Your travel fee: {travelFee}.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByProfessional": {
+    "text": "A professional cancelled a job.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByProfessional.customer": {
+    "text": "The professional cancelled. Choose a replacement or a full refund.",
+    "status": "draft"
+  },
+  "notif.job.cancelledByProfessional.professional": {
+    "text": "You cancelled this job. A late cancellation lowers your FIXX Job Quality Score.",
+    "status": "draft"
+  },
+  "notif.job.noShow": {
+    "text": "A professional no-show was recorded.",
+    "status": "draft"
+  },
+  "notif.job.noShow.customer": {
+    "text": "The professional did not arrive. Choose a replacement or a full refund.",
+    "status": "draft"
+  },
+  "notif.job.noShow.professional": {
+    "text": "This job was marked as a no-show. It lowers your FIXX Job Quality Score.",
+    "status": "draft"
+  },
+  "notif.job.checkedIn": {
+    "text": "The professional checked in at the job site.",
+    "status": "draft"
+  },
+  "notif.job.started": {
+    "text": "Work has started.",
+    "status": "draft"
+  },
+  "notif.additionalWork.requested": {
+    "text": "Additional work for {amount} needs your approval before it starts.",
+    "status": "draft"
+  },
+  "notif.payment.additionalReceived": {
+    "text": "Payment for the additional work was received.",
+    "status": "draft"
+  },
+  "notif.additionalWork.approved": {
+    "text": "The additional work was approved.",
+    "status": "draft"
+  },
+  "notif.additionalWork.approved.customer": {
+    "text": "You approved additional work for {amount}.",
+    "status": "draft"
+  },
+  "notif.additionalWork.declined": {
+    "text": "The additional work was declined.",
+    "status": "draft"
+  },
+  "notif.job.checklistComplete": {
+    "text": "The checklist is complete.",
+    "status": "draft"
+  },
+  "notif.job.complete": {
+    "text": "The job is complete. The issue window is open for {issueHours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "notif.job.completeBalanceDue": {
+    "text": "The job is marked complete. The balance is due now.",
+    "status": "draft"
+  },
+  "notif.issueWindow.reminder": {
+    "text": "The issue window closes in {reminderHours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "notif.issue.reported": {
+    "text": "An issue report was filed. Held amount: {held}.",
+    "status": "draft"
+  },
+  "notif.issue.reported.customer": {
+    "text": "We received your report. Held amount: {held}.",
+    "status": "draft"
+  },
+  "notif.issue.reported.professional": {
+    "text": "An issue was reported. Your held share: {heldPayout}.",
+    "status": "draft"
+  },
+  "notif.job.paymentReleased": {
+    "text": "Your payment was released to the professional.",
+    "status": "draft"
+  },
+  "notif.payout.released": {
+    "text": "Your payout was released and arrives today.",
+    "status": "draft"
+  },
+  "notif.job.rated": {
+    "text": "You received a new rating.",
+    "status": "draft"
+  },
+  "notif.refund.issued": {
+    "text": "Your refund was issued. It should arrive within {refundDays, plural, one {# business day} other {# business days}}.",
+    "status": "draft"
+  },
+  "notif.job.replacementChosen": {
+    "text": "We are finding a replacement. Your payment carries over.",
+    "status": "draft"
+  },
+  "notif.job.refundChosen": {
+    "text": "Your refund of {amount} is on its way.",
+    "status": "draft"
+  },
+  "notif.payment.referenceCreated": {
+    "text": "Your payment reference is ready. Pay it before the deadline shown.",
+    "status": "draft"
+  },
+  "notif.payment.received": {
+    "text": "We received your payment.",
+    "status": "draft"
+  },
+  "notif.payment.declined": {
+    "text": "The card payment did not go through. Try another method.",
+    "status": "draft"
+  },
+  "notif.payment.expired": {
+    "text": "The payment reference expired.",
+    "status": "draft"
+  },
+  "notif.case.underReview": {
+    "text": "A FIXX Agent is reviewing the case.",
+    "status": "draft"
+  },
+  "notif.case.decided": {
+    "text": "A decision was made on the case. Each side can ask for one review until the deadline.",
+    "status": "draft"
+  },
+  "notif.case.reviewRequested": {
+    "text": "A review of the decision was requested.",
+    "status": "draft"
+  },
+  "notif.case.reviewDecided": {
+    "text": "The review is done. Check the case for the new decision.",
+    "status": "draft"
+  },
+  "notif.case.final": {
+    "text": "The decision on the case is final.",
+    "status": "draft"
+  },
+  "notif.warranty.claimFiled": {
+    "text": "A warranty claim was filed.",
+    "status": "draft"
+  },
+  "notif.warranty.inReview": {
+    "text": "The warranty claim is under review.",
+    "status": "draft"
+  },
+  "notif.warranty.claimDecided.resolved": {
+    "text": "The warranty claim was approved.",
+    "status": "draft"
+  },
+  "notif.warranty.claimDecided.rejected": {
+    "text": "The warranty claim was not approved.",
+    "status": "draft"
+  },
+  "notif.warranty.ended": {
+    "text": "Your warranty has ended.",
+    "status": "draft"
+  },
+  "notif.verification.submitted": {
+    "text": "We received your documents. We will review them soon.",
+    "status": "draft"
+  },
+  "notif.admin.verificationQueue": {
+    "text": "A professional is waiting for identity verification.",
+    "status": "draft"
+  },
+  "notif.verification.approved": {
+    "text": "Your identity is verified. You are now FIXX Verified.",
+    "status": "draft"
+  },
+  "notif.verification.rejected": {
+    "text": "We could not verify your identity. Check the reason and send your documents again.",
+    "status": "draft"
+  },
+  "notif.verification.recoveryStarted": {
+    "text": "Send a new selfie and verify your new number to recover your account.",
+    "status": "draft"
+  },
+  "notif.support.agentRequested": {
+    "text": "A customer asked for a FIXX Agent.",
+    "status": "draft"
+  },
+  "notif.support.offlineFollowUp": {
+    "text": "It is outside Agent hours. The Assistant helps now, and an Agent will follow up on the next support day.",
+    "status": "draft"
+  },
+  "notif.support.closed": {
+    "text": "The conversation was closed.",
+    "status": "draft"
+  },
+  "notif.support.agentJoined": {
+    "text": "A FIXX Agent joined the chat.",
+    "status": "draft"
+  },
+  "notifications.title": {
+    "text": "Notifications",
+    "status": "draft"
+  },
+  "notifications.empty": {
+    "text": "Quiet in here. Messages show up as the job moves along.",
+    "status": "draft"
+  },
+  "notifications.demoNote": {
+    "text": "Simulated messages. Nothing is sent.",
+    "status": "draft"
+  },
+  "channel.push": {
+    "text": "Push",
+    "status": "draft"
+  },
+  "channel.whatsapp": {
+    "text": "WhatsApp",
+    "status": "draft"
+  },
+  "channel.email": {
+    "text": "Email",
+    "status": "draft"
+  },
+  "channel.inApp": {
+    "text": "In-app",
+    "status": "draft"
+  },
+  "assistant.label": {
+    "text": "FIXX Assistant (automated)",
+    "status": "draft"
+  },
+  "agent.label": {
+    "text": "FIXX Agent (person)",
+    "status": "draft"
+  },
+  "assistant.reply.greeting": {
+    "text": "Hi, I am the FIXX Assistant. I can answer questions about how FIXX works.",
+    "status": "draft"
+  },
+  "assistant.reply.howItWorks": {
+    "text": "You describe the job, see a fair price range, choose a professional, approve the quote and pay. FIXX manages the work until it is done.",
+    "status": "draft"
+  },
+  "assistant.reply.hours": {
+    "text": "FIXX Agents are available from {start} to {end}, Monday to Saturday.",
+    "status": "draft"
+  },
+  "assistant.reply.needsAgent": {
+    "text": "I cannot decide refunds, cases or payments. A FIXX Agent can help with that.",
+    "status": "draft"
+  },
+  "assistant.reply.emergency": {
+    "text": "If this is an emergency, call 911 first. FIXX is not an emergency service.",
+    "status": "draft"
+  },
+  "assistant.reply.fallback": {
+    "text": "I am not sure I understood. You can ask how FIXX works, or ask for a FIXX Agent.",
+    "status": "draft"
+  },
+  "support.koreanNote": {
+    "text": "Korean support uses translation tools. Our Agents work in English and Spanish.",
+    "status": "draft"
+  },
+  "translation.auto": {
+    "text": "Translated automatically.",
+    "status": "draft"
+  },
+  "btn.seeOriginal": {
+    "text": "See original",
+    "status": "draft"
+  },
+  "btn.hideOriginal": {
+    "text": "Hide original",
+    "status": "draft"
+  },
+  "translation.official": {
+    "text": "Official version: {language}",
+    "status": "draft"
+  },
+  "translation.officialNote": {
+    "text": "The official version of this quote is in {language}.",
+    "status": "draft"
+  },
+  "demoJob.title": {
+    "text": "Demo job",
+    "status": "draft"
+  },
+  "demoJob.method": {
+    "text": "Payment method",
+    "status": "draft"
+  },
+  "demoJob.hoursAway": {
+    "text": "Job starts in",
+    "status": "draft"
+  },
+  "demoJob.hoursOption": {
+    "text": "{hours} h",
+    "status": "draft"
+  },
+  "demoJob.customerLanguage": {
+    "text": "Customer language",
+    "status": "draft"
+  },
+  "demoJob.professionalLanguage": {
+    "text": "Professional language",
+    "status": "draft"
+  },
+  "demoJob.next": {
+    "text": "Next steps",
+    "status": "draft"
+  },
+  "demoJob.deadlines": {
+    "text": "Upcoming deadlines",
+    "status": "draft"
+  },
+  "demoJob.none": {
+    "text": "No deadlines yet.",
+    "status": "draft"
+  },
+  "demoJob.devNote": {
+    "text": "Developer tool: event names are shown as code.",
+    "status": "draft"
+  },
+  "btn.newJob": {
+    "text": "Start a demo job",
+    "status": "draft"
+  },
+  "method.card": {
+    "text": "Card",
+    "status": "draft"
+  },
+  "method.wallet": {
+    "text": "Apple Pay / Google Pay",
+    "status": "draft"
+  },
+  "method.cash": {
+    "text": "Cash at a store",
+    "status": "draft"
+  },
+  "method.spei": {
+    "text": "SPEI transfer",
+    "status": "draft"
+  },
+  "state.cancelled": {
+    "text": "Cancelled",
+    "status": "draft"
+  },
+  "state.professionalCancelled": {
+    "text": "Cancelled by the professional",
+    "status": "draft"
+  },
+  "state.noShow": {
+    "text": "Professional did not arrive",
+    "status": "draft"
+  },
+  "state.rescheduleUnanswered": {
+    "text": "Reschedule request unanswered",
+    "status": "draft"
+  },
+  "state.bookingExpired": {
+    "text": "Booking expired",
+    "status": "draft"
+  },
+  "state.refunded": {
+    "text": "Refunded",
+    "status": "draft"
+  }
+}

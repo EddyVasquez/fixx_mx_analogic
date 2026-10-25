@@ -1,0 +1,462 @@
+{
+  "admin.title": {
+    "text": "Admin console",
+    "status": "draft"
+  },
+  "admin.section": {
+    "text": "Section",
+    "status": "draft"
+  },
+  "admin.s.requests": {
+    "text": "Requests",
+    "status": "draft"
+  },
+  "admin.s.homeowners": {
+    "text": "Homeowners",
+    "status": "draft"
+  },
+  "admin.s.professionals": {
+    "text": "Professionals",
+    "status": "draft"
+  },
+  "admin.s.verification": {
+    "text": "Verification",
+    "status": "draft"
+  },
+  "admin.s.jobs": {
+    "text": "Jobs",
+    "status": "draft"
+  },
+  "admin.s.quotes": {
+    "text": "Quotes",
+    "status": "draft"
+  },
+  "admin.s.standards": {
+    "text": "Service standards",
+    "status": "draft"
+  },
+  "admin.s.cases": {
+    "text": "Cases",
+    "status": "draft"
+  },
+  "admin.s.warranties": {
+    "text": "Warranties",
+    "status": "draft"
+  },
+  "admin.s.refunds": {
+    "text": "Refunds",
+    "status": "draft"
+  },
+  "admin.s.quality": {
+    "text": "Quality Score changes",
+    "status": "draft"
+  },
+  "admin.s.notes": {
+    "text": "Internal notes",
+    "status": "draft"
+  },
+  "admin.empty": {
+    "text": "Nothing here yet.",
+    "status": "draft"
+  },
+  "admin.yes": {
+    "text": "Yes",
+    "status": "draft"
+  },
+  "admin.no": {
+    "text": "No",
+    "status": "draft"
+  },
+  "admin.col.category": {
+    "text": "Category",
+    "status": "draft"
+  },
+  "admin.col.area": {
+    "text": "Area",
+    "status": "draft"
+  },
+  "admin.col.urgent": {
+    "text": "Urgent",
+    "status": "draft"
+  },
+  "admin.col.state": {
+    "text": "State",
+    "status": "draft"
+  },
+  "admin.col.name": {
+    "text": "Name",
+    "status": "draft"
+  },
+  "admin.col.language": {
+    "text": "Language",
+    "status": "draft"
+  },
+  "admin.col.phone": {
+    "text": "Phone",
+    "status": "draft"
+  },
+  "admin.col.email": {
+    "text": "Email",
+    "status": "draft"
+  },
+  "admin.col.home": {
+    "text": "Home",
+    "status": "draft"
+  },
+  "admin.col.cancellations": {
+    "text": "Cancellations (internal)",
+    "status": "draft"
+  },
+  "admin.col.trades": {
+    "text": "Trades",
+    "status": "draft"
+  },
+  "admin.col.level": {
+    "text": "Level",
+    "status": "draft"
+  },
+  "admin.col.score": {
+    "text": "Quality Score",
+    "status": "draft"
+  },
+  "admin.col.verification": {
+    "text": "Verification",
+    "status": "draft"
+  },
+  "admin.col.penalties": {
+    "text": "Penalties",
+    "status": "draft"
+  },
+  "admin.col.rating": {
+    "text": "Rating",
+    "status": "draft"
+  },
+  "admin.col.method": {
+    "text": "Payment method",
+    "status": "draft"
+  },
+  "admin.col.total": {
+    "text": "Customer total",
+    "status": "draft"
+  },
+  "admin.col.payout": {
+    "text": "Professional payout",
+    "status": "draft"
+  },
+  "admin.col.professional": {
+    "text": "Professional",
+    "status": "draft"
+  },
+  "admin.col.date": {
+    "text": "Date",
+    "status": "draft"
+  },
+  "admin.col.line": {
+    "text": "Line",
+    "status": "draft"
+  },
+  "admin.col.amount": {
+    "text": "Amount",
+    "status": "draft"
+  },
+  "admin.col.travelFee": {
+    "text": "Travel fee",
+    "status": "draft"
+  },
+  "admin.col.adjustment": {
+    "text": "Adjustment reason",
+    "status": "draft"
+  },
+  "admin.col.official": {
+    "text": "Official language",
+    "status": "draft"
+  },
+  "admin.col.warranty": {
+    "text": "Warranty",
+    "status": "draft"
+  },
+  "admin.col.estimate": {
+    "text": "Estimate range",
+    "status": "draft"
+  },
+  "admin.col.lineType": {
+    "text": "Line type",
+    "status": "draft"
+  },
+  "admin.col.checklist": {
+    "text": "Checklist items",
+    "status": "draft"
+  },
+  "admin.col.decision": {
+    "text": "Decision",
+    "status": "draft"
+  },
+  "admin.col.held": {
+    "text": "Held amount",
+    "status": "draft"
+  },
+  "admin.col.heldShare": {
+    "text": "Held professional share",
+    "status": "draft"
+  },
+  "admin.col.deadline": {
+    "text": "Deadline",
+    "status": "draft"
+  },
+  "admin.col.destination": {
+    "text": "Destination",
+    "status": "draft"
+  },
+  "admin.col.account": {
+    "text": "Account",
+    "status": "draft"
+  },
+  "admin.col.expected": {
+    "text": "Expected by",
+    "status": "draft"
+  },
+  "admin.col.status": {
+    "text": "Status",
+    "status": "draft"
+  },
+  "admin.col.delta": {
+    "text": "Change",
+    "status": "draft"
+  },
+  "admin.col.reason": {
+    "text": "Reason",
+    "status": "draft"
+  },
+  "admin.col.about": {
+    "text": "About",
+    "status": "draft"
+  },
+  "admin.col.note": {
+    "text": "Note",
+    "status": "draft"
+  },
+  "admin.col.reviews": {
+    "text": "Reviews used",
+    "status": "draft"
+  },
+  "admin.col.claim": {
+    "text": "Claim",
+    "status": "draft"
+  },
+  "admin.col.ends": {
+    "text": "Ends",
+    "status": "draft"
+  },
+  "admin.col.actions": {
+    "text": "Actions",
+    "status": "draft"
+  },
+  "admin.approve": {
+    "text": "Approve",
+    "status": "draft"
+  },
+  "admin.reject": {
+    "text": "Reject",
+    "status": "draft"
+  },
+  "admin.reason": {
+    "text": "Reason",
+    "status": "draft"
+  },
+  "admin.followUp": {
+    "text": "Follow-up by {when}",
+    "status": "draft"
+  },
+  "admin.setHeld": {
+    "text": "Held amount",
+    "status": "draft"
+  },
+  "admin.saveHeld": {
+    "text": "Save amount",
+    "status": "draft"
+  },
+  "admin.heldInvalid": {
+    "text": "Enter an amount above 0 and up to the job total, before a decision.",
+    "status": "draft"
+  },
+  "admin.startReview": {
+    "text": "Start the review",
+    "status": "draft"
+  },
+  "admin.decide.refundCustomer": {
+    "text": "Refund the customer",
+    "status": "draft"
+  },
+  "admin.decide.releaseProfessional": {
+    "text": "Release to the professional",
+    "status": "draft"
+  },
+  "admin.decide.split": {
+    "text": "Split 50/50",
+    "status": "draft"
+  },
+  "admin.finishReview": {
+    "text": "Finish the review, keep the decision",
+    "status": "draft"
+  },
+  "admin.claim.start": {
+    "text": "Start the claim review",
+    "status": "draft"
+  },
+  "admin.claim.approve": {
+    "text": "Approve the claim",
+    "status": "draft"
+  },
+  "admin.claim.reject": {
+    "text": "Reject the claim",
+    "status": "draft"
+  },
+  "admin.noteAbout": {
+    "text": "About",
+    "status": "draft"
+  },
+  "admin.noteText": {
+    "text": "Note",
+    "status": "draft"
+  },
+  "admin.addNote": {
+    "text": "Add note",
+    "status": "draft"
+  },
+  "admin.noteInternal": {
+    "text": "Internal notes are never shown to customers or professionals.",
+    "status": "draft"
+  },
+  "admin.entity.job": {
+    "text": "Job",
+    "status": "draft"
+  },
+  "admin.entity.professional": {
+    "text": "Professional",
+    "status": "draft"
+  },
+  "admin.entity.homeowner": {
+    "text": "Homeowner",
+    "status": "draft"
+  },
+  "admin.score.pro": {
+    "text": "Professional",
+    "status": "draft"
+  },
+  "admin.score.delta": {
+    "text": "Change in points (negative lowers)",
+    "status": "draft"
+  },
+  "admin.score.reason": {
+    "text": "Reason",
+    "status": "draft"
+  },
+  "admin.score.add": {
+    "text": "Record change",
+    "status": "draft"
+  },
+  "admin.score.invalid": {
+    "text": "Enter a change other than 0 and a reason.",
+    "status": "draft"
+  },
+  "admin.score.auto": {
+    "text": "Recorded automatically. How many points a penalty is worth is still to be decided.",
+    "status": "draft"
+  },
+  "admin.refund.waiting": {
+    "text": "Waiting for the customer's CLABE",
+    "status": "draft"
+  },
+  "admin.refund.provided": {
+    "text": "Provided",
+    "status": "draft"
+  },
+  "admin.dest.original": {
+    "text": "Original method",
+    "status": "draft"
+  },
+  "admin.dest.clabe": {
+    "text": "CLABE",
+    "status": "draft"
+  },
+  "admin.vstate.notStarted": {
+    "text": "Not started",
+    "status": "draft"
+  },
+  "admin.vstate.pending": {
+    "text": "Pending review",
+    "status": "draft"
+  },
+  "admin.vstate.approved": {
+    "text": "Approved",
+    "status": "draft"
+  },
+  "admin.vstate.rejected": {
+    "text": "Rejected",
+    "status": "draft"
+  },
+  "admin.vstate.recovery": {
+    "text": "Recovery",
+    "status": "draft"
+  },
+  "admin.verify.none": {
+    "text": "No verifications yet. Open the professional app and start one.",
+    "status": "draft"
+  },
+  "admin.standards.note": {
+    "text": "Checklists and standards are generic in the demo. Periods and ranges are demo values.",
+    "status": "draft"
+  },
+  "admin.support.title": {
+    "text": "Support console",
+    "status": "draft"
+  },
+  "admin.support.macros": {
+    "text": "Macros",
+    "status": "draft"
+  },
+  "admin.support.join": {
+    "text": "Join the chat",
+    "status": "draft"
+  },
+  "admin.support.close": {
+    "text": "Close the chat",
+    "status": "draft"
+  },
+  "admin.support.noChat": {
+    "text": "No conversation yet.",
+    "status": "draft"
+  },
+  "admin.support.reply": {
+    "text": "Reply",
+    "status": "draft"
+  },
+  "admin.support.state": {
+    "text": "Chat status",
+    "status": "draft"
+  },
+  "admin.support.s.assistant": {
+    "text": "With the Assistant",
+    "status": "draft"
+  },
+  "admin.support.s.agentQueue": {
+    "text": "Waiting for an Agent",
+    "status": "draft"
+  },
+  "admin.support.s.agent": {
+    "text": "With an Agent",
+    "status": "draft"
+  },
+  "admin.support.s.offline": {
+    "text": "Outside Agent hours",
+    "status": "draft"
+  },
+  "admin.support.s.closed": {
+    "text": "Closed",
+    "status": "draft"
+  },
+  "admin.support.emergency": {
+    "text": "Emergency flagged: the customer was shown the 911 line.",
+    "status": "draft"
+  }
+}

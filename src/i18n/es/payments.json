@@ -1,0 +1,122 @@
+{
+  "pay.dueBy": {
+    "text": "Paga {amount} antes del {when}.",
+    "status": "draft"
+  },
+  "pay.waiting": {
+    "text": "Esperando tu pago.",
+    "status": "draft"
+  },
+  "pay.received": {
+    "text": "Recibimos tu pago.",
+    "status": "draft"
+  },
+  "pay.cashRef": {
+    "text": "Referencia para efectivo: {reference}",
+    "status": "draft"
+  },
+  "pay.cashHow": {
+    "text": "Paga esta referencia en efectivo en una tienda participante, como OXXO.",
+    "status": "draft"
+  },
+  "pay.speiHow": {
+    "text": "Haz una transferencia SPEI a la cuenta de abajo, con el concepto indicado.",
+    "status": "draft"
+  },
+  "pay.speiClabe": {
+    "text": "CLABE: {clabe}",
+    "status": "draft"
+  },
+  "pay.speiConcept": {
+    "text": "Concepto: {concept}",
+    "status": "draft"
+  },
+  "pay.speiBeneficiary": {
+    "text": "Beneficiario: {beneficiary}",
+    "status": "draft"
+  },
+  "schedule.title": {
+    "text": "Plazos de pago",
+    "status": "draft"
+  },
+  "schedule.line": {
+    "text": "{label}: {amount} antes del {when}.",
+    "status": "draft"
+  },
+  "installment.deposit": {
+    "text": "Depósito",
+    "status": "draft"
+  },
+  "installment.balance": {
+    "text": "Saldo",
+    "status": "draft"
+  },
+  "installment.full": {
+    "text": "Monto completo",
+    "status": "draft"
+  },
+  "consequence.expireBooking": {
+    "text": "Si no se paga a tiempo, la reserva vence.",
+    "status": "draft"
+  },
+  "consequence.cancelJobRefundDeposit": {
+    "text": "Si no se paga a tiempo, el trabajo se cancela y se reembolsa el depósito.",
+    "status": "draft"
+  },
+  "consequence.expireRequest": {
+    "text": "Si no se paga a tiempo, la solicitud vence.",
+    "status": "draft"
+  },
+  "demo.simulatePayment": {
+    "text": "Demo: marcar este pago como recibido",
+    "status": "draft"
+  },
+  "payment.expiredBody": {
+    "text": "La reserva venció porque el pago no se hizo a tiempo. Puedes iniciar una solicitud nueva.",
+    "status": "draft"
+  },
+  "balance.title": {
+    "text": "Saldo pendiente",
+    "status": "draft"
+  },
+  "refund.title": {
+    "text": "Tu reembolso",
+    "status": "draft"
+  },
+  "refund.clabeIntro": {
+    "text": "Pagaste en efectivo o por transferencia, así que necesitamos una cuenta para enviarte el reembolso.",
+    "status": "draft"
+  },
+  "refund.amount": {
+    "text": "Monto del reembolso: {amount}",
+    "status": "draft"
+  },
+  "btn.sendClabe": {
+    "text": "Enviar cuenta",
+    "status": "draft"
+  },
+  "refund.clabeInvalid": {
+    "text": "Una CLABE tiene 18 dígitos. Revísala e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "refund.done": {
+    "text": "Reembolso emitido. Debe llegar a más tardar el {date}.",
+    "status": "draft"
+  },
+  "refund.original": {
+    "text": "Tu reembolso regresa a tu método de pago original. Debe llegar a más tardar el {date}.",
+    "status": "draft"
+  },
+  "request.emergencyAfterHours": {
+    "text": "Estamos fuera del horario de Agentes. El Asistente y la asignación automática atenderán tu solicitud urgente, y un Agente dará seguimiento el siguiente día de soporte.",
+    "status": "draft"
+  },
+  "manual.followUpBy": {
+    "text": "Te daremos seguimiento a más tardar el {when}.",
+    "status": "draft"
+  },
+  "demo.declineAddress": {
+    "text": "Rechazar esta dirección",
+    "status": "draft"
+  }
+}
