@@ -1,0 +1,39 @@
+{
+  "name": "fixx-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "i18n:lint": "node src/i18n/tooling/lint.mjs",
+    "i18n:keys": "node src/tooling/keys.mjs",
+    "a11y:lint": "node src/tooling/a11y.mjs",
+    "check": "npm run i18n:lint && npm run i18n:keys && npm run a11y:lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "dexie": "^4.0.8",
+    "i18next": "^23.15.1",
+    "i18next-icu": "^2.3.0",
+    "intl-messageformat": "^10.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.0.2",
+    "react-router-dom": "^6.26.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.3.9",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^0.20.5",
+    "vitest": "^2.1.2"
+  }
+}
