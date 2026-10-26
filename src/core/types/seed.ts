@@ -4,6 +4,7 @@ const Lang = z.enum(["en", "es", "ko"]);
 export const ZoneSchema = z.object({ id: z.string(), name: z.string(), adjacentTo: z.array(z.string()) });
 export const CategorySchema = z.object({
   id: z.string(),
+  catalogCategory: z.string(),
   names: z.object({ en: z.string(), es: z.string(), ko: z.string() }),
   lineType: z.enum(["perArea", "perPoint", "perVisit", "perItem"]) // TODO(decision P5): per-category itemization
 });

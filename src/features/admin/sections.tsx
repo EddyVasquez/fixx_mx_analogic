@@ -11,6 +11,7 @@ import { Button } from "@/ui/Button";
 import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { useMoney } from "@/features/shared/Money";
+import { estimateRange } from "@/core/pricing/quote";
 import { categories, customers, homes, professionals, zoneNames } from "@/features/customer/data";
 import { JOB_ID, ratings, session } from "@/features/customer/session";
 import { Table } from "./Table";
@@ -130,9 +131,9 @@ export function StandardsSection({ lang }: P) {
   const { t } = useTranslation();
   const money = useMoney();
   const rows = categories.map((c) => {
-    const r = config.estimateRangesMXN[c.id];
+    const r = estimateRange(c.id, false);
     return [c.names[lang], c.lineType, <DemoValue key="w">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[c.id] ?? 0 })}</DemoValue>,
-      r ? <DemoValue key="r">{`${money(r[0])} – ${money(r[1])}`}</DemoValue> : "—", String(CHECKLIST_ITEMS.length)];
+      <DemoValue key="r">{`${money(r.low)} – ${money(r.high)}`}</DemoValue>, String(CHECKLIST_ITEMS.length)];
   });
   return (
     <div className="flex flex-col gap-3">

@@ -1,74 +1,86 @@
 [
   {
     "id": "plumbing",
-    "names": {
-      "en": "Plumbing",
-      "es": "Plomería",
-      "ko": "배관"
-    },
+    "catalogCategory": "Plumbing",
+    "names": { "en": "Plumbing", "es": "Plomería", "ko": "배관" },
     "lineType": "perVisit"
   },
   {
     "id": "electrical",
-    "names": {
-      "en": "Electrical",
-      "es": "Electricidad",
-      "ko": "전기"
-    },
+    "catalogCategory": "Electrical",
+    "names": { "en": "Electrical", "es": "Electricidad", "ko": "전기" },
     "lineType": "perPoint"
   },
   {
     "id": "hvac",
-    "names": {
-      "en": "HVAC",
-      "es": "Climatización",
-      "ko": "냉난방"
-    },
+    "catalogCategory": "HVAC",
+    "names": { "en": "HVAC", "es": "Climatización", "ko": "냉난방" },
     "lineType": "perVisit"
   },
   {
     "id": "painting",
-    "names": {
-      "en": "Painting",
-      "es": "Pintura",
-      "ko": "도장"
-    },
+    "catalogCategory": "Painting",
+    "names": { "en": "Painting", "es": "Pintura", "ko": "도장" },
     "lineType": "perArea"
   },
   {
     "id": "pest_control",
-    "names": {
-      "en": "Pest control",
-      "es": "Control de plagas",
-      "ko": "해충 방제"
-    },
+    "catalogCategory": "Pest",
+    "names": { "en": "Pest control", "es": "Control de plagas", "ko": "해충 방제" },
     "lineType": "perVisit"
   },
   {
     "id": "gardening",
-    "names": {
-      "en": "Gardening",
-      "es": "Jardinería",
-      "ko": "정원 관리"
-    },
+    "catalogCategory": "Gardening",
+    "names": { "en": "Gardening", "es": "Jardinería", "ko": "정원 관리" },
     "lineType": "perVisit"
   },
   {
     "id": "flooring",
-    "names": {
-      "en": "Flooring",
-      "es": "Pisos",
-      "ko": "바닥 시공"
-    },
+    "catalogCategory": "Flooring",
+    "names": { "en": "Flooring", "es": "Pisos", "ko": "바닥 시공" },
     "lineType": "perArea"
   },
   {
     "id": "concrete",
-    "names": {
-      "en": "Concrete",
-      "es": "Concreto (cocheras y patios)",
-      "ko": "콘크리트"
-    },
+    "catalogCategory": "Concrete",
+    "names": { "en": "Concrete", "es": "Concreto (cocheras y patios)", "ko": "콘크리트" },
     "lineType": "perArea"
+  },
+  {
+    "id": "carpentry",
+    "catalogCategory": "Carpentry",
+    "names": { "en": "Carpentry", "es": "Carpintería", "ko": "목공" },
+    "lineType": "perItem"
+  },
+  {
+    "id": "appliance",
+    "catalogCategory": "Appliance",
+    "names": { "en": "Appliance repair", "es": "Electrodomésticos", "ko": "가전 수리" },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "roofing",
+    "catalogCategory": "Roofing",
+    "names": { "en": "Roofing", "es": "Techos", "ko": "지붕" },
+    "lineType": "perArea"
+  },
+  {
+    "id": "handyman",
+    "catalogCategory": "Handyman",
+    "names": { "en": "Handyman", "es": "Manitas", "ko": "생활 수리" },
+    "lineType": "perVisit"
+  },
+  {
+    "id": "locksmith",
+    "catalogCategory": "Locksmith",
+    "names": { "en": "Locksmith", "es": "Cerrajería", "ko": "자물쇠" },
+    "lineType": "perItem"
+  },
+  {
+    "id": "cleaning",
+    "catalogCategory": "Cleaning",
+    "names": { "en": "Cleaning", "es": "Limpieza", "ko": "청소" },
+    "lineType": "perVisit"
   }
 ]

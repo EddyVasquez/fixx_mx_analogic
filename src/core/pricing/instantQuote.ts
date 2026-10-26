@@ -6,9 +6,10 @@
 export type UrgencyLevel = "STANDARD" | "MEDIUM" | "HIGH" | "EMERGENCY";
 export type UiUrgency = "standard" | "medium" | "high";
 
-export interface CatalogItem { id: string; category: string; name: string; spanish: string | null; spec: string | null; unit: string | null; store: string | null; price: number | null; iva: string | null; checkDate: string | null; flag: string }
-export interface CatalogLine { id: string; tier: string; itemId: string; qty: number; basis: string; unitPrice: number | null; type: "base" | "as-needed" | "flagged" | "reference"; flag: string }
-export interface CatalogTask { id: string; category: string; job: string; tiers: string[]; lines: CatalogLine[] }
+export interface CatalogItem { id: string; category: string; name: string; spanish: string | null; spec: string | null; unit: string | null; store: string | null; price: number | null; iva: string | null; checkDate: string | null; flag: string; homeownerChoice?: boolean }
+export type ReviewTrigger = "base" | "as-needed" | "none";
+export interface CatalogLine { id: string; tier: string; itemId: string; qty: number; basis: string; unitPrice: number | null; type: "base" | "as-needed" | "flagged" | "reference"; flag: string; reviewTrigger?: ReviewTrigger }
+export interface CatalogTask { id: string; category: string; job: string; jobEs?: string; jobKo?: string; tiers: string[]; lines: CatalogLine[] }
 export interface CatalogLabor {
   key: string; taskId: string; tierScope: string; trade: string; basis: string; rateLow: number | null; rateTypical: number | null; rateHigh: number | null;
   refQty: number | null; typicalRef: number | null; confidence: string; flag: string; checkedDate: string | null; estJobDays: number | null; dailyMin: number | null; floor: number | null;
@@ -42,6 +43,8 @@ export interface TaskQuote {
   /** Lines without a price: "priced on site". */
   unpriced: LineOut[];
   humanReview: { kind: "line" | "labor"; ref: string; reason: string }[];
+  /** True when a regulated labor line, or a selected regulated add-on, blocks booking until a person approves. */
+  needsHumanReview: boolean;
   warnings: string[];
   diagnosisFee: number | null;
   /** Exact total; round only for display. */
@@ -49,7 +52,7 @@ export interface TaskQuote {
 }
 
 export const round2 = (n: number): number => Math.round((n + Number.EPSILON) * 100) / 100;
-/** Display rounding: half up to whole MXN. The exact value is what gets stored. */
+/** Half up to a whole peso. Customer-facing prices use round2 so centavos stay visible. */
 export const roundHalfUp = (n: number): number => Math.floor(n + 0.5);
 
 /** UI shows Standard / Medium / High; Emergency is a toggle inside High. Always send the four-value level to pricing. */
@@ -79,11 +82,43 @@ export function priceFreshness(checkDate: string | null, now: Date): Freshness {
 }
 
 const PENDING_FLAGS = new Set(["FLAGGED-human review", "REFERENCE ONLY-COFEPRIS", "structural"]);
-const isPending = (l: CatalogLine) => l.type === "flagged" || PENDING_FLAGS.has(l.flag);
-const isChoice = (l: CatalogLine) => l.type === "reference" && !isPending(l);
-/** ASSUMPTION: lines priced as a kit or prorated consumable scale linearly with scope; every other line is bought in whole units. */
-const isProrated = (basis: string) => /line total|prorated|per m/i.test(basis);
-const scaledQty = (l: CatalogLine, scale: number) => (scale === 1 ? l.qty : isProrated(l.basis) ? l.qty * scale : Math.ceil(l.qty * scale - 1e-9));
+/** Reference and flagged lines stay out of the homeowner-choice range. Review itself follows Review_Trigger. */
+const heldOutOfChoice = (l: CatalogLine) => l.type === "flagged" || PENDING_FLAGS.has(l.flag);
+const isChoice = (l: CatalogLine) => l.type === "reference" && !heldOutOfChoice(l);
+/** Base triggers review immediately. As-needed triggers only when the homeowner selects that line. */
+function triggersReview(l: CatalogLine, selectedIds: ReadonlySet<string>): boolean {
+  if (l.type === "reference") return false;
+  if (l.reviewTrigger === "base") return true;
+  if (l.reviewTrigger === "as-needed") return selectedIds.has(l.id);
+  return false;
+}
+/** Add-on labor from Labor_Rates (for example oven, fridge, balcony, pet stain). The visit wage floor is not applied again. */
+function addonLaborAmount(cat: Catalog, taskId: string, basis: string): number {
+  const haystack = basis.toLowerCase();
+  for (const lab of Object.values(cat.labor)) {
+    if (lab.taskId !== taskId || !/^add-on\b/i.test(lab.tierScope)) continue;
+    const tokens = lab.tierScope.replace(/^add-on\s*/i, "").toLowerCase().split(/[^a-z0-9]+/).filter((t) => t.length >= 4);
+    if (tokens.length > 0 && tokens.every((t) => haystack.includes(t))) {
+      if (lab.typicalRef != null) return lab.typicalRef;
+      if (lab.rateTypical != null && lab.refQty != null) return lab.rateTypical * lab.refQty;
+    }
+  }
+  return 0;
+}
+/** A fractional catalog quantity is already a share of a pack, so it scales linearly. Whole packs round up. */
+const isProrated = (l: CatalogLine) => !Number.isInteger(l.qty) || /line total|prorated|per m/i.test(l.basis);
+const scaledQty = (l: CatalogLine, scale: number) => (isProrated(l) ? l.qty * scale : scale === 1 ? l.qty : Math.ceil(l.qty * scale - 1e-9));
+
+/** Covering the homeowner buys separately. The workbook keeps these off the task lines and out of the total. */
+function choiceItems(cat: Catalog, task: CatalogTask): CatalogItem[] {
+  const pool = Object.values(cat.items).filter((i) => i.homeownerChoice && i.category === task.category);
+  const job = task.job.toLowerCase();
+  const tile = pool.filter((i) => /tile/i.test(i.name));
+  const floating = pool.filter((i) => /laminate|spc/i.test(i.name));
+  if (/tile/.test(job) && tile.length) return tile;
+  if (/floating|laminate|spc/.test(job) && floating.length) return floating;
+  return [];
+}
 
 function lineOut(cat: Catalog, l: CatalogLine, scale: number): LineOut {
   const qty = scaledQty(l, scale);
@@ -110,7 +145,7 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const blank = (reasons: string[], extra: Partial<TaskQuote> = {}): TaskQuote => ({
     catalogVersion: cat.version, taskId, tier: input.tier, urgency: input.urgency, multiplier: mult, status: "QUOTE_ON_SITE", reasons, scale: 1, estJobDays: 0, trade: "", laborKey: "", laborFlag: "none",
     materials: 0, marketLabor: 0, floor: 0, laborBasis: 0, labor: 0, payout: 0, asNeeded: { options: [], selected: [], selectedTotal: 0 }, pendingReview: [], homeownerChoice: [],
-    homeownerChoiceRange: null, unpriced: [], humanReview: [], warnings: [], diagnosisFee: null, total: 0, displayTotal: 0, ...extra
+    homeownerChoiceRange: null, unpriced: [], humanReview: [], needsHumanReview: false, warnings: [], diagnosisFee: null, total: 0, displayTotal: 0, ...extra
   });
   if (!task) return blank(["unknown-task"]);
   if (!task.tiers.includes(input.tier)) return blank(["tier-not-offered"]);
@@ -123,6 +158,13 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const qtyForLabor = input.scopeQty ?? lab.refQty;
   const lines = task.lines.filter((l) => l.tier === input.tier);
   const reasons: string[] = [], warnings: string[] = [], humanReview: TaskQuote["humanReview"] = [];
+  const wanted = new Set(input.asNeededLineIds ?? []);
+  const selectable = lines.filter((l) => l.type === "as-needed" || l.reviewTrigger === "as-needed");
+  const unknownPick = [...wanted].filter((id) => !selectable.some((l) => l.id === id));
+  if (unknownPick.length) throw new RangeError(`not an as-needed line of this task and tier: ${unknownPick.join(", ")}`);
+  const asNeededOptions = lines.filter((l) => l.type === "as-needed").map((l) => lineOut(cat, l, scale));
+  const selected = asNeededOptions.filter((l) => wanted.has(l.lineId) && l.cost != null);
+  const addonLabor = round2(selected.reduce((s, l) => s + addonLaborAmount(cat, taskId, l.basis), 0));
 
   // materials: base lines only
   const base = lines.filter((l) => l.type === "base");
@@ -137,25 +179,23 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   }
   const materials = round2(base.reduce((s, l) => s + (l.unitPrice == null ? 0 : scaledQty(l, scale) * l.unitPrice), 0));
 
-  // labor
+  // labor. Add-on labor (oven, fridge, balcony, pet stain) is market labor. Urgency multiplies it. The wage floor stays the visit floor.
   const estDays = (lab.estJobDays ?? 1) * scale;
   const dailyMin = lab.dailyMin ?? 0;
   const floor = round2(dailyMin * Math.max(1, Math.ceil(estDays - 1e-9)));
-  const marketLabor = round2(lab.rateTypical * qtyForLabor);
+  const marketLabor = round2(lab.rateTypical * qtyForLabor + addonLabor);
   const laborBasis = Math.max(marketLabor, floor);
   const labor = round2(laborBasis * mult);
   if (lab.flag === "regulated") humanReview.push({ kind: "labor", ref: key, reason: "regulated" });
 
-  // separate lists
-  const pendingReview = lines.filter(isPending).map((l) => lineOut(cat, l, scale));
+  // separate lists. Flagged cleaning lines (work at height, mold) are reviewTrigger "as-needed": pending only when selected.
+  const pendingReview = lines.filter((l) => triggersReview(l, wanted)).map((l) => lineOut(cat, l, scale));
   pendingReview.forEach((l) => humanReview.push({ kind: "line", ref: l.lineId, reason: l.flag }));
-  const choice = lines.filter(isChoice).map((l) => lineOut(cat, l, scale));
+  const choice = [
+    ...lines.filter(isChoice).map((l) => lineOut(cat, l, scale)),
+    ...choiceItems(cat, task).map((i): LineOut => ({ lineId: i.id, itemId: i.id, item: i.name, qty: 1, unitPrice: i.price, cost: i.price, basis: "homeowner reference", flag: i.flag }))
+  ];
   const choicePrices = choice.filter((l) => l.unitPrice != null).map((l) => l.unitPrice as number);
-  const asNeededOptions = lines.filter((l) => l.type === "as-needed").map((l) => lineOut(cat, l, scale));
-  const wanted = new Set(input.asNeededLineIds ?? []);
-  const unknownPick = [...wanted].filter((id) => !asNeededOptions.some((l) => l.lineId === id));
-  if (unknownPick.length) throw new RangeError(`not an as-needed line of this task and tier: ${unknownPick.join(", ")}`);
-  const selected = asNeededOptions.filter((l) => wanted.has(l.lineId) && l.cost != null);
   const unpriced = [...lines.filter((l) => l.type !== "base" && l.unitPrice == null).map((l) => lineOut(cat, l, scale)), ...unpricedBase.map((l) => lineOut(cat, l, scale))];
 
   const selectedTotal = round2(selected.reduce((s, l) => s + (l.cost ?? 0), 0));
@@ -172,7 +212,7 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
     materials, marketLabor, floor, laborBasis, labor, payout: labor,
     asNeeded: { options: asNeededOptions, selected, selectedTotal }, pendingReview, homeownerChoice: choice,
     homeownerChoiceRange: choicePrices.length ? { min: Math.min(...choicePrices), max: Math.max(...choicePrices) } : null,
-    unpriced, humanReview, warnings, diagnosisFee, total, displayTotal: roundHalfUp(total)
+    unpriced, humanReview, needsHumanReview: humanReview.length > 0, warnings, diagnosisFee, total, displayTotal: round2(total)
   };
 }
 
@@ -181,6 +221,7 @@ export interface VisitQuote {
   jobs: { taskId: string; tier: string; materials: number; marketLabor: number; labor: number; payout: number }[];
   marketTotal: number; visitFloor: number; visitLaborBasis: number; visitLabor: number;
   materials: number; asNeeded: number; diagnosisCredit: number; total: number; displayTotal: number;
+  needsHumanReview: boolean;
 }
 /**
  * Multi-job visit: the wage floor applies per visit day, not per task.
@@ -193,7 +234,7 @@ export function quoteVisit(
   const mult = multiplierFor(cat, urgency);
   const parts = jobs.map((j) => quoteTask(cat, { ...j, urgency: "STANDARD" }, opts.now ? { now: opts.now } : {}));
   const bad = parts.find((p) => p.status !== "FIXED");
-  const empty: VisitQuote = { catalogVersion: cat.version, urgency, multiplier: mult, status: bad?.status ?? "QUOTE_ON_SITE", reasons: bad?.reasons ?? ["no-jobs"], jobs: [], marketTotal: 0, visitFloor: 0, visitLaborBasis: 0, visitLabor: 0, materials: 0, asNeeded: 0, diagnosisCredit: 0, total: 0, displayTotal: 0 };
+  const empty: VisitQuote = { catalogVersion: cat.version, urgency, multiplier: mult, status: bad?.status ?? "QUOTE_ON_SITE", reasons: bad?.reasons ?? ["no-jobs"], jobs: [], marketTotal: 0, visitFloor: 0, visitLaborBasis: 0, visitLabor: 0, materials: 0, asNeeded: 0, diagnosisCredit: 0, total: 0, displayTotal: 0, needsHumanReview: parts.some((p) => p.needsHumanReview) };
   if (bad || parts.length === 0) return empty;
 
   const marketTotal = round2(parts.reduce((s, p) => s + p.marketLabor, 0));
@@ -216,7 +257,8 @@ export function quoteVisit(
   return {
     catalogVersion: cat.version, urgency, multiplier: mult, status: "FIXED", reasons: [],
     jobs: parts.map((p, i) => ({ taskId: p.taskId, tier: p.tier, materials: p.materials, marketLabor: p.marketLabor, labor: raw[i] ?? 0, payout: raw[i] ?? 0 })),
-    marketTotal, visitFloor, visitLaborBasis, visitLabor, materials, asNeeded, diagnosisCredit, total, displayTotal: roundHalfUp(total)
+    marketTotal, visitFloor, visitLaborBasis, visitLabor, materials, asNeeded, diagnosisCredit, total, displayTotal: round2(total),
+    needsHumanReview: parts.some((p) => p.needsHumanReview)
   };
 }
 
