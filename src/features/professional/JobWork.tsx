@@ -15,6 +15,7 @@ import { HlDate } from "@/ui/Highlights";
 import { JobStatusBar } from "@/features/shared/JobStatusBar";
 import { useMoney } from "@/features/shared/Money";
 import { CaseCard } from "@/features/customer/CaseCard";
+import { CloseWindowAction } from "@/features/customer/CloseWindowAction";
 import { psession } from "./session";
 
 type Send = (e: { type: string } & Record<string, unknown>) => void;
@@ -136,6 +137,7 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
         <>
           <p>{t("work.waitWindow")}</p>
           <p className="font-bold">{t("work.payout", { amount: payout })}</p>
+          {state === "issueWindow" && <CloseWindowAction rt={rt} jobId={JOB_ID} />}
         </>
       )}
       {(state === "paymentReleased" || state === "rated") && payoutReleased && <p className="text-xl font-bold">{t("work.payoutReleased", { amount: money(released ?? round2(ctx.total * ctx.payoutRatio)) })}</p>}

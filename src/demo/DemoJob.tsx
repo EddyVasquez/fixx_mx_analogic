@@ -8,6 +8,7 @@ import { JobStatusBar } from "@/features/shared/JobStatusBar";
 import { Button } from "@/ui/Button";
 import { languageNames, localeFor } from "@/i18n";
 import { runtime, useRuntime } from "./runtime";
+import { closeIssueWindow } from "@/features/customer/closeIssueWindow";
 
 const JOB = "job-1";
 const LINES = [{ id: "prep", amount: 600 }, { id: "mat", amount: 1400 }, { id: "paint", amount: 2200 }];
@@ -33,6 +34,11 @@ export function DemoJob() {
     setError(null);
   };
   const fire = (type: string) => {
+    if (type === "WINDOW_CLOSED") {
+      const res = closeIssueWindow(rt, JOB);
+      setError(res.ok ? null : t("timeline.closeFailed"));
+      return;
+    }
     const ctx = actor?.snap.ctx as JobCtx | undefined;
     const now = rt.clock.now();
     const payloads: Record<string, object> = {
@@ -85,11 +91,18 @@ export function DemoJob() {
       {state && (
         <div>
           <h3 className="mb-2 text-sm font-semibold">{t("demoJob.next")}</h3>
-          <div className="flex flex-wrap gap-2">
-            {allowedEvents(jobMachine, state).map((type) => (
-              <Button key={type} variant="secondary" className="text-sm" onClick={() => fire(type)}><code>{type}</code></Button>
-            ))}
-          </div>
+          {allowedEvents(jobMachine, state).length === 0 ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-inkSoft">{t("demoJob.finished")}</p>
+              <Button onClick={start}>{t("btn.startOver")}</Button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {allowedEvents(jobMachine, state).map((type) => (
+                <Button key={type} variant="secondary" className="text-sm" onClick={() => fire(type)}><code>{type}</code></Button>
+              ))}
+            </div>
+          )}
           {error && <p role="alert" className="mt-2 text-sm text-danger">{error}</p>}
         </div>
       )}

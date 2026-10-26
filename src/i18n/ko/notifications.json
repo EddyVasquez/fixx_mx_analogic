@@ -509,6 +509,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "demoJob.finished": {
+    "text": "이 데모 작업이 끝났어요. 다시 하려면 처음부터 시작하세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "demoJob.devNote": {
     "text": "개발용 도구예요. 이벤트 이름은 코드로 표시돼요.",
     "status": "draft",

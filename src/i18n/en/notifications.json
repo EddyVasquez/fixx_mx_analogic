@@ -407,6 +407,10 @@
     "text": "No deadlines yet.",
     "status": "draft"
   },
+  "demoJob.finished": {
+    "text": "This demo job is finished. Start over to run it again.",
+    "status": "draft"
+  },
   "demoJob.devNote": {
     "text": "Developer tool: event names are shown as code.",
     "status": "draft"
