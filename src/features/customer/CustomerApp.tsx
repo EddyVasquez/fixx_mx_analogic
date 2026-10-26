@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { config } from "@/core/config/fixx.config";
 import { recommend } from "@/core/matching/recommend";
-import { buildQuote } from "@/core/pricing/quote";
+import { buildQuote, humanReviewForCategory } from "@/core/pricing/quote";
 import { bandFor, manualReviewFollowUp, travelFeeFor } from "@/core/rules";
 import { formatDateTime } from "@/core/clock/clock";
 import { localeFor } from "@/i18n";
@@ -65,7 +65,7 @@ function RequestFlow() {
     if (pre === "review") {
       return <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
         rt.languages.customer = lang;
-        rt.spawn(JOB_ID, "job", jobMachine, newJobCtx(), { categoryId: draft.categoryId });
+        rt.spawn(JOB_ID, "job", jobMachine, newJobCtx({ needsReview: humanReviewForCategory(draft.categoryId).length > 0 }), { categoryId: draft.categoryId });
         send({ type: draft.zoneId === "outside" ? "OUT_OF_AREA" : "ESTIMATE_READY" });
         force();
       }} />;
@@ -126,8 +126,10 @@ function RequestFlow() {
           <ChatView jobId={JOB_ID} role="customer" />
         </div>
       );
+    case "pendingReview":
     case "quoteSent":
       return <QuoteView ctx={ctx} draft={draft} professionalName={pro?.name ?? ""} now={rt.clock.now()}
+        awaitingApproval={state === "pendingReview"}
         slotHours={session.slotHours} method={session.method} onSlot={(h) => update({ slotHours: h })} onMethod={(m) => update({ method: m })}
         onAccept={(jobStart) => send({ type: "ACCEPT_QUOTE", method: session.method, jobStart })} />;
     case "awaitingDeposit":

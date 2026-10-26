@@ -693,5 +693,25 @@
     "text": "문제 없으면 계속",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "review.pending.title": {
+    "text": "검토 대기 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "review.pending.body": {
+    "text": "예약하기 전에 FIXX 전문가가 이 작업을 검토합니다. 승인되면 알려 드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.waitingApproval": {
+    "text": "승인 대기 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "state.pendingReview": {
+    "text": "검토 대기 중",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }

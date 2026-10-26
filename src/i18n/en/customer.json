@@ -554,5 +554,21 @@
   "btn.closeWindow": {
     "text": "No issues, continue",
     "status": "draft"
+  },
+  "review.pending.title": {
+    "text": "Pending review",
+    "status": "draft"
+  },
+  "review.pending.body": {
+    "text": "A FIXX specialist will check this job before you can book it. We'll let you know when it's approved.",
+    "status": "draft"
+  },
+  "btn.waitingApproval": {
+    "text": "Waiting for approval",
+    "status": "draft"
+  },
+  "state.pendingReview": {
+    "text": "Pending review",
+    "status": "draft"
   }
 }

@@ -554,5 +554,21 @@
   "btn.closeWindow": {
     "text": "Sin problema, seguir",
     "status": "draft"
+  },
+  "review.pending.title": {
+    "text": "En revisión",
+    "status": "draft"
+  },
+  "review.pending.body": {
+    "text": "Un especialista de FIXX revisará este trabajo antes de que puedas reservarlo. Te avisaremos cuando esté aprobado.",
+    "status": "draft"
+  },
+  "btn.waitingApproval": {
+    "text": "Esperando aprobación",
+    "status": "draft"
+  },
+  "state.pendingReview": {
+    "text": "En revisión",
+    "status": "draft"
   }
 }

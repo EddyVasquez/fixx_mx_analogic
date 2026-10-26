@@ -35,6 +35,10 @@
     "text": "Tu cotización está lista para revisar.",
     "status": "draft"
   },
+  "notif.quote.pendingReview": {
+    "text": "Un especialista debe aprobar este trabajo antes de que se pueda reservar.",
+    "status": "draft"
+  },
   "notif.quote.accepted": {
     "text": "La cotización fue aceptada.",
     "status": "draft"

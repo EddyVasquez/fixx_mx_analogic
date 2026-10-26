@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { addHours } from "../src/core/rules";
 import {
-  jobMachine, newJobCtx, createSnapshot, send, statusFor, cancelLowersQualityScore, allowedEvents,
+  jobMachine, newJobCtx, createSnapshot, send, statusFor, cancelLowersQualityScore, allowedEvents, adminJobEvents,
   paymentMachine, rescheduleMachine, newReschedule, caseMachine, newCase, warrantyMachine, newWarranty,
   verificationMachine, newVerification, supportMachine, activeHandler,
   type JobEvent, type JobState, type JobCtx, type Snapshot, type Effect
@@ -229,6 +229,25 @@ describe("job: issue reports (scenario 9)", () => {
   });
   it("sends the 6-hour reminder", () => {
     expect(hasEffect(effectsOf(issueWindow(), { type: "ISSUE_REMINDER" }, at(93)), "notify")).toBe(true);
+  });
+});
+
+describe("job: regulated work stays pending until an admin approves", () => {
+  it("refuses booking and leaves only through the admin approve action", () => {
+    let s = run(createSnapshot(jobMachine, newJobCtx({ needsReview: true })),
+      [{ type: "ESTIMATE_READY" }], [{ type: "RECOMMENDATIONS_READY" }],
+      [{ type: "SELECT_PROFESSIONAL", professionalId: "p2" }]);
+    const fx = effectsOf(s, { type: "SEND_QUOTE", total: 4200, travelFee: 150, payoutRatio: 0.8, lines });
+    expect(fx.some((f) => f.type === "notify" && f.template === "quote.pendingReview" && f.audience.includes("admin"))).toBe(true);
+    s = run(s, [{ type: "SEND_QUOTE", total: 4200, travelFee: 150, payoutRatio: 0.8, lines }]);
+    expect(s.state).toBe("pendingReview");
+    expect(statusFor(s.state)).toBeNull();
+    expect(allowedEvents(jobMachine, "pendingReview")).toEqual(["PENDING_REVIEW_APPROVED"]);
+    expect(adminJobEvents).toContain("PENDING_REVIEW_APPROVED");
+    const blocked = send(jobMachine, s, { type: "ACCEPT_QUOTE", method: "card", jobStart: at(72) }, t0);
+    expect(blocked.ok).toBe(false);
+    expect(blocked.snapshot.state).toBe("pendingReview");
+    expect(run(s, [{ type: "PENDING_REVIEW_APPROVED" }]).state).toBe("quoteSent");
   });
 });
 

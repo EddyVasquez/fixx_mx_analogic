@@ -35,6 +35,10 @@
     "text": "Your quote is ready to review.",
     "status": "draft"
   },
+  "notif.quote.pendingReview": {
+    "text": "This job needs a specialist to approve it before it can be booked.",
+    "status": "draft"
+  },
   "notif.quote.accepted": {
     "text": "The quote was accepted.",
     "status": "draft"

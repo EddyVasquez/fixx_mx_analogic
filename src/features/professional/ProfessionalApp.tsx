@@ -96,6 +96,12 @@ export function ProfessionalApp() {
         mine && jstate && jctx && me ? (
           <>
             {jstate === "professionalSelected" && <JobRequest draft={session.draft} me={me} customerLang={customerLang} viewerLang={lang} send={sendJ} />}
+            {jstate === "pendingReview" && (
+              <div className="flex min-w-0 flex-col gap-2">
+                <p className="font-bold">{t("review.pending.title")}</p>
+                <p className="break-words">{t("review.pending.body")}</p>
+              </div>
+            )}
             {jstate === "quoteSent" && (
               <div className="flex flex-col gap-3">
                 {status && <JobStatusBar status={status} />}

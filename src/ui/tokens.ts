@@ -14,7 +14,9 @@ export const colors = {
   hlOk: "#A0A0A0",      // highlight: needs your OK
   danger: "#1A1A1A",    // errors are marked with weight and borders, not hue
   warnBg: "#E6E6E6",    // demo-value marker
-  warnInk: "#2E2E2E"
+  warnInk: "#2E2E2E",
+  warnAmberBg: "#FFE8A3",  // pending-review banner
+  warnAmberInk: "#3F2A00"
 } as const;
 
 export const textPairs: ReadonlyArray<readonly [string, keyof typeof colors, keyof typeof colors]> = [
@@ -28,7 +30,8 @@ export const textPairs: ReadonlyArray<readonly [string, keyof typeof colors, key
   ["secondary on mist", "inkSoft", "mist"],
   ["secondary on panel", "inkSoft", "panel"],
   ["error on paper", "danger", "paper"],
-  ["demo marker", "warnInk", "warnBg"]
+  ["demo marker", "warnInk", "warnBg"],
+  ["warning banner", "warnAmberInk", "warnAmberBg"]
 ];
 
 export const spacing = { touch: "48px" } as const; // minimum touch target

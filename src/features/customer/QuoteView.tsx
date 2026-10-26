@@ -13,9 +13,13 @@ import { useMoney } from "@/features/shared/Money";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { categories } from "./data";
 import type { Draft } from "./session";
+import { PendingReviewBanner } from "./PendingReviewBanner";
 
 const Row = ({ left, right }: { left: ReactNode; right: ReactNode }) => (
-  <div className="flex items-center justify-between gap-3 border-b border-inkSoft/40 py-3"><div>{left}</div><div className="text-right">{right}</div></div>
+  <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-inkSoft/40 py-3">
+    <div className="min-w-0 break-words">{left}</div>
+    <div className="min-w-0 break-words text-right">{right}</div>
+  </div>
 );
 const Note = ({ children }: { children: ReactNode }) => <p className="border-b border-inkSoft/40 pb-3 text-sm">{children}</p>;
 
@@ -24,8 +28,10 @@ export function QuoteView(props: {
   ctx: JobCtx; draft: Draft; professionalName: string; now: Date;
   slotHours: number; method: PayMethod; onSlot: (h: number) => void; onMethod: (m: PayMethod) => void;
   onAccept: (jobStart: Date) => void;
+  awaitingApproval?: boolean;
 }) {
   const { ctx, draft, professionalName, now, slotHours, method } = props;
+  const awaitingApproval = props.awaitingApproval === true;
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const money = useMoney();
@@ -49,7 +55,8 @@ export function QuoteView(props: {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4">
+      {awaitingApproval && <PendingReviewBanner />}
       <h2 className="text-2xl font-bold">{t("quote.title")}</h2>
       <section aria-label={t("quote.title")} className="rounded-3xl bg-panel px-4 py-1 text-ink">
         <Row left={<Label>{t("quote.label.job")}</Label>} right={category?.names[lang]} />
@@ -96,7 +103,14 @@ export function QuoteView(props: {
       </label>
       <p className="text-sm text-inkSoft">{t("sign.nonLegal")}</p>
       {error && <ErrorText>{t("sign.error")}</ErrorText>}
-      <Button onClick={accept}>{t("btn.acceptQuote")}</Button>
+      <Button
+        aria-disabled={awaitingApproval}
+        aria-describedby={awaitingApproval ? "pending-review-banner" : undefined}
+        className={awaitingApproval ? "opacity-80" : ""}
+        onClick={() => { if (awaitingApproval) return; accept(); }}
+      >
+        {awaitingApproval ? t("btn.waitingApproval") : t("btn.acceptQuote")}
+      </Button>
     </div>
   );
 }

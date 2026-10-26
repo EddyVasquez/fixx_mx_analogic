@@ -37,6 +37,7 @@ export function RequestsSection({ rt, lang }: P) {
     <div className="flex flex-col gap-3">
       <Table caption={t("admin.s.requests")} head={[t("admin.col.category"), t("admin.col.area"), t("admin.col.urgent"), t("admin.col.state")]}
         rows={job && state ? [[catName(d.categoryId, lang), d.zoneId === "outside" ? t("request.outside") : zoneNames[d.zoneId], d.emergency ? t("admin.yes") : t("admin.no"), stateLabel(t, state)]] : []} />
+      {job && state === "pendingReview" && <ApprovePending rt={rt} />}
       {job && state === "manualReview" && (
         <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
           <p className="font-semibold">{t("admin.followUp", { when: when(manualReviewFollowUp(new Date(job.snap.history[0]?.at ?? rt.clock.now().toISOString()))) })}</p>
@@ -73,6 +74,16 @@ export function ProfessionalsSection({ rt, lang }: P) {
   return <Table caption={t("admin.s.professionals")} head={[t("admin.col.name"), t("admin.col.area"), t("admin.col.trades"), t("admin.col.level"), t("admin.col.score"), t("admin.col.verification"), t("admin.col.penalties"), t("admin.col.rating")]} rows={rows} />;
 }
 
+function ApprovePending({ rt }: { rt: DemoRuntime }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
+      <p className="break-words">{t("admin.pendingReview")}</p>
+      <Button onClick={() => rt.dispatch(JOB_ID, { type: "PENDING_REVIEW_APPROVED" })}>{t("admin.approvePending")}</Button>
+    </div>
+  );
+}
+
 function VerifyActions({ rt, id }: { rt: DemoRuntime; id: string }) {
   const { t } = useTranslation();
   const [reason, setReason] = useState("blurry");
@@ -107,9 +118,14 @@ export function JobsSection({ rt, lang }: P) {
   if (!job) return <Table caption={t("admin.s.jobs")} head={[]} rows={[]} />;
   const c = job.snap.ctx as JobCtx;
   const st = job.snap.state as JobState;
-  return <Table caption={t("admin.s.jobs")}
-    head={[t("admin.col.category"), t("admin.col.professional"), t("admin.col.state"), t("admin.col.method"), t("admin.col.total"), t("admin.col.payout"), t("admin.col.date")]}
-    rows={[[catName(session.draft.categoryId, lang), proName(c.professionalId), stateLabel(t, st), c.method ? t(`method.${c.method}`) : "—", c.total ? money(c.total) : "—", c.total ? money(round2(c.total * c.payoutRatio)) : "—", c.total ? when(c.jobStart) : "—"]]} />;
+  return (
+    <div className="flex flex-col gap-3">
+      <Table caption={t("admin.s.jobs")}
+        head={[t("admin.col.category"), t("admin.col.professional"), t("admin.col.state"), t("admin.col.method"), t("admin.col.total"), t("admin.col.payout"), t("admin.col.date")]}
+        rows={[[catName(session.draft.categoryId, lang), proName(c.professionalId), stateLabel(t, st), c.method ? t(`method.${c.method}`) : "—", c.total ? money(c.total) : "—", c.total ? money(round2(c.total * c.payoutRatio)) : "—", c.total ? when(c.jobStart) : "—"]]} />
+      {st === "pendingReview" && <ApprovePending rt={rt} />}
+    </div>
+  );
 }
 
 export function QuotesSection({ rt, lang }: P) {
