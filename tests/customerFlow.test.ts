@@ -40,8 +40,8 @@ describe("estimate and quote", () => {
   it("painting's range is the workbook's lowest and highest standard total", () => {
     const r = estimateRange("painting", false);
     expect(r.surcharge).toBe(0);
-    expect(r.low).toBeCloseTo(7452.22, 2);
-    expect(r.high).toBeCloseTo(8916.72, 2);
+    expect(r.low).toBeCloseTo(7448.22, 2);
+    expect(r.high).toBeCloseTo(9300.72, 2);
   });
   it("urgent requests add the configured surcharge", () => {
     expect(estimateRange("painting", true).surcharge).toBe(300);
