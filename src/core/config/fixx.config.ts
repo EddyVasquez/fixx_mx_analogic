@@ -15,7 +15,8 @@ export const config = {
   // TODO(decision): warranty period per category (days). Never hard-code "90 days" in UI.
   warrantyDaysByCategory: {
     plumbing: 60, electrical: 90, hvac: 60, painting: 30,
-    pest_control: 30, gardening: 30, flooring: 90, concrete: 90
+    pest_control: 30, gardening: 30, flooring: 90, concrete: 90,
+    carpentry: 90, appliance: 30, roofing: 90, handyman: 30, locksmith: 30, cleaning: 30
   } as Record<string, number>,
   // TODO(decision): business hours for human Agents (Mon-Sat).
   businessHours: { days: [1, 2, 3, 4, 5, 6], start: "09:00", end: "18:00" },
@@ -42,11 +43,6 @@ export const config = {
   // TODO(decision): Mexican public holidays for business-day calc (seed 2026).
   holidays2026: ["2026-01-01", "2026-02-02", "2026-03-16", "2026-05-01", "2026-09-16", "2026-11-16", "2026-12-25"],
 
-  // TODO(decision): FIXX estimate ranges per category (MXN). Painting a living room 3,500-5,000 is the brief's example.
-  estimateRangesMXN: {
-    plumbing: [800, 2500], electrical: [900, 3000], hvac: [1200, 4500], painting: [3500, 5000],
-    pest_control: [700, 1800], gardening: [600, 2000], flooring: [4000, 12000], concrete: [6000, 20000]
-  } as Record<string, [number, number]>,
   // TODO(decision G7): recommendation scoring weights and limits.
   matching: { sameZone: 30, nearby: 15, language: 25, qualityPerPoint: 0.3, topQualityScore: 90, maxRecommendations: 3 },
   // TODO(decision): offered time slots, in hours from now (demo).

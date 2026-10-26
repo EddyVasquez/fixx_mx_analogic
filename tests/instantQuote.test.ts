@@ -14,8 +14,9 @@ const URG: UrgencyLevel[] = ["STANDARD", "MEDIUM", "HIGH", "EMERGENCY"];
 const q = (taskId: string, tier: string, urgency: UrgencyLevel, extra: object = {}) => quoteTask(cat, { taskId, tier, urgency, ...extra });
 
 describe("acceptance: every Quote_Builder row", () => {
-  it("has 420 reference rows (34 tasks x tiers x 4 urgency levels)", () => {
-    expect(qb).toHaveLength(420);
+  it("has one reference row for every task, tier and urgency, including the six added trades", () => {
+    expect(qb).toHaveLength(504);
+    expect(new Set(qb.map((r) => r.taskId)).size).toBe(41);
   });
   it("matches the app total, labor, materials and payout within 0.01 at reference scope", () => {
     const wrong = qb.filter((r) => { const x = q(r.taskId, r.tier, r.urgency); return !(x.status === "FIXED" && near(x.total, r.total) && near(x.labor, r.labor) && near(x.materials, r.materials) && near(x.payout, r.payout)); });
@@ -25,20 +26,20 @@ describe("acceptance: every Quote_Builder row", () => {
 
 describe("spec examples", () => {
   it("PLM-001 toilet repair (floor 349.84 is below typical labor 800)", () => {
-    const table: Record<string, number[]> = { Budget: [1113, 1233, 1353, 1513], Standard: [1320, 1440, 1560, 1720], Premium: [1429, 1549, 1669, 1829] };
-    for (const [tier, totals] of Object.entries(table)) URG.forEach((u, i) => expect(q("FIXX-PLM-001", tier, u).total).toBe(totals[i]));
+    const table: Record<string, number[]> = { Budget: [959.1, 1079.1, 1199.1, 1359.1], Standard: [1145.1, 1265.1, 1385.1, 1545.1], Premium: [1361.1, 1481.1, 1601.1, 1761.1] };
+    for (const [tier, totals] of Object.entries(table)) URG.forEach((u, i) => expect(near(q("FIXX-PLM-001", tier, u).total, totals[i]!)).toBe(true));
     expect(URG.map((u) => q("FIXX-PLM-001", "Budget", u).payout)).toEqual([800, 920, 1040, 1200]);
-    expect(q("FIXX-PLM-001", "Budget", "STANDARD").materials).toBe(313);
+    expect(near(q("FIXX-PLM-001", "Budget", "STANDARD").materials, 159.1)).toBe(true);
   });
   it("PLM-001: the wax ring is an as-needed extra, and the diagnosis fee is separate", () => {
     const base = q("FIXX-PLM-001", "Budget", "STANDARD");
     const wax = base.asNeeded.options.find((l) => l.itemId === "PLM-M04")!;
     expect(wax.cost).toBe(52);
-    expect(base.total).toBe(1113);
-    expect(q("FIXX-PLM-001", "Budget", "STANDARD", { asNeededLineIds: [wax.lineId] }).total).toBe(1165);
+    expect(near(base.total, 959.1)).toBe(true);
+    expect(near(q("FIXX-PLM-001", "Budget", "STANDARD", { asNeededLineIds: [wax.lineId] }).total, 1011.1)).toBe(true);
     expect(diagnosisFeeFor(cat, "Plumbing", "STANDARD")).toBe(300);
     expect(diagnosisFeeFor(cat, "Plumbing", "HIGH")).toBe(390);
-    expect(q("FIXX-PLM-001", "Budget", "HIGH", { withDiagnosis: true }).total).toBe(1353 + 390);
+    expect(near(q("FIXX-PLM-001", "Budget", "HIGH", { withDiagnosis: true }).total, 1199.1 + 390)).toBe(true);
   });
   it("CAR-001 door rehang (market 240 is below the floor 363.44, so the floor applies)", () => {
     const table: Record<string, number[]> = { Budget: [465.44, 519.96, 574.47, 647.16], Standard: [470.44, 524.96, 579.47, 652.16], Premium: [519.44, 573.96, 628.47, 701.16] };
@@ -167,7 +168,7 @@ describe("prices, aliases, diagnosis fee and on-site changes", () => {
     expect(repairDueAfterDiagnosis(1320, 300)).toEqual({ credit: 300, due: 1020 });
     const v = quoteVisit(cat, [{ taskId: "FIXX-PLM-001", tier: "Standard" }], "STANDARD", { diagnosisFeePaid: 300 });
     expect(v.diagnosisCredit).toBe(300);
-    expect(v.total).toBe(1020);
+    expect(near(v.total, 1145.1 - 300)).toBe(true);
   });
   it("any on-site change, even 0.01, needs the homeowner's approval; no change does not", () => {
     expect(reconcileScopeChange({ total: 1320 }, { total: 1320.01 }, 300)).toMatchObject({ needsApproval: true, delta: 0.01, onDeclineCharge: 300 });
@@ -180,5 +181,59 @@ describe("prices, aliases, diagnosis fee and on-site changes", () => {
     expect(r.needsApproval).toBe(true);
     expect(r.oldTotal).toBe(before.total);
     expect(r.newTotal).toBe(after.total);
+  });
+});
+
+describe("fourteen trades, job names and cleaning add-ons", () => {
+  const TRADES = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance", "Roofing", "Handyman", "Locksmith", "Cleaning"];
+
+  it("prices all 14 trades from the workbook, with a job name in English, Spanish and Korean", () => {
+    const present = new Set(Object.values(cat.tasks).map((t) => t.category));
+    expect([...present].sort()).toEqual([...TRADES].sort());
+    for (const task of Object.values(cat.tasks)) {
+      expect(task.job.length).toBeGreaterThan(0);
+      expect(task.jobEs?.length).toBeGreaterThan(0);
+      expect(task.jobKo).toMatch(/\p{Script=Hangul}/u);
+    }
+    for (let n = 1; n <= 7; n++) expect(cat.tasks[`FIXX-CLN-00${n}`]).toBeTruthy();
+  });
+
+  it("shows cleaning prices with centavos and adds oven, fridge, balcony and pet-stain labor only when selected", () => {
+    const base = q("FIXX-CLN-001", "≤60 m²", "STANDARD");
+    expect(base.status).toBe("FIXED");
+    expect(base.needsHumanReview).toBe(false);
+    expect(base.materials).not.toBe(Math.round(base.materials));
+    expect(base.displayTotal).toBe(base.total);
+    const pick = (needle: string) => base.asNeeded.options.find((l) => l.basis.toLowerCase().includes(needle))!;
+    const oven = pick("oven"), fridge = pick("fridge"), balcony = pick("balcony"), pet = pick("pet");
+    const withOven = q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [oven.lineId] });
+    expect(withOven.needsHumanReview).toBe(false);
+    expect(near(withOven.total, base.total + (oven.cost ?? 0) + 250)).toBe(true);
+    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [fridge.lineId] }).total, base.total + (fridge.cost ?? 0) + 200)).toBe(true);
+    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [balcony.lineId] }).total, base.total + (balcony.cost ?? 0) + 250)).toBe(true);
+    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [pet.lineId] }).total, base.total + (pet.cost ?? 0) + 250)).toBe(true);
+    const urgentOven = q("FIXX-CLN-001", "≤60 m²", "HIGH", { asNeededLineIds: [oven.lineId] });
+    expect(near(urgentOven.labor, (base.labor + 250) * 1.3)).toBe(true);
+  });
+
+  it("puts a cleaning quote into pending review only when window-at-height or mold is selected", () => {
+    const windows = q("FIXX-CLN-007", "Budget", "STANDARD");
+    const height = cat.tasks["FIXX-CLN-007"]!.lines.find((l) => l.tier === "Budget" && l.itemId === "CLN-F01")!;
+    expect(windows.needsHumanReview).toBe(false);
+    expect(windows.pendingReview).toEqual([]);
+    const atHeight = q("FIXX-CLN-007", "Budget", "STANDARD", { asNeededLineIds: [height.id] });
+    expect(atHeight.needsHumanReview).toBe(true);
+    expect(atHeight.pendingReview.map((l) => l.itemId)).toEqual(["CLN-F01"]);
+    expect(atHeight.total).toBe(windows.total);
+    expect(q("FIXX-CLN-007", "Budget", "STANDARD").needsHumanReview).toBe(false);
+
+    const deep = q("FIXX-CLN-002", "≤60 m²", "STANDARD");
+    const mold = cat.tasks["FIXX-CLN-002"]!.lines.find((l) => l.tier === "≤60 m²" && l.itemId === "CLN-F02")!;
+    expect(deep.needsHumanReview).toBe(false);
+    const withMold = q("FIXX-CLN-002", "≤60 m²", "STANDARD", { asNeededLineIds: [mold.id] });
+    expect(withMold.needsHumanReview).toBe(true);
+    expect(withMold.pendingReview.map((l) => l.itemId)).toEqual(["CLN-F02"]);
+    const oven = deep.asNeeded.options.find((l) => l.basis.toLowerCase().includes("oven"))!;
+    expect(q("FIXX-CLN-002", "≤60 m²", "STANDARD", { asNeededLineIds: [oven.lineId] }).needsHumanReview).toBe(false);
   });
 });

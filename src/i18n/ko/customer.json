@@ -119,6 +119,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "request.jobs": {
+    "text": "이 분야의 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.description": {
     "text": "어떤 작업이 필요한가요?",
     "status": "draft",

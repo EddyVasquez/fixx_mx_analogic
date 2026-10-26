@@ -37,14 +37,17 @@ describe("recommendations", () => {
 });
 
 describe("estimate and quote", () => {
-  it("painting matches the brief's example range", () => {
-    expect(estimateRange("painting", false)).toMatchObject({ low: 3500, high: 5000, surcharge: 0 });
+  it("painting's range is the workbook's lowest and highest standard total", () => {
+    const r = estimateRange("painting", false);
+    expect(r.surcharge).toBe(0);
+    expect(r.low).toBeCloseTo(7452.22, 2);
+    expect(r.high).toBeCloseTo(8916.72, 2);
   });
   it("urgent requests add the configured surcharge", () => {
     expect(estimateRange("painting", true).surcharge).toBe(300);
   });
   it("quote lines always add up to the total", () => {
-    for (const cat of ["plumbing", "painting", "concrete"]) for (const urgent of [false, true]) {
+    for (const cat of ["plumbing", "painting", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning"]) for (const urgent of [false, true]) {
       const q = buildQuote(cat, urgent);
       expect(q.lines.reduce((s, l) => s + l.amount, 0)).toBe(q.total);
     }

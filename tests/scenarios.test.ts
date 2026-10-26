@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { Clock } from "../src/core/clock/clock";
 import { DemoRuntime } from "../src/mocks/runtime/runtime";
 import { SCENARIOS, startScenario, finishScenario } from "../src/demo/scenarios";
+import { buildQuote } from "../src/core/pricing/quote";
 import { JOB_ID } from "../src/features/customer/session";
 
 const t0 = new Date("2026-10-06T16:00:00Z");
@@ -50,7 +51,8 @@ describe("scenario runner: every scenario starts where it says and runs end to e
   });
   it("s9 settles the case and s10 resolves a warranty claim", () => {
     const a = fresh(); startScenario(a, "s9", "en"); finishScenario(a, "s9");
-    expect(a.refunds[0]?.amount).toBe(1490); // the "materials" line of the demo quote
+    const materials = buildQuote("painting", false).lines.find((l) => l.id === "mat")?.amount;
+    expect(a.refunds[0]?.amount).toBe(materials); // refund is the materials line of the painting quote
     const b = fresh(); startScenario(b, "s10", "en");
     expect(st(b, `warranty:${JOB_ID}`)).toBe("running");
     expect(b.get(`warranty:${JOB_ID}`)!.snap.history).toHaveLength(0);

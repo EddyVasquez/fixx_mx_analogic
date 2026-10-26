@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { config } from "@/core/config/fixx.config";
+import { estimateRange } from "@/core/pricing/quote";
 import { useMoney } from "@/features/shared/Money";
 import { DemoValue } from "@/ui/DemoBadge";
 
@@ -9,7 +10,7 @@ export function DecisionsPanel() {
   const money = useMoney();
   const w = Object.values(config.warrantyDaysByCategory);
   const b = config.travelFeeBandsMXN;
-  const est = config.estimateRangesMXN["painting"] ?? [0, 0];
+  const est = estimateRange("painting", false);
   const items = [
     t("decisions.surcharge", { value: money(config.emergencySurchargeMXN) }),
     t("decisions.travel", { same: money(b.same), adjacent: money(b.adjacent), far: money(b.far) }),
@@ -18,7 +19,7 @@ export function DecisionsPanel() {
     t("decisions.hours", { start: config.businessHours.start, end: config.businessHours.end }),
     t("decisions.signIn", { valid: config.signIn.codeValiditySec / 60, resend: config.signIn.resendSec, lockout: config.signIn.lockoutSec / 60 }),
     t("decisions.caseReview", { days: config.caseReviewDeadlineDays }),
-    t("decisions.estimate", { low: money(est[0]), high: money(est[1]) })
+    t("decisions.estimate", { low: money(est.low), high: money(est.high) })
   ];
   return (
     <div className="flex flex-col gap-2">

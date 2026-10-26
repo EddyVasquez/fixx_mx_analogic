@@ -95,6 +95,10 @@
     "text": "Service",
     "status": "draft"
   },
+  "request.jobs": {
+    "text": "Jobs for this trade",
+    "status": "draft"
+  },
   "request.description": {
     "text": "What needs to be done?",
     "status": "draft"

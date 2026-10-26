@@ -95,6 +95,10 @@
     "text": "Servicio",
     "status": "draft"
   },
+  "request.jobs": {
+    "text": "Trabajos de este oficio",
+    "status": "draft"
+  },
   "request.description": {
     "text": "¿Qué hay que hacer?",
     "status": "draft"

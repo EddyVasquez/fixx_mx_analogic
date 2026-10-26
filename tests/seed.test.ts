@@ -1,11 +1,23 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { loadSeed } from "../src/mocks/db/seedData";
+
+const TRADES = ["plumbing", "electrical", "hvac", "painting", "pest_control", "gardening", "flooring", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning"];
 
 describe("seed data", () => {
   const s = loadSeed();
-  it("has the 8 launch categories with EN/ES/KO names", () => {
-    expect(s.categories).toHaveLength(8);
+  it("has all 14 trades, with English, Spanish and Korean names from the workbook categories", () => {
+    expect(s.categories.map((c) => c.id)).toEqual(TRADES);
     s.categories.forEach((c) => Object.values(c.names).forEach((n) => expect(n.length).toBeGreaterThan(0)));
+    const catalog = JSON.parse(readFileSync(join(process.cwd(), "src/seed/pricing/catalog.json"), "utf8")) as { tasks: Record<string, { category: string }> };
+    const fromBook = new Set(Object.values(catalog.tasks).map((t) => t.category));
+    expect(new Set(s.categories.map((c) => c.catalogCategory))).toEqual(fromBook);
+  });
+  it("has an approved professional for every trade", () => {
+    for (const id of TRADES) {
+      expect(s.professionals.some((p) => p.verification === "approved" && p.trades.includes(id))).toBe(true);
+    }
   });
   it("has 6-8 professionals, mixing Korean- and Spanish-speaking", () => {
     expect(s.professionals.length).toBeGreaterThanOrEqual(6);

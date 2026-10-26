@@ -8,6 +8,7 @@ import { useMoney } from "@/features/shared/Money";
 import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
 import { categories, zoneNames, zones } from "./data";
+import { jobsForCategory } from "./catalogJobs";
 import type { Draft } from "./session";
 
 export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; onChange: (p: Partial<Draft>) => void; onReview: () => void }) {
@@ -33,6 +34,12 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
           {categories.map((c) => <option key={c.id} value={c.id}>{c.names[lang]}</option>)}
         </select>
       </Field>
+      <div className="flex flex-col gap-1">
+        <p className="font-semibold">{t("request.jobs")}</p>
+        <ul className="flex flex-col gap-1 text-sm">
+          {jobsForCategory(draft.categoryId, lang).map((job) => <li key={job.id}>{job.title}</li>)}
+        </ul>
+      </div>
       <Field label={t("request.description")} hint={t("request.descriptionHint")}>
         <textarea className={`${inputClass} min-h-[7rem] py-2`} value={draft.description} onChange={(e) => onChange({ description: e.target.value })} />
       </Field>
