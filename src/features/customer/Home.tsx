@@ -1,16 +1,20 @@
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
+import { focusTargetClass } from "@/ui/Field";
 import { categories } from "./data";
 
 export function Home({ name, email, onPick, onUrgent }: { name: string; email: string; onPick: (categoryId: string) => void; onUrgent: () => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { headingRef.current?.focus(); }, []);
   return (
     <div className="flex flex-col gap-4">
       {email && <p role="status" className="text-sm text-inkSoft">{t("signin.emailSent", { email })}</p>}
       <p className="text-sm font-semibold text-inkSoft">{t("home.greeting", { name })}</p>
-      <h2 className="text-2xl font-bold">{t("home.title")}</h2>
+      <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("home.title")}</h2>
       <h3 className="font-semibold">{t("home.choose")}</h3>
       <ul className="grid grid-cols-2 gap-3">
         {categories.map((c) => (

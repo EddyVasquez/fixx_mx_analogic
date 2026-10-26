@@ -88,11 +88,55 @@
     "status": "draft"
   },
   "refund.amount": {
-    "text": "Refund amount: {amount}",
+    "text": "Refund: {amount}",
     "status": "draft"
   },
   "btn.sendClabe": {
-    "text": "Send account",
+    "text": "Send CLABE",
+    "status": "draft"
+  },
+  "pay.processing": {
+    "text": "Processing your payment. Don't close this page.",
+    "status": "draft"
+  },
+  "pay.success": {
+    "text": "Payment received: {amount}",
+    "status": "draft"
+  },
+  "pay.network": {
+    "text": "We couldn't finish your payment. Nothing was charged. Try again.",
+    "status": "draft"
+  },
+  "pay.unknown": {
+    "text": "We're not sure your payment went through. Don't pay again yet. We'll confirm in a few minutes.",
+    "status": "draft"
+  },
+  "pay.refCreating": {
+    "text": "Creating your payment reference…",
+    "status": "draft"
+  },
+  "pay.refFailed": {
+    "text": "We couldn't create your payment reference. Try again.",
+    "status": "draft"
+  },
+  "refund.clabeHint": {
+    "text": "18 digits",
+    "status": "draft"
+  },
+  "refund.sending": {
+    "text": "Sending your bank details…",
+    "status": "draft"
+  },
+  "refund.processing": {
+    "text": "Processing your refund…",
+    "status": "draft"
+  },
+  "refund.clabeRejected": {
+    "text": "Your bank didn't accept this CLABE. Check it with your bank and try again.",
+    "status": "draft"
+  },
+  "refund.autoFailed": {
+    "text": "We couldn't start your refund. Try again, or contact support.",
     "status": "draft"
   },
   "refund.clabeInvalid": {

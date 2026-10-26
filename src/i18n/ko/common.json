@@ -208,5 +208,45 @@
     "text": "평가 완료",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "btn.processing": {
+    "text": "처리 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.sending": {
+    "text": "보내는 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.checking": {
+    "text": "확인 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.saving": {
+    "text": "저장 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.tryAgain": {
+    "text": "다시 시도",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.resendCode": {
+    "text": "새 코드 받기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "common.slow": {
+    "text": "평소보다 오래 걸리고 있어요. 잠시만 기다려 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "common.network": {
+    "text": "연결할 수 없어요. 인터넷을 확인하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }

@@ -9,7 +9,16 @@ const BASE = "/fixx_mx_analogic/";
 
 export default defineConfig({
   base: BASE,
-  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // i18next-icu's ESM build imports this package's CJS entry. Node then treats the
+      // whole exports object as the default, so `new IntlMessageFormat` throws and every
+      // {placeholder} is left on screen. Point at the real ESM build.
+      "intl-messageformat": fileURLToPath(new URL("./node_modules/intl-messageformat/lib/index.js", import.meta.url))
+    }
+  },
+  ssr: { noExternal: ["i18next-icu", "intl-messageformat"] },
   plugins: [
     react(),
     VitePWA({
@@ -27,5 +36,9 @@ export default defineConfig({
       }
     })
   ],
-  test: { environment: "node", include: ["tests/**/*.test.ts"] }
+  test: {
+    environment: "node",
+    include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
+    server: { deps: { inline: ["i18next-icu", "intl-messageformat"] } }
+  }
 });
