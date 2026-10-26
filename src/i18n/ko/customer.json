@@ -678,5 +678,20 @@
     "text": "문제 신고 기간이 끝나면 결제가 지급되고, 그 후 평가할 수 있어요.",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "timeline.closeNote": {
+    "text": "작업이 괜찮으면 신고 기간을 닫으세요. 결제가 풀리고 평가할 수 있어요. 실제로는 24시간을 기다려요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "timeline.closeFailed": {
+    "text": "기간을 닫지 못했어요. 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.closeWindow": {
+    "text": "문제 없으면 계속",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }

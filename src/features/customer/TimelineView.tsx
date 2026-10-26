@@ -21,6 +21,7 @@ import { ProSimulator } from "./ProSimulator";
 import { CaseCard } from "./CaseCard";
 import { CaseAgentDemo } from "./AgentDemo";
 import { IssueReport } from "./IssueReport";
+import { CloseWindowAction } from "./CloseWindowAction";
 import { JOB_ID, session } from "./session";
 
 export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState; ctx: JobCtx; onEvent: (type: string) => void; onSend?: (e: { type: string } & Record<string, unknown>) => void }) {
@@ -51,7 +52,14 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
           {cardLike && <p>{t("timeline.balanceCharged", { amount: money(Math.round((ctx.total - ctx.paid) * 100) / 100) })}</p>}
           <p><HlDate>{t("timeline.windowEnds", { when: when(ctx.issueWindowEndsAt) })}</HlDate></p>
           <p className="text-inkSoft">{t("rating.pending")}</p>
+          <CloseWindowAction rt={rt} jobId={JOB_ID} />
         </>
+      )}
+      {state === "markedComplete" && !ctx.balancePaid && (
+        <div className="flex flex-col gap-2 rounded-2xl border-2 border-dashed border-ink p-3">
+          <p className="text-sm font-semibold">{t("demo.proActing")}</p>
+          <Button variant="secondary" onClick={() => onEvent("BALANCE_PAID")}>{t("demo.simulatePayment")}</Button>
+        </div>
       )}
       {state === "issueWindow" && onSend && (
         <IssueReport ctx={ctx} onSubmit={(selected, description) => { session.issueNote = description; onSend({ type: "REPORT_ISSUE", selected }); }} />

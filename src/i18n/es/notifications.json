@@ -407,6 +407,10 @@
     "text": "Aún no hay plazos.",
     "status": "draft"
   },
+  "demoJob.finished": {
+    "text": "Este trabajo de demo terminó. Empieza de nuevo para repetirlo.",
+    "status": "draft"
+  },
   "demoJob.devNote": {
     "text": "Herramienta de desarrollo: los eventos se muestran como código.",
     "status": "draft"

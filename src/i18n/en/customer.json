@@ -542,5 +542,17 @@
   "rating.pending": {
     "text": "Your payment is released when the issue window closes. Then you can rate.",
     "status": "draft"
+  },
+  "timeline.closeNote": {
+    "text": "If the work is fine, close the issue window. Payment is released and you can rate. In real life this waits 24 hours.",
+    "status": "draft"
+  },
+  "timeline.closeFailed": {
+    "text": "The window could not be closed. Try again.",
+    "status": "draft"
+  },
+  "btn.closeWindow": {
+    "text": "No issues, continue",
+    "status": "draft"
   }
 }

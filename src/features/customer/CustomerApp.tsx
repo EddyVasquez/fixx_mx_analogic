@@ -8,7 +8,8 @@ import { bandFor, manualReviewFollowUp, travelFeeFor } from "@/core/rules";
 import { formatDateTime } from "@/core/clock/clock";
 import { localeFor } from "@/i18n";
 import { HlDate } from "@/ui/Highlights";
-import { jobMachine, newJobCtx, type JobCtx, type JobState } from "@/core/machines";
+import { jobMachine, newJobCtx, statusFor, type JobCtx, type JobState } from "@/core/machines";
+import { JobStatusBar } from "@/features/shared/JobStatusBar";
 import { Button } from "@/ui/Button";
 import { runtime, useRuntime } from "@/demo/runtime";
 import { SignIn } from "./SignIn";
@@ -140,9 +141,12 @@ function RequestFlow() {
     case "rated": {
       const w = rt.get(`warranty:${JOB_ID}`)?.snap.ctx as { endsAt: Date } | undefined;
       const refund = rt.refunds.find((r) => r.actorId === JOB_ID);
+      const status = statusFor(state);
       return (
         <div className="flex flex-col gap-4">
+          {status && <JobStatusBar status={status} />}
           <RatingView rated={state === "rated"} warrantyEndsAt={w?.endsAt ?? null} onSubmit={(values) => { ratings.push({ proId: session.proId ?? "", values }); send({ type: "RATE" }); }} />
+          <Button variant="secondary" onClick={startOver}>{t("btn.startOver")}</Button>
           <CaseCard rt={rt} jobId={JOB_ID} role="customer" lang={lang} />
           {refund && <RefundView refund={refund} issued hideStartOver onStartOver={startOver} onAuto={() => {}} onClabe={(c) => rt.provideClabe(refund.id, c)} />}
         </div>

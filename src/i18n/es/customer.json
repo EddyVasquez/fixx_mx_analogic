@@ -542,5 +542,17 @@
   "rating.pending": {
     "text": "Tu pago se libera cuando cierra el plazo para reportar. Después podrás calificar.",
     "status": "draft"
+  },
+  "timeline.closeNote": {
+    "text": "Si el trabajo está bien, cierra el plazo para reportar. El pago se libera y podrás calificar. En la vida real esto espera 24 horas.",
+    "status": "draft"
+  },
+  "timeline.closeFailed": {
+    "text": "No se pudo cerrar el plazo. Inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "btn.closeWindow": {
+    "text": "Sin problema, seguir",
+    "status": "draft"
   }
 }
