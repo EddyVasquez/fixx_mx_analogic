@@ -22,6 +22,8 @@ export const clock = new Clock();
 export function formatDateTime(d: Date, locale: string, tz = "America/Monterrey"): string {
   return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", timeZone: tz }).format(d);
 }
-export function formatMXN(amount: number, locale: string): string {
-  return new Intl.NumberFormat(locale, { style: "currency", currency: "MXN" }).format(amount);
+/** Same pesos-and-centavos text in every language: "$1,250.00 MXN". The locale argument is kept for callers and is not used. */
+export function formatMXN(amount: number, _locale?: string): string {
+  const n = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
+  return `$${n} MXN`;
 }

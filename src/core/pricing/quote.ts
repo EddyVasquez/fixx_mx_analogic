@@ -1,7 +1,7 @@
 import catalogJson from "../../seed/pricing/catalog.json";
 import { config } from "../config/fixx.config";
 import type { QuoteLine } from "../rules";
-import { quoteTask, type Catalog } from "./instantQuote";
+import { quoteTask, type Catalog, type TaskQuote } from "./instantQuote";
 
 const round10 = (n: number) => Math.round(n / 10) * 10;
 const catalog = catalogJson as unknown as Catalog;
@@ -40,6 +40,31 @@ export function estimateRange(categoryId: string, emergency: boolean, cfg: typeo
   const r = rangeFromCatalog(categoryId);
   if (!r) throw new Error(`No estimate range configured for ${categoryId}`);
   return { low: r[0], high: r[1], surcharge: emergency ? cfg.emergencySurchargeMXN : 0 };
+}
+
+const reviewByCategory = new Map<string, TaskQuote["humanReview"]>();
+
+/**
+ * Review reasons for a trade when no optional line is selected.
+ * Base triggers and regulated labor count. As-needed lines (cleaning at height or mold, a gas connector) do not, until the homeowner selects them on that task.
+ */
+export function humanReviewForCategory(categoryId: string): TaskQuote["humanReview"] {
+  const cached = reviewByCategory.get(categoryId);
+  if (cached) return cached;
+  const category = CATALOG_CATEGORY[categoryId];
+  const seen = new Map<string, TaskQuote["humanReview"][number]>();
+  if (category) {
+    for (const task of Object.values(catalog.tasks)) {
+      if (task.category !== category) continue;
+      for (const tier of task.tiers) {
+        const quote = quoteTask(catalog, { taskId: task.id, tier, urgency: "STANDARD" });
+        for (const item of quote.humanReview) seen.set(`${item.kind}:${item.ref}`, item);
+      }
+    }
+  }
+  const list = [...seen.values()];
+  reviewByCategory.set(categoryId, list);
+  return list;
 }
 
 /** Demo quote: the midpoint of the range, split into generic lines that always add up to the total. */

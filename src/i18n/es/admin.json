@@ -255,6 +255,14 @@
     "text": "Aprobar",
     "status": "draft"
   },
+  "admin.approvePending": {
+    "text": "Aprobar trabajo",
+    "status": "draft"
+  },
+  "admin.pendingReview": {
+    "text": "Un especialista todavía tiene que aprobar este trabajo. El cliente no puede reservarlo hasta que lo hagas.",
+    "status": "draft"
+  },
   "admin.reject": {
     "text": "Rechazar",
     "status": "draft"

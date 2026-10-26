@@ -1,6 +1,6 @@
 import { config, type Lang } from "../core/config/fixx.config";
 import { addHours, buildSchedule, type PayMethod } from "../core/rules";
-import { buildQuote } from "../core/pricing/quote";
+import { buildQuote, humanReviewForCategory } from "../core/pricing/quote";
 import { jobMachine, newJobCtx, verificationMachine, newVerification, type JobCtx } from "../core/machines";
 import type { DemoRuntime } from "../mocks/runtime/runtime";
 import { ensureReference, confirmPayment } from "../mocks/runtime/paymentActors";
@@ -38,7 +38,7 @@ function begin(rt: DemoRuntime, o: BeginOpts, appLang: Lang): void {
   rt.languages.customer = o.customerLang === "app" ? appLang : o.customerLang;
   rt.languages.professional = o.proLang === "app" ? appLang : o.proLang;
   if (o.noJob) return;
-  rt.spawn(JOB_ID, "job", jobMachine, newJobCtx(), { categoryId: cat });
+  rt.spawn(JOB_ID, "job", jobMachine, newJobCtx({ needsReview: humanReviewForCategory(cat).length > 0 }), { categoryId: cat });
   const r = rt.dispatch(JOB_ID, { type: o.zoneId === "outside" ? "OUT_OF_AREA" : "ESTIMATE_READY" });
   if (!r.ok) throw new Error(r.error);
 }

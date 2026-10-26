@@ -1,1 +1,12 @@
-{}
+{
+  "admin.approvePending": {
+    "text": "작업 승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "admin.pendingReview": {
+    "text": "전문가가 이 작업을 승인해야 고객이 예약할 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  }
+}

@@ -44,6 +44,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "notif.quote.pendingReview": {
+    "text": "예약하기 전에 전문가가 이 작업을 승인해야 해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "notif.quote.accepted": {
     "text": "견적서가 수락됐어요.",
     "status": "draft",

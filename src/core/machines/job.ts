@@ -5,14 +5,14 @@ import {
 import { notify, reject, type Audience, type Effect, type MachineDef, type Outcome } from "./machine";
 
 export type JobState =
-  | "submitted" | "needsInfo" | "manualReview" | "estimated" | "recommendations" | "professionalSelected" | "quoteSent"
+  | "submitted" | "needsInfo" | "manualReview" | "estimated" | "recommendations" | "professionalSelected" | "pendingReview" | "quoteSent"
   | "awaitingDeposit" | "scheduled" | "onTheWay" | "checkedIn" | "inProgress" | "additionalWorkPending" | "checklistComplete"
   | "markedComplete" | "issueWindow" | "issueOpen" | "paymentReleased" | "rated"
   | "cancelled" | "professionalCancelled" | "noShow" | "rescheduleUnanswered" | "bookingExpired" | "refunded";
 
 export type JobEvent =
   | { type: "NEEDS_INFO" } | { type: "INFO_PROVIDED" } | { type: "OUT_OF_AREA" }
-  | { type: "MANUAL_REVIEW_APPROVED" } | { type: "MANUAL_REVIEW_DECLINED" }
+  | { type: "MANUAL_REVIEW_APPROVED" } | { type: "MANUAL_REVIEW_DECLINED" } | { type: "PENDING_REVIEW_APPROVED" }
   | { type: "ESTIMATE_READY" } | { type: "RECOMMENDATIONS_READY" }
   | { type: "SELECT_PROFESSIONAL"; professionalId: string } | { type: "PROFESSIONAL_DECLINES" }
   | { type: "SEND_QUOTE"; total: number; travelFee: number; payoutRatio: number; lines: QuoteLine[]; adjustmentReason?: string }
@@ -40,12 +40,17 @@ export interface JobCtx {
   adjustmentReason: string | null;
   /** When the payment deadlines were last (re)calculated from: acceptance, then any accepted reschedule. */
   scheduleBasis: Date | null;
+  /** Set at request time when the trade has regulated work. Only an admin approve releases it. */
+  needsReview: boolean;
 }
+
+/** Events only an admin can fire. pendingReview leaves this list through approve alone. */
+export const adminJobEvents = ["MANUAL_REVIEW_APPROVED", "MANUAL_REVIEW_DECLINED", "PENDING_REVIEW_APPROVED"] as const;
 
 export const newJobCtx = (p: Partial<JobCtx> = {}): JobCtx => ({
   method: "card", total: 0, jobStart: new Date(0), professionalId: null, travelFee: 0, payoutRatio: 0.8, lines: [],
   paid: 0, initialDue: 0, balancePaid: false, onTheWayAt: null, checklistDone: false, additional: null,
-  issueWindowEndsAt: null, heldAmount: 0, heldPayout: 0, cancelledBy: null, refund: null, carryOver: 0, adjustmentReason: null, scheduleBasis: null, ...p
+  issueWindowEndsAt: null, heldAmount: 0, heldPayout: 0, cancelledBy: null, refund: null, carryOver: 0, adjustmentReason: null, scheduleBasis: null, needsReview: false, ...p
 });
 
 const C: Audience[] = ["customer"], P: Audience[] = ["professional"], CP: Audience[] = ["customer", "professional"];
@@ -109,10 +114,17 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
       SELECT_PROFESSIONAL: (_c, e) => go("professionalSelected", [notify("job.requestForProfessional", P, "urgent")], { professionalId: e.professionalId })
     },
     professionalSelected: {
-      SEND_QUOTE: (_c, e) => e.total > 0
-        ? go("quoteSent", [notify("quote.sent", C, "urgent")], { total: e.total, travelFee: e.travelFee, payoutRatio: e.payoutRatio, lines: e.lines, adjustmentReason: e.adjustmentReason ?? null })
-        : reject("quote total must be greater than 0"),
+      SEND_QUOTE: (c, e) => {
+        if (!(e.total > 0)) return reject("quote total must be greater than 0");
+        const quote = { total: e.total, travelFee: e.travelFee, payoutRatio: e.payoutRatio, lines: e.lines, adjustmentReason: e.adjustmentReason ?? null };
+        return c.needsReview
+          ? go("pendingReview", [notify("quote.pendingReview", CPA, "urgent")], quote)
+          : go("quoteSent", [notify("quote.sent", C, "urgent")], quote);
+      },
       PROFESSIONAL_DECLINES: () => go("recommendations", [notify("job.professionalDeclined", C)], { professionalId: null })
+    },
+    pendingReview: {
+      PENDING_REVIEW_APPROVED: () => go("quoteSent", [notify("quote.sent", C, "urgent")])
     },
     quoteSent: {
       ACCEPT_QUOTE: (c, e, now) => {
