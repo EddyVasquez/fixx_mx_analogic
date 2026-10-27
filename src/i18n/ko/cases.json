@@ -10,7 +10,7 @@
     "needsNativeReview": true
   },
   "issue.intro": {
-    "text": "문제가 있는 항목을 선택하세요. 해당 금액은 결정이 나올 때까지 보류돼요.",
+    "text": "문제가 있는 항목을 고르세요. 그 금액만 보류되고 나머지는 지급돼요.",
     "status": "draft",
     "needsNativeReview": true
   },

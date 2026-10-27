@@ -8,6 +8,7 @@ import { requestReschedule, acceptReschedule, declineReschedule } from "../mocks
 import { demoLines } from "../mocks/chat/chatStore";
 import { JOB_ID, resetSession, session } from "../features/customer/session";
 import { psession } from "../features/professional/session";
+import { photoQueue } from "../features/shared/photoQueue";
 
 export type RoleName = "customer" | "professional";
 export interface Scenario {
@@ -34,7 +35,8 @@ function begin(rt: DemoRuntime, o: BeginOpts, appLang: Lang): void {
   const cat = o.categoryId ?? "painting";
   Object.assign(session, { signedIn: true, email: "demo@example.com", tab: "request", proId: o.proId ?? null, method: o.method ?? "card", slotHours: 30 });
   session.draft = { categoryId: cat, description: "Paint the living room walls", photos: 1, measurements: "", zoneId: o.zoneId ?? "z1", street: "[Street and number]", emergency: !!o.emergency };
-  Object.assign(psession, { meId: o.meId ?? null, tab: "jobs", idDoc: false, selfie: false, phoneVerified: false, recoverySelfie: false, recoveryPhone: false, before: 0, after: 0, checks: {}, clabe: "", clabeSaved: false });
+  Object.assign(psession, { meId: o.meId ?? null, tab: "jobs", idDoc: false, selfie: false, phoneVerified: false, recoverySelfie: false, recoveryPhone: false, before: 0, after: 0, checks: {}, completionChecks: {}, clabe: "", clabeSaved: false });
+  photoQueue.reset();
   rt.languages.customer = o.customerLang === "app" ? appLang : o.customerLang;
   rt.languages.professional = o.proLang === "app" ? appLang : o.proLang;
   if (o.noJob) return;
@@ -81,7 +83,7 @@ const finishWork: Step = (c) => {
   c.job("CHECKLIST_COMPLETE"); c.job("MARK_COMPLETE");
   if (c.state() === "markedComplete") c.job("BALANCE_PAID");
 };
-const closeWindow: Step = (c) => c.rt.advanceHours(config.issueWindowHours);
+const closeWindow: Step = (c) => c.rt.advanceHours(config.completionCheck.autoReleaseHours);
 const rate: Step = (c) => c.job("RATE");
 const ev = (type: string, extra?: object): Step => (c) => c.job(type, extra);
 const caseEv = (type: string, extra: object = {}): Step => (c) => {

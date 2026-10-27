@@ -160,7 +160,7 @@
     "status": "draft"
   },
   "notif.issueWindow.reminder": {
-    "text": "El plazo para reportar un problema cierra en {reminderHours, plural, one {# hora} other {# horas}}.",
+    "text": "Revisa el trabajo terminado. El saldo se libera en {hoursLeft, plural, one {# hora} other {# horas}}.",
     "status": "draft"
   },
   "notif.issue.reported": {
@@ -461,6 +461,26 @@
   },
   "state.refunded": {
     "text": "Reembolsado",
+    "status": "draft"
+  },
+  "notif.completion.opened": {
+    "text": "Revisa el trabajo terminado. Si no respondes, el saldo se libera en {hours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "notif.completion.partialRelease.customer": {
+    "text": "Liberamos {released} ahora. El monto reportado sigue retenido.",
+    "status": "draft"
+  },
+  "notif.completion.partialRelease.professional": {
+    "text": "Se liberó parte de tu saldo: {releasedPayout}. El resto sigue retenido mientras FIXX revisa el reporte.",
+    "status": "draft"
+  },
+  "notif.completion.approved": {
+    "text": "Aprobaste el trabajo. El saldo se liberó.",
+    "status": "draft"
+  },
+  "notif.job.returnVisit": {
+    "text": "Una visita de regreso puede hacerse dentro de {returnHours, plural, one {# hora} other {# horas}}.",
     "status": "draft"
   }
 }

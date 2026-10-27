@@ -54,6 +54,50 @@ export const config = {
   // TODO(decision): demo sign-in code shown on screen (real codes go by SMS or WhatsApp).
   demoSignInCode: "123456",
 
+  /**
+   * Customer check after the professional marks the job complete.
+   * The balance (the 80% after the deposit) releases when the customer approves,
+   * or on its own if nobody answers. Every number here is a labelled placeholder.
+   */
+  completionCheck: {
+    // TODO(decision): hours with no answer before the balance releases on its own.
+    autoReleaseHours: 48,
+    autoReleaseLabel: "balance auto-release",
+    // TODO(decision): reminders after the job is marked complete, in hours.
+    reminders: [
+      { id: "first", hours: 2, label: "first reminder" },
+      { id: "second", hours: 24, label: "second reminder" },
+      { id: "last", hours: 44, label: "last reminder" }
+    ],
+    // TODO(decision): hours the professional has to fix a reported problem on a return visit.
+    returnVisitHours: 72,
+    returnVisitLabel: "return visit",
+    minBeforePhotos: 2,
+    minAfterPhotos: 2,
+    minProblemPhotos: 1,
+    // TODO(decision): simulated photo location until a device provides one.
+    demoLocation: "San Pedro Garza García, N.L.",
+    coreItems: ["asQuoted", "areaClean", "noDamage"],
+    /** Two or three checks per trade. The customer list is optional. */
+    tradeItems: {
+      plumbing: ["plumbing.noLeaks", "plumbing.drainsClear", "plumbing.shutoffsWork"],
+      hvac: ["hvac.cools", "hvac.drainFlows", "hvac.filterSeated"],
+      electrical: ["electrical.outletsWork", "electrical.fixturesWork", "electrical.panelClosed"],
+      pest_control: ["pest_control.certificate", "pest_control.stationsPlaced", "pest_control.entryNoted"],
+      painting: ["painting.coverageEven", "painting.edgesClean", "painting.noDrips"],
+      gardening: ["gardening.debrisCleared", "gardening.plantsSet"],
+      flooring: ["flooring.seamsFlat", "flooring.trimSet"],
+      concrete: ["concrete.surfaceSet", "concrete.edgesFormed"],
+      carpentry: ["carpentry.fitsSquare", "carpentry.hardwareTight"],
+      appliance: ["appliance.powersOn", "appliance.cycleRuns"],
+      roofing: ["roofing.leaksChecked", "roofing.debrisCleared"],
+      handyman: ["handyman.taskDone", "handyman.areaCleared"],
+      locksmith: ["locksmith.lockWorks", "locksmith.keysWork"],
+      cleaning: ["cleaning.surfacesClean", "cleaning.suppliesRemoved"]
+    } as Record<string, readonly string[]>,
+    problemCategories: ["incomplete", "quality", "damage", "notAsQuoted"]
+  },
+
   languages: ["en", "es", "ko"] as const,
   adminLanguages: ["en", "es"] as const,
   fallbackLanguage: "en" as const

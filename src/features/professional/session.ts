@@ -5,7 +5,9 @@ export const psession = {
   availability: {} as Record<string, boolean>,
   clabe: "", clabeSaved: false,
   idDoc: false, selfie: false, phoneVerified: false, recoverySelfie: false, recoveryPhone: false,
-  before: 0, after: 0, checks: {} as Record<string, boolean>
+  before: 0, after: 0, checks: {} as Record<string, boolean>,
+  /** The professional's copy of the customer completion list, visible from the start of the job. */
+  completionChecks: {} as Record<string, boolean>
 };
 /** Days are 0 = Sunday ... 6 = Saturday. Monday to Saturday are free by default. */
 export const isFree = (dow: number, slot: "morning" | "afternoon"): boolean => psession.availability[`${dow}-${slot}`] ?? dow !== 0;

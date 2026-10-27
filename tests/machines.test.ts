@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { config } from "../src/core/config/fixx.config";
 import { addHours } from "../src/core/rules";
 import {
   jobMachine, newJobCtx, createSnapshot, send, statusFor, cancelLowersQualityScore, allowedEvents, adminJobEvents,
@@ -58,11 +59,12 @@ describe("job: happy path with a card (scenario 1)", () => {
     expect(s.state).toBe("markedComplete");
     s = run(s, [{ type: "BALANCE_PAID" }, at(75)]);
     expect(s.state).toBe("issueWindow");
-    expect(s.ctx.issueWindowEndsAt?.getTime()).toBe(at(99).getTime());
-    const fx = effectsOf(s, { type: "WINDOW_CLOSED" }, at(99));
+    const releaseAt = 75 + config.completionCheck.autoReleaseHours;
+    expect(s.ctx.issueWindowEndsAt?.getTime()).toBe(at(releaseAt).getTime());
+    const fx = effectsOf(s, { type: "WINDOW_CLOSED" }, at(releaseAt));
     expect(hasEffect(fx, "releasePayout")).toBe(true);
     expect(hasEffect(fx, "startWarranty")).toBe(true);
-    s = run(s, [{ type: "WINDOW_CLOSED" }, at(99)], [{ type: "RATE" }, at(100)]);
+    s = run(s, [{ type: "WINDOW_CLOSED" }, at(releaseAt)], [{ type: "RATE" }, at(releaseAt + 1)]);
     expect(s.state).toBe("rated");
     expect(s.history.length).toBeGreaterThan(10);
   });
@@ -224,7 +226,7 @@ describe("job: issue reports (scenario 9)", () => {
     expect(run(issueWindow(), [{ type: "REPORT_ISSUE", selected: "wholeJob" }, at(76)]).ctx.heldAmount).toBe(4200);
   });
   it("a report after the window closes is refused; closing early is refused", () => {
-    expect(send(jobMachine, issueWindow(), { type: "REPORT_ISSUE", selected: "wholeJob" }, at(100)).ok).toBe(false);
+    expect(send(jobMachine, issueWindow(), { type: "REPORT_ISSUE", selected: "wholeJob" }, at(75 + config.completionCheck.autoReleaseHours + 1)).ok).toBe(false);
     expect(send(jobMachine, issueWindow(), { type: "WINDOW_CLOSED" }, at(80)).ok).toBe(false);
   });
   it("sends the 6-hour reminder", () => {

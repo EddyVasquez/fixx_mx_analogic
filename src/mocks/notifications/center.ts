@@ -43,7 +43,7 @@ export class NotificationCenter {
   subscribe = (fn: () => void): (() => void) => { this.listeners.add(fn); return () => { this.listeners.delete(fn); }; };
 }
 
-const MONEY = new Set(["amount", "travelFee", "refund", "held", "heldPayout"]);
+const MONEY = new Set(["amount", "travelFee", "refund", "held", "heldPayout", "released", "releasedPayout"]);
 type T = (key: string | string[], opts?: Record<string, unknown>) => string;
 
 /**

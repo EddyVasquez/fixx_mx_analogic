@@ -54,7 +54,10 @@ describe("scenario 9: issue report, held amounts and the case", () => {
     const { rt, kase } = reported(["mat"]);
     kase({ type: "START_REVIEW" }); kase({ type: "DECIDE", decision: "releaseProfessional" });
     rt.advanceHours(24 * 15);
-    expect(rt.payouts[0]?.amount).toBe(3360);
+    const paid = rt.payouts.reduce((sum, p) => sum + p.amount, 0);
+    expect(paid).toBe(3360);
+    expect(rt.payouts[0]?.amount).toBe(2240);
+    expect(rt.payouts.at(-1)?.amount).toBe(1120);
     expect(rt.refunds).toHaveLength(0);
   });
   it("a split refunds half to the customer", () => {

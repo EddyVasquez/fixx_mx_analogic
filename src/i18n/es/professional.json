@@ -324,11 +324,11 @@
     "status": "draft"
   },
   "work.completeNote": {
-    "text": "Al marcar el trabajo como terminado, se cobra el saldo al cliente.",
+    "text": "Al marcar el trabajo como terminado, el cliente revisa el trabajo. Tu saldo sigue pendiente hasta que apruebe, o hasta la hora de liberación.",
     "status": "draft"
   },
   "work.waitWindow": {
-    "text": "Esperando que cierre el plazo para reportar problemas. Tu pago se libera después.",
+    "text": "Esperando la aprobación del cliente. Tu saldo se libera cuando apruebe, o a la hora de liberación si no responde.",
     "status": "draft"
   },
   "work.payout": {
@@ -357,6 +357,46 @@
   },
   "chat.empty": {
     "text": "Aún no hay mensajes. Saluda.",
+    "status": "draft"
+  },
+  "work.pendingBalance": {
+    "text": "Saldo pendiente: {amount}",
+    "status": "draft"
+  },
+  "work.countdown": {
+    "text": "Se libera el {when}. Quedan cerca de {hours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "work.sameChecklist": {
+    "text": "Es la misma lista que el cliente ve al final. No te detiene.",
+    "status": "draft"
+  },
+  "work.photosNeed": {
+    "text": "Agrega al menos {count, plural, one {# foto} other {# fotos}} para continuar.",
+    "status": "draft"
+  },
+  "work.returnTitle": {
+    "text": "Visita de regreso",
+    "status": "draft"
+  },
+  "work.returnBody": {
+    "text": "Tienes la primera oportunidad de corregirlo antes del {when}.",
+    "status": "draft"
+  },
+  "btn.scheduleReturn": {
+    "text": "Agendar regreso",
+    "status": "draft"
+  },
+  "work.returnSet": {
+    "text": "Visita de regreso agendada.",
+    "status": "draft"
+  },
+  "work.releasedShare": {
+    "text": "Liberado para ti: {amount}",
+    "status": "draft"
+  },
+  "work.heldShare": {
+    "text": "Aún retenido: {amount}",
     "status": "draft"
   }
 }

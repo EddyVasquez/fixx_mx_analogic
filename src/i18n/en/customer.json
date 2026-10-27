@@ -540,11 +540,11 @@
     "status": "draft"
   },
   "rating.pending": {
-    "text": "Your payment is released when the issue window closes. Then you can rate.",
+    "text": "Approve to release the balance. If there is no answer, it releases on its own. Then you can rate.",
     "status": "draft"
   },
   "timeline.closeNote": {
-    "text": "If the work is fine, close the issue window. Payment is released and you can rate. In real life this waits 24 hours.",
+    "text": "If the work is fine, tap Approve. This demo button jumps the clock to the auto-release ({hours, plural, one {# hour} other {# hours}}).",
     "status": "draft"
   },
   "timeline.closeFailed": {
@@ -569,6 +569,290 @@
   },
   "state.pendingReview": {
     "text": "Pending review",
+    "status": "draft"
+  },
+  "completion.title": {
+    "text": "Check the finished work",
+    "status": "draft"
+  },
+  "completion.intro": {
+    "text": "Look at the after photos. The list is optional. Approve releases the balance.",
+    "status": "draft"
+  },
+  "completion.deposit": {
+    "text": "Deposit already paid: {amount}",
+    "status": "draft"
+  },
+  "completion.balance": {
+    "text": "Balance to release: {amount}",
+    "status": "draft"
+  },
+  "completion.countdown": {
+    "text": "Releases {when} if there is no answer. About {hours, plural, one {# hour} other {# hours}} left.",
+    "status": "draft"
+  },
+  "completion.checklist": {
+    "text": "Optional check",
+    "status": "draft"
+  },
+  "completion.checklistNote": {
+    "text": "Ticking items is optional. Approve is enough.",
+    "status": "draft"
+  },
+  "completion.core": {
+    "text": "For every job",
+    "status": "draft"
+  },
+  "completion.trade": {
+    "text": "For this service",
+    "status": "draft"
+  },
+  "completion.photos": {
+    "text": "After photos",
+    "status": "draft"
+  },
+  "completion.demoPay": {
+    "text": "This release is simulated. No real payment moves.",
+    "status": "draft"
+  },
+  "btn.approveJob": {
+    "text": "Approve",
+    "status": "draft"
+  },
+  "review.fixx.title": {
+    "text": "Under review by FIXX",
+    "status": "draft"
+  },
+  "review.fixx.body": {
+    "text": "The professional can fix this on a return visit before {when}. FIXX is reviewing the report.",
+    "status": "draft"
+  },
+  "review.fixx.released": {
+    "text": "Released: {amount}",
+    "status": "draft"
+  },
+  "review.fixx.held": {
+    "text": "Held: {amount}",
+    "status": "draft"
+  },
+  "problem.category": {
+    "text": "What kind of problem?",
+    "status": "draft"
+  },
+  "problem.needCategory": {
+    "text": "Choose a category.",
+    "status": "draft"
+  },
+  "problem.needPhoto": {
+    "text": "Add at least one photo.",
+    "status": "draft"
+  },
+  "problem.photo": {
+    "text": "Photo of the problem",
+    "status": "draft"
+  },
+  "btn.addProblemPhoto": {
+    "text": "Add a photo",
+    "status": "draft"
+  },
+  "btn.reportProblem": {
+    "text": "Report a problem",
+    "status": "draft"
+  },
+  "problem.cat.incomplete": {
+    "text": "Work looks unfinished",
+    "status": "draft"
+  },
+  "problem.cat.quality": {
+    "text": "Quality is below what was quoted",
+    "status": "draft"
+  },
+  "problem.cat.damage": {
+    "text": "Something was damaged",
+    "status": "draft"
+  },
+  "problem.cat.notAsQuoted": {
+    "text": "The result does not match the quote",
+    "status": "draft"
+  },
+  "check.asQuoted": {
+    "text": "Work was done as quoted",
+    "status": "draft"
+  },
+  "check.areaClean": {
+    "text": "The area was cleaned",
+    "status": "draft"
+  },
+  "check.noDamage": {
+    "text": "No damage was left behind",
+    "status": "draft"
+  },
+  "check.plumbing.noLeaks": {
+    "text": "No leaks after running water for 2 minutes",
+    "status": "draft"
+  },
+  "check.plumbing.drainsClear": {
+    "text": "Drains run clear",
+    "status": "draft"
+  },
+  "check.plumbing.shutoffsWork": {
+    "text": "Shut-off valves open and close",
+    "status": "draft"
+  },
+  "check.hvac.cools": {
+    "text": "The unit cools the room",
+    "status": "draft"
+  },
+  "check.hvac.drainFlows": {
+    "text": "The drain line flows",
+    "status": "draft"
+  },
+  "check.hvac.filterSeated": {
+    "text": "The filter is seated",
+    "status": "draft"
+  },
+  "check.electrical.outletsWork": {
+    "text": "Every outlet works",
+    "status": "draft"
+  },
+  "check.electrical.fixturesWork": {
+    "text": "Every fixture works",
+    "status": "draft"
+  },
+  "check.electrical.panelClosed": {
+    "text": "The panel cover is closed",
+    "status": "draft"
+  },
+  "check.pest_control.certificate": {
+    "text": "The service certificate was delivered",
+    "status": "draft"
+  },
+  "check.pest_control.stationsPlaced": {
+    "text": "Stations were placed as quoted",
+    "status": "draft"
+  },
+  "check.pest_control.entryNoted": {
+    "text": "Entry points were pointed out",
+    "status": "draft"
+  },
+  "check.painting.coverageEven": {
+    "text": "Coverage looks even",
+    "status": "draft"
+  },
+  "check.painting.edgesClean": {
+    "text": "Edges are clean",
+    "status": "draft"
+  },
+  "check.painting.noDrips": {
+    "text": "No drips were left",
+    "status": "draft"
+  },
+  "check.gardening.debrisCleared": {
+    "text": "Cuttings were cleared",
+    "status": "draft"
+  },
+  "check.gardening.plantsSet": {
+    "text": "Moved plants are set back",
+    "status": "draft"
+  },
+  "check.flooring.seamsFlat": {
+    "text": "Seams lie flat",
+    "status": "draft"
+  },
+  "check.flooring.trimSet": {
+    "text": "Trim is set",
+    "status": "draft"
+  },
+  "check.concrete.surfaceSet": {
+    "text": "The surface has set",
+    "status": "draft"
+  },
+  "check.concrete.edgesFormed": {
+    "text": "Edges follow the form",
+    "status": "draft"
+  },
+  "check.carpentry.fitsSquare": {
+    "text": "The piece fits square",
+    "status": "draft"
+  },
+  "check.carpentry.hardwareTight": {
+    "text": "Hardware is tight",
+    "status": "draft"
+  },
+  "check.appliance.powersOn": {
+    "text": "The appliance powers on",
+    "status": "draft"
+  },
+  "check.appliance.cycleRuns": {
+    "text": "A short cycle runs",
+    "status": "draft"
+  },
+  "check.roofing.leaksChecked": {
+    "text": "The repair was checked for leaks",
+    "status": "draft"
+  },
+  "check.roofing.debrisCleared": {
+    "text": "Debris was cleared",
+    "status": "draft"
+  },
+  "check.handyman.taskDone": {
+    "text": "The quoted task is done",
+    "status": "draft"
+  },
+  "check.handyman.areaCleared": {
+    "text": "The area was cleared",
+    "status": "draft"
+  },
+  "check.locksmith.lockWorks": {
+    "text": "The lock opens and closes",
+    "status": "draft"
+  },
+  "check.locksmith.keysWork": {
+    "text": "Every key works",
+    "status": "draft"
+  },
+  "check.cleaning.surfacesClean": {
+    "text": "Surfaces were cleaned",
+    "status": "draft"
+  },
+  "check.cleaning.suppliesRemoved": {
+    "text": "Supplies were removed",
+    "status": "draft"
+  },
+  "photo.stamp": {
+    "text": "{when} · {place}",
+    "status": "draft"
+  },
+  "photo.locationNote": {
+    "text": "Simulated location",
+    "status": "draft"
+  },
+  "photo.queued": {
+    "text": "Waiting to upload",
+    "status": "draft"
+  },
+  "photo.uploaded": {
+    "text": "Uploaded",
+    "status": "draft"
+  },
+  "photo.attempts": {
+    "text": "Upload tries: {n}",
+    "status": "draft"
+  },
+  "photo.needMore": {
+    "text": "Add at least {count, plural, one {# photo} other {# photos}}.",
+    "status": "draft"
+  },
+  "photo.offline": {
+    "text": "You are offline. Photos wait here and upload when you reconnect.",
+    "status": "draft"
+  },
+  "photo.empty": {
+    "text": "No photos yet.",
+    "status": "draft"
+  },
+  "btn.retryUploads": {
+    "text": "Retry uploads",
     "status": "draft"
   }
 }

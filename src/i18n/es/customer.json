@@ -540,11 +540,11 @@
     "status": "draft"
   },
   "rating.pending": {
-    "text": "Tu pago se libera cuando cierra el plazo para reportar. Después podrás calificar.",
+    "text": "Aprueba para liberar el saldo. Si no hay respuesta, se libera solo. Después podrás calificar.",
     "status": "draft"
   },
   "timeline.closeNote": {
-    "text": "Si el trabajo está bien, cierra el plazo para reportar. El pago se libera y podrás calificar. En la vida real esto espera 24 horas.",
+    "text": "Si el trabajo está bien, toca Aprobar. Este botón de demo adelanta el reloj a la liberación automática ({hours, plural, one {# hora} other {# horas}}).",
     "status": "draft"
   },
   "timeline.closeFailed": {
@@ -569,6 +569,290 @@
   },
   "state.pendingReview": {
     "text": "En revisión",
+    "status": "draft"
+  },
+  "completion.title": {
+    "text": "Revisa el trabajo terminado",
+    "status": "draft"
+  },
+  "completion.intro": {
+    "text": "Mira las fotos de después. La lista es opcional. Aprobar libera el saldo.",
+    "status": "draft"
+  },
+  "completion.deposit": {
+    "text": "Anticipo ya pagado: {amount}",
+    "status": "draft"
+  },
+  "completion.balance": {
+    "text": "Saldo por liberar: {amount}",
+    "status": "draft"
+  },
+  "completion.countdown": {
+    "text": "Se libera el {when} si no hay respuesta. Quedan cerca de {hours, plural, one {# hora} other {# horas}}.",
+    "status": "draft"
+  },
+  "completion.checklist": {
+    "text": "Revisión opcional",
+    "status": "draft"
+  },
+  "completion.checklistNote": {
+    "text": "Marcar los puntos es opcional. Con aprobar basta.",
+    "status": "draft"
+  },
+  "completion.core": {
+    "text": "En todos los trabajos",
+    "status": "draft"
+  },
+  "completion.trade": {
+    "text": "Para este servicio",
+    "status": "draft"
+  },
+  "completion.photos": {
+    "text": "Fotos de después",
+    "status": "draft"
+  },
+  "completion.demoPay": {
+    "text": "Esta liberación es simulada. No se mueve un pago real.",
+    "status": "draft"
+  },
+  "btn.approveJob": {
+    "text": "Aprobar",
+    "status": "draft"
+  },
+  "review.fixx.title": {
+    "text": "En revisión por FIXX",
+    "status": "draft"
+  },
+  "review.fixx.body": {
+    "text": "El profesional puede corregirlo en una visita de regreso antes del {when}. FIXX está revisando el reporte.",
+    "status": "draft"
+  },
+  "review.fixx.released": {
+    "text": "Liberado: {amount}",
+    "status": "draft"
+  },
+  "review.fixx.held": {
+    "text": "Retenido: {amount}",
+    "status": "draft"
+  },
+  "problem.category": {
+    "text": "¿Qué tipo de problema?",
+    "status": "draft"
+  },
+  "problem.needCategory": {
+    "text": "Elige una categoría.",
+    "status": "draft"
+  },
+  "problem.needPhoto": {
+    "text": "Agrega al menos una foto.",
+    "status": "draft"
+  },
+  "problem.photo": {
+    "text": "Foto del problema",
+    "status": "draft"
+  },
+  "btn.addProblemPhoto": {
+    "text": "Agregar foto",
+    "status": "draft"
+  },
+  "btn.reportProblem": {
+    "text": "Reportar problema",
+    "status": "draft"
+  },
+  "problem.cat.incomplete": {
+    "text": "El trabajo se ve incompleto",
+    "status": "draft"
+  },
+  "problem.cat.quality": {
+    "text": "La calidad es menor a lo cotizado",
+    "status": "draft"
+  },
+  "problem.cat.damage": {
+    "text": "Algo quedó dañado",
+    "status": "draft"
+  },
+  "problem.cat.notAsQuoted": {
+    "text": "El resultado no coincide con la cotización",
+    "status": "draft"
+  },
+  "check.asQuoted": {
+    "text": "El trabajo se hizo como se cotizó",
+    "status": "draft"
+  },
+  "check.areaClean": {
+    "text": "El área quedó limpia",
+    "status": "draft"
+  },
+  "check.noDamage": {
+    "text": "No quedó ningún daño",
+    "status": "draft"
+  },
+  "check.plumbing.noLeaks": {
+    "text": "No hay fugas después de dejar correr el agua 2 minutos",
+    "status": "draft"
+  },
+  "check.plumbing.drainsClear": {
+    "text": "Los desagües corren limpios",
+    "status": "draft"
+  },
+  "check.plumbing.shutoffsWork": {
+    "text": "Las llaves de paso abren y cierran",
+    "status": "draft"
+  },
+  "check.hvac.cools": {
+    "text": "El equipo enfría la habitación",
+    "status": "draft"
+  },
+  "check.hvac.drainFlows": {
+    "text": "La línea de drenaje fluye",
+    "status": "draft"
+  },
+  "check.hvac.filterSeated": {
+    "text": "El filtro está bien colocado",
+    "status": "draft"
+  },
+  "check.electrical.outletsWork": {
+    "text": "Cada contacto funciona",
+    "status": "draft"
+  },
+  "check.electrical.fixturesWork": {
+    "text": "Cada luminaria funciona",
+    "status": "draft"
+  },
+  "check.electrical.panelClosed": {
+    "text": "La tapa del tablero está cerrada",
+    "status": "draft"
+  },
+  "check.pest_control.certificate": {
+    "text": "Se entregó el certificado del servicio",
+    "status": "draft"
+  },
+  "check.pest_control.stationsPlaced": {
+    "text": "Las estaciones quedaron como se cotizó",
+    "status": "draft"
+  },
+  "check.pest_control.entryNoted": {
+    "text": "Se señalaron los puntos de entrada",
+    "status": "draft"
+  },
+  "check.painting.coverageEven": {
+    "text": "La cobertura se ve pareja",
+    "status": "draft"
+  },
+  "check.painting.edgesClean": {
+    "text": "Los bordes están limpios",
+    "status": "draft"
+  },
+  "check.painting.noDrips": {
+    "text": "No quedaron escurrimientos",
+    "status": "draft"
+  },
+  "check.gardening.debrisCleared": {
+    "text": "Se retiraron los recortes",
+    "status": "draft"
+  },
+  "check.gardening.plantsSet": {
+    "text": "Las plantas movidas quedaron en su lugar",
+    "status": "draft"
+  },
+  "check.flooring.seamsFlat": {
+    "text": "Las uniones quedan planas",
+    "status": "draft"
+  },
+  "check.flooring.trimSet": {
+    "text": "El zoclo quedó colocado",
+    "status": "draft"
+  },
+  "check.concrete.surfaceSet": {
+    "text": "La superficie ya fraguó",
+    "status": "draft"
+  },
+  "check.concrete.edgesFormed": {
+    "text": "Los bordes siguen la cimbra",
+    "status": "draft"
+  },
+  "check.carpentry.fitsSquare": {
+    "text": "La pieza asienta a escuadra",
+    "status": "draft"
+  },
+  "check.carpentry.hardwareTight": {
+    "text": "La herrería quedó firme",
+    "status": "draft"
+  },
+  "check.appliance.powersOn": {
+    "text": "El aparato enciende",
+    "status": "draft"
+  },
+  "check.appliance.cycleRuns": {
+    "text": "Un ciclo corto corre",
+    "status": "draft"
+  },
+  "check.roofing.leaksChecked": {
+    "text": "Se revisó que la reparación no gotee",
+    "status": "draft"
+  },
+  "check.roofing.debrisCleared": {
+    "text": "Se retiraron los escombros",
+    "status": "draft"
+  },
+  "check.handyman.taskDone": {
+    "text": "La tarea cotizada está hecha",
+    "status": "draft"
+  },
+  "check.handyman.areaCleared": {
+    "text": "El área quedó despejada",
+    "status": "draft"
+  },
+  "check.locksmith.lockWorks": {
+    "text": "La cerradura abre y cierra",
+    "status": "draft"
+  },
+  "check.locksmith.keysWork": {
+    "text": "Cada llave funciona",
+    "status": "draft"
+  },
+  "check.cleaning.surfacesClean": {
+    "text": "Las superficies quedaron limpias",
+    "status": "draft"
+  },
+  "check.cleaning.suppliesRemoved": {
+    "text": "Se retiraron los insumos",
+    "status": "draft"
+  },
+  "photo.stamp": {
+    "text": "{when} · {place}",
+    "status": "draft"
+  },
+  "photo.locationNote": {
+    "text": "Ubicación simulada",
+    "status": "draft"
+  },
+  "photo.queued": {
+    "text": "En espera de subir",
+    "status": "draft"
+  },
+  "photo.uploaded": {
+    "text": "Subida",
+    "status": "draft"
+  },
+  "photo.attempts": {
+    "text": "Intentos de subida: {n}",
+    "status": "draft"
+  },
+  "photo.needMore": {
+    "text": "Agrega al menos {count, plural, one {# foto} other {# fotos}}.",
+    "status": "draft"
+  },
+  "photo.offline": {
+    "text": "Estás sin conexión. Las fotos esperan aquí y se suben al reconectar.",
+    "status": "draft"
+  },
+  "photo.empty": {
+    "text": "Aún no hay fotos.",
+    "status": "draft"
+  },
+  "btn.retryUploads": {
+    "text": "Reintentar subida",
     "status": "draft"
   }
 }

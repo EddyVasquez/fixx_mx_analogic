@@ -13,7 +13,7 @@ export type Effect =
   | { type: "createRefund"; amount: number; destination: "original" | "clabe" }
   | { type: "createCase"; heldAmount: number; heldPayout: number; wholeJob: boolean }
   | { type: "qualityPenalty"; professionalId: string | null; reason: string }
-  | { type: "releasePayout" }
+  | { type: "releasePayout"; amount?: number }
   | { type: "startWarranty" };
 
 /** Every transition must emit at least one notification (checked in send). */

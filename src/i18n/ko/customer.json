@@ -675,12 +675,12 @@
     "needsNativeReview": true
   },
   "rating.pending": {
-    "text": "문제 신고 기간이 끝나면 결제가 지급되고, 그 후 평가할 수 있어요.",
+    "text": "승인하면 잔금이 지급돼요. 답이 없으면 자동으로 지급되고, 그 후 평가할 수 있어요.",
     "status": "draft",
     "needsNativeReview": true
   },
   "timeline.closeNote": {
-    "text": "작업이 괜찮으면 신고 기간을 닫으세요. 결제가 풀리고 평가할 수 있어요. 실제로는 24시간을 기다려요.",
+    "text": "작업이 괜찮으면 승인을 누르세요. 이 데모 버튼은 자동 지급({hours, plural, other {#시간}})까지 시계를 옮겨요.",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -711,6 +711,361 @@
   },
   "state.pendingReview": {
     "text": "검토 대기 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.title": {
+    "text": "끝난 작업을 확인해 주세요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.intro": {
+    "text": "작업 후 사진을 확인해 주세요. 목록은 선택 사항이에요. 승인하면 잔금이 지급돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.deposit": {
+    "text": "이미 낸 예약금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.balance": {
+    "text": "지급될 잔금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.countdown": {
+    "text": "답이 없으면 {when}에 지급돼요. 약 {hours, plural, other {#시간}} 남았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.checklist": {
+    "text": "선택 점검",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.checklistNote": {
+    "text": "항목 선택은 선택 사항이에요. 승인만으로 충분해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.core": {
+    "text": "모든 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.trade": {
+    "text": "이 서비스",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.photos": {
+    "text": "작업 후 사진",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "completion.demoPay": {
+    "text": "이 지급은 시뮬레이션이에요. 실제 결제는 움직이지 않아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.approveJob": {
+    "text": "승인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "review.fixx.title": {
+    "text": "FIXX 검토 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "review.fixx.body": {
+    "text": "전문가가 {when} 전에 재방문으로 고칠 수 있어요. FIXX가 신고를 검토하고 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "review.fixx.released": {
+    "text": "지급됨: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "review.fixx.held": {
+    "text": "보류: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.category": {
+    "text": "어떤 문제인가요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.needCategory": {
+    "text": "분류를 선택해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.needPhoto": {
+    "text": "사진을 1장 이상 추가해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.photo": {
+    "text": "문제 사진",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.addProblemPhoto": {
+    "text": "사진 추가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.reportProblem": {
+    "text": "문제 신고",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.cat.incomplete": {
+    "text": "작업이 덜 끝난 것 같아요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.cat.quality": {
+    "text": "견적보다 품질이 낮아요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.cat.damage": {
+    "text": "무언가 손상됐어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "problem.cat.notAsQuoted": {
+    "text": "결과가 견적과 달라요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.asQuoted": {
+    "text": "견적대로 작업됐어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.areaClean": {
+    "text": "작업 구역을 청소했어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.noDamage": {
+    "text": "손상은 남지 않았어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.plumbing.noLeaks": {
+    "text": "물을 2분 동안 튼 뒤 누수가 없어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.plumbing.drainsClear": {
+    "text": "배수구가 잘 빠져요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.plumbing.shutoffsWork": {
+    "text": "차단 밸브가 열리고 닫혀요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.hvac.cools": {
+    "text": "기기가 방을 시원하게 해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.hvac.drainFlows": {
+    "text": "배수 호스가 흐려요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.hvac.filterSeated": {
+    "text": "필터가 제자리에 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.electrical.outletsWork": {
+    "text": "모든 콘센트가 작동해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.electrical.fixturesWork": {
+    "text": "모든 등기구가 작동해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.electrical.panelClosed": {
+    "text": "분전함 덮개가 닫혀 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.pest_control.certificate": {
+    "text": "서비스 증명서를 받았어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.pest_control.stationsPlaced": {
+    "text": "스테이션이 견적대로 설치됐어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.pest_control.entryNoted": {
+    "text": "침입 지점을 안내받았어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.painting.coverageEven": {
+    "text": "칠이 고르게 보여요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.painting.edgesClean": {
+    "text": "모서리가 깔끔해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.painting.noDrips": {
+    "text": "흘러내린 자국이 없어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.gardening.debrisCleared": {
+    "text": "가지치기 잔해를 치웠어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.gardening.plantsSet": {
+    "text": "옮긴 식물이 제자리에 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.flooring.seamsFlat": {
+    "text": "이음매가 평평해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.flooring.trimSet": {
+    "text": "걸레받이가 붙어 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.concrete.surfaceSet": {
+    "text": "표면이 굳었어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.concrete.edgesFormed": {
+    "text": "가장자리가 거푸집을 따라요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.carpentry.fitsSquare": {
+    "text": "부재가 직각으로 맞아요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.carpentry.hardwareTight": {
+    "text": "철물이 단단히 고정됐어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.appliance.powersOn": {
+    "text": "가전이 켜져요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.appliance.cycleRuns": {
+    "text": "짧은 작동이 돌아요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.roofing.leaksChecked": {
+    "text": "수리한 곳에 물이 새지 않는지 확인했어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.roofing.debrisCleared": {
+    "text": "잔해를 치웠어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.handyman.taskDone": {
+    "text": "견적한 일이 끝났어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.handyman.areaCleared": {
+    "text": "작업 구역을 치웠어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.locksmith.lockWorks": {
+    "text": "자물쇠가 열리고 잠겨요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.locksmith.keysWork": {
+    "text": "모든 열쇠가 작동해요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.cleaning.surfacesClean": {
+    "text": "표면을 청소했어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "check.cleaning.suppliesRemoved": {
+    "text": "용품을 치웠어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.stamp": {
+    "text": "{when} · {place}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.locationNote": {
+    "text": "시뮬레이션 위치",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.queued": {
+    "text": "업로드 대기 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.uploaded": {
+    "text": "업로드됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.attempts": {
+    "text": "업로드 시도: {n}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.needMore": {
+    "text": "사진을 {count, plural, other {#장}} 이상 추가해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.offline": {
+    "text": "오프라인이에요. 사진은 여기에 대기했다가 다시 연결되면 올라가요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "photo.empty": {
+    "text": "아직 사진이 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.retryUploads": {
+    "text": "업로드 재시도",
     "status": "draft",
     "needsNativeReview": true
   }

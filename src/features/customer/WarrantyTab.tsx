@@ -49,7 +49,7 @@ export function WarrantyTab({ lang }: { lang: Lang }) {
 
       {st === "running" && (
         <section className="flex flex-col gap-3 rounded-2xl border-2 border-ink bg-paper p-4">
-          <p className="text-sm text-inkSoft">{t("claim.different", { issueHours: config.issueWindowHours })}</p>
+          <p className="text-sm text-inkSoft">{t("claim.different", { issueHours: config.completionCheck.autoReleaseHours })}</p>
           <Field label={t("claim.description")}>
             <textarea className={`${inputClass} min-h-[6rem] py-2`} value={note} onChange={(e) => setNote(e.target.value)} />
           </Field>

@@ -8,6 +8,8 @@ import { resetDemo } from "@/mocks/db/seed";
 import { JOB_ID, session } from "@/features/customer/session";
 import { A11yControl } from "@/ui/A11yControl";
 import { Button } from "@/ui/Button";
+import { DemoValue } from "@/ui/DemoBadge";
+import { usePhotoQueue } from "@/features/shared/JobPhotos";
 import { DecisionsPanel } from "./DecisionsPanel";
 import { ScenarioRunner } from "./ScenarioRunner";
 import { runtime } from "./runtime";
@@ -27,6 +29,7 @@ export function DemoPanel() {
   const lang = i18n.language as Lang;
   const { role, setRole } = useRole();
   const now = useClock();
+  const photos = usePhotoQueue();
   const [triggerError, setTriggerError] = useState<string | null>(null);
   const [method, setMethod] = useState<PayMethod>(session.method);
   const langs: readonly Lang[] = role === "admin" || role === "support" ? config.adminLanguages : config.languages;
@@ -66,7 +69,26 @@ export function DemoPanel() {
           {[1, 12, 24].map((h) => (
             <Button key={h} variant="secondary" className="text-sm" onClick={() => runtime.advanceHours(h)}>{t("clock.forward", { hours: h })}</Button>
           ))}
-          <Button variant="secondary" className="text-sm" onClick={() => { runtime.reset(); void resetDemo(); }}>{t("btn.resetData")}</Button>
+          <Button variant="secondary" className="text-sm" onClick={() => { runtime.reset(); photos.reset(); void resetDemo(); }}>{t("btn.resetData")}</Button>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="font-semibold">{t("demo.completionClock")}</p>
+          <p className="text-sm"><DemoValue>{t("demo.completionHint")}</DemoValue></p>
+          {config.completionCheck.reminders.map((r) => (
+            <div key={r.id} className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-sm"><DemoValue>{t("clock.reminderLine", { label: t(`clock.reminder.${r.id}`), hours: r.hours })}</DemoValue></span>
+              <Button variant="secondary" className="text-sm" onClick={() => runtime.advanceHours(r.hours)}>{t("clock.jumpNamed", { hours: r.hours })}</Button>
+            </div>
+          ))}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-sm"><DemoValue>{t("clock.reminderLine", { label: t("clock.autoRelease"), hours: config.completionCheck.autoReleaseHours })}</DemoValue></span>
+            <Button variant="secondary" className="text-sm" onClick={() => runtime.advanceHours(config.completionCheck.autoReleaseHours)}>{t("clock.jumpNamed", { hours: config.completionCheck.autoReleaseHours })}</Button>
+          </div>
+          <label className="flex min-h-touch items-center gap-3 text-sm font-semibold">
+            <input type="checkbox" className="h-6 w-6" checked={!photos.isOnline()} onChange={(e) => photos.setOnline(!e.target.checked)} />
+            {t("demo.offline")}
+          </label>
+          <p className="text-sm text-inkSoft">{photos.isOnline() ? t("demo.offlineOff") : t("demo.offlineOn")}</p>
         </div>
       </Group>
 

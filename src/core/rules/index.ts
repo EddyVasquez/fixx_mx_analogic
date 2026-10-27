@@ -5,3 +5,4 @@ export * from "./held";
 export * from "./refunds";
 export * from "./pricing";
 export * from "./deadlines";
+export * from "./completion";
