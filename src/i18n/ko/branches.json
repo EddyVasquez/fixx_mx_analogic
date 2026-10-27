@@ -219,6 +219,31 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "addl.copper.title": {
+    "text": "추가 동관 미터",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.copper.meters": {
+    "text": "포함된 10 ft를 넘는 미터",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.copper.preview": {
+    "text": "고객 가격: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.copper.invalid": {
+    "text": "0보다 큰 미터 수를 입력해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "addl.copper.note": {
+    "text": "포함된 10 ft를 넘는 {meters} m.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "demo.trigger.title": {
     "text": "이벤트 발생",
     "status": "draft",

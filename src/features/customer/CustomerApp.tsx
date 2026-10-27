@@ -80,7 +80,7 @@ function RequestFlow() {
   const proEvent = (type: string) => {
     if (type === "SEND_QUOTE" && pro) {
       const fee = travelFeeFor(bandFor(pro.zoneId, draft.zoneId, zones));
-      send({ type, total: quote.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: quote.lines });
+      send({ type, total: quote.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: quote.lines, taskId: quote.taskId, tier: quote.tier });
     } else send({ type });
   };
 

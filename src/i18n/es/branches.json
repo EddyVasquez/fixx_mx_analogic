@@ -175,6 +175,26 @@
     "text": "Paga el trabajo adicional",
     "status": "draft"
   },
+  "addl.copper.title": {
+    "text": "Metros extra de cobre",
+    "status": "draft"
+  },
+  "addl.copper.meters": {
+    "text": "Metros además de los 10 ft incluidos",
+    "status": "draft"
+  },
+  "addl.copper.preview": {
+    "text": "Precio para el cliente: {amount}",
+    "status": "draft"
+  },
+  "addl.copper.invalid": {
+    "text": "Escribe metros mayores que 0.",
+    "status": "draft"
+  },
+  "addl.copper.note": {
+    "text": "{meters} m además de los 10 ft incluidos.",
+    "status": "draft"
+  },
   "demo.trigger.title": {
     "text": "Provocar un evento",
     "status": "draft"

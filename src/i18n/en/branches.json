@@ -175,6 +175,26 @@
     "text": "Pay the additional work",
     "status": "draft"
   },
+  "addl.copper.title": {
+    "text": "Extra copper meters",
+    "status": "draft"
+  },
+  "addl.copper.meters": {
+    "text": "Meters beyond the included 10 ft",
+    "status": "draft"
+  },
+  "addl.copper.preview": {
+    "text": "Customer price: {amount}",
+    "status": "draft"
+  },
+  "addl.copper.invalid": {
+    "text": "Enter meters greater than 0.",
+    "status": "draft"
+  },
+  "addl.copper.note": {
+    "text": "{meters} m beyond the included 10 ft.",
+    "status": "draft"
+  },
   "demo.trigger.title": {
     "text": "Trigger an event",
     "status": "draft"

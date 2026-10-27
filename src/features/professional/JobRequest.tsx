@@ -36,7 +36,7 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
     const q = adjustQuote(base, value);
     setError(null);
     // The job still stores this release ratio until the labor payout itself is saved. It is not used to price the quote.
-    send({ type: "SEND_QUOTE", total: q.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: q.lines, ...(reason.trim() ? { adjustmentReason: reason.trim() } : {}) });
+    send({ type: "SEND_QUOTE", total: q.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: q.lines, taskId: base.taskId, tier: base.tier, ...(reason.trim() ? { adjustmentReason: reason.trim() } : {}) });
   };
 
   return (
