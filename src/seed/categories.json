@@ -68,7 +68,7 @@
   {
     "id": "handyman",
     "catalogCategory": "Handyman",
-    "names": { "en": "Handyman", "es": "Manitas", "ko": "생활 수리" },
+    "names": { "en": "Handyman", "es": "Mantenimiento general", "ko": "생활 수리" },
     "lineType": "perVisit"
   },
   {
