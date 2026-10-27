@@ -5,6 +5,7 @@ import type { JobCtx } from "@/core/machines";
 import { confirmPayment, ensureReference } from "@/mocks/runtime/paymentActors";
 import type { DemoRuntime } from "@/mocks/runtime/runtime";
 import { Button } from "@/ui/Button";
+import { EXTRA_COPPER_LINE } from "@/core/pricing/extraCopper";
 import { useMoney } from "@/features/shared/Money";
 import { TranslatedText } from "@/features/shared/TranslatedText";
 import { PaymentSchedule, ReferenceBox } from "./PaymentSchedule";
@@ -15,10 +16,14 @@ export function AdditionalApproval({ ctx, viewerLang, onApprove, onDecline }: { 
   const { t } = useTranslation();
   const money = useMoney();
   const card = ctx.method === "card" || ctx.method === "wallet";
+  const copper = ctx.additional?.lineId === EXTRA_COPPER_LINE;
   return (
     <section className="flex flex-col gap-3 rounded-2xl border-2 border-ink bg-paper p-4">
       <h3 className="text-lg font-bold">{t("addl.approve.title")}</h3>
-      <p><TranslatedText text={session.additionalNote} from={session.additionalLang} to={viewerLang} /></p>
+      {copper
+        ? <p>{t("quote.line.extraCopper")}</p>
+        : <p><TranslatedText text={session.additionalNote} from={session.additionalLang} to={viewerLang} /></p>}
+      {copper && <p>{t("addl.copper.note", { meters: ctx.additional?.meters ?? 0 })}</p>}
       <p className="text-xl font-bold">{t("addl.amount", { amount: money(ctx.additional?.amount ?? 0) })}</p>
       <p>{card ? t("addl.card") : t("addl.cash")}</p>
       <div className="flex gap-2">

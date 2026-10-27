@@ -375,6 +375,10 @@
     "text": "Booking fee",
     "status": "approved"
   },
+  "quote.line.extraCopper": {
+    "text": "Extra copper line",
+    "status": "draft"
+  },
   "quote.line.urgent": {
     "text": "Urgent surcharge",
     "status": "draft"
