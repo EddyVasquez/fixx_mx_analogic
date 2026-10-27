@@ -1,5 +1,5 @@
 {
- "version": "2026-10-27-7f60beef",
+ "version": "2026-10-27-629258a4",
  "tasks": {
   "FIXX-PNT-001": {
    "id": "FIXX-PNT-001",
@@ -245,10 +245,10 @@
     {
      "id": "L0004",
      "tier": "1 t",
-     "itemId": "HVC-M09",
+     "itemId": "HVC-M16",
      "qty": 1,
-     "basis": "per extra meter beyond kit; multiply by meters needed",
-     "unitPrice": 196,
+     "basis": "per extra metre beyond the 3.05 m (10 ft) kit; multiply by metres needed",
+     "unitPrice": 196.84,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -267,10 +267,10 @@
     {
      "id": "L0007",
      "tier": "1.5 t",
-     "itemId": "HVC-M10",
+     "itemId": "HVC-M16",
      "qty": 1,
-     "basis": "per extra meter beyond kit; multiply by meters needed",
-     "unitPrice": 221,
+     "basis": "per extra metre beyond the 3.05 m (10 ft) kit; multiply by metres needed",
+     "unitPrice": 196.84,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -289,10 +289,10 @@
     {
      "id": "L0010",
      "tier": "2 t",
-     "itemId": "HVC-M11",
+     "itemId": "HVC-M17",
      "qty": 1,
-     "basis": "per extra meter beyond kit; multiply by meters needed",
-     "unitPrice": 280,
+     "basis": "per extra metre beyond the 3.05 m (10 ft) kit; multiply by metres needed",
+     "unitPrice": 351.18,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -311,10 +311,10 @@
     {
      "id": "L0013",
      "tier": "3 t",
-     "itemId": "HVC-M12",
+     "itemId": "HVC-M17",
      "qty": 1,
-     "basis": "per extra meter beyond kit; multiply by meters needed",
-     "unitPrice": 321,
+     "basis": "per extra metre beyond the 3.05 m (10 ft) kit; multiply by metres needed",
+     "unitPrice": 351.18,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -446,7 +446,7 @@
      "itemId": "HVC-M15",
      "qty": 1,
      "basis": "1 line-set kit",
-     "unitPrice": 796.92,
+     "unitPrice": 1397.21,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -501,7 +501,7 @@
      "itemId": "HVC-M15",
      "qty": 1,
      "basis": "1 line-set kit",
-     "unitPrice": 796.92,
+     "unitPrice": 1397.21,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -6074,13 +6074,13 @@
   "HVC-M13": {
    "id": "HVC-M13",
    "category": "HVAC",
-   "name": "Cluxer copper line-set kit ¼ + ⅜, insulated, 10 ft / 3.05 m (1–1.5 t)",
+   "name": "Cluxer copper line-set kit ¼ + ⅜, ⅜ in insulation, 10 ft / 3.05 m (1–1.5 t)",
    "spanish": "Kit tubería de cobre ¼ y ⅜ con aislante de ⅜, Cluxer CXC12N38, 10 pies",
-   "spec": "¼ + ⅜ in, all-copper, ⅜ in insulation, nuts included; 10 ft (3.05 m) – ASSUMPTION: shortest length; original Mercado Libre kit length not recorded",
+   "spec": "¼ in liquid + ⅜ in suction, all-copper, ⅜ in (9.5 mm) closed-cell PE insulation, flare nuts; 10 ft (3.05 m) base run (decided by Eduardo, Oct 27, 2026)",
    "unit": "kit",
    "store": "Cluxer México (official store)",
    "price": 873.26,
-   "iva": "assumed included",
+   "iva": "included",
    "checkDate": "2026-10-27",
    "flag": "none",
    "homeownerChoice": false
@@ -7726,14 +7726,14 @@
   "HVC-M15": {
    "id": "HVC-M15",
    "category": "HVAC",
-   "name": "Cluxer copper line-set kit ⅜ + ⅝, 4 m (2–3 t)",
-   "spanish": "Kit tubería de cobre 5/8 y 3/8 4 m Cluxer CXKCU5838",
-   "spec": "⅜ + ⅝ in, 4 m, all-copper (listing: 'Material del Kit: Cobre')",
+   "name": "Cluxer copper line-set kit ⅜ + ⅝, ⅜ in insulation, 10 ft / 3.05 m (2–3 t)",
+   "spanish": "Kit tubería de cobre ⅝ y ⅜ con aislante de ⅜, Cluxer CXC41NC38, 10 pies",
+   "spec": "⅜ in liquid + ⅝ in suction, all-copper, ⅜ in (9.5 mm) closed-cell PE insulation, flare nuts; 10 ft (3.05 m) base run (decided by Eduardo, Oct 27, 2026)",
    "unit": "kit",
-   "store": "Climas Monterrey (Servi Climas y Calefacciones Monterrey)",
-   "price": 796.92,
-   "iva": "assumed included",
-   "checkDate": "2026-10-26",
+   "store": "Cluxer México (official store)",
+   "price": 1397.21,
+   "iva": "included",
+   "checkDate": "2026-10-27",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8867,6 +8867,34 @@
    "store": "Stihl México (official store)",
    "price": 700,
    "iva": "assumed included",
+   "checkDate": "2026-10-27",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "HVC-M16": {
+   "id": "HVC-M16",
+   "category": "HVAC",
+   "name": "Extra metre of insulated copper line set ¼ + ⅜ (1–1.5 t, as-needed)",
+   "spanish": "Metro adicional de tubería de cobre ¼ y ⅜ con aislante",
+   "spec": "¼ + ⅜ in all-copper, ⅜ in insulation (Cluxer CXC12N38 equivalent)",
+   "unit": "m",
+   "store": "Cluxer México (official store)",
+   "price": 196.84,
+   "iva": "included",
+   "checkDate": "2026-10-27",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "HVC-M17": {
+   "id": "HVC-M17",
+   "category": "HVAC",
+   "name": "Extra metre of insulated copper line set ⅜ + ⅝ (2–3 t, as-needed)",
+   "spanish": "Metro adicional de tubería de cobre ⅜ y ⅝ con aislante",
+   "spec": "⅜ + ⅝ in all-copper, ⅜ in insulation (Cluxer CXC41NC38 equivalent)",
+   "unit": "m",
+   "store": "Cluxer México (official store)",
+   "price": 351.18,
+   "iva": "included",
    "checkDate": "2026-10-27",
    "flag": "none",
    "homeownerChoice": false

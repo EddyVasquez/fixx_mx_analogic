@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { formatMXN } from "../src/core/clock/clock";
 import {
-  bookingFee, CARD_FEE_IVA, laborAfterCommission, laborCommission, materialsPrice, payoutFloor, proLaborPayout, revenue, roundMoney, wageFloorForDays
+  bookingFee, CARD_FEE_IVA, customerLabor, laborAfterCommission, laborCommission, materialsPrice, payoutFloor, proLaborPayout, proShare, revenue, roundHalfUp, roundMoney, wageFloorForDays
 } from "../src/config/revenue";
 import { quoteTask, quoteVisit, type Catalog } from "../src/core/pricing/instantQuote";
 import { customerLines } from "../src/core/pricing/quote";
@@ -93,20 +93,53 @@ describe("revenue rates", () => {
     expect(customerLines(outlet)).toContainEqual({ id: "booking", amount: 37.44 });
   });
 
+  it("rounds half-up to the centavo, including values that land on 5", () => {
+    expect(roundHalfUp(534.285)).toBe(534.29);
+    expect(roundHalfUp(356.19 * 1.5)).toBe(534.29);
+    expect(roundHalfUp(1.005)).toBe(1.01);
+    expect(roundHalfUp(1.015)).toBe(1.02);
+    expect(roundHalfUp(2.675)).toBe(2.68);
+    expect(roundHalfUp(10.225)).toBe(10.23);
+    expect(roundHalfUp(1.004)).toBe(1);
+    expect(roundMoney(478.125)).toBe(478.13);
+  });
+
   it("ELC-001 Emergency keeps the catalog floor unscaled and prices the scaled shortfall", () => {
     const x = quoteTask(cat, { taskId: "FIXX-ELC-001", tier: "Budget", urgency: "EMERGENCY" });
+    const raw = x.laborBasis * x.multiplier;
     expect(x.multiplier).toBe(1.5);
     expect(x.floor).toBe(356.19);
     expect(x.floor).toBe(cat.labor[x.laborKey]!.floor);
     expect(x.labor).toBe(562.5);
-    // 356.19 × 1.50 = 534.285. Half-up to the centavo is 534.29.
-    // A reference check quoted payout 534.28, which is that product cut off at the centavo.
+    expect(customerLabor(raw)).toBe(562.5);
+    expect(proShare(raw)).toBe(478.13);
+    expect(laborCommission(raw)).toBe(84.37);
+    expect(roundMoney(proShare(raw) + laborCommission(raw))).toBe(x.labor);
+    expect(payoutFloor(x.floor, x.multiplier)).toBe(534.29);
     expect(x.payout).toBe(534.29);
-    expect(x.payout).toBe(payoutFloor(x.floor, x.multiplier));
     expect(x.bookingFee).toBe(56.16);
-    expect(x.bookingFee).toBe(bookingFee(x.labor, x.payout));
+    expect(x.bookingFee).toBe(bookingFee(raw, x.payout));
+    expect(customerLines(x).find((l) => l.id === "work")?.amount).toBe(562.5);
     expect(customerLines(x)).toContainEqual({ id: "booking", amount: 56.16 });
     expect(x.total).toBe(roundMoney(x.materials + x.labor + x.bookingFee));
+  });
+
+  it("rounds CAR-001 Medium labor before the split, and the shares add up to that labor", () => {
+    const x = quoteTask(cat, { taskId: "FIXX-CAR-001", tier: "Standard", urgency: "MEDIUM" });
+    const raw = x.laborBasis * x.multiplier;
+    expect(raw).toBeCloseTo(417.956, 3);
+    expect(x.labor).toBe(417.96);
+    expect(proShare(raw)).toBe(355.26);
+    expect(laborCommission(raw)).toBe(62.7);
+    expect(roundMoney(proShare(raw) + laborCommission(raw))).toBe(417.96);
+    expect(customerLines(x).find((l) => l.id === "work")?.amount).toBe(417.96);
+    for (const taskId of ["FIXX-CLN-001", "FIXX-CLN-002", "FIXX-CLN-003", "FIXX-CLN-004"]) {
+      for (const urgency of ["MEDIUM", "HIGH", "EMERGENCY"] as const) {
+        const tier = cat.tasks[taskId]!.tiers[0]!;
+        const job = quoteTask(cat, { taskId, tier, urgency });
+        expect(job.labor).toBe(customerLabor(job.laborBasis * job.multiplier));
+      }
+    }
   });
 
   it("pays the cleaning wage floor per visit day when the labor share would go below it", () => {
@@ -143,7 +176,19 @@ describe("revenue rates", () => {
 
   it("records the refreshed copper line-set kit on the 1 t and 1.5 t install rows", () => {
     expect(cat.items["HVC-M13"]!.price).toBe(873.26);
+    expect(cat.items["HVC-M15"]!.price).toBe(1397.21);
+    expect(cat.items["HVC-M16"]!.price).toBe(196.84);
+    expect(cat.items["HVC-M17"]!.price).toBe(351.18);
     expect(quote("FIXX-HVC-001", "1 t").materialsRaw).toBe(1486.76);
     expect(quote("FIXX-HVC-001", "1.5 t").materialsRaw).toBe(1486.76);
+    expect(quote("FIXX-HVC-001", "2 t").materialsRaw).toBe(2010.71);
+    expect(quote("FIXX-HVC-001", "3 t").materialsRaw).toBe(2010.71);
+    for (const tier of ["1 t", "1.5 t", "2 t", "3 t"]) {
+      const lines = cat.tasks["FIXX-HVC-001"]!.lines.filter((l) => l.tier === tier);
+      const baseIds = lines.filter((l) => l.type === "base").map((l) => l.itemId);
+      expect(baseIds.some((id) => ["HVC-M09", "HVC-M10", "HVC-M11", "HVC-M12", "HVC-M16", "HVC-M17"].includes(id))).toBe(false);
+      const extra = lines.find((l) => l.itemId === (tier === "1 t" || tier === "1.5 t" ? "HVC-M16" : "HVC-M17"));
+      expect(extra?.type).toBe("as-needed");
+    }
   });
 });

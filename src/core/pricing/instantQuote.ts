@@ -213,7 +213,9 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const floor = wageFloorForLabor(cat, lab, estDays, scale);
   const marketLabor = round2(lab.rateTypical * qtyForLabor + addonLabor);
   const laborBasis = Math.max(marketLabor, floor);
-  const labor = round2(laborBasis * mult);
+  // Round the customer labor after urgency. The split uses this same product, before that centavo round.
+  const laborAfterUrgency = laborBasis * mult;
+  const labor = round2(laborAfterUrgency);
   if (lab.flag === "regulated") humanReview.push({ kind: "labor", ref: key, reason: "regulated" });
 
   // separate lists. Flagged cleaning lines (work at height, mold) are reviewTrigger "as-needed": pending only when selected.
@@ -236,8 +238,8 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   if (blocked) { status = "BLOCKED_STALE_PRICE"; reasons.push("price-older-than-30-days"); }
 
   const usedFloor = payoutFloor(floor, mult);
-  const payout = proLaborPayout(labor, usedFloor);
-  const fee = bookingFee(labor, usedFloor);
+  const payout = proLaborPayout(laborAfterUrgency, usedFloor);
+  const fee = bookingFee(laborAfterUrgency, usedFloor);
   const total = round2(materials + labor + selectedTotal + (diagnosisFee ?? 0) + fee);
   return {
     catalogVersion: cat.version, taskId, tier: input.tier, urgency: input.urgency, multiplier: mult, status, reasons, scale, estJobDays: estDays, trade: lab.trade, laborKey: key, laborFlag: lab.flag,
@@ -277,10 +279,11 @@ export function quoteVisit(
   }));
   const visitFloor = wageFloorForDays(topDaily, days);
   const visitLaborBasis = Math.max(marketTotal, visitFloor);
-  const visitLabor = round2(visitLaborBasis * mult);
+  const visitLaborAfterUrgency = visitLaborBasis * mult;
+  const visitLabor = round2(visitLaborAfterUrgency);
   const usedVisitFloor = payoutFloor(visitFloor, mult);
-  const visitPayout = proLaborPayout(visitLabor, usedVisitFloor);
-  const visitBookingFee = bookingFee(visitLabor, usedVisitFloor);
+  const visitPayout = proLaborPayout(visitLaborAfterUrgency, usedVisitFloor);
+  const visitBookingFee = bookingFee(visitLaborAfterUrgency, usedVisitFloor);
 
   const raw = parts.map((p) => (marketTotal > 0 ? round2((visitLabor * p.marketLabor) / marketTotal) : 0));
   const remainder = round2(visitLabor - raw.reduce((s, x) => s + x, 0));

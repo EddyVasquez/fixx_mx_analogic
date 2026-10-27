@@ -31,8 +31,8 @@ export const revenue = {
   floorScalesWithUrgency: true,
 
   /**
-   * PLACEHOLDER (undecided): how money is rounded.
-   * Conservative default: half-up to the centavo on each money amount.
+   * Confirmed: half-up to the centavo on every money amount.
+   * Labor is rounded after urgency, and only then split.
    */
   rounding: {
     decimals: 2,
@@ -74,10 +74,24 @@ export const revenue = {
 /** IVA on the card fee only. 16% as a multiplier (fee × 1.16). Catalog material prices already include their own IVA. */
 export const CARD_FEE_IVA = 1.16;
 
-/** Half-up to the configured number of decimals. The centavo is the default. */
-export function roundMoney(amount: number, decimals: number = revenue.rounding.decimals): number {
+/**
+ * Half-up to the centavo, computed in integer minor units.
+ * A 1e-8 bias lifts binary values that land just under an exact half
+ * (1.005 × 100 is 100.49999999999999; 534.285 must become 534.29).
+ */
+export function roundHalfUp(amount: number, decimals: number = revenue.rounding.decimals): number {
+  if (!Number.isFinite(amount)) return amount;
+  const sign = amount < 0 ? -1 : 1;
   const factor = 10 ** decimals;
-  return Math.round((amount + Number.EPSILON) * factor) / factor;
+  const minor = Math.floor(Math.abs(amount) * factor + 1e-8 + 0.5);
+  return (sign * minor) / factor;
+}
+
+/** Half-up to the configured number of decimals. The centavo is the default. */
+export const roundMoney = roundHalfUp;
+
+function toMinor(amount: number): number {
+  return Math.round(roundHalfUp(amount) * 100);
 }
 
 /**
@@ -89,14 +103,31 @@ export function materialsPrice(rawMaterialCost: number): number {
   return roundMoney(rawMaterialCost * (1 + revenue.materialsMarkup) / divisor);
 }
 
-/** FIXX's share of labor, before the wage floor. Not a customer charge. */
-export function laborCommission(labor: number): number {
-  return roundMoney(labor * revenue.proCommission);
+/**
+ * Urgency-applied labor before the customer centavo round.
+ * Customer labor is roundHalfUp of this. The professional's share is roundHalfUp of this times (1 − proCommission).
+ * Rounding the customer labor first, then multiplying again, would move a fraction of a centavo twice.
+ */
+export function proShare(laborAfterUrgency: number): number {
+  return roundHalfUp(laborAfterUrgency * (1 - revenue.proCommission));
+}
+
+/** Customer labor: half-up to the centavo after urgency, before the split. */
+export function customerLabor(laborAfterUrgency: number): number {
+  return roundHalfUp(laborAfterUrgency);
+}
+
+/**
+ * FIXX's share of the customer labor line. It is the remainder after proShare,
+ * so the two parts add up to the rounded labor. It is not round(labor × proCommission).
+ */
+export function laborCommission(laborAfterUrgency: number): number {
+  return (toMinor(customerLabor(laborAfterUrgency)) - toMinor(proShare(laborAfterUrgency))) / 100;
 }
 
 /** Labor after FIXX's share, before the wage floor. */
-export function laborAfterCommission(labor: number): number {
-  return roundMoney(labor * (1 - revenue.proCommission));
+export function laborAfterCommission(laborAfterUrgency: number): number {
+  return proShare(laborAfterUrgency);
 }
 
 /**
@@ -127,16 +158,16 @@ export function payoutFloor(
  * `wageFloor` must already be the floor used (see payoutFloor).
  * Pure function: storing and releasing this amount is a later change.
  */
-export function proLaborPayout(labor: number, wageFloor: number): number {
-  return roundMoney(Math.max(laborAfterCommission(labor), wageFloor));
+export function proLaborPayout(laborAfterUrgency: number, wageFloor: number): number {
+  return Math.max(toMinor(proShare(laborAfterUrgency)), toMinor(roundHalfUp(wageFloor))) / 100;
 }
 
 /**
- * Amount added to the customer total when the wage floor used is above labor after FIXX's share.
- * Zero when the floor does not bind. Not a share of labor, and not shown as one.
+ * roundHalfUp(effective floor) − proShare, and never below zero.
+ * `wageFloor` is the floor used (already scaled by urgency when that rule applies).
+ * Not a share of labor, and not shown as one.
  */
-export function bookingFee(labor: number, wageFloor: number): number {
-  const net = laborAfterCommission(labor);
-  if (wageFloor <= net) return 0;
-  return roundMoney(wageFloor - net);
+export function bookingFee(laborAfterUrgency: number, wageFloor: number): number {
+  const fee = toMinor(roundHalfUp(wageFloor)) - toMinor(proShare(laborAfterUrgency));
+  return fee > 0 ? fee / 100 : 0;
 }

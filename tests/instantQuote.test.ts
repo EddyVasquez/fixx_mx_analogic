@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { bookingFee, materialsPrice, payoutFloor, proLaborPayout, roundMoney } from "../src/config/revenue";
+const rawLabor = (x: { laborBasis: number; multiplier: number }) => x.laborBasis * x.multiplier;
 import {
   quoteTask, quoteVisit, toUrgencyLevel, diagnosisFeeFor, repairDueAfterDiagnosis, reconcileScopeChange, priceFreshness, resolveTaskId,
   type Catalog, type UrgencyLevel
@@ -26,9 +27,10 @@ describe("acceptance: every Quote_Builder row", () => {
         && near(x.labor, r.labor)
         && near(x.materialsRaw, r.materials)
         && x.materials === materialsPrice(x.materialsRaw)
-        && x.bookingFee === bookingFee(x.labor, payoutFloor(x.floor, x.multiplier))
+        && x.labor === roundMoney(rawLabor(x))
+        && x.bookingFee === bookingFee(rawLabor(x), payoutFloor(x.floor, x.multiplier))
         && near(x.total, roundMoney(x.materials + x.labor + x.bookingFee))
-        && near(x.payout, proLaborPayout(x.labor, payoutFloor(x.floor, x.multiplier))));
+        && near(x.payout, proLaborPayout(rawLabor(x), payoutFloor(x.floor, x.multiplier))));
     });
     expect(wrong.map((r) => `${r.taskId}|${r.tier}|${r.urgency}`)).toEqual([]);
   });
@@ -44,9 +46,9 @@ describe("spec examples", () => {
       expect(near(x.materialsRaw, 159.1)).toBe(true);
       expect(x.materials).toBe(materials);
       expect(x.labor).toBe(labor[i]);
-      expect(x.bookingFee).toBe(bookingFee(x.labor, payoutFloor(x.floor, x.multiplier)));
+      expect(x.bookingFee).toBe(bookingFee(rawLabor(x), payoutFloor(x.floor, x.multiplier)));
       expect(x.total).toBe(roundMoney(materials + labor[i]! + x.bookingFee));
-      expect(x.payout).toBe(proLaborPayout(labor[i]!, payoutFloor(x.floor, x.multiplier)));
+      expect(x.payout).toBe(proLaborPayout(rawLabor(x), payoutFloor(x.floor, x.multiplier)));
     });
     expect(q("FIXX-PLM-001", "Budget", "STANDARD").total).toBe(974.34);
     expect(q("FIXX-PLM-001", "Budget", "STANDARD").payout).toBe(680);
