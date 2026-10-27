@@ -235,7 +235,7 @@
     "needsNativeReview": true
   },
   "request.emergencyNote": {
-    "text": "더 빠르게 연결되는 대신 가격이 높아져요. 추가 요금은 {amount}예요.",
+    "text": "더 빠르게 연결되는 대신 가격이 높아져요. 더 높은 가격은 견적에 이미 포함되어 있어요.",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -493,6 +493,10 @@
     "text": "시공",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "quote.line.booking": {
+    "text": "예약 수수료",
+    "status": "approved"
   },
   "quote.line.urgent": {
     "text": "긴급 추가 요금",

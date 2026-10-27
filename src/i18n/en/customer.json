@@ -188,7 +188,7 @@
     "status": "draft"
   },
   "request.emergencyNote": {
-    "text": "Faster matching at a higher price. The surcharge is {amount}.",
+    "text": "Faster matching at a higher price. That higher price is already included in the quote.",
     "status": "draft"
   },
   "request.errorDescription": {
@@ -394,6 +394,10 @@
   "quote.line.work": {
     "text": "Labor",
     "status": "draft"
+  },
+  "quote.line.booking": {
+    "text": "Booking fee",
+    "status": "approved"
   },
   "quote.line.urgent": {
     "text": "Urgent surcharge",

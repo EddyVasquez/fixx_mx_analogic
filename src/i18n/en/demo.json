@@ -184,7 +184,7 @@
     "status": "draft"
   },
   "decisions.surcharge": {
-    "text": "Urgent surcharge: {value}",
+    "text": "Urgent visits use a higher labor rate, already included in the price.",
     "status": "draft"
   },
   "decisions.travel": {

@@ -1,35 +1,54 @@
+import { bookingFee, proLaborPayout, revenue, roundMoney } from "../../config/revenue";
 import { config } from "../config/fixx.config";
-import { isWithinLimits, priceBounds, round2, type QuoteLine } from "../rules";
+import { priceBounds, type QuoteLine } from "../rules";
+import { customerLines } from "./quote";
 
-const round10 = (n: number) => Math.round(n / 10) * 10;
+export interface AdjustableQuote {
+  total: number;
+  lines: QuoteLine[];
+  labor: number;
+  materials: number;
+  wageFloor: number;
+  bookingFee: number;
+  payout: number;
+}
 
-/** FIXX's suggested payout for a quote total. Professionals see payouts only; customers see totals. */
-export const suggestedPayout = (total: number, payoutRatio: number): number => round2(total * payoutRatio);
+/** The professional can move the suggested labor payout by the configured percent, and never below the wage floor. */
+export function payoutLimits(suggestedPayout: number, wageFloor: number, pct: number = config.professionalPriceLimitPct) {
+  const band = priceBounds(suggestedPayout, pct);
+  return { min: roundMoney(Math.max(band.min, wageFloor)), max: band.max };
+}
 
 /**
- * The professional adjusts the suggested payout within +/- the configured limit. The customer's quote is scaled by the same factor.
- * The urgent surcharge line is not scaled. Throws if the proposed payout is outside the limits.
+ * The professional adjusts labor payout, not a share of the customer total.
+ * Materials stay at the catalog materials price.
+ * The customer total is materials + labor + the booking fee. The booking fee is the shortfall
+ * when the wage floor used is higher than labor after FIXX's share, and zero otherwise.
  */
 export function adjustQuote(
-  base: { total: number; lines: QuoteLine[] }, payoutRatio: number, proposedPayout: number, pct: number = config.professionalPriceLimitPct
-): { total: number; lines: QuoteLine[]; payout: number; factor: number } {
-  const suggested = suggestedPayout(base.total, payoutRatio);
-  if (!isWithinLimits(suggested, proposedPayout, pct)) throw new RangeError("payout is outside the allowed range");
-  const factor = proposedPayout / suggested;
-  if (factor === 1) return { total: base.total, lines: base.lines.map((l) => ({ ...l })), payout: suggested, factor: 1 };
+  base: AdjustableQuote, proposedPayout: number, pct: number = config.professionalPriceLimitPct
+): AdjustableQuote & { factor: number } {
+  const proposed = roundMoney(proposedPayout);
+  const limits = payoutLimits(base.payout, base.wageFloor, pct);
+  if (proposed < limits.min - 0.001 || proposed > limits.max + 0.001) throw new RangeError("payout is outside the allowed range");
+  if (Math.abs(proposed - base.payout) < 0.005) {
+    return { ...base, lines: base.lines.map((l) => ({ ...l })), payout: base.payout, factor: 1 };
+  }
 
-  const urgent = base.lines.filter((l) => l.id === "urgent");
-  const scalable = base.lines.filter((l) => l.id !== "urgent");
-  const baseScalable = scalable.reduce((s, l) => s + l.amount, 0);
-  const target = round10(baseScalable * factor);
-  let used = 0;
-  const lines: QuoteLine[] = scalable.map((l, i) => {
-    const amount = i === scalable.length - 1 ? target - used : round10(l.amount * factor);
-    used += amount;
-    return { id: l.id, amount };
-  });
-  const out = [...lines, ...urgent.map((l) => ({ ...l }))];
-  const total = out.reduce((s, l) => s + l.amount, 0);
-  return { total, lines: out, payout: suggestedPayout(total, payoutRatio), factor };
+  const labor = roundMoney(proposed / (1 - revenue.proCommission));
+  const payout = proLaborPayout(labor, base.wageFloor);
+  const fee = bookingFee(labor, base.wageFloor);
+  const lines = customerLines({ materials: base.materials, labor, bookingFee: fee });
+  const total = roundMoney(lines.reduce((sum, line) => sum + line.amount, 0));
+  return {
+    ...base,
+    labor,
+    lines,
+    total,
+    payout,
+    bookingFee: fee,
+    factor: base.payout === 0 ? 1 : proposed / base.payout
+  };
 }
+
 export { priceBounds };

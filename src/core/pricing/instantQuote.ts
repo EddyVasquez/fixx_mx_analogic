@@ -1,8 +1,10 @@
 /**
  * Instant upfront quotes, built from the FIXX pricing catalog (see docs/FIXX_instant_quote_spec.md).
  * Pure functions: the catalog is passed in, so tests and the app use the same code.
- * All amounts are MXN with IVA included. Urgency multiplies labor only.
+ * The catalog stores raw labor and raw material cost. Materials markup and the labor
+ * share kept by FIXX are applied only in src/config/revenue.ts. Urgency multiplies labor only.
  */
+import { bookingFee, materialsPrice, payoutFloor, proLaborPayout, roundMoney, wageFloorForDays } from "../../config/revenue";
 export type UrgencyLevel = "STANDARD" | "MEDIUM" | "HIGH" | "EMERGENCY";
 export type UiUrgency = "standard" | "medium" | "high";
 
@@ -34,7 +36,14 @@ export type QuoteStatus = "FIXED" | "QUOTE_ON_SITE" | "BLOCKED_STALE_PRICE";
 export interface TaskQuote {
   catalogVersion: string; taskId: string; tier: string; urgency: UrgencyLevel; multiplier: number; status: QuoteStatus; reasons: string[];
   scale: number; estJobDays: number; trade: string; laborKey: string; laborFlag: string;
-  materials: number; marketLabor: number; floor: number; laborBasis: number; labor: number; payout: number;
+  /** Raw catalog material cost, before the materials price is applied. */
+  materialsRaw: number;
+  /** Customer materials price. */
+  materials: number; marketLabor: number;
+  /** Base wage floor from the catalog. Urgency is not stored in this number. */
+  floor: number; laborBasis: number; labor: number; payout: number;
+  /** Shortfall added when the wage floor used is above labor after FIXX's share. Zero otherwise. */
+  bookingFee: number;
   asNeeded: { options: LineOut[]; selected: LineOut[]; selectedTotal: number };
   /** Never priced into the total and never purchased automatically. */
   pendingReview: LineOut[];
@@ -51,7 +60,8 @@ export interface TaskQuote {
   total: number; displayTotal: number;
 }
 
-export const round2 = (n: number): number => Math.round((n + Number.EPSILON) * 100) / 100;
+/** Money rounded with the rule in the revenue config (half-up to the centavo). */
+export const round2 = (n: number): number => roundMoney(n);
 /** Half up to a whole peso. Customer-facing prices use round2 so centavos stay visible. */
 export const roundHalfUp = (n: number): number => Math.floor(n + 0.5);
 
@@ -127,6 +137,22 @@ function lineOut(cat: Catalog, l: CatalogLine, scale: number): LineOut {
   return out;
 }
 
+/** One day's wage floor for this labor row, from the per-trade dailyMin table. The row's own daily minimum is only a fallback. */
+function dailyFloorFor(cat: Catalog, lab: CatalogLabor): number {
+  const fromTrade = cat.dailyMin[lab.trade];
+  return typeof fromTrade === "number" ? fromTrade : lab.dailyMin ?? 0;
+}
+
+/**
+ * Base wage floor for this job, before urgency. At the catalog scope this is labor[key].floor
+ * (daily minimum × days, already rounded up). A different scope rebuilds it from dailyMin.
+ * Payout and the booking fee multiply this by the urgency multiplier.
+ */
+function wageFloorForLabor(cat: Catalog, lab: CatalogLabor, estDays: number, scale: number): number {
+  if (scale === 1 && typeof lab.floor === "number") return lab.floor;
+  return wageFloorForDays(dailyFloorFor(cat, lab), estDays);
+}
+
 const DIAGNOSIS_TRADE: Record<string, string> = {
   Plumbing: "Plumbing", Electrical: "Electrical", HVAC: "HVAC", Appliance: "Appliance", Roofing: "Roofing",
   Carpentry: "Handyman / carpentry", Handyman: "Handyman / carpentry", Locksmith: "Locksmith"
@@ -144,7 +170,7 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const mult = multiplierFor(cat, input.urgency);
   const blank = (reasons: string[], extra: Partial<TaskQuote> = {}): TaskQuote => ({
     catalogVersion: cat.version, taskId, tier: input.tier, urgency: input.urgency, multiplier: mult, status: "QUOTE_ON_SITE", reasons, scale: 1, estJobDays: 0, trade: "", laborKey: "", laborFlag: "none",
-    materials: 0, marketLabor: 0, floor: 0, laborBasis: 0, labor: 0, payout: 0, asNeeded: { options: [], selected: [], selectedTotal: 0 }, pendingReview: [], homeownerChoice: [],
+    materialsRaw: 0, materials: 0, marketLabor: 0, floor: 0, laborBasis: 0, labor: 0, payout: 0, bookingFee: 0, asNeeded: { options: [], selected: [], selectedTotal: 0 }, pendingReview: [], homeownerChoice: [],
     homeownerChoiceRange: null, unpriced: [], humanReview: [], needsHumanReview: false, warnings: [], diagnosisFee: null, total: 0, displayTotal: 0, ...extra
   });
   if (!task) return blank(["unknown-task"]);
@@ -177,15 +203,19 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
       else if (f === "stale") warnings.push(`stale-price:${l.itemId}`);
     }
   }
-  const materials = round2(base.reduce((s, l) => s + (l.unitPrice == null ? 0 : scaledQty(l, scale) * l.unitPrice), 0));
+  // Unit prices already include IVA. Items quoted before tax were grossed up once in the workbook. Do not add 16% again.
+  const materialsRaw = round2(base.reduce((s, l) => s + (l.unitPrice == null ? 0 : scaledQty(l, scale) * l.unitPrice), 0));
+  const materials = materialsPrice(materialsRaw);
 
-  // labor. Add-on labor (oven, fridge, balcony, pet stain) is market labor. Urgency multiplies it. The wage floor stays the visit floor.
+  // labor. Add-on labor (oven, fridge, balcony, pet stain) is market labor. Urgency multiplies customer labor.
+  // The catalog floor stays unscaled. Payout and the booking fee use that floor times the urgency multiplier.
   const estDays = (lab.estJobDays ?? 1) * scale;
-  const dailyMin = lab.dailyMin ?? 0;
-  const floor = round2(dailyMin * Math.max(1, Math.ceil(estDays - 1e-9)));
+  const floor = wageFloorForLabor(cat, lab, estDays, scale);
   const marketLabor = round2(lab.rateTypical * qtyForLabor + addonLabor);
   const laborBasis = Math.max(marketLabor, floor);
-  const labor = round2(laborBasis * mult);
+  // Round the customer labor after urgency. The split uses this same product, before that centavo round.
+  const laborAfterUrgency = laborBasis * mult;
+  const labor = round2(laborAfterUrgency);
   if (lab.flag === "regulated") humanReview.push({ kind: "labor", ref: key, reason: "regulated" });
 
   // separate lists. Flagged cleaning lines (work at height, mold) are reviewTrigger "as-needed": pending only when selected.
@@ -198,7 +228,8 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const choicePrices = choice.filter((l) => l.unitPrice != null).map((l) => l.unitPrice as number);
   const unpriced = [...lines.filter((l) => l.type !== "base" && l.unitPrice == null).map((l) => lineOut(cat, l, scale)), ...unpricedBase.map((l) => lineOut(cat, l, scale))];
 
-  const selectedTotal = round2(selected.reduce((s, l) => s + (l.cost ?? 0), 0));
+  const selectedRaw = round2(selected.reduce((s, l) => s + (l.cost ?? 0), 0));
+  const selectedTotal = selectedRaw === 0 ? 0 : materialsPrice(selectedRaw);
   const diagnosisFee = input.withDiagnosis ? diagnosisFeeFor(cat, task.category, input.urgency) : null;
   if (input.withDiagnosis && diagnosisFee == null) reasons.push("no-diagnosis-fee-data");
 
@@ -206,10 +237,13 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   if (unpricedBase.length) { status = "QUOTE_ON_SITE"; reasons.push("unpriced-base-line"); }
   if (blocked) { status = "BLOCKED_STALE_PRICE"; reasons.push("price-older-than-30-days"); }
 
-  const total = round2(materials + labor + selectedTotal + (diagnosisFee ?? 0));
+  const usedFloor = payoutFloor(floor, mult);
+  const payout = proLaborPayout(laborAfterUrgency, usedFloor);
+  const fee = bookingFee(laborAfterUrgency, usedFloor);
+  const total = round2(materials + labor + selectedTotal + (diagnosisFee ?? 0) + fee);
   return {
     catalogVersion: cat.version, taskId, tier: input.tier, urgency: input.urgency, multiplier: mult, status, reasons, scale, estJobDays: estDays, trade: lab.trade, laborKey: key, laborFlag: lab.flag,
-    materials, marketLabor, floor, laborBasis, labor, payout: labor,
+    materialsRaw, materials, marketLabor, floor, laborBasis, labor, payout, bookingFee: fee,
     asNeeded: { options: asNeededOptions, selected, selectedTotal }, pendingReview, homeownerChoice: choice,
     homeownerChoiceRange: choicePrices.length ? { min: Math.min(...choicePrices), max: Math.max(...choicePrices) } : null,
     unpriced, humanReview, needsHumanReview: humanReview.length > 0, warnings, diagnosisFee, total, displayTotal: round2(total)
@@ -219,8 +253,8 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
 export interface VisitQuote {
   catalogVersion: string; urgency: UrgencyLevel; multiplier: number; status: QuoteStatus; reasons: string[];
   jobs: { taskId: string; tier: string; materials: number; marketLabor: number; labor: number; payout: number }[];
-  marketTotal: number; visitFloor: number; visitLaborBasis: number; visitLabor: number;
-  materials: number; asNeeded: number; diagnosisCredit: number; total: number; displayTotal: number;
+  marketTotal: number; visitFloor: number; visitLaborBasis: number; visitLabor: number; visitPayout: number; bookingFee: number;
+  materialsRaw: number; materials: number; asNeeded: number; diagnosisCredit: number; total: number; displayTotal: number;
   needsHumanReview: boolean;
 }
 /**
@@ -234,30 +268,42 @@ export function quoteVisit(
   const mult = multiplierFor(cat, urgency);
   const parts = jobs.map((j) => quoteTask(cat, { ...j, urgency: "STANDARD" }, opts.now ? { now: opts.now } : {}));
   const bad = parts.find((p) => p.status !== "FIXED");
-  const empty: VisitQuote = { catalogVersion: cat.version, urgency, multiplier: mult, status: bad?.status ?? "QUOTE_ON_SITE", reasons: bad?.reasons ?? ["no-jobs"], jobs: [], marketTotal: 0, visitFloor: 0, visitLaborBasis: 0, visitLabor: 0, materials: 0, asNeeded: 0, diagnosisCredit: 0, total: 0, displayTotal: 0, needsHumanReview: parts.some((p) => p.needsHumanReview) };
+  const empty: VisitQuote = { catalogVersion: cat.version, urgency, multiplier: mult, status: bad?.status ?? "QUOTE_ON_SITE", reasons: bad?.reasons ?? ["no-jobs"], jobs: [], marketTotal: 0, visitFloor: 0, visitLaborBasis: 0, visitLabor: 0, visitPayout: 0, bookingFee: 0, materialsRaw: 0, materials: 0, asNeeded: 0, diagnosisCredit: 0, total: 0, displayTotal: 0, needsHumanReview: parts.some((p) => p.needsHumanReview) };
   if (bad || parts.length === 0) return empty;
 
   const marketTotal = round2(parts.reduce((s, p) => s + p.marketLabor, 0));
   const days = parts.reduce((s, p) => s + p.estJobDays, 0);
-  const topDaily = Math.max(...parts.map((p) => cat.labor[p.laborKey]?.dailyMin ?? 0));
-  const visitFloor = round2(topDaily * Math.max(1, Math.ceil(days - 1e-9)));
+  const topDaily = Math.max(...parts.map((p) => {
+    const lab = cat.labor[p.laborKey];
+    return lab ? dailyFloorFor(cat, lab) : 0;
+  }));
+  const visitFloor = wageFloorForDays(topDaily, days);
   const visitLaborBasis = Math.max(marketTotal, visitFloor);
-  const visitLabor = round2(visitLaborBasis * mult);
+  const visitLaborAfterUrgency = visitLaborBasis * mult;
+  const visitLabor = round2(visitLaborAfterUrgency);
+  const usedVisitFloor = payoutFloor(visitFloor, mult);
+  const visitPayout = proLaborPayout(visitLaborAfterUrgency, usedVisitFloor);
+  const visitBookingFee = bookingFee(visitLaborAfterUrgency, usedVisitFloor);
 
   const raw = parts.map((p) => (marketTotal > 0 ? round2((visitLabor * p.marketLabor) / marketTotal) : 0));
   const remainder = round2(visitLabor - raw.reduce((s, x) => s + x, 0));
   const biggest = parts.reduce((bi, p, i) => (p.marketLabor > (parts[bi]?.marketLabor ?? -1) ? i : bi), 0);
   raw[biggest] = round2((raw[biggest] ?? 0) + remainder);
+  const rawPay = parts.map((_, i) => (visitLabor > 0 ? round2((visitPayout * (raw[i] ?? 0)) / visitLabor) : 0));
+  const payRemainder = round2(visitPayout - rawPay.reduce((s, x) => s + x, 0));
+  rawPay[biggest] = round2((rawPay[biggest] ?? 0) + payRemainder);
 
+  const materialsRaw = round2(parts.reduce((s, p) => s + p.materialsRaw, 0));
+  // Each job's materials price is already marked up. Do not mark the sum up again.
   const materials = round2(parts.reduce((s, p) => s + p.materials, 0));
   const asNeeded = round2(parts.reduce((s, p) => s + p.asNeeded.selectedTotal, 0));
-  const gross = round2(materials + visitLabor + asNeeded);
+  const gross = round2(materials + visitLabor + asNeeded + visitBookingFee);
   const diagnosisCredit = round2(Math.min(opts.diagnosisFeePaid ?? 0, gross));
   const total = round2(gross - diagnosisCredit);
   return {
     catalogVersion: cat.version, urgency, multiplier: mult, status: "FIXED", reasons: [],
-    jobs: parts.map((p, i) => ({ taskId: p.taskId, tier: p.tier, materials: p.materials, marketLabor: p.marketLabor, labor: raw[i] ?? 0, payout: raw[i] ?? 0 })),
-    marketTotal, visitFloor, visitLaborBasis, visitLabor, materials, asNeeded, diagnosisCredit, total, displayTotal: round2(total),
+    jobs: parts.map((p, i) => ({ taskId: p.taskId, tier: p.tier, materials: p.materials, marketLabor: p.marketLabor, labor: raw[i] ?? 0, payout: rawPay[i] ?? 0 })),
+    marketTotal, visitFloor, visitLaborBasis, visitLabor, visitPayout, bookingFee: visitBookingFee, materialsRaw, materials, asNeeded, diagnosisCredit, total, displayTotal: round2(total),
     needsHumanReview: parts.some((p) => p.needsHumanReview)
   };
 }

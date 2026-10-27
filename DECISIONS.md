@@ -13,11 +13,11 @@ The full table, step by step, follows.
 
 # Decisions needed (maintained as the build progresses)
 
-Status: `open` = using a demo/assumed value. Every value lives in `src/core/config/fixx.config.ts`.
+Status: `open` = using a demo/assumed value. Pricing rates live in `src/config/revenue.ts`. Other demo values live in `src/core/config/fixx.config.ts`.
 
 | ID | Item | Current demo/assumed value | Status |
 |----|------|----------------------------|--------|
-| D1 | Emergency surcharge | MXN 300 | open |
+| D1 | Urgent pricing | Catalog emergency labor rate, already inside the quote. No flat surcharge | open |
 | D2 | Travel fee bands | same 80 / adjacent 150 / far 250 MXN | open |
 | D3 | Warranty by category | 30-90 days (config per category) | open |
 | D4 | Professional price limits | +/-15% of suggestion | open |
@@ -92,14 +92,14 @@ Status: `open` = using a demo/assumed value. Every value lives in `src/core/conf
 | ID | Item | Assumption in code | Status |
 |----|------|--------------------|--------|
 | V1 | Visual direction | Greyscale tokens with work-order highlights (white = amounts, mid-grey = needs your OK, outline = dates, black labels); all tokens neutral, enforced by a test | placeholder |
-| E1 | Estimate ranges per category | Demo ranges in config (painting 3,500-5,000 from the brief); shown with the Demo value marker | open |
-| E2 | Quote lines | Generic split of the range midpoint (preparation 15%, materials 35%, labor rest, plus urgent surcharge); real itemization per category is open (P5) | open |
+| E1 | Estimate ranges per category | Lowest and highest catalog total for that trade, after the materials price in src/config/revenue.ts | open |
+| E2 | Quote lines | Materials, labor, and a booking fee when the wage floor used is higher than labor after FIXX's share. The lines add up to the customer total. The booking fee is never described as a share of labor | open |
 | E3 | Recommendation scoring | Config weights: same zone 30, nearby 15, language 25, Quality Score x0.3; top 3 (G7) | open |
 | E4 | Payment methods in the flow | Card and wallet only until Step 8 adds cash and SPEI | open |
 | E5 | Email capture | Required, simple format check, confirmation simulated | open |
 | E6 | Time slots | Three demo slots 30, 54 and 78 hours ahead, rounded to the hour | open |
 | E7 | Professional side | A "Demo: act as the professional" box drives the professional's steps until the professional app (Step 7) | demo |
-| E8 | Payout share | 80% (demo), never shown to customers | open |
+| E8 | Professional labor payout | Labor after the rate in src/config/revenue.ts, and never below the wage floor used. That floor is the catalog floor times the urgency multiplier (decided). When the floor is higher, the customer pays the difference as a booking fee. The card processing cost sits inside the materials price (cardFeePct 3.6% is still a placeholder, times 1.16 IVA on that fee only). The old 80% ratio is not used to price a quote. Release still uses it until the payout is stored on the job | open |
 | E9 | Rating | 7 dimensions, all required, shown after payment release | per brief |
 | E10 | Not in this step | Permission pre-prompts and consent screens, professional profile page, chat, issue report, settings | open |
 
@@ -107,7 +107,7 @@ Status: `open` = using a demo/assumed value. Every value lives in `src/core/conf
 | ID | Item | Assumption in code | Status |
 |----|------|--------------------|--------|
 | PR1 | What professionals see on a quote | Payout only. They adjust the suggested payout within the limit (+/-15%, demo); the customer's total is derived and never shown to them | decided |
-| PR2 | Quote adjustment | The professional's change scales the customer's lines by the same factor; the urgent surcharge is not scaled; a reason is required when the payout changes | open |
+| PR2 | Quote adjustment | The professional adjusts labor payout within +/-15%. Materials stay put. The customer total is rebuilt as labor plus the materials price. A reason is required when the payout changes | open |
 | PR3 | Photos | Before/after photos are optional in the demo; only the checklist blocks completion | open |
 | PR4 | Checklist | Generic FIXX Standard checklist for every category (4 items); category-specific lists are open (P5) | open |
 | PR5 | Verification statuses | not started, pending, approved, rejected with a reason, recovery; Admin actions are shown in a demo box until the Admin app (Step 11) | demo |
