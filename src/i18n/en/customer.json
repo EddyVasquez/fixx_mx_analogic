@@ -63,6 +63,30 @@
     "text": "That email does not look right. Check it and try again.",
     "status": "draft"
   },
+  "signin.sending": {
+    "text": "Sending your code by {channel}…",
+    "status": "draft"
+  },
+  "signin.sendFailed": {
+    "text": "We couldn't send the code. Check your number and try again.",
+    "status": "draft"
+  },
+  "signin.tooMany": {
+    "text": "Too many tries. Wait {minutes} min and try again.",
+    "status": "draft"
+  },
+  "signin.expired": {
+    "text": "This code expired. Ask for a new one.",
+    "status": "draft"
+  },
+  "signin.resendIn": {
+    "text": "You can ask for a new code in {time}",
+    "status": "draft"
+  },
+  "signin.demoHints": {
+    "text": "Demo: a number ending in 0000 fails to send, 0001 means wait. Code 000000 is expired.",
+    "status": "draft"
+  },
   "signin.emailSent": {
     "text": "We sent a confirmation to {email}.",
     "status": "draft"
@@ -164,7 +188,7 @@
     "status": "draft"
   },
   "request.emergencyNote": {
-    "text": "Faster matching at a higher price. The surcharge is {amount}.",
+    "text": "Faster matching at a higher price. That higher price is already included in the quote.",
     "status": "draft"
   },
   "request.errorDescription": {
@@ -371,6 +395,10 @@
     "text": "Labor",
     "status": "draft"
   },
+  "quote.line.booking": {
+    "text": "Booking fee",
+    "status": "approved"
+  },
   "quote.line.urgent": {
     "text": "Urgent surcharge",
     "status": "draft"
@@ -452,7 +480,7 @@
     "status": "draft"
   },
   "pay.demoCards": {
-    "text": "Demo cards: {approved} works, {declined} is declined.",
+    "text": "Demo cards: {approved} works, {declined} is declined, {network} drops the connection, {unknown} stays unclear.",
     "status": "draft"
   },
   "btn.payDeposit": {

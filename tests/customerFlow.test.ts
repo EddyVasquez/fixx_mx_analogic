@@ -5,6 +5,7 @@ import { Clock } from "../src/core/clock/clock";
 import { config } from "../src/core/config/fixx.config";
 import { addHours, bandFor, travelFeeFor, splitDepositBalance } from "../src/core/rules";
 import { recommend, type ProLike, type ZoneLike } from "../src/core/matching/recommend";
+import { roundMoney } from "../src/config/revenue";
 import { estimateRange, buildQuote } from "../src/core/pricing/quote";
 import { jobMachine, newJobCtx } from "../src/core/machines";
 import { DemoRuntime } from "../src/mocks/runtime/runtime";
@@ -38,19 +39,23 @@ describe("recommendations", () => {
 });
 
 describe("estimate and quote", () => {
-  it("painting's range is the workbook's lowest and highest standard total", () => {
+  it("painting's range is the lowest and highest catalog total, with no flat surcharge", () => {
     const r = estimateRange("painting", false);
     expect(r.surcharge).toBe(0);
-    expect(r.low).toBeCloseTo(7448.22, 2);
-    expect(r.high).toBeCloseTo(9300.72, 2);
+    expect(r.low).toBeLessThan(r.high);
+    const urgent = estimateRange("painting", true);
+    expect(urgent.surcharge).toBe(0);
+    expect(urgent.low).toBeGreaterThan(r.low);
+    expect(urgent.high).toBeGreaterThan(r.high);
   });
-  it("urgent requests add the configured surcharge", () => {
-    expect(estimateRange("painting", true).surcharge).toBe(300);
-  });
-  it("quote lines always add up to the total", () => {
-    for (const cat of ["plumbing", "painting", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning"]) for (const urgent of [false, true]) {
+  it("quote lines are materials, labor, and a booking fee only when that fee is above zero", () => {
+    for (const cat of ["plumbing", "painting", "electrical", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning"]) for (const urgent of [false, true]) {
       const q = buildQuote(cat, urgent);
-      expect(q.lines.reduce((s, l) => s + l.amount, 0)).toBe(q.total);
+      const ids = q.bookingFee > 0 ? ["mat", "work", "booking"] : ["mat", "work"];
+      expect(q.lines.map((l) => l.id)).toEqual(ids);
+      if (q.bookingFee > 0) expect(q.lines.find((l) => l.id === "booking")?.amount).toBe(q.bookingFee);
+      expect(roundMoney(q.lines.reduce((s, l) => s + l.amount, 0))).toBe(q.total);
+      expect(q.total).toBe(roundMoney(q.materials + q.labor + q.bookingFee));
     }
   });
   it("splits the deposit and balance", () => {

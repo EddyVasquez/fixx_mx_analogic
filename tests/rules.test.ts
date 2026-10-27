@@ -139,8 +139,8 @@ describe("pricing, deadlines, warranty", () => {
     expect(isWithinLimits(4000, 4601, 15)).toBe(false);
     expect(clampPrice(4000, 5000, 15)).toBe(4600);
   });
-  it("adds the emergency surcharge from config", () => {
-    expect(emergencyTotal(4000)).toBe(4000 + config.emergencySurchargeMXN);
+  it("does not add a flat urgent fee on top of the quote", () => {
+    expect(emergencyTotal(4000)).toBe(4000);
   });
   it("issue window is 24h with a reminder 6h before it closes", () => {
     const w = issueWindow(now);

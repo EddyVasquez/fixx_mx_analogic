@@ -9,6 +9,12 @@ or LibreOffice first). This writes:
 
     src/seed/pricing/catalog.json
     tests/fixtures/quote_builder.json
+
+Exported money is raw. Quote_Builder columns A–R are material cost and labor
+only. Columns V–Z are a preview of the app revenue model and are not read.
+Prices already include IVA. A price marked "+16% added" was grossed up once
+when it was recorded; this script does not multiply by 1.16 again.
+Per-trade wage floors are exported as dailyMin and as labor[key].floor.
 """
 import datetime
 import hashlib
@@ -27,18 +33,21 @@ TIER_ORDER = [
 ]
 
 
-def header_row(ws):
+def header_row(ws, max_col=None):
+    """Read the header until the first blank cell. max_col stops before preview columns."""
+    limit = ws.max_column if max_col is None else min(ws.max_column, max_col)
     hdr = []
-    for cell in ws[1]:
-        if cell.value is None:
+    for col in range(1, limit + 1):
+        value = ws.cell(1, col).value
+        if value is None:
             break
-        hdr.append(cell.value)
+        hdr.append(value)
     return hdr
 
 
-def rows(name):
+def rows(name, max_col=None):
     ws = wv[name]
-    hdr = header_row(ws)
+    hdr = header_row(ws, max_col)
     for r in ws.iter_rows(min_row=2, max_col=len(hdr)):
         if r[0].value not in (None, ""):
             yield dict(zip(hdr, [c.value for c in r]))
@@ -70,6 +79,7 @@ items = {}
 for r in rows("Prices"):
     name = r["Item (English)"] or ""
     notes = str(r.get("Notes") or "")
+    # Current_Price_MXN already includes IVA. Do not apply 16% again.
     items[r["Item_ID"]] = dict(
         id=r["Item_ID"], category=r["Category"], name=name, spanish=r["Spanish_Name"], spec=r["Spec"],
         unit=r["Unit / Pack"], store=r["Store"], price=num(r["Current_Price_MXN"]), iva=r["IVA_Status"],
@@ -97,6 +107,8 @@ for r in rows("Tasks"):
 for t in tasks.values():
     t["tiers"] = sorted({line["tier"] for line in t["lines"]}, key=tier_key)
 
+# Min_Wage_Floor: dailyMin is one raw day per trade (cleaning is 342.47).
+# labor[key].floor is that daily rate times billable days. Do not mark either up, and do not multiply by urgency.
 mw = wv["Min_Wage_Floor"]
 daily = {}
 floors = {}
@@ -138,7 +150,8 @@ json.dump(catalog, open("src/seed/pricing/catalog.json", "w", encoding="utf-8"),
 open("src/seed/pricing/catalog.json", "a", encoding="utf-8").write("\n")
 
 qb = []
-for r in rows("Quote_Builder"):
+# Columns A–R only. Column S is blank; V–Z are the revenue preview and must not be exported.
+for r in rows("Quote_Builder", max_col=18):
     qb.append(dict(
         taskId=r["Task_ID"], tier=r["Tier"], urgency=r["Urgency"],
         materials=num(col(r, "Materials_MXN")), laborKey=r["Labor_Key"],

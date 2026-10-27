@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { formatDateTime } from "@/core/clock/clock";
@@ -10,6 +10,7 @@ import { useMoney } from "@/features/shared/Money";
 import { NotificationCenterView } from "@/demo/NotificationCenterView";
 import { HlDate } from "@/ui/Highlights";
 import { Button } from "@/ui/Button";
+import { focusTargetClass } from "@/ui/Field";
 import { useRuntime } from "@/demo/runtime";
 import { confirmPayment, ensureReference } from "@/mocks/runtime/paymentActors";
 import { PaymentSchedule, ReferenceBox } from "./PaymentSchedule";
@@ -36,6 +37,8 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
   const rt = useRuntime();
   const [, force] = useReducer((n: number) => n + 1, 0);
   const now = rt.clock.now();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { headingRef.current?.focus(); }, []);
   const basis = ctx.scheduleBasis ?? rt.clock.now();
   // Cash and SPEI: the balance is paid by reference before the job (when it is not already covered).
   const balanceDue = !cardLike && state === "scheduled" && !ctx.balancePaid
@@ -48,7 +51,7 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold">{t("timeline.title")}</h2>
+      <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("timeline.title")}</h2>
       {status && <JobStatusBar status={status} />}
       <p><HlDate>{t("timeline.when", { when: when(ctx.jobStart) })}</HlDate></p>
       {state === "issueWindow" && ctx.issueWindowEndsAt && (

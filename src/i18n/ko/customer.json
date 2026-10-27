@@ -79,6 +79,36 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "signin.sending": {
+    "text": "{channel}(으)로 코드를 보내는 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "signin.sendFailed": {
+    "text": "코드를 보내지 못했어요. 번호를 확인하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "signin.tooMany": {
+    "text": "시도 횟수가 너무 많아요. {minutes}분 후에 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "signin.expired": {
+    "text": "코드가 만료됐어요. 새 코드를 받아 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "signin.resendIn": {
+    "text": "{time} 후에 새 코드를 받을 수 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "signin.demoHints": {
+    "text": "데모: 0000으로 끝나는 번호는 전송 실패, 0001은 대기예요. 코드 000000은 만료예요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "signin.emailSent": {
     "text": "{email}로 확인 메일을 보냈어요.",
     "status": "draft",
@@ -205,7 +235,7 @@
     "needsNativeReview": true
   },
   "request.emergencyNote": {
-    "text": "더 빠르게 연결되는 대신 가격이 높아져요. 추가 요금은 {amount}예요.",
+    "text": "더 빠르게 연결되는 대신 가격이 높아져요. 더 높은 가격은 견적에 이미 포함되어 있어요.",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -464,6 +494,10 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "quote.line.booking": {
+    "text": "예약 수수료",
+    "status": "approved"
+  },
   "quote.line.urgent": {
     "text": "긴급 추가 요금",
     "status": "draft",
@@ -565,7 +599,7 @@
     "needsNativeReview": true
   },
   "pay.demoCards": {
-    "text": "데모 카드: {approved}는 승인, {declined}는 거절돼요.",
+    "text": "데모 카드: {approved}는 승인, {declined}는 거절, {network}는 연결 끊김, {unknown}는 확인 불가예요.",
     "status": "draft",
     "needsNativeReview": true
   },

@@ -6,8 +6,7 @@
 export const DEMO = true as const;
 
 export const config = {
-  // TODO(decision): emergency surcharge amount.
-  emergencySurchargeMXN: 300,
+  // Urgent visits use the catalog emergency labor rate (see src/config/revenue.ts). There is no flat surcharge.
   // TODO(decision): travel fee bands (professional zone -> customer zone).
   travelFeeBandsMXN: { same: 80, adjacent: 150, far: 250 },
   // TODO(decision): professional price limits as +/- share of FIXX suggestion.
@@ -47,7 +46,8 @@ export const config = {
   matching: { sameZone: 30, nearby: 15, language: 25, qualityPerPoint: 0.3, topQualityScore: 90, maxRecommendations: 3 },
   // TODO(decision): offered time slots, in hours from now (demo).
   scheduleSlotHours: [30, 54, 78],
-  // TODO(decision): professional's net share of a quote (demo). Never shown to customers.
+  // Release still multiplies the stored job total by this until the labor payout is stored on the job.
+  // Do not use it to price a quote. Customer price and labor payout come only from src/config/revenue.ts.
   demoPayoutRatio: 0.8,
   // TODO(decision): time slots offered for urgent requests, in hours from now (demo).
   emergencySlotHours: [4, 8],

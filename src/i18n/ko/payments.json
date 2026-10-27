@@ -110,12 +110,67 @@
     "needsNativeReview": true
   },
   "refund.amount": {
-    "text": "환불 금액: {amount}",
+    "text": "환불: {amount}",
     "status": "draft",
     "needsNativeReview": true
   },
   "btn.sendClabe": {
-    "text": "계좌 보내기",
+    "text": "CLABE 보내기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.processing": {
+    "text": "결제를 처리하고 있어요. 이 페이지를 닫지 마세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.success": {
+    "text": "결제 완료: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.network": {
+    "text": "결제를 완료하지 못했어요. 청구된 금액은 없어요. 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.unknown": {
+    "text": "결제가 완료됐는지 확인 중이에요. 아직 다시 결제하지 마세요. 몇 분 안에 알려 드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.refCreating": {
+    "text": "결제 참조 번호를 만드는 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "pay.refFailed": {
+    "text": "결제 참조 번호를 만들지 못했어요. 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.clabeHint": {
+    "text": "18자리",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.sending": {
+    "text": "은행 정보를 보내는 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.processing": {
+    "text": "환불을 처리하는 중…",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.clabeRejected": {
+    "text": "은행에서 이 CLABE를 받지 않았어요. 은행에 확인하고 다시 시도해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "refund.autoFailed": {
+    "text": "환불을 시작하지 못했어요. 다시 시도하거나 고객센터에 문의해 주세요.",
     "status": "draft",
     "needsNativeReview": true
   },

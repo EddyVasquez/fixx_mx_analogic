@@ -166,5 +166,37 @@
   "status.rated": {
     "text": "Rated",
     "status": "draft"
+  },
+  "btn.processing": {
+    "text": "Processing…",
+    "status": "draft"
+  },
+  "btn.sending": {
+    "text": "Sending…",
+    "status": "draft"
+  },
+  "btn.checking": {
+    "text": "Checking…",
+    "status": "draft"
+  },
+  "btn.saving": {
+    "text": "Saving…",
+    "status": "draft"
+  },
+  "btn.tryAgain": {
+    "text": "Try again",
+    "status": "draft"
+  },
+  "btn.resendCode": {
+    "text": "Send a new code",
+    "status": "draft"
+  },
+  "common.slow": {
+    "text": "This is taking longer than usual. Please wait.",
+    "status": "draft"
+  },
+  "common.network": {
+    "text": "We couldn't connect. Check your internet and try again.",
+    "status": "draft"
   }
 }
