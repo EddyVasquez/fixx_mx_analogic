@@ -498,6 +498,11 @@
     "text": "예약 수수료",
     "status": "approved"
   },
+  "quote.line.extraCopper": {
+    "text": "추가 동관",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "quote.line.urgent": {
     "text": "긴급 추가 요금",
     "status": "draft",

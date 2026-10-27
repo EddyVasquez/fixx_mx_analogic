@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { config, type Lang } from "@/core/config/fixx.config";
 import { formatDateTime } from "@/core/clock/clock";
 import { hoursUntil, professionalPendingBalance, round2 } from "@/core/rules";
+import { EXTRA_COPPER_LINE, MINISPLIT_TASK, extraCopperPrice } from "@/core/pricing/extraCopper";
 import { checklistFor } from "@/core/standards/checklist";
 import { cancelLowersQualityScore, statusFor, type JobCtx, type JobState } from "@/core/machines";
 import type { DemoRuntime } from "@/mocks/runtime/runtime";
@@ -40,9 +41,13 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
   const [addNote, setAddNote] = useState("");
   const [addPayout, setAddPayout] = useState("");
   const [addError, setAddError] = useState(false);
+  const [copperMeters, setCopperMeters] = useState("");
+  const [copperError, setCopperError] = useState(false);
   const rs = rescheduleStatus(rt, JOB_ID);
   const when = (d: Date) => formatDateTime(d, localeFor[lang]);
   const addBlocked = ctx.additional?.status === "approved" && ctx.additional.blocks && !ctx.additional.paid;
+  const copperQty = Number(copperMeters.replace(/,/g, ""));
+  const copperPrice = ctx.taskId === MINISPLIT_TASK && ctx.tier ? extraCopperPrice(ctx.taskId, ctx.tier, copperQty) : null;
   const answer = (r: { ok: boolean }) => { if (r.ok) rerender(); };
   const released = rt.payouts.find((p) => p.actorId === JOB_ID)?.amount;
   const pending = professionalPendingBalance(ctx);
@@ -114,6 +119,23 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
           <JobPhotos phase="after" label={t("work.photosAfter")} addLabel={t("btn.addAfter")} min={config.completionCheck.minAfterPhotos} now={now} lang={lang} />
           {!allChecked && <p className="text-sm text-inkSoft">{t("work.checklistFirst")}</p>}
           <Button disabled={!allChecked} onClick={() => send({ type: "CHECKLIST_COMPLETE" })}>{t("btn.finishChecklist")}</Button>
+          {ctx.taskId === MINISPLIT_TASK && (
+            <section aria-label={t("addl.copper.title")} className="flex flex-col gap-3 rounded-2xl border border-line bg-paper p-3">
+              <h3 className="font-bold">{t("addl.copper.title")}</h3>
+              <Field label={t("addl.copper.meters")}>
+                <input className={inputClass} inputMode="decimal" value={copperMeters} onChange={(e) => setCopperMeters(e.target.value)} />
+              </Field>
+              {copperPrice != null && <p className="font-semibold">{t("addl.copper.preview", { amount: money(copperPrice) })}</p>}
+              {copperError && <ErrorText>{t("addl.copper.invalid")}</ErrorText>}
+              <Button variant="secondary" onClick={() => {
+                if (copperPrice == null) return setCopperError(true);
+                setCopperError(false);
+                customerSession.additionalNote = "";
+                customerSession.additionalLang = lang;
+                send({ type: "REQUEST_ADDITIONAL_WORK", amount: copperPrice, lineId: EXTRA_COPPER_LINE, meters: copperQty });
+              }}>{t("btn.requestAddl")}</Button>
+            </section>
+          )}
           <section className="flex flex-col gap-3 rounded-2xl border border-line bg-paper p-3">
             <h3 className="font-bold">{t("addl.pro.request")}</h3>
             <Field label={t("addl.note")}><input className={inputClass} value={addNote} onChange={(e) => setAddNote(e.target.value)} /></Field>

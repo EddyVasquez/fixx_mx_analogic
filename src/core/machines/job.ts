@@ -16,13 +16,13 @@ export type JobEvent =
   | { type: "MANUAL_REVIEW_APPROVED" } | { type: "MANUAL_REVIEW_DECLINED" } | { type: "PENDING_REVIEW_APPROVED" }
   | { type: "ESTIMATE_READY" } | { type: "RECOMMENDATIONS_READY" }
   | { type: "SELECT_PROFESSIONAL"; professionalId: string } | { type: "PROFESSIONAL_DECLINES" }
-  | { type: "SEND_QUOTE"; total: number; travelFee: number; payoutRatio: number; lines: QuoteLine[]; adjustmentReason?: string }
+  | { type: "SEND_QUOTE"; total: number; travelFee: number; payoutRatio: number; lines: QuoteLine[]; adjustmentReason?: string; taskId?: string; tier?: string }
   | { type: "DECLINE_QUOTE" } | { type: "ACCEPT_QUOTE"; method: PayMethod; jobStart: Date }
   | { type: "PAYMENT_SATISFIED"; amount: number } | { type: "BOOKING_EXPIRED" } | { type: "BALANCE_OVERDUE" }
   | { type: "BALANCE_PAID" }
   | { type: "RESCHEDULE_ACCEPTED"; newStart: Date } | { type: "RESCHEDULE_DECLINED" } | { type: "RESCHEDULE_EXPIRED" }
   | { type: "ON_THE_WAY" } | { type: "CHECK_IN" } | { type: "START_WORK" }
-  | { type: "REQUEST_ADDITIONAL_WORK"; amount: number } | { type: "APPROVE_ADDITIONAL_WORK" }
+  | { type: "REQUEST_ADDITIONAL_WORK"; amount: number; lineId?: string; meters?: number } | { type: "APPROVE_ADDITIONAL_WORK" }
   | { type: "DECLINE_ADDITIONAL_WORK" } | { type: "ADDITIONAL_WORK_PAID" }
   | { type: "CHECKLIST_COMPLETE" } | { type: "MARK_COMPLETE" } | { type: "APPROVE_COMPLETION" }
   | { type: "CUSTOMER_CANCELS" } | { type: "PRO_CANCELS" } | { type: "PRO_NO_SHOW" }
@@ -34,9 +34,11 @@ export type JobEvent =
 export interface JobCtx {
   method: PayMethod; total: number; jobStart: Date; professionalId: string | null;
   travelFee: number; payoutRatio: number; lines: QuoteLine[];
+  /** Catalog task and tier for the booked quote. Null on quotes that were not built from a task. */
+  taskId: string | null; tier: string | null;
   paid: number; initialDue: number; balancePaid: boolean;
   onTheWayAt: Date | null; checklistDone: boolean;
-  additional: { amount: number; status: "pending" | "approved" | "declined"; blocks: boolean; paid: boolean } | null;
+  additional: { amount: number; status: "pending" | "approved" | "declined"; blocks: boolean; paid: boolean; lineId: string; meters: number | null } | null;
   issueWindowEndsAt: Date | null; heldAmount: number; heldPayout: number;
   cancelledBy: "customer" | "professional" | "fixx" | null; refund: CancelOutcome | null; carryOver: number;
   adjustmentReason: string | null;
@@ -58,6 +60,7 @@ export const adminJobEvents = ["MANUAL_REVIEW_APPROVED", "MANUAL_REVIEW_DECLINED
 
 export const newJobCtx = (p: Partial<JobCtx> = {}): JobCtx => ({
   method: "card", total: 0, jobStart: new Date(0), professionalId: null, travelFee: 0, payoutRatio: 0.8, lines: [],
+  taskId: null, tier: null,
   paid: 0, initialDue: 0, balancePaid: false, onTheWayAt: null, checklistDone: false, additional: null,
   issueWindowEndsAt: null, heldAmount: 0, heldPayout: 0, cancelledBy: null, refund: null, carryOver: 0, adjustmentReason: null, scheduleBasis: null, needsReview: false,
   releasedAmount: 0, releasedPayout: 0, returnVisitBy: null, returnScheduled: false, problemCategory: null, ...p
@@ -130,7 +133,7 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
     professionalSelected: {
       SEND_QUOTE: (c, e) => {
         if (!(e.total > 0)) return reject("quote total must be greater than 0");
-        const quote = { total: e.total, travelFee: e.travelFee, payoutRatio: e.payoutRatio, lines: e.lines, adjustmentReason: e.adjustmentReason ?? null };
+        const quote = { total: e.total, travelFee: e.travelFee, payoutRatio: e.payoutRatio, lines: e.lines, adjustmentReason: e.adjustmentReason ?? null, taskId: e.taskId ?? null, tier: e.tier ?? null };
         return c.needsReview
           ? go("pendingReview", [notify("quote.pendingReview", CPA, "urgent")], quote)
           : go("quoteSent", [notify("quote.sent", C, "urgent")], quote);
@@ -194,7 +197,7 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
     inProgress: {
       REQUEST_ADDITIONAL_WORK: (_c, e) => e.amount > 0
         ? go("additionalWorkPending", [notify("additionalWork.requested", C, "urgent", { amount: e.amount })],
-          { additional: { amount: e.amount, status: "pending", blocks: false, paid: false } })
+          { additional: { amount: e.amount, status: "pending", blocks: false, paid: false, lineId: e.lineId && e.lineId.trim() ? e.lineId : "additional", meters: e.meters != null && e.meters > 0 ? e.meters : null } })
         : reject("additional work amount must be greater than 0"),
       ADDITIONAL_WORK_PAID: (c) => go("inProgress", [notify("payment.additionalReceived", CP, "record")],
         { additional: c.additional ? { ...c.additional, paid: true } : null }),
@@ -205,7 +208,7 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
         if (!c.additional) return reject("no additional work to approve");
         const plan = planAdditionalWork(c.method, c.additional.amount);
         return go("inProgress", [notify("additionalWork.approved", CP, "urgent", { amount: plan.amount })],
-          { total: c.total + plan.amount, lines: [...c.lines, { id: "additional", amount: plan.amount }], additional: { ...c.additional, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
+          { total: c.total + plan.amount, lines: [...c.lines, { id: c.additional.lineId || "additional", amount: plan.amount }], additional: { ...c.additional, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
       },
       DECLINE_ADDITIONAL_WORK: (c) => go("inProgress", [notify("additionalWork.declined", P)],
         { additional: c.additional ? { ...c.additional, status: "declined" } : null })
