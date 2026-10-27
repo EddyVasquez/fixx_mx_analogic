@@ -18,6 +18,18 @@ export function ensureReference(rt: DemoRuntime, jobId: string, kind: PayKind, m
   // Additional work has no fixed deadline: it must be paid before the job can be marked complete.
   if (dueAt) rt.scheduler.add(id, dueAt, { type: "DEADLINE_PASSED" }, `${kind} due`);
 }
+let referenceFailures = 0;
+/** The next n reference requests fail, so the screen can show the retry state. */
+export function failNextReferences(n: number): void { referenceFailures = n; }
+
+/** Creates the cash or SPEI reference. Safe to retry: ensureReference itself runs only once per id. */
+export function issueReference(rt: DemoRuntime, jobId: string, kind: PayKind, method: "cash" | "spei", amount: number, dueAt: Date | null): { ok: true } | { ok: false } {
+  if (referenceFailures > 0) { referenceFailures -= 1; return { ok: false }; }
+  if (!(amount > 0) || !dueAt) return { ok: false };
+  ensureReference(rt, jobId, kind, method, amount, dueAt);
+  return { ok: true };
+}
+
 /** The simulated bank or store confirms the payment. */
 export function confirmPayment(rt: DemoRuntime, jobId: string, kind: PayKind): void {
   if (rt.get(idFor(jobId, kind))) rt.dispatch(idFor(jobId, kind), { type: "PAYMENT_CONFIRMED" });

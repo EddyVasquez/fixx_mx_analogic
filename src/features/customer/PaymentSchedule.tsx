@@ -8,11 +8,14 @@ import { HlDate } from "@/ui/Highlights";
 import { useMoney } from "@/features/shared/Money";
 
 /** Exact deadlines and what happens if one is missed. For cards, the charge timing instead. */
-export function PaymentSchedule({ method, total, jobStart, basis, only }: {
+export function PaymentSchedule({ method, total, jobStart, basis, only, formatAmount }: {
   method: PayMethod; total: number; jobStart: Date; basis: Date; only?: "deposit" | "balance" | "full";
+  /** Payment screen passes the customer amount format. Other screens keep the shared formatter. */
+  formatAmount?: (amount: number) => string;
 }) {
   const { t, i18n } = useTranslation();
-  const money = useMoney();
+  const fallbackMoney = useMoney();
+  const money = formatAmount ?? fallbackMoney;
   const lang = i18n.language as Lang;
   if (method === "card" || method === "wallet") return <p>{t("quote.cardTiming")}</p>;
   const lines = buildSchedule({ method, total, jobStart, now: basis }).installments.filter((i) => !only || i.kind === only);

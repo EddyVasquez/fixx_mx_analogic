@@ -63,6 +63,30 @@
     "text": "Ese correo no parece correcto. Revísalo e inténtalo de nuevo.",
     "status": "draft"
   },
+  "signin.sending": {
+    "text": "Enviando tu código por {channel}…",
+    "status": "draft"
+  },
+  "signin.sendFailed": {
+    "text": "No pudimos enviar el código. Revisa tu número e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "signin.tooMany": {
+    "text": "Demasiados intentos. Espera {minutes} min e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "signin.expired": {
+    "text": "Este código venció. Pide uno nuevo.",
+    "status": "draft"
+  },
+  "signin.resendIn": {
+    "text": "Puedes pedir otro código en {time}",
+    "status": "draft"
+  },
+  "signin.demoHints": {
+    "text": "Demo: un número que termina en 0000 no se envía, 0001 pide esperar. El código 000000 está vencido.",
+    "status": "draft"
+  },
   "signin.emailSent": {
     "text": "Enviamos una confirmación a {email}.",
     "status": "draft"
@@ -452,7 +476,7 @@
     "status": "draft"
   },
   "pay.demoCards": {
-    "text": "Tarjetas de la demo: {approved} funciona, {declined} es rechazada.",
+    "text": "Tarjetas de la demo: {approved} funciona, {declined} es rechazada, {network} pierde la conexión, {unknown} queda sin confirmar.",
     "status": "draft"
   },
   "btn.payDeposit": {

@@ -32,6 +32,7 @@ import { TimelineView } from "./TimelineView";
 import { RatingView } from "./RatingView";
 import { customers, professionals, zones } from "./data";
 import { ChatView } from "@/features/chat/ChatView";
+import { settleClabe } from "./refundActions";
 import { JOB_ID, ratings, resetSession, session, type Draft } from "./session";
 
 type Pre = "home" | "request" | "review";
@@ -150,7 +151,7 @@ function RequestFlow() {
           <RatingView rated={state === "rated"} warrantyEndsAt={w?.endsAt ?? null} onSubmit={(values) => { ratings.push({ proId: session.proId ?? "", values }); send({ type: "RATE" }); }} />
           <Button variant="secondary" onClick={startOver}>{t("btn.startOver")}</Button>
           <CaseCard rt={rt} jobId={JOB_ID} role="customer" lang={lang} />
-          {refund && <RefundView refund={refund} issued hideStartOver onStartOver={startOver} onAuto={() => {}} onClabe={(c) => rt.provideClabe(refund.id, c)} />}
+          {refund && <RefundView refund={refund} issued hideStartOver onStartOver={startOver} onAuto={async () => ({ ok: true })} onClabe={async (c) => settleClabe(c, (digits) => rt.provideClabe(refund.id, digits))} />}
         </div>
       );
     }
@@ -165,8 +166,17 @@ function RequestFlow() {
       const refund = rt.refunds.find((r) => r.actorId === JOB_ID);
       if (refund) {
         return <RefundView refund={refund} issued={state === "refunded"} onStartOver={startOver}
-          onClabe={(c) => { const ok = rt.provideClabe(refund.id, c); if (ok) send({ type: "REFUND_ISSUED" }); return ok; }}
-          onAuto={() => { send({ type: "REFUND_ISSUED" }); }} />;
+          onClabe={async (c) => {
+            const result = settleClabe(c, (digits) => rt.provideClabe(refund.id, digits));
+            if (result.ok) send({ type: "REFUND_ISSUED" });
+            return result;
+          }}
+          onAuto={async () => {
+            if (rt.get(JOB_ID)?.snap.state === "refunded") return { ok: true };
+            const result = send({ type: "REFUND_ISSUED" });
+            if (result.ok || rt.get(JOB_ID)?.snap.state === "refunded") return { ok: true };
+            return { ok: false, reason: "failed" };
+          }} />;
       }
       return branchView;
     }

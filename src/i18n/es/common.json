@@ -166,5 +166,37 @@
   "status.rated": {
     "text": "Calificado",
     "status": "draft"
+  },
+  "btn.processing": {
+    "text": "Procesando…",
+    "status": "draft"
+  },
+  "btn.sending": {
+    "text": "Enviando…",
+    "status": "draft"
+  },
+  "btn.checking": {
+    "text": "Verificando…",
+    "status": "draft"
+  },
+  "btn.saving": {
+    "text": "Guardando…",
+    "status": "draft"
+  },
+  "btn.tryAgain": {
+    "text": "Intentar de nuevo",
+    "status": "draft"
+  },
+  "btn.resendCode": {
+    "text": "Enviar código nuevo",
+    "status": "draft"
+  },
+  "common.slow": {
+    "text": "Está tardando más de lo normal. Espera un momento.",
+    "status": "draft"
+  },
+  "common.network": {
+    "text": "No pudimos conectarnos. Revisa tu internet e inténtalo de nuevo.",
+    "status": "draft"
   }
 }

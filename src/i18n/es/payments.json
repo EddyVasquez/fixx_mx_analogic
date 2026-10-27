@@ -88,11 +88,55 @@
     "status": "draft"
   },
   "refund.amount": {
-    "text": "Monto del reembolso: {amount}",
+    "text": "Reembolso: {amount}",
     "status": "draft"
   },
   "btn.sendClabe": {
-    "text": "Enviar cuenta",
+    "text": "Enviar CLABE",
+    "status": "draft"
+  },
+  "pay.processing": {
+    "text": "Procesando tu pago. No cierres esta página.",
+    "status": "draft"
+  },
+  "pay.success": {
+    "text": "Pago recibido: {amount}",
+    "status": "draft"
+  },
+  "pay.network": {
+    "text": "No pudimos completar tu pago. No se hizo ningún cargo. Inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "pay.unknown": {
+    "text": "No sabemos si tu pago pasó. No vuelvas a pagar todavía; te confirmamos en unos minutos.",
+    "status": "draft"
+  },
+  "pay.refCreating": {
+    "text": "Generando tu referencia de pago…",
+    "status": "draft"
+  },
+  "pay.refFailed": {
+    "text": "No pudimos generar tu referencia de pago. Inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "refund.clabeHint": {
+    "text": "18 dígitos",
+    "status": "draft"
+  },
+  "refund.sending": {
+    "text": "Enviando tus datos bancarios…",
+    "status": "draft"
+  },
+  "refund.processing": {
+    "text": "Procesando tu reembolso…",
+    "status": "draft"
+  },
+  "refund.clabeRejected": {
+    "text": "Tu banco no aceptó esta CLABE. Confírmala con tu banco e inténtalo de nuevo.",
+    "status": "draft"
+  },
+  "refund.autoFailed": {
+    "text": "No pudimos iniciar tu reembolso. Inténtalo de nuevo o contacta a soporte.",
     "status": "draft"
   },
   "refund.clabeInvalid": {
