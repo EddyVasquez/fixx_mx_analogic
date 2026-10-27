@@ -49,7 +49,7 @@ const select = (id: string): Step => (c) => c.job("SELECT_PROFESSIONAL", { profe
 const sendQuote = (extra = 0): Step => (c) => {
   const q = buildQuote(session.draft.categoryId, session.draft.emergency);
   const lines = q.lines.map((l) => (l.id === "work" ? { ...l, amount: l.amount + extra } : l));
-  c.job("SEND_QUOTE", { total: q.total + extra, travelFee: config.travelFeeBandsMXN.adjacent, payoutRatio: config.demoPayoutRatio, lines });
+  c.job("SEND_QUOTE", { total: q.total + extra, travelFee: config.travelFeeBandsMXN.adjacent, payoutRatio: config.demoPayoutRatio, lines, taskId: q.taskId, tier: q.tier });
 };
 const toQuote = (id: string, extra = 0): Step[] => [recs, select(id), sendQuote(extra)];
 const accept = (method: PayMethod, hours: number): Step => (c) => { session.method = method; c.job("ACCEPT_QUOTE", { method, jobStart: addHours(c.rt.clock.now(), hours) }); };
