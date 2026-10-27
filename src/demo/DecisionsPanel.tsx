@@ -12,7 +12,7 @@ export function DecisionsPanel() {
   const b = config.travelFeeBandsMXN;
   const est = estimateRange("painting", false);
   const items = [
-    t("decisions.surcharge", { value: money(config.emergencySurchargeMXN) }),
+    t("decisions.surcharge"),
     t("decisions.travel", { same: money(b.same), adjacent: money(b.adjacent), far: money(b.far) }),
     t("decisions.limits", { pct: config.professionalPriceLimitPct }),
     t("decisions.warranty", { min: Math.min(...w), max: Math.max(...w) }),

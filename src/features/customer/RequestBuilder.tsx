@@ -4,7 +4,6 @@ import { config, type Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
 import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
-import { useMoney } from "@/features/shared/Money";
 import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
 import { categories, zoneNames, zones } from "./data";
@@ -14,7 +13,6 @@ import type { Draft } from "./session";
 export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; onChange: (p: Partial<Draft>) => void; onReview: () => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
-  const money = useMoney();
   const [errors, setErrors] = useState<string[]>([]);
 
   const review = () => {
@@ -77,7 +75,7 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
         </label>
         {draft.emergency && (
           <>
-            <p className="text-sm"><DemoValue>{t("request.emergencyNote", { amount: money(config.emergencySurchargeMXN) })}</DemoValue></p>
+            <p className="text-sm"><DemoValue>{t("request.emergencyNote")}</DemoValue></p>
             <p className="text-sm font-semibold">{t("home.emergencyLine")}</p>
             {!isAgentHours(clock.now()) && <p className="text-sm">{t("request.emergencyAfterHours")}</p>}
           </>

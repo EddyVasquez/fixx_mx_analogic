@@ -184,7 +184,7 @@
     "status": "draft"
   },
   "decisions.surcharge": {
-    "text": "Cargo por urgencia: {value}",
+    "text": "Las visitas urgentes usan una tarifa de mano de obra más alta, ya incluida en el precio.",
     "status": "draft"
   },
   "decisions.travel": {

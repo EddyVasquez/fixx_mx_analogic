@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { bookingFee, materialsPrice, payoutFloor, proLaborPayout, roundMoney } from "../src/config/revenue";
 import {
   quoteTask, quoteVisit, toUrgencyLevel, diagnosisFeeFor, repairDueAfterDiagnosis, reconcileScopeChange, priceFreshness, resolveTaskId,
   type Catalog, type UrgencyLevel
@@ -18,35 +19,63 @@ describe("acceptance: every Quote_Builder row", () => {
     expect(qb).toHaveLength(504);
     expect(new Set(qb.map((r) => r.taskId)).size).toBe(41);
   });
-  it("matches the app total, labor, materials and payout within 0.01 at reference scope", () => {
-    const wrong = qb.filter((r) => { const x = q(r.taskId, r.tier, r.urgency); return !(x.status === "FIXED" && near(x.total, r.total) && near(x.labor, r.labor) && near(x.materials, r.materials) && near(x.payout, r.payout)); });
+  it("keeps workbook labor and raw materials, then prices materials and payout once", () => {
+    const wrong = qb.filter((r) => {
+      const x = q(r.taskId, r.tier, r.urgency);
+      return !(x.status === "FIXED"
+        && near(x.labor, r.labor)
+        && near(x.materialsRaw, r.materials)
+        && x.materials === materialsPrice(x.materialsRaw)
+        && x.bookingFee === bookingFee(x.labor, payoutFloor(x.floor, x.multiplier))
+        && near(x.total, roundMoney(x.materials + x.labor + x.bookingFee))
+        && near(x.payout, proLaborPayout(x.labor, payoutFloor(x.floor, x.multiplier))));
+    });
     expect(wrong.map((r) => `${r.taskId}|${r.tier}|${r.urgency}`)).toEqual([]);
   });
 });
 
 describe("spec examples", () => {
-  it("PLM-001 toilet repair (floor 349.84 is below typical labor 800)", () => {
-    const table: Record<string, number[]> = { Budget: [959.1, 1079.1, 1199.1, 1359.1], Standard: [1145.1, 1265.1, 1385.1, 1545.1], Premium: [1361.1, 1481.1, 1601.1, 1761.1] };
-    for (const [tier, totals] of Object.entries(table)) URG.forEach((u, i) => expect(near(q("FIXX-PLM-001", tier, u).total, totals[i]!)).toBe(true));
-    expect(URG.map((u) => q("FIXX-PLM-001", "Budget", u).payout)).toEqual([800, 920, 1040, 1200]);
-    expect(near(q("FIXX-PLM-001", "Budget", "STANDARD").materials, 159.1)).toBe(true);
+  it("PLM-001 toilet repair prices raw materials once and pays labor after the labor share", () => {
+    const labor = [800, 920, 1040, 1200];
+    const materials = materialsPrice(159.1);
+    expect(materials).toBe(174.34);
+    URG.forEach((u, i) => {
+      const x = q("FIXX-PLM-001", "Budget", u);
+      expect(near(x.materialsRaw, 159.1)).toBe(true);
+      expect(x.materials).toBe(materials);
+      expect(x.labor).toBe(labor[i]);
+      expect(x.bookingFee).toBe(bookingFee(x.labor, payoutFloor(x.floor, x.multiplier)));
+      expect(x.total).toBe(roundMoney(materials + labor[i]! + x.bookingFee));
+      expect(x.payout).toBe(proLaborPayout(labor[i]!, payoutFloor(x.floor, x.multiplier)));
+    });
+    expect(q("FIXX-PLM-001", "Budget", "STANDARD").total).toBe(974.34);
+    expect(q("FIXX-PLM-001", "Budget", "STANDARD").payout).toBe(680);
+    expect(q("FIXX-PLM-001", "Budget", "STANDARD").bookingFee).toBe(0);
   });
   it("PLM-001: the wax ring is an as-needed extra, and the diagnosis fee is separate", () => {
     const base = q("FIXX-PLM-001", "Budget", "STANDARD");
     const wax = base.asNeeded.options.find((l) => l.itemId === "PLM-M04")!;
     expect(wax.cost).toBe(52);
-    expect(near(base.total, 959.1)).toBe(true);
-    expect(near(q("FIXX-PLM-001", "Budget", "STANDARD", { asNeededLineIds: [wax.lineId] }).total, 1011.1)).toBe(true);
+    expect(base.total).toBe(974.34);
+    expect(q("FIXX-PLM-001", "Budget", "STANDARD", { asNeededLineIds: [wax.lineId] }).total).toBe(roundMoney(base.total + materialsPrice(52)));
     expect(diagnosisFeeFor(cat, "Plumbing", "STANDARD")).toBe(300);
     expect(diagnosisFeeFor(cat, "Plumbing", "HIGH")).toBe(390);
-    expect(near(q("FIXX-PLM-001", "Budget", "HIGH", { withDiagnosis: true }).total, 1199.1 + 390)).toBe(true);
+    const high = q("FIXX-PLM-001", "Budget", "HIGH");
+    expect(q("FIXX-PLM-001", "Budget", "HIGH", { withDiagnosis: true }).total).toBe(roundMoney(high.total + 390));
   });
-  it("CAR-001 door rehang (market 240 is below the floor 363.44, so the floor applies)", () => {
-    const table: Record<string, number[]> = { Budget: [465.44, 519.96, 574.47, 647.16], Standard: [470.44, 524.96, 579.47, 652.16], Premium: [519.44, 573.96, 628.47, 701.16] };
-    for (const [tier, totals] of Object.entries(table)) URG.forEach((u, i) => expect(near(q("FIXX-CAR-001", tier, u).total, totals[i]!)).toBe(true));
-    expect(URG.map((u) => q("FIXX-CAR-001", "Standard", u).payout)).toEqual([363.44, 417.96, 472.47, 545.16]);
+  it("CAR-001 door rehang keeps the wage floor when the labor share would pay less", () => {
+    const standard = q("FIXX-CAR-001", "Standard", "STANDARD");
+    expect(standard.marketLabor).toBe(240);
+    expect(standard.floor).toBe(363.44);
+    expect(standard.labor).toBe(363.44);
+    expect(roundMoney(standard.labor * 0.85)).toBeLessThan(standard.floor);
+    expect(standard.payout).toBe(363.44);
+    expect(standard.bookingFee).toBe(bookingFee(standard.labor, standard.floor));
+    expect(standard.materials).toBe(materialsPrice(standard.materialsRaw));
+    expect(standard.total).toBe(roundMoney(standard.materials + standard.labor + standard.bookingFee));
+    expect(URG.map((u) => q("FIXX-CAR-001", "Standard", u).labor)).toEqual([363.44, 417.96, 472.47, 545.16]);
   });
-  it("multi-job visit CAR-001 Standard + LCK-002 at High: 897.00 labor split 312.00 / 585.00, total 1,004.00", () => {
+  it("multi-job visit CAR-001 Standard + LCK-002 at High: 897.00 labor split 312.00 / 585.00", () => {
     const lckTier = cat.tasks["FIXX-LCK-002"]!.tiers[0]!;
     const v = quoteVisit(cat, [{ taskId: "FIXX-CAR-001", tier: "Standard" }, { taskId: "FIXX-LCK-002", tier: lckTier }], "HIGH");
     expect(v.status).toBe("FIXED");
@@ -54,15 +83,20 @@ describe("spec examples", () => {
     expect(v.visitFloor).toBe(363.44);
     expect(v.visitLabor).toBe(897);
     expect(v.jobs.map((j) => j.labor)).toEqual([312, 585]);
-    expect(v.total).toBe(1004);
+    expect(v.materialsRaw).toBe(107);
+    expect(v.materials).toBe(materialsPrice(107));
+    expect(v.bookingFee).toBe(bookingFee(v.visitLabor, payoutFloor(v.visitFloor, v.multiplier)));
+    expect(v.total).toBe(roundMoney(v.materials + 897 + v.bookingFee));
+    expect(v.visitPayout).toBe(proLaborPayout(897, payoutFloor(v.visitFloor, v.multiplier)));
+    expect(roundMoney(v.jobs.reduce((s, j) => s + j.payout, 0))).toBe(v.visitPayout);
     expect(v.jobs.reduce((s, j) => s + j.labor, 0)).toBe(v.visitLabor);
-    const separately = q("FIXX-CAR-001", "Standard", "HIGH").total + q("FIXX-LCK-002", lckTier, "HIGH").total;
-    expect(near(separately, 1164.47)).toBe(true);
   });
   it("a visit with only CAR-001 at High: the floor binds, labor 472.47", () => {
     const v = quoteVisit(cat, [{ taskId: "FIXX-CAR-001", tier: "Standard" }], "HIGH");
     expect(v.visitLabor).toBe(472.47);
-    expect(v.total).toBe(579.47);
+    expect(v.materials).toBe(materialsPrice(v.materialsRaw));
+    expect(v.total).toBe(roundMoney(v.materials + v.visitLabor + v.bookingFee));
+    expect(v.visitPayout).toBe(proLaborPayout(472.47, payoutFloor(v.visitFloor, v.multiplier)));
   });
   it("the visit floor uses the highest trade floor among its jobs", () => {
     const v = quoteVisit(cat, [{ taskId: "FIXX-CAR-001", tier: "Standard" }, { taskId: "FIXX-LCK-002", tier: cat.tasks["FIXX-LCK-002"]!.tiers[0]! }], "STANDARD");
@@ -89,7 +123,7 @@ describe("rules", () => {
     for (const t of Object.values(cat.tasks)) for (const tier of t.tiers) {
       const x = q(t.id, tier, "STANDARD");
       if (x.status !== "FIXED") continue;
-      expect(near(x.total, x.materials + x.labor)).toBe(true);
+      expect(near(x.total, x.materials + x.labor + x.bookingFee)).toBe(true);
       if (x.pendingReview.length) withPending++;
     }
     expect(withPending).toBeGreaterThan(5);
@@ -102,7 +136,7 @@ describe("rules", () => {
     const x = q("FIXX-ELC-003", "Budget", "STANDARD");
     expect(x.pendingReview.length).toBeGreaterThanOrEqual(3);
     expect(new Set(x.pendingReview.map((l) => l.exclusiveGroup)).size).toBe(1);
-    expect(near(x.total, x.materials + x.labor)).toBe(true);
+    expect(near(x.total, x.materials + x.labor + x.bookingFee)).toBe(true);
   });
   it("regulated labor is priced like Quote_Builder but goes to the human-review queue (spec conflict, see report)", () => {
     const x = q("FIXX-PST-002", cat.tasks["FIXX-PST-002"]!.tiers[0]!, "STANDARD");
@@ -168,7 +202,7 @@ describe("prices, aliases, diagnosis fee and on-site changes", () => {
     expect(repairDueAfterDiagnosis(1320, 300)).toEqual({ credit: 300, due: 1020 });
     const v = quoteVisit(cat, [{ taskId: "FIXX-PLM-001", tier: "Standard" }], "STANDARD", { diagnosisFeePaid: 300 });
     expect(v.diagnosisCredit).toBe(300);
-    expect(near(v.total, 1145.1 - 300)).toBe(true);
+    expect(v.total).toBe(roundMoney(v.materials + v.visitLabor + v.asNeeded + v.bookingFee - 300));
   });
   it("any on-site change, even 0.01, needs the homeowner's approval; no change does not", () => {
     expect(reconcileScopeChange({ total: 1320 }, { total: 1320.01 }, 300)).toMatchObject({ needsApproval: true, delta: 0.01, onDeclineCharge: 300 });
@@ -208,10 +242,10 @@ describe("fourteen trades, job names and cleaning add-ons", () => {
     const oven = pick("oven"), fridge = pick("fridge"), balcony = pick("balcony"), pet = pick("pet");
     const withOven = q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [oven.lineId] });
     expect(withOven.needsHumanReview).toBe(false);
-    expect(near(withOven.total, base.total + (oven.cost ?? 0) + 250)).toBe(true);
-    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [fridge.lineId] }).total, base.total + (fridge.cost ?? 0) + 200)).toBe(true);
-    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [balcony.lineId] }).total, base.total + (balcony.cost ?? 0) + 250)).toBe(true);
-    expect(near(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [pet.lineId] }).total, base.total + (pet.cost ?? 0) + 250)).toBe(true);
+    expect(withOven.total).toBe(roundMoney(base.total + materialsPrice(oven.cost ?? 0) + 250));
+    expect(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [fridge.lineId] }).total).toBe(roundMoney(base.total + materialsPrice(fridge.cost ?? 0) + 200));
+    expect(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [balcony.lineId] }).total).toBe(roundMoney(base.total + materialsPrice(balcony.cost ?? 0) + 250));
+    expect(q("FIXX-CLN-001", "≤60 m²", "STANDARD", { asNeededLineIds: [pet.lineId] }).total).toBe(roundMoney(base.total + materialsPrice(pet.cost ?? 0) + 250));
     const urgentOven = q("FIXX-CLN-001", "≤60 m²", "HIGH", { asNeededLineIds: [oven.lineId] });
     expect(near(urgentOven.labor, (base.labor + 250) * 1.3)).toBe(true);
   });

@@ -1,8 +1,9 @@
 import { describe, it, expect } from "vitest";
+import { roundMoney } from "../src/config/revenue";
 import { Clock } from "../src/core/clock/clock";
 import { addHours } from "../src/core/rules";
 import { buildQuote } from "../src/core/pricing/quote";
-import { adjustQuote, suggestedPayout, priceBounds } from "../src/core/pricing/adjust";
+import { adjustQuote, payoutLimits } from "../src/core/pricing/adjust";
 import { checklistFor } from "../src/core/standards/checklist";
 import { jobMachine, newJobCtx, verificationMachine, newVerification } from "../src/core/machines";
 import { DemoRuntime } from "../src/mocks/runtime/runtime";
@@ -14,28 +15,29 @@ const mk = () => new DemoRuntime(new Clock(0, () => t0.getTime()));
 
 describe("professional quote adjustment", () => {
   const base = buildQuote("painting", false);
-  const ratio = 0.8;
   it("a payout equal to the suggestion leaves the quote unchanged", () => {
-    const s = suggestedPayout(base.total, ratio);
-    expect(adjustQuote(base, ratio, s)).toMatchObject({ total: base.total, factor: 1, payout: s });
+    expect(adjustQuote(base, base.payout)).toMatchObject({ total: base.total, factor: 1, payout: base.payout, labor: base.labor });
   });
-  it("adjusting within the limits scales the lines and keeps them adding up", () => {
-    const s = suggestedPayout(base.total, ratio);
-    const q = adjustQuote(base, ratio, s * 1.1);
+  it("adjusting within the limits changes labor only and keeps the lines adding up", () => {
+    const q = adjustQuote(base, base.payout * 1.1);
     expect(q.total).toBeGreaterThan(base.total);
-    expect(q.lines.reduce((a, l) => a + l.amount, 0)).toBe(q.total);
-    const b = priceBounds(s);
+    expect(q.lines.find((l) => l.id === "mat")?.amount).toBe(base.materials);
+    expect(q.labor).toBeGreaterThan(base.labor);
+    expect(roundMoney(q.lines.reduce((a, l) => a + l.amount, 0))).toBe(q.total);
+    expect(q.total).toBe(roundMoney(q.materials + q.labor + q.bookingFee));
+    const b = payoutLimits(base.payout, base.wageFloor);
     expect(q.payout >= b.min && q.payout <= b.max).toBe(true);
   });
   it("refuses a payout outside the limits", () => {
-    const s = suggestedPayout(base.total, ratio);
-    expect(() => adjustQuote(base, ratio, s * 1.2)).toThrow();
-    expect(() => adjustQuote(base, ratio, s * 0.8)).toThrow();
+    expect(() => adjustQuote(base, base.payout * 1.2)).toThrow();
+    expect(() => adjustQuote(base, base.payout * 0.8)).toThrow();
   });
-  it("never scales the urgent surcharge", () => {
+  it("an urgent quote has no flat surcharge line, and adjustment leaves materials unchanged", () => {
     const u = buildQuote("painting", true);
-    const q = adjustQuote(u, ratio, suggestedPayout(u.total, ratio) * 0.9);
-    expect(q.lines.find((l) => l.id === "urgent")?.amount).toBe(300);
+    expect(u.lines.find((l) => l.id === "urgent")).toBeUndefined();
+    expect(u.labor).toBeGreaterThan(base.labor);
+    const q = adjustQuote(u, u.payout * 0.9);
+    expect(q.lines.find((l) => l.id === "mat")?.amount).toBe(u.materials);
     expect(q.lines.reduce((a, l) => a + l.amount, 0)).toBe(q.total);
   });
   it("has a checklist for every category", () => {
@@ -48,7 +50,7 @@ describe("professional sends an adjusted quote through the job", () => {
     const rt = mk();
     rt.spawn("job", "job", jobMachine, newJobCtx({ professionalId: "p6" }), { categoryId: "painting" });
     const base = buildQuote("painting", false);
-    const q = adjustQuote(base, 0.8, suggestedPayout(base.total, 0.8) * 1.05);
+    const q = adjustQuote(base, base.payout * 1.05);
     for (const e of [{ type: "ESTIMATE_READY" }, { type: "RECOMMENDATIONS_READY" }, { type: "SELECT_PROFESSIONAL", professionalId: "p6" },
       { type: "SEND_QUOTE", total: q.total, travelFee: 150, payoutRatio: 0.8, lines: q.lines, adjustmentReason: "Extra prep" }]) {
       expect(rt.dispatch("job", e).ok).toBe(true);

@@ -23,7 +23,8 @@ for (const f of files) {
       if (l === "ko" && e.status !== "approved" && !e.needsNativeReview) errors.push(`[ko] ${k}: missing needsNativeReview`);
       if (data.en[k] && placeholders(e.text) !== placeholders(data.en[k].text)) errors.push(`[${l}] ${k}: placeholder mismatch`);
       { let d = 0, ok = true; for (const ch of e.text) { if (ch === "{") d++; if (ch === "}") { d--; if (d < 0) ok = false; } } if (d !== 0 || !ok) errors.push(`[${l}] ${k}: unbalanced braces (a raw placeholder would show)`); }
-      if (banned.some((r) => r.test(e.text.replace(/FIXX Pro\b/g, "")))) errors.push(`[${l}] ${k}: banned term`);
+      // "예약 수수료" is the owner-approved booking-fee label. The ban still applies to every other use of 수수료.
+      if (banned.some((r) => r.test(e.text.replace(/FIXX Pro\b/g, "").replace(/예약 수수료/g, "")))) errors.push(`[${l}] ${k}: banned term`);
       if (k.startsWith("btn.") && [...e.text].length > BTN_MAX) warns.push(`[${l}] ${k}: button over ${BTN_MAX} chars`);
       if (k.endsWith(".title") && [...e.text].length > HEADLINE_MAX) warns.push(`[${l}] ${k}: headline over ${HEADLINE_MAX} chars`);
     }

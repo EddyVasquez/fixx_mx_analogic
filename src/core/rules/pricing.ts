@@ -13,5 +13,5 @@ export const clampPrice = (suggested: number, proposed: number, pct?: number): n
   const b = priceBounds(suggested, pct);
   return Math.min(b.max, Math.max(b.min, proposed));
 };
-/** Surcharge is shown to the customer before they confirm. */
-export const emergencyTotal = (base: number, cfg: typeof config = config): number => round2(base + cfg.emergencySurchargeMXN);
+/** Urgent labor is priced by the catalog urgency rate inside the quote. There is no flat add-on. */
+export const emergencyTotal = (base: number, _cfg: typeof config = config): number => round2(base);

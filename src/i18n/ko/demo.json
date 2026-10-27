@@ -230,7 +230,7 @@
     "needsNativeReview": true
   },
   "decisions.surcharge": {
-    "text": "긴급 추가 요금: {value}",
+    "text": "긴급 방문은 더 높은 인건비 요율을 쓰며, 그 금액은 가격에 이미 포함되어 있어요.",
     "status": "draft",
     "needsNativeReview": true
   },

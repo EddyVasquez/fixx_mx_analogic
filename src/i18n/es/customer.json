@@ -164,7 +164,7 @@
     "status": "draft"
   },
   "request.emergencyNote": {
-    "text": "Asignación más rápida a un precio mayor. El cargo adicional es de {amount}.",
+    "text": "Asignación más rápida a un precio mayor. Ese precio mayor ya está incluido en la cotización.",
     "status": "draft"
   },
   "request.errorDescription": {
@@ -370,6 +370,10 @@
   "quote.line.work": {
     "text": "Mano de obra",
     "status": "draft"
+  },
+  "quote.line.booking": {
+    "text": "Cuota de reservación",
+    "status": "approved"
   },
   "quote.line.urgent": {
     "text": "Cargo por urgencia",

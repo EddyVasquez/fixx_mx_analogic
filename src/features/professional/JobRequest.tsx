@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { config, type Lang } from "@/core/config/fixx.config";
 import { buildQuote } from "@/core/pricing/quote";
-import { adjustQuote, priceBounds, suggestedPayout } from "@/core/pricing/adjust";
+import { adjustQuote, payoutLimits } from "@/core/pricing/adjust";
 import { bandFor, travelFeeFor } from "@/core/rules";
 import type { ProLike } from "@/core/matching/recommend";
 import { languageNames } from "@/i18n";
@@ -20,10 +20,9 @@ type Send = (e: { type: string } & Record<string, unknown>) => void;
 export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draft: Draft; me: ProLike; customerLang: Lang; viewerLang: Lang; send: Send }) {
   const { t } = useTranslation();
   const money = useMoney();
-  const ratio = config.demoPayoutRatio;
   const base = buildQuote(draft.categoryId, draft.emergency);
-  const suggested = suggestedPayout(base.total, ratio);
-  const bounds = priceBounds(suggested);
+  const suggested = base.payout;
+  const bounds = payoutLimits(suggested, base.wageFloor);
   const [payout, setPayout] = useState(String(suggested));
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,9 +33,10 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
     const value = Number(payout.replace(/,/g, ""));
     if (!Number.isFinite(value) || value < bounds.min || value > bounds.max) return setError("pquote.outOfLimits");
     if (Math.abs(value - suggested) > 0.005 && !reason.trim()) return setError("pquote.reasonNeeded");
-    const q = adjustQuote(base, ratio, value);
+    const q = adjustQuote(base, value);
     setError(null);
-    send({ type: "SEND_QUOTE", total: q.total, travelFee: fee, payoutRatio: ratio, lines: q.lines, ...(reason.trim() ? { adjustmentReason: reason.trim() } : {}) });
+    // The job still stores this release ratio until the labor payout itself is saved. It is not used to price the quote.
+    send({ type: "SEND_QUOTE", total: q.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: q.lines, ...(reason.trim() ? { adjustmentReason: reason.trim() } : {}) });
   };
 
   return (
