@@ -175,6 +175,26 @@
     "text": "Street and number",
     "status": "draft"
   },
+  "request.homeownerName": {
+    "text": "Your name",
+    "status": "draft"
+  },
+  "request.community": {
+    "text": "Community",
+    "status": "draft"
+  },
+  "request.profileHint": {
+    "text": "These come from My Home. You can change them for this request.",
+    "status": "draft"
+  },
+  "request.errorName": {
+    "text": "Add your name so the professional knows who to ask for.",
+    "status": "draft"
+  },
+  "request.errorCommunity": {
+    "text": "Add the community so we can find the home.",
+    "status": "draft"
+  },
   "request.outside": {
     "text": "Outside Apodaca",
     "status": "draft"

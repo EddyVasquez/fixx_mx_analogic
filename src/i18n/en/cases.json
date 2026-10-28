@@ -147,6 +147,10 @@
     "text": "Reject the claim",
     "status": "draft"
   },
+  "customer.tabs": {
+    "text": "Main",
+    "status": "draft"
+  },
   "customer.tab.request": {
     "text": "Request",
     "status": "draft"
@@ -161,6 +165,10 @@
   },
   "myhome.title": {
     "text": "My Home",
+    "status": "draft"
+  },
+  "myhome.homeowner": {
+    "text": "Homeowner: {name}",
     "status": "draft"
   },
   "myhome.community": {

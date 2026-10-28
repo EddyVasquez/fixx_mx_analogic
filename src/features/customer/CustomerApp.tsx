@@ -30,7 +30,9 @@ import { stateLabel } from "@/features/admin/sections";
 import { SupportChatView } from "@/features/support/SupportChatView";
 import { TimelineView } from "./TimelineView";
 import { RatingView } from "./RatingView";
-import { customers, professionals, zones } from "./data";
+import { professionals, zones } from "./data";
+import { CustomerTabBar } from "./CustomerTabBar";
+import { useHomeProfile } from "./homeProfile";
 import { ChatView } from "@/features/chat/ChatView";
 import { settleClabe } from "./refundActions";
 import { JOB_ID, ratings, resetSession, session, type Draft } from "./session";
@@ -53,7 +55,7 @@ function RequestFlow() {
   const job = rt.get(JOB_ID);
   const state = job?.snap.state as JobState | undefined;
   const ctx = job?.snap.ctx as JobCtx | undefined;
-  const customer = customers.find((c) => c.language === lang) ?? customers[0];
+  const profile = useHomeProfile();
   const pro = professionals.find((p) => p.id === session.proId);
   // The customer's messages arrive in the language they are using the app in.
   useEffect(() => { rt.languages.customer = lang; });
@@ -71,7 +73,7 @@ function RequestFlow() {
         force();
       }} />;
     }
-    return <Home name={customer?.name ?? ""} email={session.email}
+    return <Home name={profile.homeownerName} email={session.email}
       onPick={(id) => { setDraft({ categoryId: id, emergency: false }); setPre("request"); }}
       onUrgent={() => { setDraft({ emergency: true }); setPre("request"); }} />;
   }
@@ -186,32 +188,25 @@ function RequestFlow() {
   }
 }
 
-const TAB_KEYS = { request: "customer.tab.request", home: "customer.tab.myHome", warranty: "customer.tab.warranty", help: "customer.tab.help" } as const;
-
-/** Customer app: sign-in, then three tabs (request flow, My Home, Warranty). */
+/** Customer app. My Home is the landing tab. The bar lists only tabs that already have screens. */
 export function CustomerApp() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const [, force] = useReducer((x: number) => x + 1, 0);
   const rt = useRuntime();
   const jobState = rt.get(JOB_ID)?.snap.state;
-  if (!session.signedIn) return <SignIn onDone={(email) => { session.signedIn = true; session.email = email; force(); }} />;
+  if (!session.signedIn) return <SignIn onDone={(email) => { session.signedIn = true; session.email = email; session.tab = "home"; force(); }} />;
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-h-[calc(100dvh-8.5rem)] flex-col gap-4">
       {/* Announces job status changes to screen readers */}
       <p role="status" className="sr-only">{jobState ? `${t("status.label")}: ${stateLabel(t, jobState)}` : ""}</p>
-      <div role="group" className="flex gap-2">
-        {(Object.keys(TAB_KEYS) as (keyof typeof TAB_KEYS)[]).map((tab) => (
-          <button key={tab} type="button" aria-pressed={session.tab === tab} onClick={() => { session.tab = tab; force(); }}
-            className={`min-h-touch flex-1 rounded-full border-2 border-ink px-2 text-sm font-semibold ${session.tab === tab ? "bg-ink text-paper" : "bg-paper text-ink"}`}>
-            {t(TAB_KEYS[tab])}
-          </button>
-        ))}
+      <div className="flex flex-1 flex-col gap-4">
+        {session.tab === "request" && <RequestFlow />}
+        {session.tab === "home" && <MyHomeTab lang={lang} />}
+        {session.tab === "warranty" && <WarrantyTab lang={lang} />}
+        {session.tab === "help" && <SupportChatView lang={lang} />}
       </div>
-      {session.tab === "request" && <RequestFlow />}
-      {session.tab === "home" && <MyHomeTab lang={lang} />}
-      {session.tab === "warranty" && <WarrantyTab lang={lang} />}
-      {session.tab === "help" && <SupportChatView lang={lang} />}
+      <CustomerTabBar active={session.tab} onSelect={(tab) => { session.tab = tab; force(); }} />
     </div>
   );
 }

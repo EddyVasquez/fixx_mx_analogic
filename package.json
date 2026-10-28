@@ -13,6 +13,7 @@
     "check": "npm run i18n:lint && npm run i18n:keys && npm run a11y:lint && npm run test && npm run build"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "dexie": "^4.0.8",
     "i18next": "^23.15.1",
     "i18next-icu": "^2.3.0",
