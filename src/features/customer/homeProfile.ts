@@ -1,12 +1,15 @@
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
 import demoProfileSeed from "@/seed/demoProfile.json";
+import { HomeModelSchema } from "./homeModel";
 
 /** One homeowner profile. A future registration flow replaces this with the signed-in person's own data. */
 export const HomeProfileSchema = z.object({
   homeownerName: z.string().min(1),
   community: z.string().min(1),
-  address: z.string().min(1)
+  address: z.string().min(1),
+  /** Builder floor plan, when this profile was started from a home preset. */
+  model: HomeModelSchema.optional()
 });
 export type HomeProfile = z.infer<typeof HomeProfileSchema>;
 

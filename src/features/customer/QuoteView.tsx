@@ -12,6 +12,7 @@ import { HlAmount, HlDate, HlOk, Label } from "@/ui/Highlights";
 import { useMoney } from "@/features/shared/Money";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { categories } from "./data";
+import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import type { Draft } from "./session";
 import { PendingReviewBanner } from "./PendingReviewBanner";
 
@@ -60,6 +61,7 @@ export function QuoteView(props: {
       <h2 className="text-2xl font-bold">{t("quote.title")}</h2>
       <section aria-label={t("quote.title")} className="rounded-3xl bg-panel px-4 py-1 text-ink">
         <Row left={<Label>{t("quote.label.job")}</Label>} right={category?.names[lang]} />
+        <div className="border-b border-inkSoft/40 py-3"><HomeQuoteFacts draft={draft} /></div>
         <Row left={<Label>{t("quote.label.professional")}</Label>} right={professionalName} />
         <Note>{t("quote.identityNote")}</Note>
         <Row left={<Label>{t("quote.label.date")}</Label>} right={<HlDate>{when(slot(hoursSel))}</HlDate>} />

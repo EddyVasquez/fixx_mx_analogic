@@ -1,5 +1,6 @@
 import type { PayMethod } from "@/core/rules";
 import type { Lang } from "@/core/config/fixx.config";
+import { blankQuoteFacts, quoteFactsFromModel } from "./homeModel";
 import { getHomeProfile } from "./homeProfile";
 
 export const JOB_ID = "job-customer";
@@ -16,6 +17,8 @@ export interface Draft {
   zoneId: string; // a zone id, or "outside"
   /** Copied from the home profile when a request starts. Edits apply to this request only. */
   homeownerName: string; community: string; street: string; emergency: boolean;
+  /** Copied from the home model. Cleaning size is a catalog m² band. The customer can change each one. */
+  cleaningTier: string; minisplits: number; bathrooms: number; bedrooms: number;
   /** Catalog task ids, in the order the customer selected them. */
   selectedJobIds: string[];
   /** True after the customer types in the description. Chip changes no longer overwrite it. */
@@ -23,9 +26,11 @@ export interface Draft {
 }
 export const emptyDraft = (over: Partial<Draft> = {}): Draft => {
   const profile = getHomeProfile();
+  const facts = profile.model ? quoteFactsFromModel(profile.model) : blankQuoteFacts();
   return {
     categoryId: "painting", description: "", photos: 0, measurements: "", zoneId: "z1",
     homeownerName: profile.homeownerName, community: profile.community, street: profile.address, emergency: false,
+    ...facts,
     selectedJobIds: [], descriptionEdited: false,
     ...over
   };

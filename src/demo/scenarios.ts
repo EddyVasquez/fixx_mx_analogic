@@ -1,6 +1,7 @@
 import { config, type Lang } from "../core/config/fixx.config";
 import { addHours, buildSchedule, type PayMethod } from "../core/rules";
 import { buildQuote, humanReviewForCategory } from "../core/pricing/quote";
+import { quoteScopeFromDraft } from "../features/customer/homeModel";
 import { jobMachine, newJobCtx, verificationMachine, newVerification, type JobCtx } from "../core/machines";
 import type { DemoRuntime } from "../mocks/runtime/runtime";
 import { ensureReference, confirmPayment } from "../mocks/runtime/paymentActors";
@@ -49,7 +50,7 @@ function begin(rt: DemoRuntime, o: BeginOpts, appLang: Lang): void {
 const recs: Step = (c) => c.job("RECOMMENDATIONS_READY");
 const select = (id: string): Step => (c) => c.job("SELECT_PROFESSIONAL", { professionalId: id });
 const sendQuote = (extra = 0): Step => (c) => {
-  const q = buildQuote(session.draft.categoryId, session.draft.emergency);
+  const q = buildQuote(session.draft.categoryId, session.draft.emergency, quoteScopeFromDraft(session.draft));
   const lines = q.lines.map((l) => (l.id === "work" ? { ...l, amount: l.amount + extra } : l));
   c.job("SEND_QUOTE", { total: q.total + extra, travelFee: config.travelFeeBandsMXN.adjacent, payoutRatio: config.demoPayoutRatio, lines, taskId: q.taskId, tier: q.tier });
 };

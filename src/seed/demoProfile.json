@@ -1,5 +1,29 @@
 {
   "homeownerName": "Eduardo L. Vasquez",
   "community": "Santa Sofia Residencial",
-  "address": "Sierra Picachos 402"
+  "address": "Sierra Picachos 402",
+  "model": {
+    "id": "santa-sofia",
+    "developer": "GP Vivienda",
+    "stories": 2,
+    "lotM2": 98,
+    "lotApproximate": true,
+    "builtM2": 100.49,
+    "garageCarsMin": 1,
+    "garageCarsMax": 2,
+    "livingDining": true,
+    "kitchen": true,
+    "kitchenBuiltIn": "optional",
+    "breakfastBar": "optional",
+    "groundFullBathrooms": 1,
+    "laundry": true,
+    "backPatio": true,
+    "sidePassage": true,
+    "bedrooms": 3,
+    "mainBedroomCloset": true,
+    "mainBedroomMinisplit": true,
+    "upperFullBathrooms": 1,
+    "minisplits": 1,
+    "plansVaryByPhase": true
+  }
 }

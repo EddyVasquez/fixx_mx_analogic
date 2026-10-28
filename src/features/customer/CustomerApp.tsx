@@ -4,6 +4,7 @@ import type { Lang } from "@/core/config/fixx.config";
 import { config } from "@/core/config/fixx.config";
 import { recommend } from "@/core/matching/recommend";
 import { buildQuote, humanReviewForCategory } from "@/core/pricing/quote";
+import { quoteScopeFromDraft } from "./homeModel";
 import { bandFor, manualReviewFollowUp, travelFeeFor } from "@/core/rules";
 import { formatDateTime } from "@/core/clock/clock";
 import { localeFor } from "@/i18n";
@@ -78,7 +79,7 @@ function RequestFlow() {
       onUrgent={() => { setDraft({ emergency: true }); setPre("request"); }} />;
   }
 
-  const quote = buildQuote(draft.categoryId, draft.emergency);
+  const quote = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
   const proEvent = (type: string) => {
     if (type === "SEND_QUOTE" && pro) {
       const fee = travelFeeFor(bandFor(pro.zoneId, draft.zoneId, zones));

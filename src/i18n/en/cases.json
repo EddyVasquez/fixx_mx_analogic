@@ -199,6 +199,110 @@
     "text": "Completed {date}",
     "status": "draft"
   },
+  "myhome.translationDraft": {
+    "text": "Korean copy is a draft.",
+    "status": "draft"
+  },
+  "myhome.model.santaSofia": {
+    "text": "Santa Sofía model",
+    "status": "draft"
+  },
+  "myhome.source": {
+    "text": "Santa Sofía Residencial (GP Vivienda)",
+    "status": "draft"
+  },
+  "myhome.stories": {
+    "text": "{count, plural, one {# story} other {# stories}}",
+    "status": "draft"
+  },
+  "myhome.lotAbout": {
+    "text": "Lot: about {area} m²",
+    "status": "draft"
+  },
+  "myhome.lot": {
+    "text": "Lot: {area} m²",
+    "status": "draft"
+  },
+  "myhome.built": {
+    "text": "Built area: {area} m²",
+    "status": "draft"
+  },
+  "myhome.ground": {
+    "text": "Ground floor",
+    "status": "draft"
+  },
+  "myhome.upper": {
+    "text": "Upper floor",
+    "status": "draft"
+  },
+  "myhome.garage": {
+    "text": "Garage for {min}–{max} cars",
+    "status": "draft"
+  },
+  "myhome.livingDining": {
+    "text": "Combined living and dining room",
+    "status": "draft"
+  },
+  "myhome.kitchen": {
+    "text": "Kitchen",
+    "status": "draft"
+  },
+  "myhome.kitchenBuiltIn.optional": {
+    "text": "Built-in kitchen is optional",
+    "status": "draft"
+  },
+  "myhome.kitchenBuiltIn.included": {
+    "text": "Built-in kitchen",
+    "status": "draft"
+  },
+  "myhome.breakfastBar.optional": {
+    "text": "Breakfast bar is optional",
+    "status": "draft"
+  },
+  "myhome.breakfastBar.included": {
+    "text": "Breakfast bar",
+    "status": "draft"
+  },
+  "myhome.fullBathrooms": {
+    "text": "{count, plural, one {# full bathroom} other {# full bathrooms}}",
+    "status": "draft"
+  },
+  "myhome.laundry": {
+    "text": "Laundry room",
+    "status": "draft"
+  },
+  "myhome.backPatio": {
+    "text": "Back patio",
+    "status": "draft"
+  },
+  "myhome.sidePassage": {
+    "text": "Side passage",
+    "status": "draft"
+  },
+  "myhome.bedrooms": {
+    "text": "{count, plural, one {# bedroom} other {# bedrooms}}",
+    "status": "draft"
+  },
+  "myhome.mainBedroom": {
+    "text": "The main bedroom has space for a closet and a minisplit.",
+    "status": "draft"
+  },
+  "myhome.mainBedroomCloset": {
+    "text": "The main bedroom has space for a closet.",
+    "status": "draft"
+  },
+  "myhome.mainBedroomMinisplit": {
+    "text": "The main bedroom has space for a minisplit.",
+    "status": "draft"
+  },
+  "myhome.sharedBathroom": {
+    "text": "{count, plural, one {# shared full bathroom} other {# shared full bathrooms}}",
+    "status": "draft"
+  },
+  "myhome.plansVary": {
+    "text": "Exact plans vary by phase.",
+    "status": "draft"
+  },
   "warranty.title": {
     "text": "Warranty",
     "status": "draft"

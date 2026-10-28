@@ -215,6 +215,50 @@
     "text": "Vienen de Mi hogar. Puedes cambiarlos para esta solicitud.",
     "status": "draft"
   },
+  "request.quoteFacts": {
+    "text": "Datos de la casa para esta cotización",
+    "status": "draft"
+  },
+  "request.quoteFactsHint": {
+    "text": "Vienen de Mi hogar. Puedes cambiar cualquiera en esta solicitud.",
+    "status": "draft"
+  },
+  "request.cleaningSize": {
+    "text": "Tamaño para la limpieza",
+    "status": "draft"
+  },
+  "request.cleaningSizeUnset": {
+    "text": "Sin tamaño de limpieza",
+    "status": "draft"
+  },
+  "request.cleaningSizeUsed": {
+    "text": "Tamaño para la limpieza: {tier}",
+    "status": "draft"
+  },
+  "request.minisplits": {
+    "text": "Minisplits",
+    "status": "draft"
+  },
+  "request.minisplitHint": {
+    "text": "La recámara principal tiene espacio para uno.",
+    "status": "draft"
+  },
+  "request.bathrooms": {
+    "text": "Baños",
+    "status": "draft"
+  },
+  "request.bedrooms": {
+    "text": "Recámaras",
+    "status": "draft"
+  },
+  "request.fromHome": {
+    "text": "De tu hogar",
+    "status": "draft"
+  },
+  "request.homeCounts": {
+    "text": "{minisplits, plural, one {# minisplit} other {# minisplits}}, {bathrooms, plural, one {# baño} other {# baños}}, {bedrooms, plural, one {# recámara} other {# recámaras}}",
+    "status": "draft"
+  },
   "request.errorName": {
     "text": "Agrega tu nombre para que el profesional sepa a quién buscar.",
     "status": "draft"

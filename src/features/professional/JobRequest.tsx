@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { config, type Lang } from "@/core/config/fixx.config";
 import { buildQuote } from "@/core/pricing/quote";
+import { HomeQuoteFacts } from "@/features/customer/HomeQuoteFacts";
+import { quoteScopeFromDraft } from "@/features/customer/homeModel";
 import { adjustQuote, payoutLimits } from "@/core/pricing/adjust";
 import { bandFor, travelFeeFor } from "@/core/rules";
 import type { ProLike } from "@/core/matching/recommend";
@@ -20,7 +22,7 @@ type Send = (e: { type: string } & Record<string, unknown>) => void;
 export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draft: Draft; me: ProLike; customerLang: Lang; viewerLang: Lang; send: Send }) {
   const { t } = useTranslation();
   const money = useMoney();
-  const base = buildQuote(draft.categoryId, draft.emergency);
+  const base = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
   const suggested = base.payout;
   const bounds = payoutLimits(suggested, base.wageFloor);
   const [payout, setPayout] = useState(String(suggested));
@@ -53,6 +55,7 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
         <div><dt className="text-sm text-inkSoft">{t("job.where")}</dt><dd>{draft.zoneId === "outside" ? t("request.outside") : zoneNames[draft.zoneId]}</dd></div>
         {draft.emergency && <div><dd className="font-bold">{t("request.emergency")}</dd></div>}
       </dl>
+      <HomeQuoteFacts draft={draft} />
 
       <h3 className="text-xl font-bold">{t("pquote.title")}</h3>
       <p className="font-semibold">{t("pquote.suggested", { amount: money(suggested) })}</p>

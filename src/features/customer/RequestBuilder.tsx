@@ -8,11 +8,19 @@ import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
 import { categories, zoneNames, zones } from "./data";
 import { jobsForCategory, type CatalogJob } from "./catalogJobs";
+import { HomeQuoteFacts } from "./HomeQuoteFacts";
+import { cleaningAreaTiers } from "./homeModel";
 import { JobChips, type JobOption } from "./JobChips";
 import { buildJobSentence } from "./jobSentence";
 import type { Draft } from "./session";
 
 const UNDO_MS = 5000;
+
+function countFrom(raw: string): number {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return Math.floor(n);
+}
 
 function sentenceFor(categoryId: string, lang: Lang, ids: readonly string[]): string {
   const byId = new Map(jobsForCategory(categoryId, lang).map((job) => [job.id, job]));
@@ -88,6 +96,25 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
       <Field label={t("request.community")}>
         <input className={inputClass} autoComplete="address-level3" value={draft.community} onChange={(e) => onChange({ community: e.target.value })} />
       </Field>
+      <fieldset className="flex flex-col gap-3">
+        <legend className="font-semibold">{t("request.quoteFacts")}</legend>
+        <p className="text-sm text-inkSoft">{t("request.quoteFactsHint")}</p>
+        <Field label={t("request.cleaningSize")}>
+          <select className={inputClass} value={draft.cleaningTier} onChange={(e) => onChange({ cleaningTier: e.target.value })}>
+            {draft.cleaningTier === "" && <option value="">{t("request.cleaningSizeUnset")}</option>}
+            {cleaningAreaTiers().map((tier) => <option key={tier} value={tier}>{tier}</option>)}
+          </select>
+        </Field>
+        <Field label={t("request.minisplits")} hint={t("request.minisplitHint")}>
+          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.minisplits} onChange={(e) => onChange({ minisplits: countFrom(e.target.value) })} />
+        </Field>
+        <Field label={t("request.bathrooms")}>
+          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.bathrooms} onChange={(e) => onChange({ bathrooms: countFrom(e.target.value) })} />
+        </Field>
+        <Field label={t("request.bedrooms")}>
+          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.bedrooms} onChange={(e) => onChange({ bedrooms: countFrom(e.target.value) })} />
+        </Field>
+      </fieldset>
       <Field label={t("request.category")}>
         <select className={inputClass} value={draft.categoryId} onChange={(e) => {
           const categoryId = e.target.value;
@@ -191,6 +218,7 @@ export function RequestReview({ draft, onEdit, onSubmit }: { draft: Draft; onEdi
         <div><dt className="text-sm text-inkSoft">{t("request.address")}</dt><dd>{where}, {draft.street}</dd></div>
         {draft.emergency && <div><dd className="font-bold">{t("request.emergency")}</dd></div>}
       </dl>
+      <HomeQuoteFacts draft={draft} />
       <div className="flex gap-2">
         <Button variant="secondary" onClick={onEdit}>{t("btn.edit")}</Button>
         <Button className="flex-1" onClick={onSubmit}>{t("btn.submitRequest")}</Button>

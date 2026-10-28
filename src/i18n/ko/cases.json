@@ -249,6 +249,136 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "myhome.translationDraft": {
+    "text": "한국어 문구는 초안이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.model.santaSofia": {
+    "text": "산타 소피아 모델",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.source": {
+    "text": "산타 소피아 레지던시알 (GP Vivienda)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.stories": {
+    "text": "{count, plural, other {#층 주택}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.lotAbout": {
+    "text": "대지면적: 약 {area} m²",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.lot": {
+    "text": "대지면적: {area} m²",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.built": {
+    "text": "연면적: {area} m²",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.ground": {
+    "text": "1층",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.upper": {
+    "text": "2층",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.garage": {
+    "text": "주차 {min}–{max}대",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.livingDining": {
+    "text": "거실과 식당이 함께 있어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.kitchen": {
+    "text": "주방",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.kitchenBuiltIn.optional": {
+    "text": "붙박이 주방은 선택이에요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.kitchenBuiltIn.included": {
+    "text": "붙박이 주방",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.breakfastBar.optional": {
+    "text": "아침 식사용 바는 선택이에요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.breakfastBar.included": {
+    "text": "아침 식사용 바",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.fullBathrooms": {
+    "text": "{count, plural, other {욕실 #개}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.laundry": {
+    "text": "세탁실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.backPatio": {
+    "text": "뒤뜰",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.sidePassage": {
+    "text": "측면 통로",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.bedrooms": {
+    "text": "{count, plural, other {침실 #개}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.mainBedroom": {
+    "text": "안방에는 옷장과 미니스플릿을 놓을 자리가 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.mainBedroomCloset": {
+    "text": "안방에는 옷장을 놓을 자리가 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.mainBedroomMinisplit": {
+    "text": "안방에는 미니스플릿을 놓을 자리가 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.sharedBathroom": {
+    "text": "{count, plural, other {공용 욕실 #개}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.plansVary": {
+    "text": "정확한 도면은 단계마다 다를 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "warranty.title": {
     "text": "보증",
     "status": "draft",
