@@ -1,5 +1,6 @@
+import { config } from "../config/fixx.config";
 import {
-  buildSchedule, planAdditionalWork, issueWindow, computeHeld, customerCancellation, refundDestination,
+  buildSchedule, planAdditionalWork, completionWindow, computeHeld, customerCancellation, refundDestination, addHours, round2,
   type PayMethod, type QuoteLine, type CancelOutcome, type CancelStage
 } from "../rules";
 import { notify, reject, type Audience, type Effect, type MachineDef, type Outcome } from "./machine";
@@ -23,10 +24,11 @@ export type JobEvent =
   | { type: "ON_THE_WAY" } | { type: "CHECK_IN" } | { type: "START_WORK" }
   | { type: "REQUEST_ADDITIONAL_WORK"; amount: number; lineId?: string; meters?: number } | { type: "APPROVE_ADDITIONAL_WORK" }
   | { type: "DECLINE_ADDITIONAL_WORK" } | { type: "ADDITIONAL_WORK_PAID" }
-  | { type: "CHECKLIST_COMPLETE" } | { type: "MARK_COMPLETE" }
+  | { type: "CHECKLIST_COMPLETE" } | { type: "MARK_COMPLETE" } | { type: "APPROVE_COMPLETION" }
   | { type: "CUSTOMER_CANCELS" } | { type: "PRO_CANCELS" } | { type: "PRO_NO_SHOW" }
   | { type: "CHOOSE_REPLACEMENT" } | { type: "CHOOSE_REFUND" } | { type: "REFUND_ISSUED" }
-  | { type: "ISSUE_REMINDER" } | { type: "REPORT_ISSUE"; selected: string[] | "wholeJob" }
+  | { type: "ISSUE_REMINDER" } | { type: "REPORT_ISSUE"; selected: string[] | "wholeJob"; category?: string; description?: string; photoCount?: number }
+  | { type: "SCHEDULE_RETURN" }
   | { type: "WINDOW_CLOSED" } | { type: "CASE_RESOLVED" } | { type: "RATE" };
 
 export interface JobCtx {
@@ -44,6 +46,13 @@ export interface JobCtx {
   scheduleBasis: Date | null;
   /** Set at request time when the trade has regulated work. Only an admin approve releases it. */
   needsReview: boolean;
+  /** Customer amount released when a problem report holds only the disputed part. */
+  releasedAmount: number;
+  /** Professional net share already released. Never a rate. */
+  releasedPayout: number;
+  returnVisitBy: Date | null;
+  returnScheduled: boolean;
+  problemCategory: string | null;
 }
 
 /** Events only an admin can fire. pendingReview leaves this list through approve alone. */
@@ -53,7 +62,8 @@ export const newJobCtx = (p: Partial<JobCtx> = {}): JobCtx => ({
   method: "card", total: 0, jobStart: new Date(0), professionalId: null, travelFee: 0, payoutRatio: 0.8, lines: [],
   taskId: null, tier: null,
   paid: 0, initialDue: 0, balancePaid: false, onTheWayAt: null, checklistDone: false, additional: null,
-  issueWindowEndsAt: null, heldAmount: 0, heldPayout: 0, cancelledBy: null, refund: null, carryOver: 0, adjustmentReason: null, scheduleBasis: null, needsReview: false, ...p
+  issueWindowEndsAt: null, heldAmount: 0, heldPayout: 0, cancelledBy: null, refund: null, carryOver: 0, adjustmentReason: null, scheduleBasis: null, needsReview: false,
+  releasedAmount: 0, releasedPayout: 0, returnVisitBy: null, returnScheduled: false, problemCategory: null, ...p
 });
 
 const C: Audience[] = ["customer"], P: Audience[] = ["professional"], CP: Audience[] = ["customer", "professional"];
@@ -87,11 +97,15 @@ const choice = {
 };
 
 const enterIssueWindow = (now: Date, fx: Effect[]): O => {
-  const w = issueWindow(now);
+  const w = completionWindow(now);
+  const timers: Effect[] = w.reminders.map((r) => ({
+    type: "timer", at: r.at, event: { type: "ISSUE_REMINDER" }, label: r.label
+  }));
+  timers.push({ type: "timer", at: w.endsAt, event: { type: "WINDOW_CLOSED" }, label: w.autoReleaseLabel });
   return go("issueWindow", [
     ...fx,
-    { type: "timer", at: w.reminderAt, event: { type: "ISSUE_REMINDER" }, label: "issue window closes in 6 hours" },
-    { type: "timer", at: w.endsAt, event: { type: "WINDOW_CLOSED" }, label: "issue window closes" }
+    notify("completion.opened", C, "urgent", { hours: config.completionCheck.autoReleaseHours }),
+    ...timers
   ], { issueWindowEndsAt: w.endsAt });
 };
 const release = (): Effect[] => [
@@ -208,24 +222,57 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
           return reject("the additional work must be paid before the job can be marked complete");
         }
         return c.balancePaid
-          ? enterIssueWindow(now, [notify("job.complete", C, "urgent")])
+          ? enterIssueWindow(now, [notify("job.complete", C, "urgent", { issueHours: config.completionCheck.autoReleaseHours })])
           : go("markedComplete", [notify("job.completeBalanceDue", C, "urgent")]);
       }
     },
     markedComplete: { BALANCE_PAID: (_c, _e, now) => enterIssueWindow(now, [notify("payment.balanceReceived", C, "record")]) },
     issueWindow: {
-      ISSUE_REMINDER: () => go("issueWindow", [notify("issueWindow.reminder", C, "urgent")]),
+      ISSUE_REMINDER: (c, _e, now) => {
+        const hoursLeft = c.issueWindowEndsAt
+          ? Math.max(0, Math.round((c.issueWindowEndsAt.getTime() - now.getTime()) / 3_600_000))
+          : 0;
+        return go("issueWindow", [notify("issueWindow.reminder", C, "urgent", { hoursLeft })]);
+      },
+      APPROVE_COMPLETION: (c, _e, now) => {
+        if (c.issueWindowEndsAt && now.getTime() > c.issueWindowEndsAt.getTime()) return reject("the issue window has closed");
+        return go("paymentReleased", [...release(), notify("completion.approved", C, "record")]);
+      },
       REPORT_ISSUE: (c, e, now) => {
         if (c.issueWindowEndsAt && now.getTime() > c.issueWindowEndsAt.getTime()) return reject("the issue window has closed");
+        if (e.category !== undefined && !e.category.trim()) return reject("choose a problem category");
+        if (e.description !== undefined && !e.description.trim()) return reject("describe the problem");
+        if (e.photoCount !== undefined && e.photoCount < config.completionCheck.minProblemPhotos) return reject("add at least one photo");
         const h = computeHeld({ lines: c.lines, selected: e.selected, jobTotal: c.total, payoutRatio: c.payoutRatio });
-        return go("issueOpen", [notify("issue.reported", CPA, "urgent", { held: h.held, heldPayout: h.heldPayout }),
-          { type: "createCase", heldAmount: h.held, heldPayout: h.heldPayout, wholeJob: h.wholeJob }],
-          { heldAmount: h.held, heldPayout: h.heldPayout });
+        const releasedPayout = round2(h.released * c.payoutRatio);
+        const fx: Effect[] = [
+          notify("issue.reported", CPA, "urgent", { held: h.held, heldPayout: h.heldPayout }),
+          { type: "createCase", heldAmount: h.held, heldPayout: h.heldPayout, wholeJob: h.wholeJob }
+        ];
+        // Only the disputed amount stays held. The rest of the job releases now.
+        if (h.released > 0 && releasedPayout > 0) {
+          fx.push(notify("completion.partialRelease", C, "record", { released: h.released }));
+          fx.push(notify("completion.partialRelease", P, "record", { releasedPayout }));
+          fx.push({ type: "releasePayout", amount: releasedPayout });
+        }
+        return go("issueOpen", fx, {
+          heldAmount: h.held, heldPayout: h.heldPayout, releasedAmount: h.released, releasedPayout,
+          returnVisitBy: addHours(now, config.completionCheck.returnVisitHours),
+          returnScheduled: false, problemCategory: e.category?.trim() || null
+        });
       },
       WINDOW_CLOSED: (c, _e, now) => c.issueWindowEndsAt && now.getTime() < c.issueWindowEndsAt.getTime()
         ? reject("the issue window is still open") : go("paymentReleased", release())
     },
-    issueOpen: { CASE_RESOLVED: () => go("paymentReleased", release()) },
+    issueOpen: {
+      SCHEDULE_RETURN: (c, _e, now) => {
+        if (!c.returnVisitBy) return reject("there is no return visit window");
+        if (c.returnScheduled) return reject("a return visit is already scheduled");
+        if (now.getTime() > c.returnVisitBy.getTime()) return reject("the return visit window has closed");
+        return go("issueOpen", [notify("job.returnVisit", CP, "urgent", { returnHours: config.completionCheck.returnVisitHours })], { returnScheduled: true });
+      },
+      CASE_RESOLVED: () => go("paymentReleased", release())
+    },
     paymentReleased: { RATE: () => go("rated", [notify("job.rated", P)]) },
     cancelled: { REFUND_ISSUED: () => go("refunded", [notify("refund.issued", C, "record")]) },
     professionalCancelled: choice,

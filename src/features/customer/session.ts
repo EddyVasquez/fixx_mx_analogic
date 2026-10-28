@@ -20,9 +20,11 @@ export const session = {
   /** Professionals the customer moved away from (cancelled, no-show, unanswered reschedule). */
   excluded: [] as string[],
   /** Additional work description written by the professional, in their language. */
-  additionalNote: "", additionalLang: "es" as Lang
+  additionalNote: "", additionalLang: "es" as Lang,
+  /** Optional customer ticks on the completion list. They do not gate approval. */
+  completionChecks: {} as Record<string, boolean>
 };
 export function resetSession(keepSignIn = true): void {
   const { signedIn, email } = session;
-  Object.assign(session, { signedIn: keepSignIn && signedIn, email: keepSignIn ? email : "", draft: emptyDraft(), proId: null, method: "card", slotHours: 30, excluded: [], additionalNote: "", additionalLang: "es", issueNote: "", tab: "request" });
+  Object.assign(session, { signedIn: keepSignIn && signedIn, email: keepSignIn ? email : "", draft: emptyDraft(), proId: null, method: "card", slotHours: 30, excluded: [], additionalNote: "", additionalLang: "es", issueNote: "", tab: "request", completionChecks: {} });
 }

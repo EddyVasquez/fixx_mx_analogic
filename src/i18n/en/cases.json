@@ -8,7 +8,7 @@
     "status": "draft"
   },
   "issue.intro": {
-    "text": "Choose what has a problem. The amount for those items is held until we decide.",
+    "text": "Choose what has a problem. Only that amount is held. The rest is released.",
     "status": "draft"
   },
   "issue.itemsLegend": {

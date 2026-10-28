@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Clock } from "../src/core/clock/clock";
+import { config } from "../src/core/config/fixx.config";
 import { addHours } from "../src/core/rules";
 import { jobMachine, newJobCtx, type JobCtx } from "../src/core/machines";
 import { DemoRuntime } from "../src/mocks/runtime/runtime";
@@ -33,7 +34,7 @@ describe("scenario 3: additional work", () => {
     go({ type: "APPROVE_ADDITIONAL_WORK" });
     expect(ctx().total).toBe(4700);
     go({ type: "CHECKLIST_COMPLETE" }); go({ type: "MARK_COMPLETE" }); go({ type: "BALANCE_PAID" });
-    rt.advanceHours(24);
+    rt.advanceHours(config.completionCheck.autoReleaseHours);
     expect(state()).toBe("paymentReleased");
     expect(rt.payouts[0]?.amount).toBe(3760);
   });

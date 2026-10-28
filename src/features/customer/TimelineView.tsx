@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { formatDateTime } from "@/core/clock/clock";
@@ -23,6 +23,8 @@ import { CaseCard } from "./CaseCard";
 import { CaseAgentDemo } from "./AgentDemo";
 import { IssueReport } from "./IssueReport";
 import { CloseWindowAction } from "./CloseWindowAction";
+import { CompletionCheck } from "./CompletionCheck";
+import { UnderReview } from "./UnderReview";
 import { JOB_ID, session } from "./session";
 
 export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState; ctx: JobCtx; onEvent: (type: string) => void; onSend?: (e: { type: string } & Record<string, unknown>) => void }) {
@@ -33,6 +35,8 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
   const status = statusFor(state);
   const cardLike = ctx.method === "card" || ctx.method === "wallet";
   const rt = useRuntime();
+  const [, force] = useReducer((n: number) => n + 1, 0);
+  const now = rt.clock.now();
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, []);
   const basis = ctx.scheduleBasis ?? rt.clock.now();
@@ -52,8 +56,8 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
       <p><HlDate>{t("timeline.when", { when: when(ctx.jobStart) })}</HlDate></p>
       {state === "issueWindow" && ctx.issueWindowEndsAt && (
         <>
-          {cardLike && <p>{t("timeline.balanceCharged", { amount: money(Math.round((ctx.total - ctx.paid) * 100) / 100) })}</p>}
-          <p><HlDate>{t("timeline.windowEnds", { when: when(ctx.issueWindowEndsAt) })}</HlDate></p>
+          <CompletionCheck ctx={ctx} categoryId={session.draft.categoryId} now={now} lang={lang} onToggle={force}
+            onApprove={() => onEvent("APPROVE_COMPLETION")} />
           <p className="text-inkSoft">{t("rating.pending")}</p>
           <CloseWindowAction rt={rt} jobId={JOB_ID} />
         </>
@@ -64,11 +68,15 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
           <Button variant="secondary" onClick={() => onEvent("BALANCE_PAID")}>{t("demo.simulatePayment")}</Button>
         </div>
       )}
-      {state === "issueWindow" && onSend && (
-        <IssueReport ctx={ctx} onSubmit={(selected, description) => { session.issueNote = description; onSend({ type: "REPORT_ISSUE", selected }); }} />
+      {state === "issueWindow" && onSend && ctx.issueWindowEndsAt && now.getTime() <= ctx.issueWindowEndsAt.getTime() && (
+        <IssueReport ctx={ctx} now={now} lang={lang} onSubmit={(selected, description, category, photoCount) => {
+          session.issueNote = description;
+          onSend({ type: "REPORT_ISSUE", selected, description, category, photoCount });
+        }} />
       )}
       {state === "issueOpen" && (
         <>
+          <UnderReview ctx={ctx} lang={lang} role="customer" />
           <CaseCard rt={rt} jobId={JOB_ID} role="customer" lang={lang} />
           <CaseAgentDemo rt={rt} jobId={JOB_ID} />
         </>

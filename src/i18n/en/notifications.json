@@ -160,7 +160,7 @@
     "status": "draft"
   },
   "notif.issueWindow.reminder": {
-    "text": "The issue window closes in {reminderHours, plural, one {# hour} other {# hours}}.",
+    "text": "Please check the finished job. The balance releases in {hoursLeft, plural, one {# hour} other {# hours}}.",
     "status": "draft"
   },
   "notif.issue.reported": {
@@ -461,6 +461,26 @@
   },
   "state.refunded": {
     "text": "Refunded",
+    "status": "draft"
+  },
+  "notif.completion.opened": {
+    "text": "Please check the finished job. If you do not answer, the balance releases in {hours, plural, one {# hour} other {# hours}}.",
+    "status": "draft"
+  },
+  "notif.completion.partialRelease.customer": {
+    "text": "We released {released} now. The reported amount stays held.",
+    "status": "draft"
+  },
+  "notif.completion.partialRelease.professional": {
+    "text": "Part of your balance was released: {releasedPayout}. The rest stays held while FIXX reviews the report.",
+    "status": "draft"
+  },
+  "notif.completion.approved": {
+    "text": "You approved the job. The balance was released.",
+    "status": "draft"
+  },
+  "notif.job.returnVisit": {
+    "text": "A return visit can happen within {returnHours, plural, one {# hour} other {# hours}}.",
     "status": "draft"
   }
 }

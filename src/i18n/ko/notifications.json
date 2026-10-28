@@ -200,7 +200,7 @@
     "needsNativeReview": true
   },
   "notif.issueWindow.reminder": {
-    "text": "문제 신고 기간이 {reminderHours, plural, other {#시간}} 후에 끝나요.",
+    "text": "끝난 작업을 확인해 주세요. 잔금은 {hoursLeft, plural, other {#시간}} 후에 지급돼요.",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -576,6 +576,31 @@
   },
   "state.refunded": {
     "text": "환불 완료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.completion.opened": {
+    "text": "끝난 작업을 확인해 주세요. 답이 없으면 {hours, plural, other {#시간}} 후에 잔금이 지급돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.completion.partialRelease.customer": {
+    "text": "지금 {released}을 지급했어요. 신고한 금액은 보류돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.completion.partialRelease.professional": {
+    "text": "잔금 일부가 지급됐어요: {releasedPayout}. 나머지는 FIXX 검토 동안 보류돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.completion.approved": {
+    "text": "작업을 승인했어요. 잔금이 지급됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "notif.job.returnVisit": {
+    "text": "{returnHours, plural, other {#시간}} 안에 재방문할 수 있어요.",
     "status": "draft",
     "needsNativeReview": true
   }

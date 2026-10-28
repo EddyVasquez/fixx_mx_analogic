@@ -191,9 +191,14 @@ export class DemoRuntime {
       case "qualityPenalty":
         this.penalties.push({ actorId: actor.id, professionalId: fx.professionalId, reason: fx.reason, at: at.toISOString() });
         break;
-      case "releasePayout":
-        this.payouts.push({ actorId: actor.id, amount: round2(actor.snap.ctx.total * actor.snap.ctx.payoutRatio - (actor.meta.payoutDeduction ?? 0)), at: at.toISOString() });
+      case "releasePayout": {
+        const ctx = actor.snap.ctx as { total: number; payoutRatio: number; releasedPayout?: number };
+        const gross = round2(ctx.total * ctx.payoutRatio - (actor.meta.payoutDeduction ?? 0));
+        const already = ctx.releasedPayout ?? 0;
+        const amount = fx.amount != null ? fx.amount : round2(Math.max(0, gross - already));
+        if (amount > 0) this.payouts.push({ actorId: actor.id, amount, at: at.toISOString() });
         break;
+      }
       case "startWarranty": {
         const cat = actor.meta.categoryId;
         if (!cat) break;

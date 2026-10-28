@@ -178,3 +178,14 @@ Status: `open` = using a demo/assumed value. Pricing rates live in `src/config/r
 | S2b | Agent macros | Four macros in English and Spanish, translated for Korean users with the scripted phrasebook | demo |
 | S3b | Korean users | Told that Korean support uses translation tools and Agents work in English and Spanish | per brief |
 | S4b | Not in this step | Admin editing of standards, config values, and real authentication | open |
+
+## Added for the customer completion check
+| ID | Item | Assumption in code | Status |
+|----|------|--------------------|--------|
+| CC1 | Balance release | Simulated in the job machine. Approve, or no answer, releases the balance. No escrow and no real charge | demo |
+| CC2 | Deposit and balance | 20% deposit, 80% balance, from the existing deposit share | open |
+| CC3 | Auto-release and reminders | 48 h, reminders at 2 / 24 / 44 h. Labels in config are placeholders | open |
+| CC4 | Return visit | The professional has the first chance to fix a reported problem within 72 h | open |
+| CC5 | Photo location | A fixed simulated place until a device provides one | demo |
+| CC6 | Customer list | Optional. Shared core plus 2–3 items per trade, from config | open |
+| CC7 | Korean copy | Draft, flagged for a native review | open |

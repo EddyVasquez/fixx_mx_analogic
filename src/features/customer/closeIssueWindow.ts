@@ -2,7 +2,7 @@ import type { JobCtx } from "@/core/machines";
 import type { DemoRuntime } from "@/mocks/runtime/runtime";
 
 /**
- * The issue window closes on a timer (24 hours). In the demo, move the clock to that
+ * The balance releases on a timer (completionCheck.autoReleaseHours). In the demo, move the clock to that
  * moment so the scheduled close runs and the status path can continue.
  */
 export function closeIssueWindow(rt: DemoRuntime, jobId: string): { ok: boolean; error?: string } {

@@ -405,12 +405,12 @@
     "needsNativeReview": true
   },
   "work.completeNote": {
-    "text": "작업 완료로 표시하면 고객에게 잔금이 청구돼요.",
+    "text": "작업 완료로 표시하면 고객이 작업을 확인해요. 잔금은 고객이 승인하거나 지급 시각이 될 때까지 대기해요.",
     "status": "draft",
     "needsNativeReview": true
   },
   "work.waitWindow": {
-    "text": "문제 신고 기간이 끝나기를 기다리고 있어요. 그 후에 정산금이 지급돼요.",
+    "text": "고객의 승인을 기다리고 있어요. 고객이 승인하거나, 답이 없으면 지급 시각에 잔금이 나가요.",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -446,6 +446,56 @@
   },
   "chat.empty": {
     "text": "아직 메시지가 없어요. 인사해 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.pendingBalance": {
+    "text": "대기 중인 잔금: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.countdown": {
+    "text": "{when}에 지급돼요. 약 {hours, plural, other {#시간}} 남았어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.sameChecklist": {
+    "text": "고객이 마지막에 보는 같은 목록이에요. 진행을 막지 않아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.photosNeed": {
+    "text": "계속하려면 사진을 {count, plural, other {#장}} 이상 추가해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.returnTitle": {
+    "text": "재방문",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.returnBody": {
+    "text": "{when} 전에 먼저 고칠 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "btn.scheduleReturn": {
+    "text": "재방문 예약",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.returnSet": {
+    "text": "재방문이 예약됐어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.releasedShare": {
+    "text": "지급된 금액: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "work.heldShare": {
+    "text": "아직 보류: {amount}",
     "status": "draft",
     "needsNativeReview": true
   }

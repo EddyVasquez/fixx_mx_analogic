@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Clock } from "../src/core/clock/clock";
+import { config } from "../src/core/config/fixx.config";
 import { addHours, bandFor, travelFeeFor, splitDepositBalance } from "../src/core/rules";
 import { recommend, type ProLike, type ZoneLike } from "../src/core/matching/recommend";
 import { roundMoney } from "../src/config/revenue";
@@ -83,7 +84,7 @@ describe("customer happy path, headless (scenario 1)", () => {
     go({ type: "PAYMENT_SATISFIED", amount: ctx().initialDue });
     rt.advanceHours(30);
     for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE", "BALANCE_PAID"]) go({ type: e });
-    rt.advanceHours(24);
+    rt.advanceHours(config.completionCheck.autoReleaseHours);
     expect(rt.get("job")?.snap.state).toBe("paymentReleased");
     go({ type: "RATE" });
     expect(rt.get("job")?.snap.state).toBe("rated");

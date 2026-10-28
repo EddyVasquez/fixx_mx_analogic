@@ -8,7 +8,7 @@
     "status": "draft"
   },
   "issue.intro": {
-    "text": "Elige qué tiene el problema. El monto de esos conceptos se retiene hasta que decidamos.",
+    "text": "Elige qué tiene el problema. Solo ese monto se retiene. El resto se libera.",
     "status": "draft"
   },
   "issue.itemsLegend": {

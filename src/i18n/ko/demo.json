@@ -283,5 +283,60 @@
     "text": "저희 쪽에서 문제가 생겼어요. 페이지를 새로고침하고 다시 시도해 주세요.",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "demo.completionClock": {
+    "text": "확인 기간",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.completionHint": {
+    "text": "이 시간은 임시 값이에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.offline": {
+    "text": "오프라인 업로드",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.offlineOn": {
+    "text": "다시 연결될 때까지 사진이 대기해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.offlineOff": {
+    "text": "사진이 바로 올라가요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.reminderLine": {
+    "text": "{label} ({hours, plural, other {#시간}})",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.reminder.first": {
+    "text": "첫 알림",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.reminder.second": {
+    "text": "두 번째 알림",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.reminder.last": {
+    "text": "마지막 알림",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.autoRelease": {
+    "text": "잔금 자동 지급",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "clock.jumpNamed": {
+    "text": "+{hours}시간",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }

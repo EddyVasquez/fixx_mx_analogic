@@ -226,5 +226,49 @@
   "error.generic": {
     "text": "Algo salió mal de nuestro lado. Recarga la página e inténtalo de nuevo.",
     "status": "draft"
+  },
+  "demo.completionClock": {
+    "text": "Plazo de revisión",
+    "status": "draft"
+  },
+  "demo.completionHint": {
+    "text": "Estos tiempos son valores de ejemplo.",
+    "status": "draft"
+  },
+  "demo.offline": {
+    "text": "Subidas sin conexión",
+    "status": "draft"
+  },
+  "demo.offlineOn": {
+    "text": "Las fotos esperan hasta que vuelvas a estar en línea.",
+    "status": "draft"
+  },
+  "demo.offlineOff": {
+    "text": "Las fotos se suben de inmediato.",
+    "status": "draft"
+  },
+  "clock.reminderLine": {
+    "text": "{label} ({hours, plural, one {# hora} other {# horas}})",
+    "status": "draft"
+  },
+  "clock.reminder.first": {
+    "text": "Primer recordatorio",
+    "status": "draft"
+  },
+  "clock.reminder.second": {
+    "text": "Segundo recordatorio",
+    "status": "draft"
+  },
+  "clock.reminder.last": {
+    "text": "Último recordatorio",
+    "status": "draft"
+  },
+  "clock.autoRelease": {
+    "text": "Liberación automática",
+    "status": "draft"
+  },
+  "clock.jumpNamed": {
+    "text": "+{hours} h",
+    "status": "draft"
   }
 }

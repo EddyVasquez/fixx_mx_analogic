@@ -324,11 +324,11 @@
     "status": "draft"
   },
   "work.completeNote": {
-    "text": "The customer is charged the balance when you mark the job complete.",
+    "text": "Marking the job complete asks the customer to check the work. Your balance stays pending until they approve, or until the release time.",
     "status": "draft"
   },
   "work.waitWindow": {
-    "text": "Waiting for the issue window to close. Your payout is released after that.",
+    "text": "Waiting for the customer to approve. Your balance releases when they approve, or at the release time if they do not answer.",
     "status": "draft"
   },
   "work.payout": {
@@ -357,6 +357,46 @@
   },
   "chat.empty": {
     "text": "No messages yet. Say hello.",
+    "status": "draft"
+  },
+  "work.pendingBalance": {
+    "text": "Pending balance: {amount}",
+    "status": "draft"
+  },
+  "work.countdown": {
+    "text": "Releases {when}. About {hours, plural, one {# hour} other {# hours}} left.",
+    "status": "draft"
+  },
+  "work.sameChecklist": {
+    "text": "This is the same list the customer sees at the end. It does not block you.",
+    "status": "draft"
+  },
+  "work.photosNeed": {
+    "text": "Add at least {count, plural, one {# photo} other {# photos}} to continue.",
+    "status": "draft"
+  },
+  "work.returnTitle": {
+    "text": "Return visit",
+    "status": "draft"
+  },
+  "work.returnBody": {
+    "text": "You have the first chance to fix this before {when}.",
+    "status": "draft"
+  },
+  "btn.scheduleReturn": {
+    "text": "Schedule return",
+    "status": "draft"
+  },
+  "work.returnSet": {
+    "text": "Return visit scheduled.",
+    "status": "draft"
+  },
+  "work.releasedShare": {
+    "text": "Released to you: {amount}",
+    "status": "draft"
+  },
+  "work.heldShare": {
+    "text": "Still held: {amount}",
     "status": "draft"
   }
 }

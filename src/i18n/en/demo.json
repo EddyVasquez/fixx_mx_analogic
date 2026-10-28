@@ -226,5 +226,49 @@
   "error.generic": {
     "text": "Something went wrong on our side. Reload the page and try again.",
     "status": "draft"
+  },
+  "demo.completionClock": {
+    "text": "Completion window",
+    "status": "draft"
+  },
+  "demo.completionHint": {
+    "text": "These times are placeholders.",
+    "status": "draft"
+  },
+  "demo.offline": {
+    "text": "Offline uploads",
+    "status": "draft"
+  },
+  "demo.offlineOn": {
+    "text": "Photos queue until you are back online.",
+    "status": "draft"
+  },
+  "demo.offlineOff": {
+    "text": "Photos upload right away.",
+    "status": "draft"
+  },
+  "clock.reminderLine": {
+    "text": "{label} ({hours, plural, one {# hour} other {# hours}})",
+    "status": "draft"
+  },
+  "clock.reminder.first": {
+    "text": "First reminder",
+    "status": "draft"
+  },
+  "clock.reminder.second": {
+    "text": "Second reminder",
+    "status": "draft"
+  },
+  "clock.reminder.last": {
+    "text": "Last reminder",
+    "status": "draft"
+  },
+  "clock.autoRelease": {
+    "text": "Balance auto-release",
+    "status": "draft"
+  },
+  "clock.jumpNamed": {
+    "text": "+{hours} h",
+    "status": "draft"
   }
 }
