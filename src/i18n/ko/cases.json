@@ -184,6 +184,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "customer.tabs": {
+    "text": "메인",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "customer.tab.request": {
     "text": "요청",
     "status": "draft",
@@ -201,6 +206,11 @@
   },
   "myhome.title": {
     "text": "내 집",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.homeowner": {
+    "text": "집주인: {name}",
     "status": "draft",
     "needsNativeReview": true
   },

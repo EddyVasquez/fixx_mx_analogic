@@ -6,7 +6,7 @@ import type { DemoRuntime } from "../mocks/runtime/runtime";
 import { ensureReference, confirmPayment } from "../mocks/runtime/paymentActors";
 import { requestReschedule, acceptReschedule, declineReschedule } from "../mocks/runtime/rescheduleActors";
 import { demoLines } from "../mocks/chat/chatStore";
-import { JOB_ID, resetSession, session } from "../features/customer/session";
+import { emptyDraft, JOB_ID, resetSession, session } from "../features/customer/session";
 import { psession } from "../features/professional/session";
 import { photoQueue } from "../features/shared/photoQueue";
 
@@ -34,7 +34,7 @@ function begin(rt: DemoRuntime, o: BeginOpts, appLang: Lang): void {
   resetSession(true);
   const cat = o.categoryId ?? "painting";
   Object.assign(session, { signedIn: true, email: "demo@example.com", tab: "request", proId: o.proId ?? null, method: o.method ?? "card", slotHours: 30 });
-  session.draft = { categoryId: cat, description: "Paint the living room walls", photos: 1, measurements: "", zoneId: o.zoneId ?? "z1", street: "[Street and number]", emergency: !!o.emergency };
+  session.draft = emptyDraft({ categoryId: cat, description: "Paint the living room walls", photos: 1, measurements: "", zoneId: o.zoneId ?? "z1", emergency: !!o.emergency });
   Object.assign(psession, { meId: o.meId ?? null, tab: "jobs", idDoc: false, selfie: false, phoneVerified: false, recoverySelfie: false, recoveryPhone: false, before: 0, after: 0, checks: {}, completionChecks: {}, clabe: "", clabeSaved: false });
   photoQueue.reset();
   rt.languages.customer = o.customerLang === "app" ? appLang : o.customerLang;

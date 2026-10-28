@@ -17,6 +17,8 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
 
   const review = () => {
     const e: string[] = [];
+    if (!draft.homeownerName.trim()) e.push("request.errorName");
+    if (!draft.community.trim()) e.push("request.errorCommunity");
     if (!draft.description.trim()) e.push("request.errorDescription");
     if (draft.photos < 1 && !draft.emergency) e.push("request.errorPhoto");
     if (!draft.street.trim()) e.push("request.errorStreet");
@@ -27,6 +29,13 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("request.title")}</h2>
+      <p className="text-sm text-inkSoft">{t("request.profileHint")}</p>
+      <Field label={t("request.homeownerName")}>
+        <input className={inputClass} autoComplete="name" value={draft.homeownerName} onChange={(e) => onChange({ homeownerName: e.target.value })} />
+      </Field>
+      <Field label={t("request.community")}>
+        <input className={inputClass} autoComplete="address-level3" value={draft.community} onChange={(e) => onChange({ community: e.target.value })} />
+      </Field>
       <Field label={t("request.category")}>
         <select className={inputClass} value={draft.categoryId} onChange={(e) => onChange({ categoryId: e.target.value })}>
           {categories.map((c) => <option key={c.id} value={c.id}>{c.names[lang]}</option>)}
@@ -97,6 +106,8 @@ export function RequestReview({ draft, onEdit, onSubmit }: { draft: Draft; onEdi
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("review.title")}</h2>
       <dl className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
+        <div><dt className="text-sm text-inkSoft">{t("request.homeownerName")}</dt><dd className="font-bold">{draft.homeownerName}</dd></div>
+        <div><dt className="text-sm text-inkSoft">{t("request.community")}</dt><dd>{draft.community}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold">{category?.names[lang]}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.description")}</dt><dd>{draft.description}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.photos")}</dt><dd>{draft.photos === 0 ? t("request.noPhotos") : t("request.photoCount", { count: draft.photos })}</dd></div>

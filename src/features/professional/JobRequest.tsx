@@ -43,6 +43,9 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("job.request.title")}</h2>
       <dl className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
+        <div><dt className="text-sm text-inkSoft">{t("request.homeownerName")}</dt><dd className="font-bold">{draft.homeownerName}</dd></div>
+        <div><dt className="text-sm text-inkSoft">{t("request.community")}</dt><dd>{draft.community}</dd></div>
+        <div><dt className="text-sm text-inkSoft">{t("request.street")}</dt><dd>{draft.street}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold">{category?.names[viewerLang]}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.description")}</dt><dd><TranslatedText text={draft.description} from={customerLang} to={viewerLang} /></dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.photos")}</dt><dd>{draft.photos === 0 ? t("request.noPhotos") : t("request.photoCount", { count: draft.photos })}</dd></div>

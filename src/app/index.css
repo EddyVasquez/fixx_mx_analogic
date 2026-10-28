@@ -5,7 +5,12 @@
 html { font-size: 100%; }
 body { @apply bg-mist text-ink font-sans text-base; }
 :focus-visible { outline: 3px solid theme("colors.brandDeep"); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.customer-tab { transition: opacity 120ms ease; }
+.customer-tab:active { opacity: 0.7; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .customer-tab { transition: none; }
+}
 .btn-primary { @apply inline-flex items-center justify-center min-h-touch min-w-touch px-5 rounded-full bg-brand text-paper font-semibold; }
 
 /* High-contrast mode (toggled by A11yControl via <html data-contrast="high">) */

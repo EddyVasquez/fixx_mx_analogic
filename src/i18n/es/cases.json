@@ -147,12 +147,16 @@
     "text": "Rechazar el reclamo",
     "status": "draft"
   },
+  "customer.tabs": {
+    "text": "Principal",
+    "status": "draft"
+  },
   "customer.tab.request": {
-    "text": "Solicitud",
+    "text": "Solicitar",
     "status": "draft"
   },
   "customer.tab.myHome": {
-    "text": "Mi Casa",
+    "text": "Mi hogar",
     "status": "draft"
   },
   "customer.tab.warranty": {
@@ -160,7 +164,11 @@
     "status": "draft"
   },
   "myhome.title": {
-    "text": "Mi Casa",
+    "text": "Mi hogar",
+    "status": "draft"
+  },
+  "myhome.homeowner": {
+    "text": "Propietario: {name}",
     "status": "draft"
   },
   "myhome.community": {

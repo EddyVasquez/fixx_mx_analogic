@@ -175,6 +175,26 @@
     "text": "Calle y número",
     "status": "draft"
   },
+  "request.homeownerName": {
+    "text": "Tu nombre",
+    "status": "draft"
+  },
+  "request.community": {
+    "text": "Fraccionamiento",
+    "status": "draft"
+  },
+  "request.profileHint": {
+    "text": "Vienen de Mi hogar. Puedes cambiarlos para esta solicitud.",
+    "status": "draft"
+  },
+  "request.errorName": {
+    "text": "Agrega tu nombre para que el profesional sepa a quién buscar.",
+    "status": "draft"
+  },
+  "request.errorCommunity": {
+    "text": "Agrega el fraccionamiento para ubicar la casa.",
+    "status": "draft"
+  },
   "request.outside": {
     "text": "Fuera de Apodaca",
     "status": "draft"
