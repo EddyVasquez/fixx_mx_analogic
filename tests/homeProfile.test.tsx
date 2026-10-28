@@ -87,6 +87,14 @@ describe("My Home tab and request prefill", () => {
     expect(next[1]?.getAttribute("aria-current")).toBe("page");
     expect(next[0]?.getAttribute("aria-current")).toBeNull();
     expect(next[2]?.getAttribute("aria-current")).toBeNull();
+
+    const help = within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: "Help" });
+    expect(help.querySelector("svg")?.getAttribute("data-icon")).toBe("help");
+    expect(help.querySelector("svg")?.getAttribute("data-weight")).toBe("regular");
+    fireEvent.click(help);
+    const helpIcon = within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: "Help" }).querySelector("svg");
+    expect(helpIcon?.getAttribute("data-weight")).toBe("fill");
+    expect(helpIcon?.getAttribute("data-icon")).toBe("help");
   });
 
   it("shows Spanish labels for the same profile", async () => {

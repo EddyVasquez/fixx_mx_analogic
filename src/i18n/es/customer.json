@@ -123,6 +123,34 @@
     "text": "Trabajos de este oficio",
     "status": "draft"
   },
+  "request.jobsHint": {
+    "text": "Elige uno o más. Nosotros escribimos la descripción.",
+    "status": "draft"
+  },
+  "request.jobsCount": {
+    "text": "{n} trabajos seleccionados",
+    "status": "draft"
+  },
+  "request.jobSelected": {
+    "text": "{job} seleccionado",
+    "status": "draft"
+  },
+  "request.jobUnselected": {
+    "text": "{job} quitado",
+    "status": "draft"
+  },
+  "request.regenerate": {
+    "text": "Actualizar con los trabajos elegidos",
+    "status": "draft"
+  },
+  "request.showAll": {
+    "text": "Ver todos ({n})",
+    "status": "draft"
+  },
+  "request.undo": {
+    "text": "Deshacer",
+    "status": "draft"
+  },
   "request.description": {
     "text": "¿Qué hay que hacer?",
     "status": "draft"

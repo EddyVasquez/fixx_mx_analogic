@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { config, type Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
@@ -7,13 +7,65 @@ import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
 import { categories, zoneNames, zones } from "./data";
-import { jobsForCategory } from "./catalogJobs";
+import { jobsForCategory, type CatalogJob } from "./catalogJobs";
+import { JobChips, type JobOption } from "./JobChips";
+import { buildJobSentence } from "./jobSentence";
 import type { Draft } from "./session";
+
+const UNDO_MS = 5000;
+
+function sentenceFor(categoryId: string, lang: Lang, ids: readonly string[]): string {
+  const byId = new Map(jobsForCategory(categoryId, lang).map((job) => [job.id, job]));
+  const ordered: CatalogJob[] = [];
+  for (const id of ids) {
+    const job = byId.get(id);
+    if (job) ordered.push(job);
+  }
+  return buildJobSentence(ordered.map((job) => ({ label: job.title, keepCase: job.keepCase })), lang);
+}
 
 export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; onChange: (p: Partial<Draft>) => void; onReview: () => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const [errors, setErrors] = useState<string[]>([]);
+  const [undo, setUndo] = useState<string | null>(null);
+  const jobs = jobsForCategory(draft.categoryId, lang);
+  const options: JobOption[] = jobs.map((job) => ({
+    id: job.id,
+    label: job.title,
+    keepCase: job.keepCase,
+    status: job.pendingReview ? t("state.pendingReview") : undefined
+  }));
+
+  useEffect(() => {
+    if (undo == null) return;
+    const id = window.setTimeout(() => setUndo(null), UNDO_MS);
+    return () => window.clearTimeout(id);
+  }, [undo]);
+
+  const seenLang = useRef(lang);
+  useEffect(() => {
+    if (seenLang.current === lang) return;
+    seenLang.current = lang;
+    if (draft.descriptionEdited) return;
+    const next = sentenceFor(draft.categoryId, lang, draft.selectedJobIds);
+    if (next !== draft.description) onChange({ description: next });
+  }, [lang, draft.categoryId, draft.description, draft.descriptionEdited, draft.selectedJobIds, onChange]);
+
+  const onJobs = (selectedJobIds: string[]) => {
+    if (draft.descriptionEdited) onChange({ selectedJobIds });
+    else onChange({ selectedJobIds, description: sentenceFor(draft.categoryId, lang, selectedJobIds) });
+  };
+
+  const onDescription = (value: string) => {
+    if (value.trim() === "") onChange({ description: "", descriptionEdited: false });
+    else onChange({ description: value, descriptionEdited: true });
+  };
+
+  const regenerate = () => {
+    setUndo(draft.description);
+    onChange({ description: sentenceFor(draft.categoryId, lang, draft.selectedJobIds), descriptionEdited: false });
+  };
 
   const review = () => {
     const e: string[] = [];
@@ -37,19 +89,43 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
         <input className={inputClass} autoComplete="address-level3" value={draft.community} onChange={(e) => onChange({ community: e.target.value })} />
       </Field>
       <Field label={t("request.category")}>
-        <select className={inputClass} value={draft.categoryId} onChange={(e) => onChange({ categoryId: e.target.value })}>
+        <select className={inputClass} value={draft.categoryId} onChange={(e) => {
+          const categoryId = e.target.value;
+          setUndo(null);
+          if (draft.descriptionEdited) onChange({ categoryId, selectedJobIds: [] });
+          else onChange({ categoryId, selectedJobIds: [], description: "" });
+        }}>
           {categories.map((c) => <option key={c.id} value={c.id}>{c.names[lang]}</option>)}
         </select>
       </Field>
       <div className="flex flex-col gap-1">
-        <p className="font-semibold">{t("request.jobs")}</p>
-        <ul className="flex flex-col gap-1 text-sm">
-          {jobsForCategory(draft.categoryId, lang).map((job) => <li key={job.id}>{job.title}</li>)}
-        </ul>
+        <h3 id="request-jobs-heading" className="font-semibold">{t("request.jobs")}</h3>
+        <p className="text-sm text-inkSoft">{t("request.jobsHint")}</p>
+        <JobChips key={draft.categoryId} headingId="request-jobs-heading" jobs={options} selectedIds={draft.selectedJobIds} onChange={onJobs} />
       </div>
       <Field label={t("request.description")} hint={t("request.descriptionHint")}>
-        <textarea className={`${inputClass} min-h-[7rem] py-2`} value={draft.description} onChange={(e) => onChange({ description: e.target.value })} />
+        <textarea
+          className={`${inputClass} min-h-[7rem] py-2`}
+          required
+          placeholder={t("request.descriptionHint")}
+          value={draft.description}
+          onChange={(e) => onDescription(e.target.value)}
+        />
       </Field>
+      {(draft.descriptionEdited || undo != null) && (
+        <div className="flex flex-wrap gap-2">
+          {draft.descriptionEdited && (
+            <button type="button" className="min-h-touch self-start px-1 text-left text-sm font-semibold text-ink underline" onClick={regenerate}>
+              {t("request.regenerate")}
+            </button>
+          )}
+          {undo != null && (
+            <button type="button" className="min-h-touch self-start px-1 text-left text-sm font-semibold text-ink underline" onClick={() => { onChange({ description: undo, descriptionEdited: true }); setUndo(null); }}>
+              {t("request.undo")}
+            </button>
+          )}
+        </div>
+      )}
 
       <fieldset className="flex flex-col gap-2">
         <legend className="font-semibold">{t("request.photos")}</legend>
