@@ -154,6 +154,41 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "request.jobsHint": {
+    "text": "하나 이상 선택하세요. 설명은 자동으로 작성돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.jobsCount": {
+    "text": "{n}개 선택됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.jobSelected": {
+    "text": "{job} 선택됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.jobUnselected": {
+    "text": "{job} 선택 해제됨",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.regenerate": {
+    "text": "선택한 작업으로 다시 작성",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.showAll": {
+    "text": "모두 보기 ({n})",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.undo": {
+    "text": "실행 취소",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.description": {
     "text": "어떤 작업이 필요한가요?",
     "status": "draft",

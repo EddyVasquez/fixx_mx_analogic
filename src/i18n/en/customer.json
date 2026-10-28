@@ -123,6 +123,34 @@
     "text": "Jobs for this trade",
     "status": "draft"
   },
+  "request.jobsHint": {
+    "text": "Pick one or more. We'll write the description for you.",
+    "status": "draft"
+  },
+  "request.jobsCount": {
+    "text": "{n} jobs selected",
+    "status": "draft"
+  },
+  "request.jobSelected": {
+    "text": "{job} selected",
+    "status": "draft"
+  },
+  "request.jobUnselected": {
+    "text": "{job} unselected",
+    "status": "draft"
+  },
+  "request.regenerate": {
+    "text": "Update from selected jobs",
+    "status": "draft"
+  },
+  "request.showAll": {
+    "text": "Show all ({n})",
+    "status": "draft"
+  },
+  "request.undo": {
+    "text": "Undo",
+    "status": "draft"
+  },
   "request.description": {
     "text": "What needs to be done?",
     "status": "draft"

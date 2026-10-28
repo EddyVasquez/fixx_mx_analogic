@@ -82,6 +82,7 @@ export function CustomerTabBar({ active, onSelect }: { active: CustomerTab; onSe
                 weight={selected ? "fill" : "regular"}
                 color={selected ? colors.brand : TAB_INACTIVE}
                 data-weight={selected ? "fill" : "regular"}
+                data-icon={tab}
               />
               <TabLabel text={label} active={selected} />
             </a>

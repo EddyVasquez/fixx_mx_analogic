@@ -3509,6 +3509,7 @@
    "job": "TV wall mount, 1 TV (TV excluded; budget/standard tilt ≤70 in, premium articulated)",
    "jobEs": "Instalación de TV en pared, 1 TV",
    "jobKo": "TV 벽걸이 설치, TV 1대",
+   "keepCase": ["en", "ko"],
    "lines": [
     {
      "id": "L0196",
