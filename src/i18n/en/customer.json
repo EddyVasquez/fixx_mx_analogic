@@ -215,6 +215,50 @@
     "text": "These come from My Home. You can change them for this request.",
     "status": "draft"
   },
+  "request.quoteFacts": {
+    "text": "Home details for this quote",
+    "status": "draft"
+  },
+  "request.quoteFactsHint": {
+    "text": "Filled in from My Home. You can change any of these for this request.",
+    "status": "draft"
+  },
+  "request.cleaningSize": {
+    "text": "Cleaning size",
+    "status": "draft"
+  },
+  "request.cleaningSizeUnset": {
+    "text": "Cleaning size not set",
+    "status": "draft"
+  },
+  "request.cleaningSizeUsed": {
+    "text": "Cleaning size: {tier}",
+    "status": "draft"
+  },
+  "request.minisplits": {
+    "text": "Minisplits",
+    "status": "draft"
+  },
+  "request.minisplitHint": {
+    "text": "The main bedroom has space for one.",
+    "status": "draft"
+  },
+  "request.bathrooms": {
+    "text": "Bathrooms",
+    "status": "draft"
+  },
+  "request.bedrooms": {
+    "text": "Bedrooms",
+    "status": "draft"
+  },
+  "request.fromHome": {
+    "text": "From your home",
+    "status": "draft"
+  },
+  "request.homeCounts": {
+    "text": "{minisplits, plural, one {# minisplit} other {# minisplits}}, {bathrooms, plural, one {# bathroom} other {# bathrooms}}, {bedrooms, plural, one {# bedroom} other {# bedrooms}}",
+    "status": "draft"
+  },
   "request.errorName": {
     "text": "Add your name so the professional knows who to ask for.",
     "status": "draft"

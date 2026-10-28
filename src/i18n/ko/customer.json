@@ -269,6 +269,61 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "request.quoteFacts": {
+    "text": "이 견적에 쓸 집 정보",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.quoteFactsHint": {
+    "text": "내 집에서 가져온 값이에요. 이 요청에서는 원하는 대로 바꿀 수 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.cleaningSize": {
+    "text": "청소 면적",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.cleaningSizeUnset": {
+    "text": "청소 면적이 없어요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.cleaningSizeUsed": {
+    "text": "청소 면적: {tier}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.minisplits": {
+    "text": "미니스플릿",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.minisplitHint": {
+    "text": "안방에 하나 놓을 자리가 있어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.bathrooms": {
+    "text": "욕실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.bedrooms": {
+    "text": "침실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.fromHome": {
+    "text": "내 집에서",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.homeCounts": {
+    "text": "{minisplits, plural, other {미니스플릿 #대}}, {bathrooms, plural, other {욕실 #개}}, {bedrooms, plural, other {침실 #개}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.errorName": {
     "text": "전문가가 누구를 찾는지 알 수 있도록 이름을 입력해 주세요.",
     "status": "draft",

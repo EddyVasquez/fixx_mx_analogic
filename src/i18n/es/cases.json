@@ -199,6 +199,110 @@
     "text": "Terminado el {date}",
     "status": "draft"
   },
+  "myhome.translationDraft": {
+    "text": "El texto en coreano es un borrador.",
+    "status": "draft"
+  },
+  "myhome.model.santaSofia": {
+    "text": "Modelo Santa Sofía",
+    "status": "draft"
+  },
+  "myhome.source": {
+    "text": "Santa Sofía Residencial (GP Vivienda)",
+    "status": "draft"
+  },
+  "myhome.stories": {
+    "text": "{count, plural, one {# planta} other {# plantas}}",
+    "status": "draft"
+  },
+  "myhome.lotAbout": {
+    "text": "Terreno: unos {area} m²",
+    "status": "draft"
+  },
+  "myhome.lot": {
+    "text": "Terreno: {area} m²",
+    "status": "draft"
+  },
+  "myhome.built": {
+    "text": "Construcción: {area} m²",
+    "status": "draft"
+  },
+  "myhome.ground": {
+    "text": "Planta baja",
+    "status": "draft"
+  },
+  "myhome.upper": {
+    "text": "Planta alta",
+    "status": "draft"
+  },
+  "myhome.garage": {
+    "text": "Cochera para {min}–{max} autos",
+    "status": "draft"
+  },
+  "myhome.livingDining": {
+    "text": "Sala y comedor juntos",
+    "status": "draft"
+  },
+  "myhome.kitchen": {
+    "text": "Cocina",
+    "status": "draft"
+  },
+  "myhome.kitchenBuiltIn.optional": {
+    "text": "La cocina integral es opcional",
+    "status": "draft"
+  },
+  "myhome.kitchenBuiltIn.included": {
+    "text": "Cocina integral",
+    "status": "draft"
+  },
+  "myhome.breakfastBar.optional": {
+    "text": "La barra de desayuno es opcional",
+    "status": "draft"
+  },
+  "myhome.breakfastBar.included": {
+    "text": "Barra de desayuno",
+    "status": "draft"
+  },
+  "myhome.fullBathrooms": {
+    "text": "{count, plural, one {# baño completo} other {# baños completos}}",
+    "status": "draft"
+  },
+  "myhome.laundry": {
+    "text": "Cuarto de lavado",
+    "status": "draft"
+  },
+  "myhome.backPatio": {
+    "text": "Patio trasero",
+    "status": "draft"
+  },
+  "myhome.sidePassage": {
+    "text": "Pasillo lateral",
+    "status": "draft"
+  },
+  "myhome.bedrooms": {
+    "text": "{count, plural, one {# recámara} other {# recámaras}}",
+    "status": "draft"
+  },
+  "myhome.mainBedroom": {
+    "text": "La recámara principal tiene espacio para un clóset y un minisplit.",
+    "status": "draft"
+  },
+  "myhome.mainBedroomCloset": {
+    "text": "La recámara principal tiene espacio para un clóset.",
+    "status": "draft"
+  },
+  "myhome.mainBedroomMinisplit": {
+    "text": "La recámara principal tiene espacio para un minisplit.",
+    "status": "draft"
+  },
+  "myhome.sharedBathroom": {
+    "text": "{count, plural, one {# baño completo compartido} other {# baños completos compartidos}}",
+    "status": "draft"
+  },
+  "myhome.plansVary": {
+    "text": "Los planos exactos cambian según la etapa.",
+    "status": "draft"
+  },
   "warranty.title": {
     "text": "Garantía",
     "status": "draft"
