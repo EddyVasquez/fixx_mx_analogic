@@ -1,135 +1,269 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject } from "react";
-import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject } from "react";
+import { Canvas, useThree, useFrame, useLoader } from "@react-three/fiber";
 import {
-  BoxGeometry,
-  BufferGeometry,
-  DoubleSide,
+  Box3,
+  CanvasTexture,
+  Color,
+  DirectionalLight,
   EdgesGeometry,
-  Float32BufferAttribute,
-  type Group
+  LineBasicMaterial,
+  LineSegments,
+  Mesh,
+  MeshStandardMaterial,
+  PCFSoftShadowMap,
+  ShaderMaterial,
+  type Group,
+  type Material,
+  type PerspectiveCamera
 } from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   AUTO_YAW_PER_SEC,
-  buildSantaSofia,
-  clampPitch,
+  CAMERA_FOV_DEG,
+  HOUSE_MODEL_URL,
+  OUTLINE_THRESHOLD_DEG,
+  placeCamera,
   shouldAutoRotate,
-  type BoxPart,
-  type RoofSpec
+  type Vec3
 } from "./houseModel";
 
-const LINE = "#1e4b8f";
-const FACE: Record<BoxPart["role"] | "roof", { color: string; opacity: number }> = {
-  body: { color: "#b7d4f2", opacity: 0.42 },
-  band: { color: "#8fb4de", opacity: 0.55 },
-  patio: { color: "#c5dff8", opacity: 0.5 },
-  garage: { color: "#e7f3fc", opacity: 0.2 },
-  door: { color: "#7eaddd", opacity: 0.62 },
-  window: { color: "#f4f9fd", opacity: 0.35 },
-  roof: { color: "#d5e7f8", opacity: 0.48 }
-};
+const OUTLINE = "#374151";
 
 interface Motion {
   yaw: number;
-  pitch: number;
   dragging: boolean;
   idle: boolean;
 }
 
-function roofGeometry(roof: RoofSpec): BufferGeometry {
-  const hw = roof.width / 2;
-  const hd = roof.depth / 2;
-  const positions = [
-    -hw, 0, -hd, hw, 0, -hd, hw, 0, hd, -hw, 0, hd,
-    -hw, roof.frontHeight, -hd, hw, roof.frontHeight, -hd, hw, roof.backHeight, hd, -hw, roof.backHeight, hd
-  ];
-  const index = [
-    0, 2, 1, 0, 3, 2,
-    4, 5, 6, 4, 6, 7,
-    0, 1, 5, 0, 5, 4,
-    3, 7, 6, 3, 6, 2,
-    0, 4, 7, 0, 7, 3,
-    1, 2, 6, 1, 6, 5
-  ];
-  const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  geometry.setIndex(index);
-  return geometry;
+function isGlass(mat: Material): boolean {
+  return mat.name === "Glass";
 }
 
-function Edged({ geometry, position, color, opacity }: {
-  geometry: BufferGeometry;
-  position: [number, number, number];
-  color: string;
-  opacity: number;
-}) {
-  const edges = useMemo(() => new EdgesGeometry(geometry), [geometry]);
-  useEffect(() => () => { edges.dispose(); }, [edges]);
+function tuneMaterial(source: Material): Material {
+  const mat = source.clone();
+  if (mat instanceof MeshStandardMaterial && !isGlass(mat)) {
+    mat.roughness = 1;
+    mat.metalness = 0;
+    mat.envMapIntensity = 0;
+    mat.polygonOffset = true;
+    mat.polygonOffsetFactor = 1;
+    mat.polygonOffsetUnits = 1;
+  }
+  if (mat instanceof MeshStandardMaterial && isGlass(mat)) {
+    mat.transparent = true;
+    mat.depthWrite = false;
+    mat.metalness = 0;
+  }
+  mat.needsUpdate = true;
+  return mat;
+}
+
+interface Dressed {
+  scene: Group;
+  bounds: { min: Vec3; max: Vec3 };
+  dispose: () => void;
+}
+
+function dress(source: Group): Dressed {
+  const scene = source.clone(true);
+  const outline = new LineBasicMaterial({ color: OUTLINE, toneMapped: false });
+  const disposables: { dispose: () => void }[] = [outline];
+  scene.traverse((obj) => {
+    if (!(obj instanceof Mesh)) return;
+    const list = Array.isArray(obj.material) ? obj.material : [obj.material];
+    const next = list.map((mat) => tuneMaterial(mat));
+    disposables.push(...next);
+    obj.material = Array.isArray(obj.material) ? next : next[0]!;
+    const glass = next.some(isGlass);
+    obj.castShadow = !glass;
+    obj.receiveShadow = !glass;
+    if (glass) {
+      obj.renderOrder = 2;
+      return;
+    }
+    const edges = new EdgesGeometry(obj.geometry, OUTLINE_THRESHOLD_DEG);
+    disposables.push(edges);
+    const lines = new LineSegments(edges, outline);
+    lines.renderOrder = 3;
+    obj.add(lines);
+  });
+  scene.updateWorldMatrix(true, true);
+  const box = new Box3().setFromObject(scene);
+  return {
+    scene,
+    bounds: {
+      min: { x: box.min.x, y: box.min.y, z: box.min.z },
+      max: { x: box.max.x, y: box.max.y, z: box.max.z }
+    },
+    dispose: () => { disposables.forEach((item) => item.dispose()); }
+  };
+}
+
+function FitCamera({ bounds }: { bounds: { min: Vec3; max: Vec3 } }) {
+  const camera = useThree((s) => s.camera) as PerspectiveCamera;
+  const size = useThree((s) => s.size);
+  const invalidate = useThree((s) => s.invalidate);
+  useLayoutEffect(() => {
+    if (size.width < 2 || size.height < 2) return;
+    const placement = placeCamera(bounds.min, bounds.max, size.width / size.height);
+    camera.fov = placement.fov;
+    camera.position.set(placement.position.x, placement.position.y, placement.position.z);
+    camera.near = placement.near;
+    camera.far = placement.far;
+    camera.lookAt(placement.target.x, placement.target.y, placement.target.z);
+    camera.updateProjectionMatrix();
+    invalidate();
+  }, [bounds, camera, size.width, size.height, invalidate]);
+  return null;
+}
+
+function KeyLight() {
+  const light = useRef<DirectionalLight>(null);
+  useLayoutEffect(() => {
+    const cam = light.current?.shadow.camera;
+    if (!cam) return;
+    cam.left = -12;
+    cam.right = 12;
+    cam.top = 12;
+    cam.bottom = -12;
+    cam.near = 0.5;
+    cam.far = 48;
+    cam.updateProjectionMatrix();
+  }, []);
   return (
-    <group position={position}>
-      <mesh geometry={geometry}>
-        <meshBasicMaterial color={color} transparent opacity={opacity} side={DoubleSide} depthWrite={false} polygonOffset polygonOffsetFactor={1} polygonOffsetUnits={1} />
-      </mesh>
-      <lineSegments geometry={edges}>
-        <lineBasicMaterial color={LINE} />
-      </lineSegments>
+    <directionalLight
+      ref={light}
+      position={[-7, 12, 9]}
+      intensity={1.25}
+      castShadow
+      shadow-mapSize-width={2048}
+      shadow-mapSize-height={2048}
+      shadow-bias={-0.00035}
+      shadow-normalBias={0.04}
+    />
+  );
+}
+
+function FadingGrid() {
+  const material = useMemo(() => new ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    toneMapped: false,
+    uniforms: {
+      uColor: { value: new Color("#b0b0b0") },
+      uCell: { value: 1 },
+      uFade: { value: 13 },
+      uStrength: { value: 0.22 }
+    },
+    vertexShader: `
+      varying vec3 vWorld;
+      void main() {
+        vec4 world = modelMatrix * vec4(position, 1.0);
+        vWorld = world.xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vWorld;
+      uniform vec3 uColor;
+      uniform float uCell;
+      uniform float uFade;
+      uniform float uStrength;
+      void main() {
+        vec2 coord = vWorld.xz / uCell;
+        vec2 grid = abs(fract(coord - 0.5) - 0.5) / fwidth(coord);
+        float line = min(grid.x, grid.y);
+        float mask = 1.0 - min(line, 1.0);
+        float dist = length(vWorld.xz);
+        float fade = 1.0 - smoothstep(uFade * 0.35, uFade, dist);
+        float alpha = mask * fade * uStrength;
+        if (alpha < 0.02) discard;
+        gl_FragColor = vec4(uColor, alpha);
+      }
+    `
+  }), []);
+  useEffect(() => () => { material.dispose(); }, [material]);
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} material={material} renderOrder={1}>
+      <planeGeometry args={[48, 48]} />
+    </mesh>
+  );
+}
+
+function ContactShadow() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    const fade = ctx.createRadialGradient(128, 128, 18, 128, 128, 128);
+    fade.addColorStop(0, "rgba(30, 30, 30, 0.42)");
+    fade.addColorStop(0.38, "rgba(30, 30, 30, 0.2)");
+    fade.addColorStop(0.68, "rgba(30, 30, 30, 0.06)");
+    fade.addColorStop(1, "rgba(30, 30, 30, 0)");
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, 0, 256, 256);
+    const map = new CanvasTexture(canvas);
+    map.needsUpdate = true;
+    return map;
+  }, []);
+  useEffect(() => () => { texture?.dispose(); }, [texture]);
+  if (!texture) return null;
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.046, 1.1]} renderOrder={2}>
+      <planeGeometry args={[11, 15]} />
+      <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
+    </mesh>
+  );
+}
+
+function HouseModel() {
+  const gltf = useLoader(GLTFLoader, HOUSE_MODEL_URL);
+  const dressed = useMemo(() => dress(gltf.scene), [gltf]);
+  useEffect(() => () => { dressed.dispose(); }, [dressed]);
+  return (
+    <group>
+      <primitive object={dressed.scene} />
+      <ContactShadow />
+      <FitCamera bounds={dressed.bounds} />
     </group>
   );
 }
 
-function BoxPartMesh({ part }: { part: BoxPart }) {
-  const [w, h, d] = part.size;
-  const geometry = useMemo(() => new BoxGeometry(w, h, d), [w, h, d]);
-  useEffect(() => () => { geometry.dispose(); }, [geometry]);
-  const face = FACE[part.role];
-  return <Edged geometry={geometry} position={part.position} color={face.color} opacity={face.opacity} />;
-}
-
-function RoofMesh({ roof }: { roof: RoofSpec }) {
-  const geometry = useMemo(() => roofGeometry(roof), [roof]);
-  useEffect(() => () => { geometry.dispose(); }, [geometry]);
-  return <Edged geometry={geometry} position={roof.position} color={FACE.roof.color} opacity={FACE.roof.opacity} />;
-}
-
 function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; reduced: boolean; draw: MutableRefObject<() => void> }) {
   const group = useRef<Group>(null);
-  const shell = useMemo(() => buildSantaSofia(), []);
   const invalidate = useThree((s) => s.invalidate);
   const gl = useThree((s) => s.gl);
-  const camera = useThree((s) => s.camera);
   const idleRef = useRef(motion);
 
   useEffect(() => { draw.current = invalidate; }, [draw, invalidate]);
 
   useEffect(() => {
-    camera.lookAt(0, 2.6, -1.4);
+    gl.shadowMap.type = PCFSoftShadowMap;
     gl.domElement.tabIndex = -1;
     gl.domElement.setAttribute("aria-hidden", "true");
     gl.domElement.style.touchAction = "none";
     invalidate();
-  }, [camera, gl, invalidate]);
+  }, [gl, invalidate]);
 
   useEffect(() => {
     const el = gl.domElement;
     let lastX = 0;
-    let lastY = 0;
     let resume = 0;
     const down = (event: PointerEvent) => {
       resume += 1;
       idleRef.current.current.dragging = true;
       idleRef.current.current.idle = false;
       lastX = event.clientX;
-      lastY = event.clientY;
       el.setPointerCapture(event.pointerId);
     };
     const move = (event: PointerEvent) => {
       const current = idleRef.current.current;
       if (!current.dragging) return;
       const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
       lastX = event.clientX;
-      lastY = event.clientY;
       current.yaw += dx * 0.01;
-      current.pitch = clampPitch(current.pitch + dy * 0.005);
       invalidate();
     };
     const up = (event: PointerEvent) => {
@@ -156,25 +290,34 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
   useFrame((_, delta) => {
     const current = motion.current;
     if (shouldAutoRotate(reduced, current.idle, current.dragging)) current.yaw += delta * AUTO_YAW_PER_SEC;
-    if (!group.current) return;
-    group.current.rotation.y = current.yaw;
-    group.current.rotation.x = current.pitch;
+    if (group.current) group.current.rotation.y = current.yaw;
   });
 
   return (
     <>
-      <color attach="background" args={["#f7fafc"]} />
-      <gridHelper args={[16, 16, "#c5d4e6", "#e7eef6"]} />
+      <color attach="background" args={["#ffffff"]} />
+      <hemisphereLight args={["#ffffff", "#f7f7f7", 2.05]} />
+      <KeyLight />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
+        <planeGeometry args={[80, 80]} />
+        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
+        <planeGeometry args={[40, 40]} />
+        <shadowMaterial opacity={0.28} transparent />
+      </mesh>
+      <FadingGrid />
       <group ref={group}>
-        {shell.parts.map((part) => <BoxPartMesh key={part.id} part={part} />)}
-        <RoofMesh roof={shell.roof} />
+        <HouseModel />
       </group>
     </>
   );
 }
 
+useLoader.preload(GLTFLoader, HOUSE_MODEL_URL);
+
 export default function HouseBlueprint({ label }: { label: string }) {
-  const motion = useRef<Motion>({ yaw: 0.15, pitch: 0.18, dragging: false, idle: true });
+  const motion = useRef<Motion>({ yaw: 0, dragging: false, idle: true });
   const draw = useRef<() => void>(() => {});
   const [reduced, setReduced] = useState(() => {
     if (typeof window.matchMedia !== "function") return false;
@@ -202,8 +345,6 @@ export default function HouseBlueprint({ label }: { label: string }) {
     const current = motion.current;
     if (event.key === "ArrowLeft") current.yaw -= step;
     else if (event.key === "ArrowRight") current.yaw += step;
-    else if (event.key === "ArrowUp") current.pitch = clampPitch(current.pitch - 0.08);
-    else if (event.key === "ArrowDown") current.pitch = clampPitch(current.pitch + 0.08);
     else return;
     event.preventDefault();
     current.idle = false;
@@ -221,10 +362,12 @@ export default function HouseBlueprint({ label }: { label: string }) {
       onKeyDown={onKey}
     >
       <Canvas
+        flat
         frameloop={reduced || hidden ? "demand" : "always"}
-        dpr={[1, 1.5]}
-        camera={{ position: [13, 8.5, -15.5], fov: 34 }}
-        gl={{ antialias: true, powerPreference: "low-power" }}
+        dpr={[1, 2]}
+        shadows="soft"
+        camera={{ fov: CAMERA_FOV_DEG, position: [-8, 5, 14], near: 0.05, far: 200 }}
+        gl={{ antialias: true, powerPreference: "low-power", alpha: false }}
       >
         <Scene motion={motion} reduced={reduced || hidden} draw={draw} />
       </Canvas>
