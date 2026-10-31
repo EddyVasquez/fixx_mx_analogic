@@ -498,45 +498,5 @@
   "claim.outcome.rejected": {
     "text": "Último reclamo: no aprobado",
     "status": "draft"
-  },
-  "avatar.legend": {
-    "text": "Foto de perfil",
-    "status": "draft"
-  },
-  "avatar.current": {
-    "text": "Foto de perfil: {name}",
-    "status": "draft"
-  },
-  "avatar.youngMan": {
-    "text": "Hombre joven",
-    "status": "draft"
-  },
-  "avatar.youngWoman": {
-    "text": "Mujer joven",
-    "status": "draft"
-  },
-  "avatar.middleMan": {
-    "text": "Hombre de mediana edad",
-    "status": "draft"
-  },
-  "avatar.middleWoman": {
-    "text": "Mujer de mediana edad",
-    "status": "draft"
-  },
-  "avatar.baldMan": {
-    "text": "Hombre calvo",
-    "status": "draft"
-  },
-  "avatar.beardedGlasses": {
-    "text": "Hombre con barba y lentes",
-    "status": "draft"
-  },
-  "avatar.longHair": {
-    "text": "Mujer de cabello largo",
-    "status": "draft"
-  },
-  "avatar.cappedMan": {
-    "text": "Hombre con gorra",
-    "status": "draft"
   }
 }

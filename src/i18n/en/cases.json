@@ -498,45 +498,5 @@
   "claim.outcome.rejected": {
     "text": "Last claim: not approved",
     "status": "draft"
-  },
-  "avatar.legend": {
-    "text": "Profile picture",
-    "status": "draft"
-  },
-  "avatar.current": {
-    "text": "Profile picture: {name}",
-    "status": "draft"
-  },
-  "avatar.youngMan": {
-    "text": "Young man",
-    "status": "draft"
-  },
-  "avatar.youngWoman": {
-    "text": "Young woman",
-    "status": "draft"
-  },
-  "avatar.middleMan": {
-    "text": "Middle-aged man",
-    "status": "draft"
-  },
-  "avatar.middleWoman": {
-    "text": "Middle-aged woman",
-    "status": "draft"
-  },
-  "avatar.baldMan": {
-    "text": "Bald man",
-    "status": "draft"
-  },
-  "avatar.beardedGlasses": {
-    "text": "Bearded man with glasses",
-    "status": "draft"
-  },
-  "avatar.longHair": {
-    "text": "Woman with long hair",
-    "status": "draft"
-  },
-  "avatar.cappedMan": {
-    "text": "Man in a cap",
-    "status": "draft"
   }
 }

@@ -623,55 +623,5 @@
     "text": "최근 청구: 미승인",
     "status": "draft",
     "needsNativeReview": true
-  },
-  "avatar.legend": {
-    "text": "프로필 사진",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.current": {
-    "text": "프로필 사진: {name}",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.youngMan": {
-    "text": "젊은 남성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.youngWoman": {
-    "text": "젊은 여성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.middleMan": {
-    "text": "중년 남성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.middleWoman": {
-    "text": "중년 여성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.baldMan": {
-    "text": "대머리 남성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.beardedGlasses": {
-    "text": "안경 쓴 수염 남성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.longHair": {
-    "text": "긴 머리 여성",
-    "status": "draft",
-    "needsNativeReview": true
-  },
-  "avatar.cappedMan": {
-    "text": "모자 쓴 남성",
-    "status": "draft",
-    "needsNativeReview": true
   }
 }

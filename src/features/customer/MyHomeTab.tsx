@@ -15,8 +15,6 @@ import { stateLabel } from "@/features/admin/sections";
 import { useMoney } from "@/features/shared/Money";
 import { Button } from "@/ui/Button";
 import { colors } from "@/ui/tokens";
-import { avatarById, useAvatar } from "./avatarChoice";
-import { AvatarPicker, ProfileAvatar } from "./avatars";
 import { BlueprintSlot } from "./blueprint/BlueprintSlot";
 import { categories, professionals } from "./data";
 import { setDemoMode, useDemoMode } from "./demoMode";
@@ -43,24 +41,19 @@ const WARRANTY_CHIP: Record<WarrantyState, string> = {
   expired: "myhome.hub.warrantyState.expired"
 };
 
-/**
- * Phone order is the DOM order: greeting, house, active jobs, shortcuts, warranty, then the rest.
- * From the tablet breakpoint the house sits in the right column and the greeting, active jobs
- * and warranty stack on the left. Explicit rows keep that placement when the grid gets wider.
- */
+/** Phone order. Wider layouts place these with explicit columns so focus stays in this order. */
 const PLACE = {
-  hero: "col-span-1 md:col-start-1 md:row-start-1 lg:col-span-7 lg:col-start-1 lg:row-start-1",
-  blueprint: "col-span-1 flex items-center justify-center self-start md:col-start-2 md:row-start-1 md:row-span-3 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-3",
-  active: "col-span-1 md:col-start-1 md:row-start-2 lg:col-span-7 lg:col-start-1 lg:row-start-2",
-  quick: "col-span-1 md:col-span-2 md:col-start-1 md:row-start-4 lg:col-span-12 lg:col-start-1 lg:row-start-4",
-  warranty: "col-span-1 md:col-start-1 md:row-start-3 lg:col-span-7 lg:col-start-1 lg:row-start-3",
-  maintenance: "col-span-1 md:col-start-1 md:row-start-5 lg:col-span-6 lg:col-start-1 lg:row-start-5",
-  documents: "col-span-1 md:col-start-2 md:row-start-5 lg:col-span-6 lg:col-start-7 lg:row-start-5",
-  details: "col-span-1 md:col-span-2 md:col-start-1 md:row-start-6 lg:col-span-8 lg:col-start-1 lg:row-start-6",
-  history: "col-span-1 md:col-span-2 md:col-start-1 md:row-start-7 lg:col-span-4 lg:col-start-9 lg:row-start-6"
+  hero: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 lg:col-span-8 lg:col-start-1 lg:row-start-1",
+  active: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-1",
+  quick: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-3 lg:col-span-8 lg:col-start-1 lg:row-start-2",
+  warranty: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-2",
+  maintenance: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-4 lg:col-span-6 lg:col-start-1 lg:row-start-3",
+  documents: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-4 lg:col-span-6 lg:col-start-7 lg:row-start-3",
+  details: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-5 lg:col-span-8 lg:col-start-1 lg:row-start-4",
+  history: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-6 lg:col-span-4 lg:col-start-9 lg:row-start-4"
 } as const;
 
-const card = "glass flex min-w-0 flex-col gap-3 self-stretch p-4 md:p-6";
+const card = "flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6";
 
 interface JobView {
   total: number;
@@ -124,11 +117,11 @@ function Meter({ label, percent }: { label: string; percent: number }) {
   );
 }
 
-function DemoModeBar() {
+function DemoModeSwitch() {
   const { t } = useTranslation();
   const on = useDemoMode();
   return (
-    <div data-testid="demo-mode" className="glass flex flex-col gap-2 p-4">
+    <div data-testid="demo-mode" className="flex flex-col gap-2">
       <label className="flex min-h-touch items-center gap-3 font-semibold">
         <input type="checkbox" checked={on} onChange={(event) => setDemoMode(event.target.checked)} />
         {t("demo.mode.label")}
@@ -144,7 +137,6 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
   const rt = useRuntime();
   const profile = useHomeProfile();
   const model = profile.model;
-  const avatarId = useAvatar();
   const job = rt.get(JOB_ID);
   const state = job?.snap.state as JobState | undefined;
   const ctx = job?.snap.ctx as JobView | undefined;
@@ -173,43 +165,30 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <DemoModeBar />
-      <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-2 md:gap-6 lg:grid-cols-12">
-        <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
-          <div className="glass flex flex-col gap-4 p-4 md:p-6">
-            {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
-            <div className="flex items-center gap-3">
-              <div data-testid="header-avatar" className="h-16 w-16 shrink-0" aria-hidden="true">
-                <ProfileAvatar id={avatarId} />
-              </div>
-              <div className="flex min-w-0 flex-col gap-1">
-                <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[32px]">{profile.homeownerName}</h1>
-                <p className="sr-only">{t("avatar.current", { name: t(avatarById(avatarId).labelKey) })}</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="break-words">{t("myhome.community", { name: profile.community })}</p>
-              <p className="break-words">{t("myhome.address", { address: profile.address })}</p>
-              {model && <p className="break-words font-semibold">{t("myhome.hub.modelLine", { model: t("myhome.model.santaSofia"), developer: model.developer })}</p>}
-              <p className="text-inkSoft">{t("myhome.hub.updated", { time: formatClockTime(now, locale) })}</p>
-            </div>
-            {model && <StatTiles model={model} />}
-            <AvatarPicker />
-          </div>
-        </section>
-
+    <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
+      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
         {model && (
-          <div data-module="blueprint" className={`${PLACE.blueprint} glass w-full p-3`}>
-            <div className="mx-auto aspect-square w-full max-w-[440px]">
-              <div className="h-full w-full">
-                <BlueprintSlot label={t("myhome.hub.blueprint")} />
-              </div>
+          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-white md:h-[320px] lg:h-[360px]">
+            {/* The name card overlaps this strip, so the model is framed in the visible part. */}
+            <div className="absolute inset-x-0 top-0 bottom-8 md:bottom-12">
+              <BlueprintSlot label={t("myhome.hub.blueprint")} />
             </div>
           </div>
         )}
+        <div className={`relative z-10 flex flex-col gap-4 rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "-mt-8 md:-mt-12" : ""}`}>
+          {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
+          <div className="flex flex-col gap-1">
+            <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[32px]">{profile.homeownerName}</h1>
+            <p className="break-words">{t("myhome.community", { name: profile.community })}</p>
+            <p className="break-words">{t("myhome.address", { address: profile.address })}</p>
+            {model && <p className="break-words font-semibold">{t("myhome.hub.modelLine", { model: t("myhome.model.santaSofia"), developer: model.developer })}</p>}
+            <p className="text-inkSoft">{t("myhome.hub.updated", { time: formatClockTime(now, locale) })}</p>
+          </div>
+          {model && <StatTiles model={model} />}
+        </div>
+      </section>
 
-        <ActiveJob lang={lang} active={active} now={now} onView={() => openRequest(null)} onRequest={() => openRequest(null)} />
+      <ActiveJob lang={lang} active={active} now={now} onView={() => openRequest(null)} onRequest={() => openRequest(null)} />
 
         <section aria-labelledby="hub-quick" data-module="quick" className={`${card} ${PLACE.quick}`}>
           <h2 id="hub-quick" className="text-[22px] font-bold leading-tight">{t("myhome.hub.quick")}</h2>
@@ -222,7 +201,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
                     type="button"
                     aria-pressed={selected}
                     onClick={() => openRequest(item.id)}
-                    className={`flex min-h-touch w-full flex-col items-center justify-center gap-1 rounded-[20px] border px-2 py-2 text-center text-ink ${selected ? "border-2 border-ink bg-mist" : "border-line bg-paper"}`}
+                    className={`flex min-h-touch w-full flex-col items-center justify-center gap-1 rounded-[20px] border border-line px-2 py-2 text-center text-ink ${selected ? "bg-accent" : "bg-paper"}`}
                   >
                     <TradeIcon categoryId={item.id} />
                     <span className="break-words leading-tight">{item.name}</span>
@@ -277,7 +256,6 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
           <p className="break-words">{t("myhome.hub.exampleNote")}</p>
           <p className="break-words">{t("myhome.hub.docsEmpty")}</p>
         </section>
-      </div>
     </div>
   );
 }
@@ -329,6 +307,7 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
   return (
     <section aria-labelledby="hub-active" data-module="active" className={`${card} ${PLACE.active}`}>
       <h2 id="hub-active" className="text-[22px] font-bold leading-tight">{t("myhome.hub.activeJob")}</h2>
+      <DemoModeSwitch />
       {active && (
         <div className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-3">
           <div className="flex items-start gap-2">
@@ -340,7 +319,7 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
             </p>
           </div>
           <div className="flex items-start gap-2">
-            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-ink" />
+            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-accent" />
             {active.state === "pendingReview" ? (
               <p aria-live="polite" className="min-w-0 break-words rounded-full bg-warnAmberBg px-3 py-1 font-semibold text-warnAmberInk">{t("review.pending.title")}</p>
             ) : (

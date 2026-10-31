@@ -10,7 +10,7 @@ import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { WarrantyAgentDemo } from "./AgentDemo";
 import { categories } from "./data";
-import { useDemoMode } from "./demoMode";
+import { setDemoMode, useDemoMode } from "./demoMode";
 import { demoWarrantyViews, type DemoWarrantyView } from "./demoSamples";
 import { JOB_ID, session } from "./session";
 import { TradeName } from "./tradeIcons";
@@ -29,12 +29,19 @@ export function WarrantyTab({ lang }: { lang: Lang }) {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("warranty.title")}</h2>
+      <div className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
+        <label className="flex min-h-touch items-center gap-3 font-semibold">
+          <input type="checkbox" checked={demoOn} onChange={(event) => setDemoMode(event.target.checked)} />
+          {t("demo.mode.label")}
+        </label>
+        <p className="break-words">{t("demo.mode.note")}</p>
+      </div>
       {samples.length > 0 && (
         <ul className="flex flex-col gap-3">
           {samples.map((item) => <DemoWarrantyRow key={item.id} lang={lang} item={item} when={when} />)}
         </ul>
       )}
-      {!a && samples.length === 0 && <p className="glass p-4">{t("warranty.empty")}</p>}
+      {!a && samples.length === 0 && <p className="rounded-2xl border border-line bg-paper p-4">{t("warranty.empty")}</p>}
       {a && <LiveWarranty lang={lang} note={note} error={error} setNote={setNote} setError={setError} />}
     </div>
   );
@@ -49,7 +56,7 @@ function DemoWarrantyRow({ lang, item, when }: { lang: Lang; item: DemoWarrantyV
       ? t("demo.warranty.expiring")
       : t("myhome.hub.warrantyState.active");
   return (
-    <li data-demo-warranty={item.id} className="glass flex flex-col gap-2 p-4">
+    <li data-demo-warranty={item.id} className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="inline-flex items-center rounded bg-warnBg px-1.5 py-0.5 text-xs font-semibold text-warnInk">{t("demo.badge")}</span>
         <p className="inline-flex w-fit max-w-full items-center break-words rounded-full border border-line bg-mist px-3 py-1 font-semibold">{chip}</p>
@@ -81,7 +88,7 @@ function LiveWarranty({ lang, note, error, setNote, setError }: {
 
   return (
     <>
-      <section className="glass flex flex-col gap-2 p-4">
+      <section className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
         <p className="text-lg font-bold"><TradeName categoryId={session.draft.categoryId} lang={lang} /></p>
         {st === "expired"
           ? <p>{t("warranty.endedOn", { date: when(c.endsAt) })}</p>

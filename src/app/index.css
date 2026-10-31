@@ -13,15 +13,7 @@ body { @apply bg-mist text-ink font-sans text-base; }
 }
 .btn-primary { @apply inline-flex items-center justify-center min-h-touch min-w-touch px-5 rounded-full bg-brand text-paper font-semibold; }
 
-/* Shared card. Paper fill, hairline, and a soft shadow. */
-.glass {
-  background-color: theme("colors.paper");
-  border: 1px solid theme("colors.line");
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgb(46 46 46 / 0.08);
-}
-
 /* High-contrast mode (toggled by A11yControl via <html data-contrast="high">) */
-html[data-contrast="high"] body { background: #F5F5F5; color: #000000; }
+html[data-contrast="high"] body { background: #FFFFFF; color: #000000; }
 html[data-contrast="high"] * { border-color: #000000 !important; }
 html[data-contrast="high"] .text-inkSoft { color: #000000; }
