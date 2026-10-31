@@ -303,6 +303,146 @@
     "text": "Exact plans vary by phase.",
     "status": "draft"
   },
+  "myhome.hub.quick": {
+    "text": "Get help with",
+    "status": "draft"
+  },
+  "myhome.hub.allServices": {
+    "text": "See all services",
+    "status": "draft"
+  },
+  "myhome.hub.activeJob": {
+    "text": "Active job",
+    "status": "draft"
+  },
+  "myhome.hub.noActive": {
+    "text": "No active jobs. Need something fixed?",
+    "status": "draft"
+  },
+  "myhome.hub.viewJob": {
+    "text": "View job",
+    "status": "draft"
+  },
+  "myhome.hub.warranty": {
+    "text": "Warranty",
+    "status": "draft"
+  },
+  "myhome.hub.daysLeft": {
+    "text": "{n} days left",
+    "status": "draft"
+  },
+  "myhome.hub.noWarranty": {
+    "text": "Warranty starts when a job is finished.",
+    "status": "draft"
+  },
+  "myhome.hub.openWarranty": {
+    "text": "Open warranty",
+    "status": "draft"
+  },
+  "myhome.hub.rooms": {
+    "text": "Rooms by floor",
+    "status": "draft"
+  },
+  "myhome.hub.maintenance": {
+    "text": "Maintenance ideas",
+    "status": "draft"
+  },
+  "myhome.hub.documents": {
+    "text": "Documents",
+    "status": "draft"
+  },
+  "myhome.hub.docsEmpty": {
+    "text": "Your quotes, receipts and warranty papers will appear here.",
+    "status": "draft"
+  },
+  "myhome.hub.example": {
+    "text": "Example",
+    "status": "draft"
+  },
+  "myhome.hub.updated": {
+    "text": "Updated {time}",
+    "status": "draft"
+  },
+  "myhome.hub.blueprint": {
+    "text": "Blueprint of your home. Drag or use arrow keys to turn it.",
+    "status": "draft"
+  },
+  "myhome.hub.exampleNote": {
+    "text": "Example only. Nothing here is scheduled for your home yet.",
+    "status": "draft"
+  },
+  "myhome.hub.maint.filters": {
+    "text": "Clean minisplit filters (every 3 months)",
+    "status": "draft"
+  },
+  "myhome.hub.maint.heater": {
+    "text": "Check water heater (yearly)",
+    "status": "draft"
+  },
+  "myhome.hub.maint.pest": {
+    "text": "Pest control (every 6 months)",
+    "status": "draft"
+  },
+  "myhome.hub.stat.stories": {
+    "text": "Stories",
+    "status": "draft"
+  },
+  "myhome.hub.stat.built": {
+    "text": "Built",
+    "status": "draft"
+  },
+  "myhome.hub.stat.bedrooms": {
+    "text": "Bedrooms",
+    "status": "draft"
+  },
+  "myhome.hub.stat.bathrooms": {
+    "text": "Bathrooms",
+    "status": "draft"
+  },
+  "myhome.hub.stat.minisplits": {
+    "text": "Minisplits",
+    "status": "draft"
+  },
+  "myhome.hub.stat.garage": {
+    "text": "Garage",
+    "status": "draft"
+  },
+  "myhome.hub.areaValue": {
+    "text": "{area} m²",
+    "status": "draft"
+  },
+  "myhome.hub.span": {
+    "text": "{min}–{max}",
+    "status": "draft"
+  },
+  "myhome.hub.due": {
+    "text": "Amount due: {amount}",
+    "status": "draft"
+  },
+  "myhome.hub.next": {
+    "text": "Next: {date}",
+    "status": "draft"
+  },
+  "myhome.hub.modelLine": {
+    "text": "{model} · {developer}",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.active": {
+    "text": "Active",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.claimFiled": {
+    "text": "Claim filed",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.inReview": {
+    "text": "In review",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.expired": {
+    "text": "Expired",
+    "status": "draft"
+  },
   "warranty.title": {
     "text": "Warranty",
     "status": "draft"

@@ -45,9 +45,11 @@ export const session = {
   /** Additional work description written by the professional, in their language. */
   additionalNote: "", additionalLang: "es" as Lang,
   /** Optional customer ticks on the completion list. They do not gate approval. */
-  completionChecks: {} as Record<string, boolean>
+  completionChecks: {} as Record<string, boolean>,
+  /** When true, the Request tab opens the form with the draft category instead of the service list. */
+  openBuilder: false
 };
 export function resetSession(keepSignIn = true): void {
   const { signedIn, email } = session;
-  Object.assign(session, { signedIn: keepSignIn && signedIn, email: keepSignIn ? email : "", draft: emptyDraft(), proId: null, method: "card", slotHours: 30, excluded: [], additionalNote: "", additionalLang: "es", issueNote: "", tab: "home", completionChecks: {} });
+  Object.assign(session, { signedIn: keepSignIn && signedIn, email: keepSignIn ? email : "", draft: emptyDraft(), proId: null, method: "card", slotHours: 30, excluded: [], additionalNote: "", additionalLang: "es", issueNote: "", tab: "home", completionChecks: {}, openBuilder: false });
 }

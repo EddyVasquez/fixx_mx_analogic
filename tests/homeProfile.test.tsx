@@ -18,7 +18,7 @@ import { CUSTOMER_TAB_ORDER, emptyDraft, resetSession, session } from "../src/fe
 
 const seedProfile = {
   homeownerName: "Eduardo L. Vasquez",
-  community: "Santa Sofia Residencial",
+  community: "Santa Sofía Residencial",
   address: "Sierra Picachos 402"
 };
 
@@ -98,9 +98,8 @@ describe("My Home tab and request prefill", () => {
     expect(icons[1]?.getAttribute("fill")).toBe(TAB_INACTIVE);
     tabs.forEach((link) => expect(link.className).toContain("flex-1"));
     expect(contrast(TAB_INACTIVE, TAB_BAR_BG)).toBeGreaterThanOrEqual(4.5);
-    expect(screen.getByRole("heading", { name: "My Home" })).toBeTruthy();
-    expect(screen.getByText("Homeowner: Eduardo L. Vasquez")).toBeTruthy();
-    expect(screen.getByText("Community: Santa Sofia Residencial")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Eduardo L. Vasquez" })).toBeTruthy();
+    expect(screen.getByText("Community: Santa Sofía Residencial")).toBeTruthy();
     expect(screen.getByText("Address: Sierra Picachos 402")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Santa Sofía model" })).toBeTruthy();
     expect(screen.getByText("Santa Sofía Residencial (GP Vivienda)")).toBeTruthy();
@@ -141,8 +140,8 @@ describe("My Home tab and request prefill", () => {
     expect(screen.getByRole("navigation", { name: "Principal" })).toBeTruthy();
     expect(tabLabels()).toEqual(["Mi hogar", "Solicitar", "Garantía", "Ayuda"]);
     expect(tabLinks()[0]?.getAttribute("aria-current")).toBe("page");
-    expect(screen.getByText("Propietario: Eduardo L. Vasquez")).toBeTruthy();
-    expect(screen.getByText("Fraccionamiento: Santa Sofia Residencial")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Eduardo L. Vasquez" })).toBeTruthy();
+    expect(screen.getByText("Fraccionamiento: Santa Sofía Residencial")).toBeTruthy();
     expect(screen.getByText("Dirección: Sierra Picachos 402")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Modelo Santa Sofía" })).toBeTruthy();
     expect(screen.getByText("Santa Sofía Residencial (GP Vivienda)")).toBeTruthy();
@@ -161,7 +160,7 @@ describe("My Home tab and request prefill", () => {
     resetSession(false);
     session.signedIn = true;
     render(<CustomerApp />);
-    expect(screen.getByText("Homeowner: Ana Demo")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Ana Demo" })).toBeTruthy();
     expect(screen.getByText("Community: Valle Demo")).toBeTruthy();
     expect(screen.getByText("Address: Calle Demo 1")).toBeTruthy();
     expect(screen.queryByText(/Eduardo L\. Vasquez/)).toBeNull();
@@ -192,8 +191,8 @@ describe("My Home tab and request prefill", () => {
     expect(screen.getByText("Zone 1 (demo), Calle Demo 1")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("link", { name: "My Home" }));
-    expect(screen.getByText("Homeowner: Eduardo L. Vasquez")).toBeTruthy();
-    expect(screen.getByText("Community: Santa Sofia Residencial")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Eduardo L. Vasquez" })).toBeTruthy();
+    expect(screen.getByText("Community: Santa Sofía Residencial")).toBeTruthy();
     expect(screen.getByText("Address: Sierra Picachos 402")).toBeTruthy();
     expect(getHomeProfile()).toMatchObject(seedProfile);
     expect(getHomeProfile().model?.id).toBe("santa-sofia");

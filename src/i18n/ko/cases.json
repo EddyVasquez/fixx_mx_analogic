@@ -379,6 +379,181 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "myhome.hub.quick": {
+    "text": "어떤 도움이 필요하세요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.allServices": {
+    "text": "모든 서비스 보기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.activeJob": {
+    "text": "진행 중인 작업",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.noActive": {
+    "text": "진행 중인 작업이 없어요. 고칠 게 있나요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.viewJob": {
+    "text": "작업 보기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.warranty": {
+    "text": "보증",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.daysLeft": {
+    "text": "{n}일 남음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.noWarranty": {
+    "text": "작업이 끝나면 보증이 시작돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.openWarranty": {
+    "text": "보증 보기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.rooms": {
+    "text": "층별 공간",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.maintenance": {
+    "text": "관리 아이디어",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.documents": {
+    "text": "문서",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.docsEmpty": {
+    "text": "견적서, 영수증, 보증서가 여기에 표시돼요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.example": {
+    "text": "예시",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.updated": {
+    "text": "{time} 업데이트",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.blueprint": {
+    "text": "우리 집 도면이에요. 끌거나 화살표 키로 돌려 보세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.exampleNote": {
+    "text": "예시예요. 아직 집에 예약된 내용은 아니에요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.maint.filters": {
+    "text": "미니스플릿 필터 청소 (3개월마다)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.maint.heater": {
+    "text": "온수기 점검 (매년)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.maint.pest": {
+    "text": "해충 방제 (6개월마다)",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.stories": {
+    "text": "층",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.built": {
+    "text": "연면적",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.bedrooms": {
+    "text": "침실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.bathrooms": {
+    "text": "욕실",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.minisplits": {
+    "text": "미니스플릿",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.stat.garage": {
+    "text": "차고",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.areaValue": {
+    "text": "{area} m²",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.span": {
+    "text": "{min}–{max}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.due": {
+    "text": "납부할 금액: {amount}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.next": {
+    "text": "다음: {date}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.modelLine": {
+    "text": "{model} · {developer}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.warrantyState.active": {
+    "text": "유효",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.warrantyState.claimFiled": {
+    "text": "청구 접수",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.warrantyState.inReview": {
+    "text": "검토 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.warrantyState.expired": {
+    "text": "만료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "warranty.title": {
     "text": "보증",
     "status": "draft",

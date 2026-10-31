@@ -16,7 +16,9 @@ export const colors = {
   warnBg: "#E6E6E6",    // demo-value marker
   warnInk: "#2E2E2E",
   warnAmberBg: "#FFE8A3",  // pending-review banner
-  warnAmberInk: "#3F2A00"
+  warnAmberInk: "#3F2A00",
+  /** Hub accent. Backgrounds only (hero card, stat tiles, status dot, selected shortcut), with ink on top. Never text, and never a thin icon on white. */
+  accent: "#DFFF32"
 } as const;
 
 export const textPairs: ReadonlyArray<readonly [string, keyof typeof colors, keyof typeof colors]> = [
@@ -31,7 +33,9 @@ export const textPairs: ReadonlyArray<readonly [string, keyof typeof colors, key
   ["secondary on panel", "inkSoft", "panel"],
   ["error on paper", "danger", "paper"],
   ["demo marker", "warnInk", "warnBg"],
-  ["warning banner", "warnAmberInk", "warnAmberBg"]
+  ["warning banner", "warnAmberInk", "warnAmberBg"],
+  ["ink on accent", "ink", "accent"],
+  ["secondary on accent", "inkSoft", "accent"]
 ];
 
 export const spacing = { touch: "48px" } as const; // minimum touch target
