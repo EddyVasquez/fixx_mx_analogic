@@ -17,6 +17,7 @@ import {
   type PerspectiveCamera
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { colors } from "@/ui/tokens";
 import {
   AUTO_YAW_PER_SEC,
   CAMERA_FOV_DEG,
@@ -27,7 +28,7 @@ import {
   type Vec3
 } from "./houseModel";
 
-const OUTLINE = "#374151";
+const OUTLINE = colors.charcoal;
 
 interface Motion {
   yaw: number;
@@ -39,20 +40,29 @@ function isGlass(mat: Material): boolean {
   return mat.name === "Glass";
 }
 
+/** sRGB average. GLTF colors above this are treated as too close to the removed surface. */
+function srgbAverage(color: Color): number {
+  const srgb = color.clone().convertLinearToSRGB();
+  return (srgb.r + srgb.g + srgb.b) / 3;
+}
+
 function tuneMaterial(source: Material): Material {
   const mat = source.clone();
-  if (mat instanceof MeshStandardMaterial && !isGlass(mat)) {
+  if (mat instanceof MeshStandardMaterial && isGlass(mat)) {
+    mat.color.set(colors.hlOk);
+    mat.transparent = true;
+    mat.depthWrite = false;
+    mat.metalness = 0;
+  } else if (mat instanceof MeshStandardMaterial) {
+    if (mat.name === "Trim_Charcoal") mat.color.set(colors.charcoal);
+    else if (mat.name === "Site_Light") mat.color.set(colors.mist);
+    else if (mat.name === "Wall_Grey" || srgbAverage(mat.color) > 0.82) mat.color.set(colors.hlOk);
     mat.roughness = 1;
     mat.metalness = 0;
     mat.envMapIntensity = 0;
     mat.polygonOffset = true;
     mat.polygonOffsetFactor = 1;
     mat.polygonOffsetUnits = 1;
-  }
-  if (mat instanceof MeshStandardMaterial && isGlass(mat)) {
-    mat.transparent = true;
-    mat.depthWrite = false;
-    mat.metalness = 0;
   }
   mat.needsUpdate = true;
   return mat;
@@ -150,7 +160,7 @@ function FadingGrid() {
     depthWrite: false,
     toneMapped: false,
     uniforms: {
-      uColor: { value: new Color("#b0b0b0") },
+      uColor: { value: new Color(colors.hlOk) },
       uCell: { value: 1 },
       uFade: { value: 13 },
       uStrength: { value: 0.22 }
@@ -295,12 +305,12 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
 
   return (
     <>
-      <color attach="background" args={["#ffffff"]} />
-      <hemisphereLight args={["#ffffff", "#f7f7f7", 2.05]} />
+      <color attach="background" args={[colors.paper]} />
+      <hemisphereLight args={[colors.paper, colors.mist, 1.55]} />
       <KeyLight />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
         <planeGeometry args={[80, 80]} />
-        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+        <meshBasicMaterial color={colors.paper} toneMapped={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
         <planeGeometry args={[40, 40]} />

@@ -2,6 +2,7 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { fileURLToPath } from "node:url";
+import { colors } from "./src/ui/tokens";
 
 // GitHub Pages project site: https://eddyvasquez.github.io/fixx_mx_analogic/
 // Asset URLs must include this prefix or the built page loads a blank #root.
@@ -29,7 +30,7 @@ export default defineConfig({
         name: "FIXX (Demo)",
         short_name: "FIXX",
         display: "standalone",
-        background_color: "#FFFFFF",
+        background_color: colors.paper,
         theme_color: "#2E2E2E",
         start_url: BASE,
         scope: BASE

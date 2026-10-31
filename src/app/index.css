@@ -3,7 +3,15 @@
 @tailwind utilities;
 
 html { font-size: 100%; }
-body { @apply bg-mist text-ink font-sans text-base; }
+body {
+  @apply bg-mist text-ink font-sans text-base;
+  /* Grey wash behind the glass, so the blur has something to catch. */
+  background-image:
+    radial-gradient(46rem 32rem at -6% -12%, theme("colors.panel"), transparent 68%),
+    radial-gradient(40rem 30rem at 108% 0%, theme("colors.line"), transparent 64%),
+    radial-gradient(34rem 26rem at 72% 118%, theme("colors.panel"), transparent 60%);
+  background-attachment: fixed;
+}
 :focus-visible { outline: 3px solid theme("colors.brandDeep"); outline-offset: 2px; }
 .customer-tab { transition: opacity 120ms ease; }
 .customer-tab:active { opacity: 0.7; }
@@ -13,7 +21,105 @@ body { @apply bg-mist text-ink font-sans text-base; }
 }
 .btn-primary { @apply inline-flex items-center justify-center min-h-touch min-w-touch px-5 rounded-full bg-brand text-paper font-semibold; }
 
+/*
+  Liquid glass. Translucent grey (or lime) over the page wash, with blur,
+  a grey inner edge, and a soft shadow. The reusable classes are .glass and
+  .glass-lime; the same rules cover the existing card shapes.
+*/
+.glass,
+.rounded-2xl.bg-paper,
+.rounded-\[20px\].bg-paper {
+  background-color: rgba(245, 245, 245, 0.62);
+  background-image: linear-gradient(180deg, rgba(245, 245, 245, 0.5), rgba(245, 245, 245, 0) 46%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 245, 245, 0.9),
+    inset 0 0 0 1px rgba(46, 46, 46, 0.06),
+    0 10px 28px rgba(46, 46, 46, 0.12);
+}
+/* Sits on the lime hero. Opaque surface so the accent does not tint the type. */
+.glass-sheet.rounded-\[20px\].bg-paper {
+  background-color: theme("colors.paper");
+  background-image: linear-gradient(180deg, rgba(236, 236, 236, 0.85), rgba(245, 245, 245, 0) 42%);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.glass-lime,
+.rounded-2xl.bg-accent,
+.rounded-\[20px\].bg-accent {
+  background-color: rgba(223, 255, 50, 0.84);
+  background-image: linear-gradient(180deg, rgba(223, 255, 50, 0.55), rgba(223, 255, 50, 0) 48%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.45);
+  backdrop-filter: blur(18px) saturate(1.45);
+  box-shadow:
+    inset 0 1px 0 rgba(223, 255, 50, 0.95),
+    inset 0 0 0 1px rgba(46, 46, 46, 0.08),
+    0 10px 28px rgba(46, 46, 46, 0.12);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-sheet.rounded-\[20px\].bg-paper,
+  .rounded-2xl.bg-paper,
+  .rounded-\[20px\].bg-paper {
+    background-color: theme("colors.paper");
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass-lime,
+  .rounded-2xl.bg-accent,
+  .rounded-\[20px\].bg-accent {
+    background-color: theme("colors.accent");
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-sheet.rounded-\[20px\].bg-paper,
+  .rounded-2xl.bg-paper,
+  .rounded-\[20px\].bg-paper {
+    background-color: theme("colors.paper");
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass-lime,
+  .rounded-2xl.bg-accent,
+  .rounded-\[20px\].bg-accent {
+    background-color: theme("colors.accent");
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 /* High-contrast mode (toggled by A11yControl via <html data-contrast="high">) */
-html[data-contrast="high"] body { background: #FFFFFF; color: #000000; }
+html[data-contrast="high"] body {
+  background: theme("colors.paper");
+  background-image: none;
+  color: #000000;
+}
 html[data-contrast="high"] * { border-color: #000000 !important; }
 html[data-contrast="high"] .text-inkSoft { color: #000000; }
+html[data-contrast="high"] .glass,
+html[data-contrast="high"] .glass-sheet.rounded-\[20px\].bg-paper,
+html[data-contrast="high"] .rounded-2xl.bg-paper,
+html[data-contrast="high"] .rounded-\[20px\].bg-paper {
+  background-color: theme("colors.paper");
+  background-image: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-contrast="high"] .glass-lime,
+html[data-contrast="high"] .rounded-2xl.bg-accent,
+html[data-contrast="high"] .rounded-\[20px\].bg-accent {
+  background-color: theme("colors.accent");
+  background-image: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

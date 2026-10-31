@@ -7,9 +7,9 @@ import { Wrench } from "@phosphor-icons/react/Wrench";
 import { colors } from "@/ui/tokens";
 import { CUSTOMER_TAB_ORDER, type CustomerTab } from "./session";
 
-/** Tailwind slate-600. Checked at 4.5:1 against the white bar. */
-export const TAB_INACTIVE = "#475569";
-export const TAB_BAR_BG = "#FFFFFF";
+/** Secondary ink. Checked at 4.5:1 against the bar surface. */
+export const TAB_INACTIVE = colors.inkSoft;
+export const TAB_BAR_BG = colors.paper;
 
 /**
  * Icons from the bottom-tab spec, one import each.
@@ -46,7 +46,7 @@ function TabLabel({ text, active }: { text: string; active: boolean }) {
     <span
       ref={ref}
       style={{ fontSize: px }}
-      className={`inline-block max-w-full whitespace-nowrap text-center leading-[14px] ${active ? "font-semibold text-brand" : "font-normal text-[#475569]"}`}
+      className={`inline-block max-w-full whitespace-nowrap text-center leading-[14px] ${active ? "font-semibold text-brand" : "font-normal text-inkSoft"}`}
     >
       {text}
     </span>
@@ -59,7 +59,7 @@ export function CustomerTabBar({ active, onSelect }: { active: CustomerTab; onSe
   return (
     <nav
       aria-label={t("customer.tabs")}
-      className="mt-auto w-full border-t border-slate-200 bg-white"
+      className="glass mt-auto w-full border-t border-line bg-paper"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       <div className="flex h-16 w-full">

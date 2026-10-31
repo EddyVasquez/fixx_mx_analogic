@@ -8,7 +8,7 @@ The My Home hero loads one GLB. The file in the repo is the starter house (real 
 2. Put the file in `public/models/`.
    - Same name (`santa-sofia-house.glb`): replace the file. No code change.
    - Versioned name (`santa-sofia-house_vNN.glb`): change `HOUSE_MODEL_FILE` in `src/features/customer/blueprint/houseModel.ts` to that name. That constant is the only path the app reads. The URL is `import.meta.env.BASE_URL` plus `models/` plus the file name, so the GitHub Pages base `/fixx_mx_analogic/` stays correct.
-3. Replace the static image the hero shows when WebGL is missing or the model is still loading. It must sit next to the GLB and use the same stem with a `.png` extension (`santa-sofia-house.png`, or `santa-sofia-house_vNN.png` if you versioned the GLB). Use a front 3/4 render on white.
+3. Replace the static image the hero shows when WebGL is missing or the model is still loading. It must sit next to the GLB and use the same stem with a `.png` extension (`santa-sofia-house.png`, or `santa-sofia-house_vNN.png` if you versioned the GLB). Use a front 3/4 render on the light grey surface (`paper` in `src/ui/tokens.ts`).
 
 The view spins the model around the vertical axis through the footprint center. The camera stays a level 3/4 and refits to the bounding box, so a larger export still fits the hero. Outlines, the soft ground shadow, and the fading grid are added in the app. Glass stays the translucent grey from the file.
 
