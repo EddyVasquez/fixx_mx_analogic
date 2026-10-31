@@ -47,7 +47,7 @@ function RequestFlow() {
   const rt = useRuntime();
   const lang = i18n.language as Lang;
   const [, force] = useReducer((x: number) => x + 1, 0);
-  const [pre, setPre] = useState<Pre>("home");
+  const [pre, setPre] = useState<Pre>(session.openBuilder ? "request" : "home");
   const update = (p: Partial<typeof session>) => { Object.assign(session, p); force(); };
   const setDraft = (p: Partial<Draft>) => update({ draft: { ...session.draft, ...p } });
   const startOver = () => { rt.reset(); resetSession(); setPre("home"); force(); };
@@ -203,11 +203,11 @@ export function CustomerApp() {
       <p role="status" className="sr-only">{jobState ? `${t("status.label")}: ${stateLabel(t, jobState)}` : ""}</p>
       <div className="flex flex-1 flex-col gap-4">
         {session.tab === "request" && <RequestFlow />}
-        {session.tab === "home" && <MyHomeTab lang={lang} />}
+        {session.tab === "home" && <MyHomeTab lang={lang} onNavigate={force} />}
         {session.tab === "warranty" && <WarrantyTab lang={lang} />}
         {session.tab === "help" && <SupportChatView lang={lang} />}
       </div>
-      <CustomerTabBar active={session.tab} onSelect={(tab) => { session.tab = tab; force(); }} />
+      <CustomerTabBar active={session.tab} onSelect={(tab) => { if (tab === "request") session.openBuilder = false; session.tab = tab; force(); }} />
     </div>
   );
 }

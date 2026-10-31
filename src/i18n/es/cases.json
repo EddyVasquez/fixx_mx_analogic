@@ -303,6 +303,146 @@
     "text": "Los planos exactos cambian según la etapa.",
     "status": "draft"
   },
+  "myhome.hub.quick": {
+    "text": "¿Con qué te ayudamos?",
+    "status": "draft"
+  },
+  "myhome.hub.allServices": {
+    "text": "Ver todos los servicios",
+    "status": "draft"
+  },
+  "myhome.hub.activeJob": {
+    "text": "Trabajo en curso",
+    "status": "draft"
+  },
+  "myhome.hub.noActive": {
+    "text": "No tienes trabajos en curso. ¿Necesitas arreglar algo?",
+    "status": "draft"
+  },
+  "myhome.hub.viewJob": {
+    "text": "Ver trabajo",
+    "status": "draft"
+  },
+  "myhome.hub.warranty": {
+    "text": "Garantía",
+    "status": "draft"
+  },
+  "myhome.hub.daysLeft": {
+    "text": "Quedan {n} días",
+    "status": "draft"
+  },
+  "myhome.hub.noWarranty": {
+    "text": "La garantía empieza al terminar un trabajo.",
+    "status": "draft"
+  },
+  "myhome.hub.openWarranty": {
+    "text": "Ver garantía",
+    "status": "draft"
+  },
+  "myhome.hub.rooms": {
+    "text": "Espacios por planta",
+    "status": "draft"
+  },
+  "myhome.hub.maintenance": {
+    "text": "Ideas de mantenimiento",
+    "status": "draft"
+  },
+  "myhome.hub.documents": {
+    "text": "Documentos",
+    "status": "draft"
+  },
+  "myhome.hub.docsEmpty": {
+    "text": "Aquí aparecerán tus cotizaciones, recibos y garantías.",
+    "status": "draft"
+  },
+  "myhome.hub.example": {
+    "text": "Ejemplo",
+    "status": "draft"
+  },
+  "myhome.hub.updated": {
+    "text": "Actualizado {time}",
+    "status": "draft"
+  },
+  "myhome.hub.blueprint": {
+    "text": "Plano de tu casa. Arrástralo o usa las flechas para girarlo.",
+    "status": "draft"
+  },
+  "myhome.hub.exampleNote": {
+    "text": "Solo un ejemplo. Todavía no hay nada programado para tu casa.",
+    "status": "draft"
+  },
+  "myhome.hub.maint.filters": {
+    "text": "Limpiar los filtros del minisplit (cada 3 meses)",
+    "status": "draft"
+  },
+  "myhome.hub.maint.heater": {
+    "text": "Revisar el calentador de agua (cada año)",
+    "status": "draft"
+  },
+  "myhome.hub.maint.pest": {
+    "text": "Control de plagas (cada 6 meses)",
+    "status": "draft"
+  },
+  "myhome.hub.stat.stories": {
+    "text": "Plantas",
+    "status": "draft"
+  },
+  "myhome.hub.stat.built": {
+    "text": "Construcción",
+    "status": "draft"
+  },
+  "myhome.hub.stat.bedrooms": {
+    "text": "Recámaras",
+    "status": "draft"
+  },
+  "myhome.hub.stat.bathrooms": {
+    "text": "Baños",
+    "status": "draft"
+  },
+  "myhome.hub.stat.minisplits": {
+    "text": "Minisplits",
+    "status": "draft"
+  },
+  "myhome.hub.stat.garage": {
+    "text": "Cochera",
+    "status": "draft"
+  },
+  "myhome.hub.areaValue": {
+    "text": "{area} m²",
+    "status": "draft"
+  },
+  "myhome.hub.span": {
+    "text": "{min}–{max}",
+    "status": "draft"
+  },
+  "myhome.hub.due": {
+    "text": "Por pagar: {amount}",
+    "status": "draft"
+  },
+  "myhome.hub.next": {
+    "text": "Siguiente: {date}",
+    "status": "draft"
+  },
+  "myhome.hub.modelLine": {
+    "text": "{model} · {developer}",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.active": {
+    "text": "Activa",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.claimFiled": {
+    "text": "Reclamo presentado",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.inReview": {
+    "text": "En revisión",
+    "status": "draft"
+  },
+  "myhome.hub.warrantyState.expired": {
+    "text": "Vencida",
+    "status": "draft"
+  },
   "warranty.title": {
     "text": "Garantía",
     "status": "draft"
