@@ -13,7 +13,8 @@ import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { useMoney } from "@/features/shared/Money";
 import { TranslatedText } from "@/features/shared/TranslatedText";
-import { categories, zoneNames, zones } from "@/features/customer/data";
+import { zoneNames, zones } from "@/features/customer/data";
+import { TradeName } from "@/features/customer/tradeIcons";
 import type { Draft } from "@/features/customer/session";
 
 type Send = (e: { type: string } & Record<string, unknown>) => void;
@@ -28,7 +29,6 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
   const [payout, setPayout] = useState(String(suggested));
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const category = categories.find((c) => c.id === draft.categoryId);
   const fee = travelFeeFor(bandFor(me.zoneId, draft.zoneId, zones));
 
   const submit = () => {
@@ -48,7 +48,7 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
         <div><dt className="text-sm text-inkSoft">{t("request.homeownerName")}</dt><dd className="font-bold">{draft.homeownerName}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.community")}</dt><dd>{draft.community}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.street")}</dt><dd>{draft.street}</dd></div>
-        <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold">{category?.names[viewerLang]}</dd></div>
+        <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold"><TradeName categoryId={draft.categoryId} lang={viewerLang} /></dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.description")}</dt><dd><TranslatedText text={draft.description} from={customerLang} to={viewerLang} /></dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.photos")}</dt><dd>{draft.photos === 0 ? t("request.noPhotos") : t("request.photoCount", { count: draft.photos })}</dd></div>
         {draft.measurements && <div><dt className="text-sm text-inkSoft">{t("request.measurements")}</dt><dd><TranslatedText text={draft.measurements} from={customerLang} to={viewerLang} /></dd></div>}

@@ -12,6 +12,8 @@ import { runtime } from "../src/demo/runtime";
 import { CustomerApp } from "../src/features/customer/CustomerApp";
 import { TAB_BAR_BG, TAB_INACTIVE } from "../src/features/customer/CustomerTabBar";
 import { matchingAreaTier } from "../src/core/pricing/areaTier";
+import { resetAvatar } from "../src/features/customer/avatarChoice";
+import { resetDemoMode } from "../src/features/customer/demoMode";
 import { getHomeProfile, resetHomeProfile, setHomeProfile } from "../src/features/customer/homeProfile";
 import { cleaningAreaTiers } from "../src/features/customer/homeModel";
 import { CUSTOMER_TAB_ORDER, emptyDraft, resetSession, session } from "../src/features/customer/session";
@@ -33,6 +35,8 @@ function tabLabels(): string[] {
 describe("My Home tab and request prefill", () => {
   beforeEach(async () => {
     resetHomeProfile();
+    resetAvatar();
+    resetDemoMode();
     runtime.reset();
     resetSession(false);
     session.signedIn = true;
@@ -41,6 +45,8 @@ describe("My Home tab and request prefill", () => {
   });
   afterEach(async () => {
     cleanup();
+    resetAvatar();
+    resetDemoMode();
     resetHomeProfile();
     runtime.reset();
     resetSession(false);

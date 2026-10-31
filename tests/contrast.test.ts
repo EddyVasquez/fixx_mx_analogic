@@ -12,7 +12,8 @@ describe("design token contrast (WCAG AA 4.5:1)", () => {
   }
   it("every token is a neutral grey (current direction)", () => {
     for (const [key, hex] of Object.entries(colors)) {
-      if (key.startsWith("warnAmber") || key === "accent") continue;
+      // Pending-review amber, the hub lime, and the avatar badge fills are the approved hues.
+      if (key.startsWith("warnAmber") || key === "accent" || key === "avatarLime" || key === "avatarPink") continue;
       const n = parseInt(hex.slice(1), 16);
       expect(((n >> 16) & 255) === ((n >> 8) & 255) && ((n >> 8) & 255) === (n & 255)).toBe(true);
     }

@@ -10,6 +10,8 @@ import { colors } from "../src/ui/tokens";
 import i18n from "../src/i18n";
 import { runtime } from "../src/demo/runtime";
 import { CustomerApp } from "../src/features/customer/CustomerApp";
+import { resetAvatar } from "../src/features/customer/avatarChoice";
+import { setDemoMode } from "../src/features/customer/demoMode";
 import { resetHomeProfile } from "../src/features/customer/homeProfile";
 import { JOB_ID, resetSession, session } from "../src/features/customer/session";
 
@@ -28,6 +30,8 @@ function modules(): string[] {
 describe("My Home hub", () => {
   beforeEach(async () => {
     resetHomeProfile();
+    resetAvatar();
+    setDemoMode(false);
     runtime.reset();
     resetSession(false);
     session.signedIn = true;
@@ -36,6 +40,8 @@ describe("My Home hub", () => {
   });
   afterEach(async () => {
     cleanup();
+    resetAvatar();
+    setDemoMode(false);
     resetHomeProfile();
     runtime.reset();
     resetSession(false);
@@ -62,14 +68,22 @@ describe("My Home hub", () => {
 
   it("lays the real modules out in phone order, with example tags only on placeholders", () => {
     render(<CustomerApp />);
-    expect(modules()).toEqual(["hero", "active", "quick", "warranty", "maintenance", "details", "history", "documents"]);
+    expect(modules()).toEqual(["hero", "blueprint", "active", "quick", "warranty", "maintenance", "details", "history", "documents"]);
     const hero = screen.getByRole("region", { name: "Eduardo L. Vasquez" });
-    expect(hero.className).toContain("lg:col-span-8");
+    expect(hero.className).toContain("lg:col-span-7");
     expect(hero.className).toContain("bg-accent");
-    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-4");
-    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-9");
-    expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-4");
-    expect(document.querySelector("[data-module='quick']")?.className).toContain("lg:col-span-8");
+    const house = document.querySelector("[data-module='blueprint']");
+    expect(house?.className).toContain("md:col-start-2");
+    expect(house?.className).toContain("md:row-span-3");
+    expect(house?.className).toContain("items-center");
+    expect(house?.className).toContain("justify-center");
+    expect(house?.className).toContain("self-start");
+    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-7");
+    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-1");
+    expect(document.querySelector("[data-module='active']")?.className).toContain("md:col-start-1");
+    expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-1");
+    expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:row-start-3");
+    expect(document.querySelector("[data-module='quick']")?.className).toContain("lg:col-span-12");
     expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-span-6");
     expect(document.querySelector("[data-module='history']")?.className).toContain("lg:col-span-4");
 
@@ -98,7 +112,7 @@ describe("My Home hub", () => {
     fireEvent.click(within(quick).getByRole("button", { name: "Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
-    expect((screen.getByLabelText("Service") as HTMLSelectElement).value).toBe("electrical");
+    expect((screen.getByRole("radio", { name: "Electrical" }) as HTMLInputElement).checked).toBe(true);
 
     cleanup();
     resetSession(false);

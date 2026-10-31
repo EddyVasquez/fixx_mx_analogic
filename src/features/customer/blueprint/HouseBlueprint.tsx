@@ -17,6 +17,7 @@ import {
   type PerspectiveCamera
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { colors } from "@/ui/tokens";
 import {
   AUTO_YAW_PER_SEC,
   CAMERA_FOV_DEG,
@@ -295,12 +296,12 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
 
   return (
     <>
-      <color attach="background" args={["#ffffff"]} />
-      <hemisphereLight args={["#ffffff", "#f7f7f7", 2.05]} />
+      <color attach="background" args={[colors.paper]} />
+      <hemisphereLight args={[colors.paper, "#E4E4E4", 2.05]} />
       <KeyLight />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
         <planeGeometry args={[80, 80]} />
-        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+        <meshBasicMaterial color={colors.paper} toneMapped={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
         <planeGeometry args={[40, 40]} />

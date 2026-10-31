@@ -29,7 +29,7 @@ export default defineConfig({
         name: "FIXX (Demo)",
         short_name: "FIXX",
         display: "standalone",
-        background_color: "#FFFFFF",
+        background_color: "#F5F5F5",
         theme_color: "#2E2E2E",
         start_url: BASE,
         scope: BASE

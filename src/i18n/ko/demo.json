@@ -338,5 +338,35 @@
     "text": "+{hours}시간",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "demo.mode.label": {
+    "text": "샘플 집 데이터",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.mode.note": {
+    "text": "산타 소피아 집의 샘플 작업과 보증이에요. 실제 예약과 구분되도록 표시했어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.job.progress": {
+    "text": "진행률",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.warranty.expiring": {
+    "text": "곧 만료",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.warranty.claim": {
+    "text": "청구 진행 중",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "demo.warranty.ends": {
+    "text": "보장 종료 {date}",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }
