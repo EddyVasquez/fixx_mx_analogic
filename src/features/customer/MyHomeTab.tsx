@@ -145,7 +145,8 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
       <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
         {model && (
           <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-white md:h-[320px] lg:h-[360px]">
-            <div className="absolute inset-0">
+            {/* The name card overlaps this strip, so the model is framed in the visible part. */}
+            <div className="absolute inset-x-0 top-0 bottom-8 md:bottom-12">
               <BlueprintSlot label={t("myhome.hub.blueprint")} />
             </div>
           </div>
