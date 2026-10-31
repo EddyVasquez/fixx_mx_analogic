@@ -17,7 +17,7 @@ export const colors = {
   warnInk: "#2E2E2E",
   warnAmberBg: "#FFE8A3",  // pending-review banner
   warnAmberInk: "#3F2A00",
-  /** Hub accent. Backgrounds only (hero card, stat tiles, status dot, selected shortcut), with ink on top. Never text, and never a thin icon on white. */
+  /** Hub accent. Only the main hero card and the stat tiles, with ink on top. Never behind the blueprint, and never text or a thin icon. */
   accent: "#DFFF32"
 } as const;
 

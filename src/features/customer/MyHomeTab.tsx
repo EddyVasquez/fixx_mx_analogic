@@ -144,13 +144,13 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
     <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
       <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
         {model && (
-          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-white md:h-[320px] lg:h-[360px]">
+          <div className="relative h-[280px] overflow-hidden rounded-2xl border border-line bg-paper md:h-[340px] lg:h-[380px]">
             <div className="absolute inset-0">
               <BlueprintSlot label={t("myhome.hub.blueprint")} />
             </div>
           </div>
         )}
-        <div className={`relative z-10 flex flex-col gap-4 rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "-mt-8 md:-mt-12" : ""}`}>
+        <div className={`relative z-10 flex flex-col gap-4 rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "mt-3" : ""}`}>
           {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
           <div className="flex flex-col gap-1">
             <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[32px]">{profile.homeownerName}</h1>
@@ -177,7 +177,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
                   type="button"
                   aria-pressed={selected}
                   onClick={() => openRequest(item.id)}
-                  className={`flex min-h-touch w-full flex-col items-center justify-center gap-1 rounded-[20px] border border-line px-2 py-2 text-center text-ink ${selected ? "bg-accent" : "bg-paper"}`}
+                  className={`flex min-h-touch w-full flex-col items-center justify-center gap-1 rounded-[20px] bg-paper px-2 py-2 text-center text-ink ${selected ? "border-2 border-ink" : "border border-line"}`}
                 >
                   <ShortcutIcon aria-hidden="true" size={24} weight="bold" color={colors.ink} />
                   <span className="break-words leading-tight">{item.name}</span>
@@ -285,7 +285,7 @@ function ActiveJob({ lang, active, onView, onRequest }: {
               : (category?.names[lang] ?? "")}
           </p>
           <div className="flex items-start gap-2">
-            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-accent" />
+            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-ink" />
             {active.state === "pendingReview" ? (
               <p aria-live="polite" className="min-w-0 break-words rounded-full bg-warnAmberBg px-3 py-1 font-semibold text-warnAmberInk">{t("review.pending.title")}</p>
             ) : (
