@@ -129,6 +129,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "trade.add": {
+    "text": "{trade} 추가",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "home.emergencyLine": {
     "text": "응급 상황인가요? 먼저 911에 전화하세요. FIXX는 응급 서비스가 아니에요.",
     "status": "draft",

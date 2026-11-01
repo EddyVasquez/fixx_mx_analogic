@@ -6,7 +6,8 @@ import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
-import { categories, zoneNames, zones } from "./data";
+import { zoneNames, zones } from "./data";
+import { TradePicker } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
 import { jobsForCategory, type CatalogJob } from "./catalogJobs";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
@@ -118,28 +119,16 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
       </fieldset>
       <fieldset className="flex flex-col gap-3">
         <legend className="font-semibold">{t("request.category")}</legend>
-        <div className="grid grid-cols-2 gap-2">
-          {categories.map((c) => {
-            const selected = draft.categoryId === c.id;
-            return (
-              <label key={c.id} className={`flex min-h-touch items-center gap-2 rounded-2xl border px-3 py-2 ${selected ? "border-2 border-ink bg-mist" : "border-line bg-paper"}`}>
-                <input
-                  type="radio"
-                  name="request-trade"
-                  value={c.id}
-                  checked={selected}
-                  onChange={() => {
-                    setUndo(null);
-                    if (draft.descriptionEdited) onChange({ categoryId: c.id, selectedJobIds: [] });
-                    else onChange({ categoryId: c.id, selectedJobIds: [], description: "" });
-                  }}
-                />
-                <TradeIcon categoryId={c.id} />
-                <span className="min-w-0 break-words">{c.names[lang]}</span>
-              </label>
-            );
-          })}
-        </div>
+        <TradePicker
+          lang={lang}
+          selectedId={draft.categoryId}
+          onPick={(id) => {
+            if (id === draft.categoryId) return;
+            setUndo(null);
+            if (draft.descriptionEdited) onChange({ categoryId: id, selectedJobIds: [] });
+            else onChange({ categoryId: id, selectedJobIds: [], description: "" });
+          }}
+        />
       </fieldset>
       <div className="flex flex-col gap-1">
         <p className="flex flex-wrap items-center gap-2">

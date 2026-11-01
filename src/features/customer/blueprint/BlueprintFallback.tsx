@@ -8,7 +8,7 @@ export function BlueprintFallback({ label }: { label: string }) {
       alt={label}
       draggable={false}
       data-blueprint="fallback"
-      className="h-full w-full bg-white object-contain"
+      className="h-full w-full bg-paper object-contain"
     />
   );
 }

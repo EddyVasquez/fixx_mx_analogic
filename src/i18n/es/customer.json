@@ -103,6 +103,10 @@
     "text": "Elige un servicio",
     "status": "draft"
   },
+  "trade.add": {
+    "text": "Agregar {trade}",
+    "status": "draft"
+  },
   "home.emergencyLine": {
     "text": "¿Emergencia? Llama primero al 911. FIXX no es un servicio de emergencias.",
     "status": "draft"

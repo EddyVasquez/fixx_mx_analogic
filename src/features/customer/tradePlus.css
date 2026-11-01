@@ -1,0 +1,58 @@
+/* Trade plus buttons. Hover lift is pointer-only. A selected plus stays pressed in, like a job chip. */
+.trade-plus {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: theme("colors.ink");
+  cursor: pointer;
+  line-height: 1;
+}
+
+.trade-plus-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: theme("colors.accent");
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.trade-plus:focus-visible {
+  outline: 3px solid theme("colors.brandDeep");
+  outline-offset: 2px;
+}
+
+.trade-plus:active:not([aria-pressed="true"]) .trade-plus-face {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
+}
+
+.trade-plus[aria-pressed="true"] .trade-plus-face {
+  transform: none;
+  box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.45);
+}
+
+@media (hover: hover) {
+  .trade-plus:hover:not([aria-pressed="true"]) .trade-plus-face {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .trade-plus[aria-pressed="true"]:hover .trade-plus-face {
+    transform: none;
+    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trade-plus-face,
+  .trade-plus:hover .trade-plus-face,
+  .trade-plus:active .trade-plus-face,
+  .trade-plus[aria-pressed="true"]:hover .trade-plus-face {
+    transform: none;
+    transition: none;
+  }
+}

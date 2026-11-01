@@ -384,11 +384,6 @@
     "status": "draft",
     "needsNativeReview": true
   },
-  "myhome.hub.allServices": {
-    "text": "모든 서비스 보기",
-    "status": "draft",
-    "needsNativeReview": true
-  },
   "myhome.hub.activeJob": {
     "text": "진행 중인 작업",
     "status": "draft",

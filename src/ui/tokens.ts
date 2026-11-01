@@ -6,7 +6,7 @@ export const colors = {
   brandDeep: "#2E2E2E", // focus ring
   ink: "#2E2E2E",       // body text
   inkSoft: "#484848",   // secondary text
-  paper: "#FFFFFF",
+  paper: "#D4D4D4",     // section cards, hero backdrop, and light text. Not white.
   mist: "#ECECEC",      // page background
   panel: "#D4D4D4",     // work-order panel
   line: "#C8C8C8",      // borders (non-text)
@@ -17,7 +17,7 @@ export const colors = {
   warnInk: "#2E2E2E",
   warnAmberBg: "#FFE8A3",  // pending-review banner
   warnAmberInk: "#3F2A00",
-  /** Hub accent. Backgrounds only (hero card, stat tiles, status dot, selected shortcut), with ink on top. Never text, and never a thin icon on white. */
+  /** Hub accent. Backgrounds only: the My Home hero frame, stat tiles, and trade plus buttons. Ink sits on top. Never text. */
   accent: "#DFFF32"
 } as const;
 
