@@ -10,7 +10,7 @@ import { colors } from "../src/ui/tokens";
  * stay only in the high-contrast override.
  */
 export const PALETTE_ALLOWLIST: Record<string, readonly string[]> = {
-  DFFF32: ["src/ui/tokens.ts"],
+  DFFF32: ["src/ui/tokens.ts", "src/features/customer/jobChips.css"],
   FFE8A3: ["src/ui/tokens.ts"],
   "3F2A00": ["src/ui/tokens.ts"],
   FFFFFF: ["src/app/index.css"],

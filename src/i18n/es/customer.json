@@ -135,6 +135,26 @@
     "text": "{n} trabajos seleccionados",
     "status": "draft"
   },
+  "request.trayCount": {
+    "text": "{n, plural, one {# trabajo elegido} other {# trabajos elegidos}}",
+    "status": "draft"
+  },
+  "request.trayMore": {
+    "text": "+{n}",
+    "status": "draft"
+  },
+  "request.continue": {
+    "text": "Continuar",
+    "status": "draft"
+  },
+  "request.fromMyHome": {
+    "text": "De Mi hogar",
+    "status": "draft"
+  },
+  "request.editInMyHome": {
+    "text": "Editar en Mi hogar",
+    "status": "draft"
+  },
   "request.jobSelected": {
     "text": "{job} seleccionado",
     "status": "draft"

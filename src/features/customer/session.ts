@@ -15,9 +15,9 @@ export const ratings: { proId: string; values: Record<string, number> }[] = [];
 export interface Draft {
   categoryId: string; description: string; photos: number; measurements: string;
   zoneId: string; // a zone id, or "outside"
-  /** Copied from the home profile when a request starts. Edits apply to this request only. */
+  /** Copied from the home profile when a request starts. The form shows name and community read-only. */
   homeownerName: string; community: string; street: string; emergency: boolean;
-  /** Copied from the home model. Cleaning size is a catalog m² band. The customer can change each one. */
+  /** Copied from the home model. Cleaning size is a catalog m² band. The form shows these read-only; the quote still uses them. */
   cleaningTier: string; minisplits: number; bathrooms: number; bedrooms: number;
   /** Catalog task ids, in the order the customer selected them. */
   selectedJobIds: string[];

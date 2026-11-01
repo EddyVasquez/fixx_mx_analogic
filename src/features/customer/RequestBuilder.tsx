@@ -11,18 +11,14 @@ import { TradePicker } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
 import { jobsForCategory, type CatalogJob } from "./catalogJobs";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
-import { cleaningAreaTiers } from "./homeModel";
+import { HomeSummaryCard } from "./HomeSummaryCard";
 import { JobChips, type JobOption } from "./JobChips";
+import { JobTray } from "./JobTray";
 import { buildJobSentence } from "./jobSentence";
+import "./jobChips.css";
 import type { Draft } from "./session";
 
 const UNDO_MS = 5000;
-
-function countFrom(raw: string): number {
-  const n = Number(raw);
-  if (!Number.isFinite(n) || n < 0) return 0;
-  return Math.floor(n);
-}
 
 function sentenceFor(categoryId: string, lang: Lang, ids: readonly string[]): string {
   const byId = new Map(jobsForCategory(categoryId, lang).map((job) => [job.id, job]));
@@ -34,7 +30,12 @@ function sentenceFor(categoryId: string, lang: Lang, ids: readonly string[]): st
   return buildJobSentence(ordered.map((job) => ({ label: job.title, keepCase: job.keepCase })), lang);
 }
 
-export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; onChange: (p: Partial<Draft>) => void; onReview: () => void }) {
+export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
+  draft: Draft;
+  onChange: (p: Partial<Draft>) => void;
+  onReview: () => void;
+  onEditHome?: () => void;
+}) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const [errors, setErrors] = useState<string[]>([]);
@@ -77,6 +78,19 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
     onChange({ description: sentenceFor(draft.categoryId, lang, draft.selectedJobIds), descriptionEdited: false });
   };
 
+  const focusDescription = () => {
+    const el = document.getElementById("request-description");
+    if (!(el instanceof HTMLElement)) return;
+    const reduce = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView?.({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    el.focus();
+  };
+
+  const chosenLabels = draft.selectedJobIds.flatMap((id) => {
+    const job = jobs.find((item) => item.id === id);
+    return job ? [job.title] : [];
+  });
+
   const review = () => {
     const e: string[] = [];
     if (!draft.homeownerName.trim()) e.push("request.errorName");
@@ -89,34 +103,9 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={`flex flex-col gap-4 ${chosenLabels.length > 0 ? "request-tray-pad" : ""}`}>
       <h2 className="text-2xl font-bold">{t("request.title")}</h2>
-      <p className="text-sm text-inkSoft">{t("request.profileHint")}</p>
-      <Field label={t("request.homeownerName")}>
-        <input className={inputClass} autoComplete="name" value={draft.homeownerName} onChange={(e) => onChange({ homeownerName: e.target.value })} />
-      </Field>
-      <Field label={t("request.community")}>
-        <input className={inputClass} autoComplete="address-level3" value={draft.community} onChange={(e) => onChange({ community: e.target.value })} />
-      </Field>
-      <fieldset className="flex flex-col gap-3">
-        <legend className="font-semibold">{t("request.quoteFacts")}</legend>
-        <p className="text-sm text-inkSoft">{t("request.quoteFactsHint")}</p>
-        <Field label={t("request.cleaningSize")}>
-          <select className={inputClass} value={draft.cleaningTier} onChange={(e) => onChange({ cleaningTier: e.target.value })}>
-            {draft.cleaningTier === "" && <option value="">{t("request.cleaningSizeUnset")}</option>}
-            {cleaningAreaTiers().map((tier) => <option key={tier} value={tier}>{tier}</option>)}
-          </select>
-        </Field>
-        <Field label={t("request.minisplits")} hint={t("request.minisplitHint")}>
-          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.minisplits} onChange={(e) => onChange({ minisplits: countFrom(e.target.value) })} />
-        </Field>
-        <Field label={t("request.bathrooms")}>
-          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.bathrooms} onChange={(e) => onChange({ bathrooms: countFrom(e.target.value) })} />
-        </Field>
-        <Field label={t("request.bedrooms")}>
-          <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.bedrooms} onChange={(e) => onChange({ bedrooms: countFrom(e.target.value) })} />
-        </Field>
-      </fieldset>
+      <HomeSummaryCard draft={draft} onEditHome={onEditHome} />
       <fieldset className="flex flex-col gap-3">
         <legend className="font-semibold">{t("request.category")}</legend>
         <TradePicker
@@ -130,7 +119,7 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
           }}
         />
       </fieldset>
-      <div className="flex flex-col gap-1">
+      <section key={draft.categoryId} aria-labelledby="request-jobs-heading" className="job-spotlight glass flex flex-col gap-2 rounded-[20px] p-4">
         <p className="flex flex-wrap items-center gap-2">
           <span className="text-inkSoft">{t("request.selectedTrade")}</span>
           <TradeName categoryId={draft.categoryId} lang={lang} />
@@ -140,11 +129,12 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
           <span>{t("request.jobs")}</span>
         </h3>
         <p className="text-sm text-inkSoft">{t("request.jobsHint")}</p>
-        <JobChips key={draft.categoryId} headingId="request-jobs-heading" jobs={options} selectedIds={draft.selectedJobIds} onChange={onJobs} />
-      </div>
+        <JobChips headingId="request-jobs-heading" jobs={options} selectedIds={draft.selectedJobIds} onChange={onJobs} />
+      </section>
       <Field label={t("request.description")} hint={t("request.descriptionHint")}>
         <textarea
-          className={`${inputClass} min-h-[7rem] py-2`}
+          id="request-description"
+          className={`${inputClass} min-h-[7rem] scroll-mb-32 py-2`}
           required
           placeholder={t("request.descriptionHint")}
           value={draft.description}
@@ -208,6 +198,7 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
 
       {errors.length > 0 && <ErrorText>{errors.map((k) => <span key={k} className="block">{t(k)}</span>)}</ErrorText>}
       <Button onClick={review}>{t("btn.reviewRequest")}</Button>
+      <JobTray labels={chosenLabels} onContinue={focusDescription} />
     </div>
   );
 }

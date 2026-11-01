@@ -10,6 +10,10 @@ describe("design token contrast (WCAG AA 4.5:1)", () => {
   for (const [name, fg, bg] of textPairs) {
     it(name, () => expect(contrast(colors[fg], colors[bg])).toBeGreaterThanOrEqual(4.5));
   }
+  it("keeps charcoal readable on the lime continue button and selected chips", () => {
+    expect(contrast("#2E2E2E", "#DFFF32")).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#E0E0E0", "#1E1E1E")).toBeGreaterThanOrEqual(4.5);
+  });
   it("every token is a neutral grey (current direction)", () => {
     for (const [key, hex] of Object.entries(colors)) {
       if (key.startsWith("warnAmber") || key === "accent") continue;

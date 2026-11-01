@@ -4,6 +4,14 @@
 
 html { font-size: 100%; }
 body { @apply bg-mist text-ink font-sans text-base; }
+
+/* Frosted card for the read-only home summary and the job spotlight. */
+.glass {
+  background: theme("colors.paper");
+  background: color-mix(in srgb, theme("colors.paper") 88%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
 ::selection { background: theme("colors.ink"); color: theme("colors.paper"); }
 input, textarea, select { accent-color: theme("colors.ink"); }
 :focus-visible { outline: 3px solid theme("colors.brandDeep"); outline-offset: 2px; }
