@@ -170,27 +170,28 @@ describe("My Home tab and request prefill", () => {
     expect(screen.queryByRole("heading", { name: "Santa Sofía model" })).toBeNull();
   });
 
-  it("prefills name, community and address, and keeps edits on this request only", () => {
+  it("shows name and community as a read-only summary and keeps the street edit on this request", () => {
     render(<CustomerApp />);
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
     fireEvent.click(screen.getByRole("button", { name: "Add Painting" }));
 
-    const name = screen.getByLabelText("Your name") as HTMLInputElement;
-    const community = screen.getByLabelText("Community") as HTMLInputElement;
+    const summary = screen.getByRole("region", { name: "From My Home" });
+    expect(within(summary).getByText(seedProfile.homeownerName)).toBeTruthy();
+    expect(within(summary).getByText(seedProfile.community)).toBeTruthy();
+    expect(within(summary).queryByRole("textbox")).toBeNull();
+    expect(screen.queryByLabelText("Your name")).toBeNull();
+    expect(screen.queryByLabelText("Community")).toBeNull();
+    expect(screen.queryByText("These come from My Home. You can change them for this request.")).toBeNull();
+    expect(screen.queryByText(/You can change them/)).toBeNull();
     const street = screen.getByLabelText("Street and number") as HTMLInputElement;
-    expect(name.value).toBe(seedProfile.homeownerName);
-    expect(community.value).toBe(seedProfile.community);
     expect(street.value).toBe(seedProfile.address);
-    expect(screen.getByText("These come from My Home. You can change them for this request.")).toBeTruthy();
 
-    fireEvent.change(name, { target: { value: "Ana Demo" } });
-    fireEvent.change(community, { target: { value: "Valle Demo" } });
     fireEvent.change(street, { target: { value: "Calle Demo 1" } });
     fireEvent.change(screen.getByLabelText(/What needs to be done/), { target: { value: "Paint the hall" } });
     fireEvent.click(screen.getByRole("button", { name: "Add a photo" }));
     fireEvent.click(screen.getByRole("button", { name: "Review request" }));
-    expect(screen.getByText("Ana Demo")).toBeTruthy();
-    expect(screen.getByText("Valle Demo")).toBeTruthy();
+    expect(screen.getByText(seedProfile.homeownerName)).toBeTruthy();
+    expect(screen.getByText(seedProfile.community)).toBeTruthy();
     expect(screen.getByText("Zone 1 (demo), Calle Demo 1")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("link", { name: "My Home" }));
@@ -202,9 +203,11 @@ describe("My Home tab and request prefill", () => {
 
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
     fireEvent.click(screen.getByRole("button", { name: "Add Painting" }));
-    expect((screen.getByLabelText("Your name") as HTMLInputElement).value).toBe("Ana Demo");
-    expect((screen.getByLabelText("Community") as HTMLInputElement).value).toBe("Valle Demo");
+    expect(within(screen.getByRole("region", { name: "From My Home" })).getByText(seedProfile.homeownerName)).toBeTruthy();
     expect((screen.getByLabelText("Street and number") as HTMLInputElement).value).toBe("Calle Demo 1");
+
+    fireEvent.click(screen.getByRole("button", { name: "Edit in My Home" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Eduardo L. Vasquez" })).toBeTruthy();
   });
 
   it("shows the Santa Sofía model in Korean as a draft", async () => {
@@ -225,31 +228,34 @@ describe("My Home tab and request prefill", () => {
     expect(screen.getByText("정확한 도면은 단계마다 다를 수 있어요.")).toBeTruthy();
   });
 
-  it("prefills quote counts from the model and keeps edits on this request", () => {
+  it("shows quote counts from the model as a read-only summary and the quote still uses them", () => {
     render(<CustomerApp />);
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
     fireEvent.click(screen.getByRole("button", { name: "Add Cleaning" }));
 
-    const size = screen.getByLabelText("Cleaning size") as HTMLSelectElement;
-    const minisplits = screen.getByLabelText(/Minisplits/) as HTMLInputElement;
-    const bathrooms = screen.getByLabelText("Bathrooms") as HTMLInputElement;
-    const bedrooms = screen.getByLabelText("Bedrooms") as HTMLInputElement;
-    expect(size.value).toBe("101–150 m²");
-    expect(minisplits.value).toBe("1");
-    expect(bathrooms.value).toBe("2");
-    expect(bedrooms.value).toBe("3");
-    expect(screen.getByText("Filled in from My Home. You can change any of these for this request.")).toBeTruthy();
-    expect(screen.getByText("The main bedroom has space for one.")).toBeTruthy();
+    const summary = screen.getByRole("region", { name: "From My Home" });
+    expect(within(summary).getByText("101–150 m²")).toBeTruthy();
+    expect(within(summary).getByText("Cleaning size")).toBeTruthy();
+    expect(within(summary).getByText("Minisplits")).toBeTruthy();
+    expect(within(summary).getByText("Bathrooms")).toBeTruthy();
+    expect(within(summary).getByText("Bedrooms")).toBeTruthy();
+    expect(within(summary).getByText("1")).toBeTruthy();
+    expect(within(summary).getByText("2")).toBeTruthy();
+    expect(within(summary).getByText("3")).toBeTruthy();
+    expect(summary.querySelector("input, select")).toBeNull();
+    expect(screen.queryByLabelText("Cleaning size")).toBeNull();
+    expect(screen.queryByText("Filled in from My Home. You can change any of these for this request.")).toBeNull();
+    expect(screen.queryByText(/You can change any of these/)).toBeNull();
+    expect(session.draft.cleaningTier).toBe("101–150 m²");
+    expect(session.draft.minisplits).toBe(1);
+    expect(session.draft.bathrooms).toBe(2);
+    expect(session.draft.bedrooms).toBe(3);
 
-    fireEvent.change(size, { target: { value: "≤60 m²" } });
-    fireEvent.change(minisplits, { target: { value: "2" } });
-    fireEvent.change(bathrooms, { target: { value: "4" } });
-    fireEvent.change(bedrooms, { target: { value: "5" } });
     fireEvent.change(screen.getByLabelText(/What needs to be done/), { target: { value: "Clean the house" } });
     fireEvent.click(screen.getByRole("button", { name: "Add a photo" }));
     fireEvent.click(screen.getByRole("button", { name: "Review request" }));
-    expect(screen.getByText("Cleaning size: ≤60 m²")).toBeTruthy();
-    expect(screen.getByText("2 minisplits, 4 bathrooms, 5 bedrooms")).toBeTruthy();
+    expect(screen.getByText("Cleaning size: 101–150 m²")).toBeTruthy();
+    expect(screen.getByText("1 minisplit, 2 bathrooms, 3 bedrooms")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("link", { name: "My Home" }));
     expect(screen.getByText("Built area: 100.49 m²")).toBeTruthy();
@@ -257,12 +263,5 @@ describe("My Home tab and request prefill", () => {
     expect(screen.getByText("3 bedrooms")).toBeTruthy();
     expect(getHomeProfile().model?.minisplits).toBe(1);
     expect(getHomeProfile().model?.bedrooms).toBe(3);
-
-    fireEvent.click(screen.getByRole("link", { name: "Request" }));
-    fireEvent.click(screen.getByRole("button", { name: "Add Cleaning" }));
-    expect((screen.getByLabelText("Cleaning size") as HTMLSelectElement).value).toBe("≤60 m²");
-    expect((screen.getByLabelText(/Minisplits/) as HTMLInputElement).value).toBe("2");
-    expect((screen.getByLabelText("Bathrooms") as HTMLInputElement).value).toBe("4");
-    expect((screen.getByLabelText("Bedrooms") as HTMLInputElement).value).toBe("5");
   });
 });
