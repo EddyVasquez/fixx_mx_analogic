@@ -173,7 +173,7 @@ describe("My Home tab and request prefill", () => {
   it("prefills name, community and address, and keeps edits on this request only", () => {
     render(<CustomerApp />);
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
-    fireEvent.click(screen.getByRole("button", { name: "Painting" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Painting" }));
 
     const name = screen.getByLabelText("Your name") as HTMLInputElement;
     const community = screen.getByLabelText("Community") as HTMLInputElement;
@@ -201,7 +201,7 @@ describe("My Home tab and request prefill", () => {
     expect(getHomeProfile().model?.id).toBe("santa-sofia");
 
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
-    fireEvent.click(screen.getByRole("button", { name: "Painting" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Painting" }));
     expect((screen.getByLabelText("Your name") as HTMLInputElement).value).toBe("Ana Demo");
     expect((screen.getByLabelText("Community") as HTMLInputElement).value).toBe("Valle Demo");
     expect((screen.getByLabelText("Street and number") as HTMLInputElement).value).toBe("Calle Demo 1");
@@ -228,7 +228,7 @@ describe("My Home tab and request prefill", () => {
   it("prefills quote counts from the model and keeps edits on this request", () => {
     render(<CustomerApp />);
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
-    fireEvent.click(screen.getByRole("button", { name: "Cleaning" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Cleaning" }));
 
     const size = screen.getByLabelText("Cleaning size") as HTMLSelectElement;
     const minisplits = screen.getByLabelText(/Minisplits/) as HTMLInputElement;
@@ -259,7 +259,7 @@ describe("My Home tab and request prefill", () => {
     expect(getHomeProfile().model?.bedrooms).toBe(3);
 
     fireEvent.click(screen.getByRole("link", { name: "Request" }));
-    fireEvent.click(screen.getByRole("button", { name: "Cleaning" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Cleaning" }));
     expect((screen.getByLabelText("Cleaning size") as HTMLSelectElement).value).toBe("≤60 m²");
     expect((screen.getByLabelText(/Minisplits/) as HTMLInputElement).value).toBe("2");
     expect((screen.getByLabelText("Bathrooms") as HTMLInputElement).value).toBe("4");

@@ -96,25 +96,25 @@ describe("My Home hub", () => {
   it("opens a request for a real category, and leaves maintenance as an example", () => {
     render(<CustomerApp />);
     const quick = screen.getByRole("region", { name: "Get help with" });
-    const names = within(quick).getAllByRole("button").map((button) => button.textContent);
-    expect(names).toEqual(["Plumbing", "Electrical", "HVAC", "Cleaning", "Handyman", "Locksmith"]);
-    fireEvent.click(within(quick).getByRole("button", { name: "Electrical" }));
+    const names = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest control", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance repair", "Roofing", "Handyman", "Locksmith", "Cleaning"];
+    expect(within(quick).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
+    names.forEach((name) => expect(within(quick).getByText(name)).toBeTruthy());
+    expect(screen.queryByRole("link", { name: "See all services" })).toBeNull();
+    const plumbing = within(quick).getByRole("button", { name: "Add Plumbing" });
+    expect(plumbing.className).toContain("min-h-touch");
+    expect(plumbing.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+    fireEvent.click(within(quick).getByRole("button", { name: "Add Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
-    expect((screen.getByRole("radio", { name: "Electrical" }) as HTMLInputElement).checked).toBe(true);
+    expect(screen.getByRole("button", { name: "Add Electrical" }).getAttribute("aria-pressed")).toBe("true");
 
     cleanup();
     resetSession(false);
     session.signedIn = true;
     render(<CustomerApp />);
-    fireEvent.click(screen.getByRole("link", { name: "See all services" }));
-    expect(screen.getByRole("heading", { name: "What do you need to do at home?" })).toBeTruthy();
-
-    cleanup();
-    resetSession(false);
-    session.signedIn = true;
-    render(<CustomerApp />);
-    fireEvent.click(screen.getByRole("button", { name: /Clean minisplit filters/ }));
+    const maintenance = screen.getByRole("region", { name: "Maintenance ideas" });
+    expect(within(maintenance).getByText(/Clean minisplit filters/)).toBeTruthy();
+    fireEvent.click(within(maintenance).getByRole("button", { name: "Add HVAC" }));
     expect(session.draft.categoryId).toBe("hvac");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
   });

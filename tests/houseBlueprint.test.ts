@@ -15,6 +15,7 @@ import {
   placeCamera,
   projectedNdc,
   shouldAutoRotate,
+  toNeutralGrey,
   yawPoint,
   type Vec3
 } from "../src/features/customer/blueprint/houseModel";
@@ -54,6 +55,13 @@ describe("Santa Sofía house model", () => {
     expect(live).toMatch(/EdgesGeometry/);
     expect(live).toMatch(/GLTFLoader/);
     expect(live).not.toMatch(/clampPitch|buildSantaSofia/);
+    expect(live).toMatch(/colors\.paper/);
+    expect(live).not.toMatch(/#fff(?:fff)?\b/i);
+    expect(live).not.toMatch(/#374151/i);
+    expect(toNeutralGrey("#374151")).toBe("#404040");
+    expect(toNeutralGrey("#e5e7eb")).toBe("#e7e7e7");
+    expect(toNeutralGrey("#9ca3af")).toBe("#a2a2a2");
+    expect(toNeutralGrey(toNeutralGrey("#374151"))).toBe("#404040");
   });
 
   it("points at one swappable file under the Vite base", () => {

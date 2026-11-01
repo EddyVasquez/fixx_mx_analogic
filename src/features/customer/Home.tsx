@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
 import { focusTargetClass } from "@/ui/Field";
-import { categories } from "./data";
-import { TradeIcon } from "./tradeIcons";
+import { TradePicker } from "./tradePicker";
 
 export function Home({ name, email, onPick, onUrgent }: { name: string; email: string; onPick: (categoryId: string) => void; onUrgent: () => void }) {
   const { t, i18n } = useTranslation();
@@ -17,17 +16,7 @@ export function Home({ name, email, onPick, onUrgent }: { name: string; email: s
       <p className="text-sm font-semibold text-inkSoft">{t("home.greeting", { name })}</p>
       <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("home.title")}</h2>
       <h3 className="font-semibold">{t("home.choose")}</h3>
-      <ul className="grid grid-cols-2 gap-3">
-        {categories.map((c) => (
-          <li key={c.id}>
-            <button type="button" onClick={() => onPick(c.id)}
-              className="flex min-h-[5rem] w-full items-center gap-3 rounded-2xl border border-line bg-paper px-3 text-left font-bold">
-              <TradeIcon categoryId={c.id} size={28} />
-              <span className="min-w-0 break-words">{c.names[lang]}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <TradePicker lang={lang} onPick={onPick} />
       <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
         <p className="text-sm">{t("home.emergencyLine")}</p>
         <Button onClick={onUrgent}>{t("btn.urgentRequest")}</Button>

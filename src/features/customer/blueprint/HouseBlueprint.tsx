@@ -9,6 +9,7 @@ import {
   LineBasicMaterial,
   LineSegments,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   PCFSoftShadowMap,
   ShaderMaterial,
@@ -17,6 +18,7 @@ import {
   type PerspectiveCamera
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { colors } from "@/ui/tokens";
 import {
   AUTO_YAW_PER_SEC,
   CAMERA_FOV_DEG,
@@ -24,10 +26,11 @@ import {
   OUTLINE_THRESHOLD_DEG,
   placeCamera,
   shouldAutoRotate,
+  toNeutralGrey,
   type Vec3
 } from "./houseModel";
 
-const OUTLINE = "#374151";
+const OUTLINE = "#404040";
 
 interface Motion {
   yaw: number;
@@ -40,7 +43,11 @@ function isGlass(mat: Material): boolean {
 }
 
 function tuneMaterial(source: Material): Material {
+  if (source instanceof MeshStandardMaterial && source.name === "Site_Light") {
+    return new MeshBasicMaterial({ name: "Site_Light", color: colors.paper, toneMapped: false });
+  }
   const mat = source.clone();
+  if (mat instanceof MeshStandardMaterial) mat.color.set(toNeutralGrey(mat.color.getHexString()));
   if (mat instanceof MeshStandardMaterial && !isGlass(mat)) {
     mat.roughness = 1;
     mat.metalness = 0;
@@ -75,8 +82,10 @@ function dress(source: Group): Dressed {
     disposables.push(...next);
     obj.material = Array.isArray(obj.material) ? next : next[0]!;
     const glass = next.some(isGlass);
-    obj.castShadow = !glass;
-    obj.receiveShadow = !glass;
+    const site = next.some((mat) => mat.name === "Site_Light");
+    obj.castShadow = !glass && !site;
+    obj.receiveShadow = !glass && !site;
+    if (site) return;
     if (glass) {
       obj.renderOrder = 2;
       return;
@@ -150,10 +159,10 @@ function FadingGrid() {
     depthWrite: false,
     toneMapped: false,
     uniforms: {
-      uColor: { value: new Color("#b0b0b0") },
+      uColor: { value: new Color("#6A6A6A") },
       uCell: { value: 1 },
       uFade: { value: 13 },
-      uStrength: { value: 0.22 }
+      uStrength: { value: 0.55 }
     },
     vertexShader: `
       varying vec3 vWorld;
@@ -295,12 +304,12 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
 
   return (
     <>
-      <color attach="background" args={["#ffffff"]} />
-      <hemisphereLight args={["#ffffff", "#f7f7f7", 2.05]} />
+      <color attach="background" args={[colors.paper]} />
+      <hemisphereLight args={[colors.mist, colors.paper, 2.05]} />
       <KeyLight />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
         <planeGeometry args={[80, 80]} />
-        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+        <meshBasicMaterial color={colors.paper} toneMapped={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
         <planeGeometry args={[40, 40]} />
@@ -358,7 +367,7 @@ export default function HouseBlueprint({ label }: { label: string }) {
       aria-label={label}
       tabIndex={0}
       data-blueprint="live"
-      className="h-full w-full touch-none"
+      className="h-full w-full touch-none bg-paper"
       onKeyDown={onKey}
     >
       <Canvas

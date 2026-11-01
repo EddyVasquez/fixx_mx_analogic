@@ -23,6 +23,17 @@ export const AUTO_YAW_PER_SEC = 0.18;
 /** Crease angle for the grey outline. Box corners stay; nearly flat edges drop out. */
 export const OUTLINE_THRESHOLD_DEG = 20;
 
+/** sRGB hex to a neutral grey with the same perceived lightness. Drops blue casts in the house materials. */
+export function toNeutralGrey(hex: string): string {
+  const n = parseInt(hex.replace("#", ""), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const y = Math.max(0, Math.min(255, Math.round(0.2126 * r + 0.7152 * g + 0.0722 * b)));
+  const channel = y.toString(16).padStart(2, "0");
+  return `#${channel}${channel}${channel}`;
+}
+
 /** Vertical field of view. About a 35 mm lens, kept fixed while the distance changes. */
 export const CAMERA_FOV_DEG = 35;
 

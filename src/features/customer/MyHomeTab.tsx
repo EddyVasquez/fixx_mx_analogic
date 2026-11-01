@@ -22,11 +22,10 @@ import { demoJobViews, demoWarrantyViews, type DemoJobView, type DemoWarrantyVie
 import { formatArea, type HomeModel } from "./homeModel";
 import { useHomeProfile } from "./homeProfile";
 import { JOB_ID, session } from "./session";
+import { TradePicker, TradePlusButton } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
 
 const DONE: JobState[] = ["paymentReleased", "rated"];
-
-const SHORTCUTS = ["plumbing", "electrical", "hvac", "cleaning", "handyman", "locksmith"];
 
 const MAINTENANCE: { key: string; categoryId: string }[] = [
   { key: "myhome.hub.maint.filters", categoryId: "hvac" },
@@ -159,16 +158,11 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
     onNavigate();
   };
 
-  const shortcuts = SHORTCUTS.flatMap((id) => {
-    const category = categories.find((item) => item.id === id);
-    return category ? [{ id, name: category.names[lang] }] : [];
-  });
-
   return (
     <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
       <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
         {model && (
-          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-white md:h-[320px] lg:h-[360px]">
+          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-paper md:h-[320px] lg:h-[360px]">
             {/* The name card overlaps this strip, so the model is framed in the visible part. */}
             <div className="absolute inset-x-0 top-0 bottom-8 md:bottom-12">
               <BlueprintSlot label={t("myhome.hub.blueprint")} />
@@ -192,27 +186,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
 
         <section aria-labelledby="hub-quick" data-module="quick" className={`${card} ${PLACE.quick}`}>
           <h2 id="hub-quick" className="text-[22px] font-bold leading-tight">{t("myhome.hub.quick")}</h2>
-          <ul className="grid grid-cols-3 gap-3">
-            {shortcuts.map((item) => {
-              const selected = session.draft.categoryId === item.id;
-              return (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => openRequest(item.id)}
-                    className={`flex min-h-touch w-full flex-col items-center justify-center gap-1 rounded-[20px] border border-line px-2 py-2 text-center text-ink ${selected ? "bg-accent" : "bg-paper"}`}
-                  >
-                    <TradeIcon categoryId={item.id} />
-                    <span className="break-words leading-tight">{item.name}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          <a href="#request" className="inline-flex min-h-touch items-center font-semibold underline" onClick={(e) => { e.preventDefault(); openRequest(null); }}>
-            {t("myhome.hub.allServices")}
-          </a>
+          <TradePicker lang={lang} selectedId={session.draft.categoryId} onPick={(id) => openRequest(id)} />
         </section>
 
         <WarrantyCard lang={lang} actor={warrantyActor} now={now} onOpen={openWarranty} />
@@ -221,17 +195,19 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
           <h2 id="hub-maintenance" className="text-[22px] font-bold leading-tight">{t("myhome.hub.maintenance")}</h2>
           <p className="break-words">{t("myhome.hub.exampleNote")}</p>
           <ul className="flex flex-col gap-3">
-            {MAINTENANCE.map((item) => (
-              <li key={item.key}>
-                <button type="button" onClick={() => openRequest(item.categoryId)} className="flex min-h-touch w-full items-center gap-2 rounded-2xl border border-line bg-paper px-3 py-2 text-left">
+            {MAINTENANCE.map((item) => {
+              const trade = categories.find((category) => category.id === item.categoryId)?.names[lang] ?? item.categoryId;
+              return (
+                <li key={item.key} className="flex min-w-0 items-center gap-2 rounded-2xl border border-line bg-paper py-1 pl-3 pr-1">
                   <TradeIcon categoryId={item.categoryId} />
-                  <span className="flex min-w-0 flex-col items-start gap-1">
+                  <span className="flex min-w-0 flex-1 flex-col items-start gap-1">
                     <ExampleTag />
                     <span className="break-words">{t(item.key)}</span>
                   </span>
-                </button>
-              </li>
-            ))}
+                  <TradePlusButton label={t("trade.add", { trade })} onClick={() => openRequest(item.categoryId)} />
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -319,7 +295,7 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
             </p>
           </div>
           <div className="flex items-start gap-2">
-            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-accent" />
+            <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-ink" />
             {active.state === "pendingReview" ? (
               <p aria-live="polite" className="min-w-0 break-words rounded-full bg-warnAmberBg px-3 py-1 font-semibold text-warnAmberInk">{t("review.pending.title")}</p>
             ) : (

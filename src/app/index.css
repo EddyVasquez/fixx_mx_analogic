@@ -4,6 +4,8 @@
 
 html { font-size: 100%; }
 body { @apply bg-mist text-ink font-sans text-base; }
+::selection { background: theme("colors.ink"); color: theme("colors.paper"); }
+input, textarea, select { accent-color: theme("colors.ink"); }
 :focus-visible { outline: 3px solid theme("colors.brandDeep"); outline-offset: 2px; }
 .customer-tab { transition: opacity 120ms ease; }
 .customer-tab:active { opacity: 0.7; }
@@ -17,3 +19,6 @@ body { @apply bg-mist text-ink font-sans text-base; }
 html[data-contrast="high"] body { background: #FFFFFF; color: #000000; }
 html[data-contrast="high"] * { border-color: #000000 !important; }
 html[data-contrast="high"] .text-inkSoft { color: #000000; }
+html[data-contrast="high"] input,
+html[data-contrast="high"] textarea,
+html[data-contrast="high"] select { accent-color: #000000; }
