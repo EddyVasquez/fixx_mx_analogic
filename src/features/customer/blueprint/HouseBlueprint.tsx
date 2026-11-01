@@ -19,6 +19,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { colors } from "@/ui/tokens";
+import { useTheme, type Theme } from "@/ui/theme";
 import {
   AUTO_YAW_PER_SEC,
   CAMERA_FOV_DEG,
@@ -32,6 +33,22 @@ import {
 
 const OUTLINE = "#404040";
 
+interface SceneTone {
+  backdrop: string;
+  sky: string;
+  ground: string;
+  outline: string;
+  grid: string;
+  key: number;
+}
+
+function sceneTone(theme: Theme): SceneTone {
+  if (theme === "dark") {
+    return { backdrop: "#1E1E1E", sky: "#B0B0B0", ground: "#121212", outline: "#C8C8C8", grid: "#8A8A8A", key: 1.65 };
+  }
+  return { backdrop: colors.paper, sky: colors.mist, ground: colors.paper, outline: OUTLINE, grid: "#6A6A6A", key: 1.25 };
+}
+
 interface Motion {
   yaw: number;
   dragging: boolean;
@@ -42,9 +59,9 @@ function isGlass(mat: Material): boolean {
   return mat.name === "Glass";
 }
 
-function tuneMaterial(source: Material): Material {
+function tuneMaterial(source: Material, siteColor: string): Material {
   if (source instanceof MeshStandardMaterial && source.name === "Site_Light") {
-    return new MeshBasicMaterial({ name: "Site_Light", color: colors.paper, toneMapped: false });
+    return new MeshBasicMaterial({ name: "Site_Light", color: siteColor, toneMapped: false });
   }
   const mat = source.clone();
   if (mat instanceof MeshStandardMaterial) mat.color.set(toNeutralGrey(mat.color.getHexString()));
@@ -71,14 +88,14 @@ interface Dressed {
   dispose: () => void;
 }
 
-function dress(source: Group): Dressed {
+function dress(source: Group, tone: SceneTone): Dressed {
   const scene = source.clone(true);
-  const outline = new LineBasicMaterial({ color: OUTLINE, toneMapped: false });
+  const outline = new LineBasicMaterial({ color: tone.outline, toneMapped: false });
   const disposables: { dispose: () => void }[] = [outline];
   scene.traverse((obj) => {
     if (!(obj instanceof Mesh)) return;
     const list = Array.isArray(obj.material) ? obj.material : [obj.material];
-    const next = list.map((mat) => tuneMaterial(mat));
+    const next = list.map((mat) => tuneMaterial(mat, tone.backdrop));
     disposables.push(...next);
     obj.material = Array.isArray(obj.material) ? next : next[0]!;
     const glass = next.some(isGlass);
@@ -126,7 +143,7 @@ function FitCamera({ bounds }: { bounds: { min: Vec3; max: Vec3 } }) {
   return null;
 }
 
-function KeyLight() {
+function KeyLight({ intensity }: { intensity: number }) {
   const light = useRef<DirectionalLight>(null);
   useLayoutEffect(() => {
     const cam = light.current?.shadow.camera;
@@ -143,7 +160,7 @@ function KeyLight() {
     <directionalLight
       ref={light}
       position={[-7, 12, 9]}
-      intensity={1.25}
+      intensity={intensity}
       castShadow
       shadow-mapSize-width={2048}
       shadow-mapSize-height={2048}
@@ -153,13 +170,13 @@ function KeyLight() {
   );
 }
 
-function FadingGrid() {
+function FadingGrid({ color }: { color: string }) {
   const material = useMemo(() => new ShaderMaterial({
     transparent: true,
     depthWrite: false,
     toneMapped: false,
     uniforms: {
-      uColor: { value: new Color("#6A6A6A") },
+      uColor: { value: new Color(color) },
       uCell: { value: 1 },
       uFade: { value: 13 },
       uStrength: { value: 0.55 }
@@ -190,7 +207,7 @@ function FadingGrid() {
         gl_FragColor = vec4(uColor, alpha);
       }
     `
-  }), []);
+  }), [color]);
   useEffect(() => () => { material.dispose(); }, [material]);
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} material={material} renderOrder={1}>
@@ -227,9 +244,9 @@ function ContactShadow() {
   );
 }
 
-function HouseModel() {
+function HouseModel({ theme }: { theme: Theme }) {
   const gltf = useLoader(GLTFLoader, HOUSE_MODEL_URL);
-  const dressed = useMemo(() => dress(gltf.scene), [gltf]);
+  const dressed = useMemo(() => dress(gltf.scene, sceneTone(theme)), [gltf, theme]);
   useEffect(() => () => { dressed.dispose(); }, [dressed]);
   return (
     <group>
@@ -240,7 +257,7 @@ function HouseModel() {
   );
 }
 
-function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; reduced: boolean; draw: MutableRefObject<() => void> }) {
+function Scene({ motion, reduced, draw, theme }: { motion: MutableRefObject<Motion>; reduced: boolean; draw: MutableRefObject<() => void>; theme: Theme }) {
   const group = useRef<Group>(null);
   const invalidate = useThree((s) => s.invalidate);
   const gl = useThree((s) => s.gl);
@@ -302,22 +319,23 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
     if (group.current) group.current.rotation.y = current.yaw;
   });
 
+  const tone = sceneTone(theme);
   return (
     <>
-      <color attach="background" args={[colors.paper]} />
-      <hemisphereLight args={[colors.mist, colors.paper, 2.05]} />
-      <KeyLight />
+      <color attach="background" args={[tone.backdrop]} />
+      <hemisphereLight args={[tone.sky, tone.ground, theme === "dark" ? 1.7 : 2.05]} />
+      <KeyLight intensity={tone.key} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
         <planeGeometry args={[80, 80]} />
-        <meshBasicMaterial color={colors.paper} toneMapped={false} />
+        <meshBasicMaterial color={tone.backdrop} toneMapped={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
         <planeGeometry args={[40, 40]} />
         <shadowMaterial opacity={0.28} transparent />
       </mesh>
-      <FadingGrid />
+      <FadingGrid color={tone.grid} />
       <group ref={group}>
-        <HouseModel />
+        <HouseModel theme={theme} />
       </group>
     </>
   );
@@ -326,6 +344,7 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
 useLoader.preload(GLTFLoader, HOUSE_MODEL_URL);
 
 export default function HouseBlueprint({ label }: { label: string }) {
+  const theme = useTheme();
   const motion = useRef<Motion>({ yaw: 0, dragging: false, idle: true });
   const draw = useRef<() => void>(() => {});
   const [reduced, setReduced] = useState(() => {
@@ -378,7 +397,7 @@ export default function HouseBlueprint({ label }: { label: string }) {
         camera={{ fov: CAMERA_FOV_DEG, position: [-8, 5, 14], near: 0.05, far: 200 }}
         gl={{ antialias: true, powerPreference: "low-power", alpha: false }}
       >
-        <Scene motion={motion} reduced={reduced || hidden} draw={draw} />
+        <Scene motion={motion} reduced={reduced || hidden} draw={draw} theme={theme} />
       </Canvas>
     </div>
   );

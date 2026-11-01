@@ -42,7 +42,7 @@ type Pre = "home" | "request" | "review";
 const BRANCH: JobState[] = ["cancelled", "professionalCancelled", "noShow", "rescheduleUnanswered", "bookingExpired", "refunded"];
 
 /** Customer flow. Before a request exists the screens are local steps; after that the job's state decides the screen. */
-function RequestFlow() {
+function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
   const { t, i18n } = useTranslation();
   const rt = useRuntime();
   const lang = i18n.language as Lang;
@@ -65,7 +65,7 @@ function RequestFlow() {
   if (!session.signedIn) return <SignIn onDone={(email) => update({ signedIn: true, email })} />;
 
   if (!job || !state || !ctx) {
-    if (pre === "request") return <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} />;
+    if (pre === "request") return <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} onEditHome={onEditHome} />;
     if (pre === "review") {
       return <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
         rt.languages.customer = lang;
@@ -202,7 +202,7 @@ export function CustomerApp() {
       {/* Announces job status changes to screen readers */}
       <p role="status" className="sr-only">{jobState ? `${t("status.label")}: ${stateLabel(t, jobState)}` : ""}</p>
       <div className="flex flex-1 flex-col gap-4">
-        {session.tab === "request" && <RequestFlow />}
+        {session.tab === "request" && <RequestFlow onEditHome={() => { session.tab = "home"; force(); }} />}
         {session.tab === "home" && <MyHomeTab lang={lang} onNavigate={force} />}
         {session.tab === "warranty" && <WarrantyTab lang={lang} />}
         {session.tab === "help" && <SupportChatView lang={lang} />}

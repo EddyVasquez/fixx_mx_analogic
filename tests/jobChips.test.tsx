@@ -1,6 +1,8 @@
 /**
  * @vitest-environment jsdom
  */
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useState } from "react";
 import { act, cleanup, createEvent, fireEvent, render, screen, within } from "@testing-library/react";
@@ -56,7 +58,7 @@ describe("job chip selection", () => {
     fireEvent.click(second!);
     expect(second?.getAttribute("aria-pressed")).toBe("true");
     expect(description().value).toBe("Toilet repair and single-lever faucet install (faucet excluded).");
-    expect(screen.getByText(/2 jobs selected/)).toBeTruthy();
+    expect(screen.getAllByText(/2 jobs selected/).length).toBeGreaterThan(0);
 
     fireEvent.click(first!);
     expect(first?.getAttribute("aria-pressed")).toBe("false");
@@ -221,5 +223,36 @@ describe("job chip selection", () => {
     expect(screen.getAllByText("Pending review")).toHaveLength(pest.length);
     expect(document.body.textContent).not.toMatch(/commission|comisi[oó]n|수수료|\bmargin\b/i);
     expect(screen.getByRole("group", { name: "Jobs for this trade" }).querySelector('input[type="checkbox"]')).toBeNull();
+  });
+
+  it("spotlights the jobs in lime and raises a tray that continues to the description", () => {
+    const css = readFileSync(join(process.cwd(), "src/features/customer/jobChips.css"), "utf8");
+    expect(css).toMatch(/#DFFF32/);
+    expect(css).toMatch(/prefers-reduced-motion/);
+    expect(css).toMatch(/@keyframes job-rise/);
+    render(<Form />);
+    expect(document.querySelector(".job-spotlight")).toBeTruthy();
+    expect(screen.queryByTestId("job-tray")).toBeNull();
+
+    const [first, second, third] = chips();
+    fireEvent.click(first!);
+    const tray = screen.getByTestId("job-tray");
+    expect(tray.getAttribute("aria-live")).toBe("polite");
+    expect(tray.textContent).toContain("1 job selected");
+    expect(tray.textContent).toContain("Toilet repair");
+    expect(first?.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
+
+    fireEvent.click(second!);
+    fireEvent.click(third!);
+    expect(screen.getByTestId("job-tray").textContent).toContain("+1");
+    expect(document.querySelector(".request-tray-pad")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    expect(document.activeElement).toBe(description());
+
+    fireEvent.click(first!);
+    fireEvent.click(second!);
+    fireEvent.click(third!);
+    expect(screen.queryByTestId("job-tray")).toBeNull();
   });
 });

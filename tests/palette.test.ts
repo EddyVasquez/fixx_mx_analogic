@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { inflateSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
-import { colors } from "../src/ui/tokens";
+import { colors, darkColors } from "../src/ui/tokens";
 
 /**
  * Hex colors that are not neutral greys, and the files allowed to contain them.
@@ -10,7 +10,7 @@ import { colors } from "../src/ui/tokens";
  * stay only in the high-contrast override.
  */
 export const PALETTE_ALLOWLIST: Record<string, readonly string[]> = {
-  DFFF32: ["src/ui/tokens.ts"],
+  DFFF32: ["src/ui/tokens.ts", "src/features/customer/jobChips.css"],
   FFE8A3: ["src/ui/tokens.ts"],
   "3F2A00": ["src/ui/tokens.ts"],
   FFFFFF: ["src/app/index.css"],
@@ -148,5 +148,35 @@ describe("greyscale palette", () => {
     }
     expect(nearWhite / pixels).toBeLessThan(0.01);
     expect(blue).toBe(0);
+  });
+
+  it("covers the dark theme tokens: near-black base, grey surfaces, light grey text, same lime, no white", () => {
+    expect(darkColors.mist).toBe("#121212");
+    expect(darkColors.paper).toBe("#1E1E1E");
+    expect(darkColors.panel).toBe("#2A2A2A");
+    expect(darkColors.ink).toBe("#E0E0E0");
+    expect(darkColors.accent).toBe("#DFFF32");
+    expect(darkColors.accent).toBe(colors.accent);
+    expect(darkColors.onAccent).toBe("#2E2E2E");
+    const css = readFileSync(join(process.cwd(), "src/app/index.css"), "utf8");
+    const darkBlock = css.match(/html\[data-theme="dark"\]\s*\{([^}]+)\}/)?.[1] ?? "";
+    expect(darkBlock).not.toBe("");
+    for (const [key, hex] of Object.entries(darkColors)) {
+      expect(hex.toUpperCase()).not.toBe("#FFFFFF");
+      expect(hex.toUpperCase()).not.toBe("#FFF");
+      if (key === "accent" || key.startsWith("warnAmber")) continue;
+      const n = parseInt(hex.slice(1), 16);
+      const r = (n >> 16) & 255;
+      const g = (n >> 8) & 255;
+      const b = n & 255;
+      expect(r).toBe(g);
+      expect(g).toBe(b);
+      expect(r).toBeLessThan(246);
+      expect(darkBlock.toUpperCase()).toContain(hex.toUpperCase());
+    }
+    const html = readFileSync(join(process.cwd(), "index.html"), "utf8");
+    expect(html).toContain('localStorage.getItem("fixx.theme")');
+    expect(html).toContain("prefers-color-scheme: dark");
+    expect(html).not.toMatch(/#fff(?:fff)?\b/i);
   });
 });

@@ -1,40 +1,42 @@
-/* Job chips. Hover lift is pointer-only. A selected chip stays pushed in. */
+/* Job chips. Hover lift is pointer-only. Selected chips are solid lime with charcoal text. */
 .job-chip {
-  background: theme("colors.paper");
-  border: 1px solid theme("colors.line");
-  color: theme("colors.ink");
+  background: color-mix(in srgb, var(--color-paper) 78%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
   font-weight: 500;
   line-height: 1.3;
   cursor: pointer;
   user-select: none;
-  transition: transform 120ms ease;
+  transition: transform 120ms ease, background 120ms ease;
 }
 
 .job-chip:active:not([aria-pressed="true"]):not([aria-disabled="true"]) {
-  background: theme("colors.mist");
-  border-color: theme("colors.inkSoft");
+  background: var(--color-mist);
+  border-color: var(--color-inkSoft);
   transform: translateY(0);
   box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
 }
 
 .job-chip[aria-pressed="true"] {
-  background: theme("colors.brand");
-  border-color: theme("colors.brand");
-  color: theme("colors.paper");
+  background: #DFFF32;
+  border-color: #DFFF32;
+  color: #2E2E2E;
   font-weight: 600;
   transform: none;
-  box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.45);
+  box-shadow: none;
 }
 
 .job-chip:focus-visible {
-  outline: 2px solid theme("colors.brandDeep");
+  outline: 2px solid var(--color-brandDeep);
   outline-offset: 2px;
 }
 
 .job-chip[aria-disabled="true"] {
-  background: theme("colors.mist");
-  border: 1px solid theme("colors.line");
-  color: theme("colors.inkSoft");
+  background: var(--color-mist);
+  border: 1px solid var(--color-line);
+  color: var(--color-inkSoft);
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -43,25 +45,86 @@
 
 @media (hover: hover) {
   .job-chip:hover:not([aria-pressed="true"]):not([aria-disabled="true"]) {
-    border-color: theme("colors.inkSoft");
+    border-color: var(--color-inkSoft);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 
   .job-chip[aria-pressed="true"]:hover {
     transform: none;
-    background: theme("colors.brand");
-    color: theme("colors.paper");
-    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.45);
+    background: #DFFF32;
+    color: #2E2E2E;
+    box-shadow: none;
   }
+}
+
+/* Jobs for this trade. Slides up once a trade is chosen. Lime stays a border, not text. */
+.job-spotlight {
+  border: 1px solid #DFFF32;
+  box-shadow: 0 0 0 1px #DFFF3240, 0 12px 32px #DFFF3226;
+  animation: job-rise 380ms ease;
+}
+
+/* Pinned to the viewport bottom, inside the safe area, while jobs are selected. */
+.job-tray-slot {
+  position: fixed;
+  z-index: 40;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+
+.job-tray {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(40rem, 100%);
+  padding: 0.75rem 0.75rem 0.75rem 1rem;
+  border-radius: 1.25rem;
+  background: rgb(30 30 30 / 0.92);
+  color: #E0E0E0;
+  border: 1px solid #2A2A2A;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: job-rise 320ms ease;
+}
+
+.job-continue {
+  background: #DFFF32;
+  color: #2E2E2E;
+  border: 0;
+  cursor: pointer;
+}
+
+.job-continue:focus-visible {
+  outline: 3px solid #E0E0E0;
+  outline-offset: 2px;
+}
+
+.request-tray-pad {
+  padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@keyframes job-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .job-chip,
   .job-chip:hover,
   .job-chip:active,
-  .job-chip[aria-pressed="true"]:hover {
+  .job-chip[aria-pressed="true"]:hover,
+  .job-spotlight,
+  .job-tray {
     transform: none;
     transition: none;
+    animation: none;
   }
 }

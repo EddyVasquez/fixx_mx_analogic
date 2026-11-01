@@ -80,7 +80,7 @@ describe("My Home hub", () => {
     expect(values).toEqual(["2", "100.49 m²", "3", "2", "1", "1–2"]);
     hero.querySelectorAll("dl svg").forEach((icon) => {
       expect(icon.getAttribute("aria-hidden")).toBe("true");
-      expect(icon.getAttribute("fill")).toBe(colors.ink);
+      expect(icon.getAttribute("fill")).toBe(colors.onAccent);
     });
     expect(within(hero).queryByText("Example")).toBeNull();
     expect(screen.getAllByText("Example")).toHaveLength(4);

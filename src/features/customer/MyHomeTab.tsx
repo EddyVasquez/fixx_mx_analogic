@@ -15,6 +15,7 @@ import { stateLabel } from "@/features/admin/sections";
 import { useMoney } from "@/features/shared/Money";
 import { Button } from "@/ui/Button";
 import { colors } from "@/ui/tokens";
+import { ThemeToggle } from "@/ui/ThemeToggle";
 import { BlueprintSlot } from "./blueprint/BlueprintSlot";
 import { categories, professionals } from "./data";
 import { setDemoMode, useDemoMode } from "./demoMode";
@@ -52,7 +53,7 @@ const PLACE = {
   history: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-6 lg:col-span-4 lg:col-start-9 lg:row-start-4"
 } as const;
 
-const card = "flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6";
+const card = "glass flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6";
 
 interface JobView {
   total: number;
@@ -160,7 +161,10 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
 
   return (
     <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
-      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
+      <section aria-labelledby="home-hero-name" data-module="hero" className={`relative ${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
+        <div className="absolute right-3 top-3 z-20 md:right-4 md:top-4">
+          <ThemeToggle />
+        </div>
         {model && (
           <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-paper md:h-[320px] lg:h-[360px]">
             {/* The name card overlaps this strip, so the model is framed in the visible part. */}
@@ -169,7 +173,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
             </div>
           </div>
         )}
-        <div className={`relative z-10 flex flex-col gap-4 rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "-mt-8 md:-mt-12" : ""}`}>
+        <div className={`glass-sheet relative z-10 flex flex-col gap-4 rounded-[20px] border border-line p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "-mt-8 md:-mt-12" : ""}`}>
           {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
           <div className="flex flex-col gap-1">
             <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[32px]">{profile.homeownerName}</h1>
@@ -250,9 +254,9 @@ function StatTiles({ model }: { model: HomeModel }) {
   return (
     <dl className="grid grid-cols-3 gap-3 lg:grid-cols-6">
       {tiles.map((tile) => (
-        <div key={tile.id} className="min-w-0 rounded-2xl bg-accent px-2 py-3 text-ink">
+        <div key={tile.id} className="min-w-0 rounded-2xl bg-accent px-2 py-3 text-onAccent">
           <dt className="flex items-center gap-2 break-words leading-tight">
-            <tile.Icon aria-hidden="true" size={22} weight="bold" color={colors.ink} />
+            <tile.Icon aria-hidden="true" size={22} weight="bold" color={colors.onAccent} />
             <span>{tile.label}</span>
           </dt>
           <dd className="mt-1 text-[22px] font-semibold leading-tight">{tile.value}</dd>

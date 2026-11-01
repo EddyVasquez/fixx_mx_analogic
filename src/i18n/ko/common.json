@@ -34,6 +34,16 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "theme.useDark": {
+    "text": "어두운 테마로 바꾸기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "theme.useLight": {
+    "text": "밝은 테마로 바꾸기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "btn.start": {
     "text": "요청 시작하기",
     "status": "draft",

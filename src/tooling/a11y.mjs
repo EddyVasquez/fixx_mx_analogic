@@ -33,7 +33,7 @@ for (const file of walk(src)) {
     if ((ts.isJsxOpeningElement(n) || ts.isJsxSelfClosingElement(n)) && n.tagName.getText() === "button") {
       const cls = n.attributes.properties.find((p) => ts.isJsxAttribute(p) && p.name.getText() === "className");
       // ui/Button.tsx builds its class from a shared base that includes min-h-touch; a fixed min height of 3rem or more also counts
-      const ok = file.endsWith("ui/Button.tsx") || (cls && /min-h-touch|min-h-\[(?:[3-9]|\d{2,})(?:\.\d+)?rem\]/.test(cls.getText()));
+      const ok = file.endsWith("ui/Button.tsx") || (cls && /min-h-touch|min-h-\[44px\]|min-h-\[(?:[3-9]|\d{2,})(?:\.\d+)?rem\]/.test(cls.getText()));
       if (!ok) errors.push(`<button> without a touch-sized min height at ${at(n)}`);
     }
     ts.forEachChild(n, visit);

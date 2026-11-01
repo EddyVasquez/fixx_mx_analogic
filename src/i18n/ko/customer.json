@@ -169,6 +169,31 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "request.trayCount": {
+    "text": "{n, plural, other {#개 선택됨}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.trayMore": {
+    "text": "+{n}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.continue": {
+    "text": "계속",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.fromMyHome": {
+    "text": "내 집에서",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "request.editInMyHome": {
+    "text": "내 집에서 수정",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.jobSelected": {
     "text": "{job} 선택됨",
     "status": "draft",
