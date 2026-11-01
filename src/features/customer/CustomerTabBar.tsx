@@ -80,8 +80,7 @@ export function CustomerTabBar({ active, onSelect }: { active: CustomerTab; onSe
                 aria-hidden="true"
                 size={24}
                 weight={selected ? "fill" : "regular"}
-                color="currentColor"
-                className={selected ? "text-brand" : "text-inkSoft"}
+                color={selected ? colors.brand : TAB_INACTIVE}
                 data-weight={selected ? "fill" : "regular"}
                 data-icon={tab}
               />

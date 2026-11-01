@@ -21,7 +21,7 @@ export function TradePlusButton({ label, pressed, onClick }: {
       onClick={onClick}
     >
       <span className="trade-plus-face" aria-hidden="true">
-        <Plus aria-hidden="true" size={20} weight="bold" color={colors.onAccent} />
+        <Plus aria-hidden="true" size={20} weight="bold" color={colors.ink} />
       </span>
     </button>
   );

@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "@/i18n";
 import "./index.css";
-import { initTheme } from "@/ui/theme";
 import App from "./App";
-
-initTheme();
 import { RoleProvider } from "@/demo/roles";
 import { ensureSeeded } from "@/mocks/db/seed";
 import { Loading } from "@/ui/Loading";

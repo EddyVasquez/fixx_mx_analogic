@@ -27,14 +27,6 @@
     "text": "Idioma",
     "status": "draft"
   },
-  "theme.useDark": {
-    "text": "Cambiar a tema oscuro",
-    "status": "draft"
-  },
-  "theme.useLight": {
-    "text": "Cambiar a tema claro",
-    "status": "draft"
-  },
   "btn.start": {
     "text": "Crear una solicitud",
     "status": "draft"

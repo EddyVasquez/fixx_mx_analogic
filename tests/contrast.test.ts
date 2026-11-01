@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { colors, darkColors, darkTextPairs, textPairs } from "../src/ui/tokens";
+import { colors, textPairs } from "../src/ui/tokens";
 import { contrast } from "../src/core/rules/contrast";
 
 describe("design token contrast (WCAG AA 4.5:1)", () => {
@@ -10,15 +10,9 @@ describe("design token contrast (WCAG AA 4.5:1)", () => {
   for (const [name, fg, bg] of textPairs) {
     it(name, () => expect(contrast(colors[fg], colors[bg])).toBeGreaterThanOrEqual(4.5));
   }
-  describe("dark theme", () => {
-    for (const [name, fg, bg] of darkTextPairs) {
-      it(name, () => expect(contrast(darkColors[fg], darkColors[bg])).toBeGreaterThanOrEqual(4.5));
-    }
-    it("keeps charcoal readable on the lime continue button and selected chips", () => {
-      expect(contrast("#2E2E2E", "#DFFF32")).toBeGreaterThanOrEqual(4.5);
-      expect(contrast("#E0E0E0", "#1E1E1E")).toBeGreaterThanOrEqual(4.5);
-      expect(contrast("#E0E0E0", "#2E2E2E")).toBeGreaterThanOrEqual(4.5);
-    });
+  it("keeps charcoal readable on the lime continue button and selected chips", () => {
+    expect(contrast("#2E2E2E", "#DFFF32")).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#E0E0E0", "#1E1E1E")).toBeGreaterThanOrEqual(4.5);
   });
   it("every token is a neutral grey (current direction)", () => {
     for (const [key, hex] of Object.entries(colors)) {

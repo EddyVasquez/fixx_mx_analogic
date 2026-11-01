@@ -5,17 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#2E2E2E" />
     <title>FIXX (Demo)</title>
-    <script>
-      (function () {
-        try {
-          var saved = localStorage.getItem("fixx.theme");
-          var dark = saved === "dark" || (saved !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-          var root = document.documentElement;
-          root.setAttribute("data-theme", dark ? "dark" : "light");
-          root.style.backgroundColor = dark ? "#121212" : "#ECECEC";
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>

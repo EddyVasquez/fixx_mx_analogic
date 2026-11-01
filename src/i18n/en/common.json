@@ -27,14 +27,6 @@
     "text": "Language",
     "status": "draft"
   },
-  "theme.useDark": {
-    "text": "Switch to dark theme",
-    "status": "draft"
-  },
-  "theme.useLight": {
-    "text": "Switch to light theme",
-    "status": "draft"
-  },
   "btn.start": {
     "text": "Start a request",
     "status": "draft"
