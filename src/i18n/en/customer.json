@@ -978,5 +978,9 @@
   "btn.retryUploads": {
     "text": "Retry uploads",
     "status": "draft"
+  },
+  "request.selectedTrade": {
+    "text": "Selected trade",
+    "status": "draft"
   }
 }

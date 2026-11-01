@@ -11,7 +11,7 @@ import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { HlAmount, HlDate, HlOk, Label } from "@/ui/Highlights";
 import { useMoney } from "@/features/shared/Money";
 import { PaymentSchedule } from "./PaymentSchedule";
-import { categories } from "./data";
+import { TradeName } from "./tradeIcons";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import type { Draft } from "./session";
 import { PendingReviewBanner } from "./PendingReviewBanner";
@@ -44,7 +44,6 @@ export function QuoteView(props: {
   const when = (d: Date) => formatDateTime(d, localeFor[lang]);
   const { deposit, balance } = splitDepositBalance(ctx.total);
   const pct = config.deposit.sharePct;
-  const category = categories.find((c) => c.id === draft.categoryId);
   const warranty = config.warrantyDaysByCategory[draft.categoryId] ?? 0;
   const slotList = draft.emergency ? config.emergencySlotHours : config.scheduleSlotHours;
   const hoursSel = slotList.includes(slotHours) ? slotHours : slotList[0]!;
@@ -60,7 +59,7 @@ export function QuoteView(props: {
       {awaitingApproval && <PendingReviewBanner />}
       <h2 className="text-2xl font-bold">{t("quote.title")}</h2>
       <section aria-label={t("quote.title")} className="rounded-3xl bg-panel px-4 py-1 text-ink">
-        <Row left={<Label>{t("quote.label.job")}</Label>} right={category?.names[lang]} />
+        <Row left={<Label>{t("quote.label.job")}</Label>} right={<TradeName categoryId={draft.categoryId} lang={lang} />} />
         <div className="border-b border-inkSoft/40 py-3"><HomeQuoteFacts draft={draft} /></div>
         <Row left={<Label>{t("quote.label.professional")}</Label>} right={professionalName} />
         <Note>{t("quote.identityNote")}</Note>

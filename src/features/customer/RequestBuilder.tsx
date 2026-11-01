@@ -7,6 +7,7 @@ import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { clock } from "@/core/clock/clock";
 import { isAgentHours } from "@/core/rules";
 import { categories, zoneNames, zones } from "./data";
+import { TradeIcon, TradeName } from "./tradeIcons";
 import { jobsForCategory, type CatalogJob } from "./catalogJobs";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import { cleaningAreaTiers } from "./homeModel";
@@ -115,18 +116,40 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
           <input className={inputClass} inputMode="numeric" min={0} step={1} type="number" value={draft.bedrooms} onChange={(e) => onChange({ bedrooms: countFrom(e.target.value) })} />
         </Field>
       </fieldset>
-      <Field label={t("request.category")}>
-        <select className={inputClass} value={draft.categoryId} onChange={(e) => {
-          const categoryId = e.target.value;
-          setUndo(null);
-          if (draft.descriptionEdited) onChange({ categoryId, selectedJobIds: [] });
-          else onChange({ categoryId, selectedJobIds: [], description: "" });
-        }}>
-          {categories.map((c) => <option key={c.id} value={c.id}>{c.names[lang]}</option>)}
-        </select>
-      </Field>
+      <fieldset className="flex flex-col gap-3">
+        <legend className="font-semibold">{t("request.category")}</legend>
+        <div className="grid grid-cols-2 gap-2">
+          {categories.map((c) => {
+            const selected = draft.categoryId === c.id;
+            return (
+              <label key={c.id} className={`flex min-h-touch items-center gap-2 rounded-2xl border px-3 py-2 ${selected ? "border-2 border-ink bg-mist" : "border-line bg-paper"}`}>
+                <input
+                  type="radio"
+                  name="request-trade"
+                  value={c.id}
+                  checked={selected}
+                  onChange={() => {
+                    setUndo(null);
+                    if (draft.descriptionEdited) onChange({ categoryId: c.id, selectedJobIds: [] });
+                    else onChange({ categoryId: c.id, selectedJobIds: [], description: "" });
+                  }}
+                />
+                <TradeIcon categoryId={c.id} />
+                <span className="min-w-0 break-words">{c.names[lang]}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
       <div className="flex flex-col gap-1">
-        <h3 id="request-jobs-heading" className="font-semibold">{t("request.jobs")}</h3>
+        <p className="flex flex-wrap items-center gap-2">
+          <span className="text-inkSoft">{t("request.selectedTrade")}</span>
+          <TradeName categoryId={draft.categoryId} lang={lang} />
+        </p>
+        <h3 id="request-jobs-heading" className="flex items-center gap-2 font-semibold">
+          <TradeIcon categoryId={draft.categoryId} />
+          <span>{t("request.jobs")}</span>
+        </h3>
         <p className="text-sm text-inkSoft">{t("request.jobsHint")}</p>
         <JobChips key={draft.categoryId} headingId="request-jobs-heading" jobs={options} selectedIds={draft.selectedJobIds} onChange={onJobs} />
       </div>
@@ -203,7 +226,6 @@ export function RequestBuilder({ draft, onChange, onReview }: { draft: Draft; on
 export function RequestReview({ draft, onEdit, onSubmit }: { draft: Draft; onEdit: () => void; onSubmit: () => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
-  const category = categories.find((c) => c.id === draft.categoryId);
   const where = draft.zoneId === "outside" ? t("request.outside") : zoneNames[draft.zoneId];
   return (
     <div className="flex flex-col gap-4">
@@ -211,7 +233,7 @@ export function RequestReview({ draft, onEdit, onSubmit }: { draft: Draft; onEdi
       <dl className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
         <div><dt className="text-sm text-inkSoft">{t("request.homeownerName")}</dt><dd className="font-bold">{draft.homeownerName}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.community")}</dt><dd>{draft.community}</dd></div>
-        <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold">{category?.names[lang]}</dd></div>
+        <div><dt className="text-sm text-inkSoft">{t("request.category")}</dt><dd className="font-bold"><TradeName categoryId={draft.categoryId} lang={lang} /></dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.description")}</dt><dd>{draft.description}</dd></div>
         <div><dt className="text-sm text-inkSoft">{t("request.photos")}</dt><dd>{draft.photos === 0 ? t("request.noPhotos") : t("request.photoCount", { count: draft.photos })}</dd></div>
         {draft.measurements && <div><dt className="text-sm text-inkSoft">{t("request.measurements")}</dt><dd>{draft.measurements}</dd></div>}

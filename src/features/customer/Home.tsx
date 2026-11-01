@@ -4,6 +4,7 @@ import type { Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
 import { focusTargetClass } from "@/ui/Field";
 import { categories } from "./data";
+import { TradeIcon } from "./tradeIcons";
 
 export function Home({ name, email, onPick, onUrgent }: { name: string; email: string; onPick: (categoryId: string) => void; onUrgent: () => void }) {
   const { t, i18n } = useTranslation();
@@ -20,8 +21,9 @@ export function Home({ name, email, onPick, onUrgent }: { name: string; email: s
         {categories.map((c) => (
           <li key={c.id}>
             <button type="button" onClick={() => onPick(c.id)}
-              className="flex min-h-[5rem] w-full items-center rounded-2xl border border-line bg-paper px-3 text-left font-bold">
-              {c.names[lang]}
+              className="flex min-h-[5rem] w-full items-center gap-3 rounded-2xl border border-line bg-paper px-3 text-left font-bold">
+              <TradeIcon categoryId={c.id} size={28} />
+              <span className="min-w-0 break-words">{c.names[lang]}</span>
             </button>
           </li>
         ))}

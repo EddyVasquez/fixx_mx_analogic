@@ -270,5 +270,29 @@
   "clock.jumpNamed": {
     "text": "+{hours} h",
     "status": "draft"
+  },
+  "demo.mode.label": {
+    "text": "Sample home data",
+    "status": "draft"
+  },
+  "demo.mode.note": {
+    "text": "Sample jobs and warranties for the Santa Sofía home. They are marked so they are not a live booking.",
+    "status": "draft"
+  },
+  "demo.job.progress": {
+    "text": "Progress",
+    "status": "draft"
+  },
+  "demo.warranty.expiring": {
+    "text": "Expiring soon",
+    "status": "draft"
+  },
+  "demo.warranty.claim": {
+    "text": "Claim in progress",
+    "status": "draft"
+  },
+  "demo.warranty.ends": {
+    "text": "Coverage ends {date}",
+    "status": "draft"
   }
 }

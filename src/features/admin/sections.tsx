@@ -13,6 +13,7 @@ import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { useMoney } from "@/features/shared/Money";
 import { estimateRange } from "@/core/pricing/quote";
 import { categories, customers, homes, professionals, zoneNames } from "@/features/customer/data";
+import { TradeName } from "@/features/customer/tradeIcons";
 import { JOB_ID, ratings, session } from "@/features/customer/session";
 import { Table } from "./Table";
 
@@ -25,7 +26,6 @@ export const stateLabel = (t: T, state: string): string => {
 };
 const useWhen = (lang: Lang) => (d: Date | string) => formatDateTime(new Date(d), localeFor[lang]);
 const proName = (id: string | null | undefined) => professionals.find((p) => p.id === id)?.name ?? "";
-const catName = (id: string, lang: Lang) => categories.find((c) => c.id === id)?.names[lang] ?? id;
 
 export function RequestsSection({ rt, lang }: P) {
   const { t } = useTranslation();
@@ -36,7 +36,7 @@ export function RequestsSection({ rt, lang }: P) {
   return (
     <div className="flex flex-col gap-3">
       <Table caption={t("admin.s.requests")} head={[t("admin.col.category"), t("admin.col.area"), t("admin.col.urgent"), t("admin.col.state")]}
-        rows={job && state ? [[catName(d.categoryId, lang), d.zoneId === "outside" ? t("request.outside") : zoneNames[d.zoneId], d.emergency ? t("admin.yes") : t("admin.no"), stateLabel(t, state)]] : []} />
+        rows={job && state ? [[<TradeName key="trade" categoryId={d.categoryId} lang={lang} />, d.zoneId === "outside" ? t("request.outside") : zoneNames[d.zoneId], d.emergency ? t("admin.yes") : t("admin.no"), stateLabel(t, state)]] : []} />
       {job && state === "pendingReview" && <ApprovePending rt={rt} />}
       {job && state === "manualReview" && (
         <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
@@ -68,7 +68,7 @@ export function ProfessionalsSection({ rt, lang }: P) {
     const delta = rt.scoreChanges.filter((c) => c.professionalId === p.id).reduce((s, c) => s + c.delta, 0);
     const mine = ratings.filter((r) => r.proId === p.id);
     const avg = mine.length ? (mine.reduce((s, r) => s + (r.values["overall"] ?? 0), 0) / mine.length).toFixed(1) : "—";
-    return [p.name, zoneNames[p.zoneId], p.trades.map((x) => catName(x, lang)).join(", "), p.level ? t(`level.${p.level}`) : "—",
+    return [p.name, zoneNames[p.zoneId], <span key="trades" className="flex flex-wrap gap-2">{p.trades.map((x) => <TradeName key={x} categoryId={x} lang={lang} />)}</span>, p.level ? t(`level.${p.level}`) : "—",
       p.qualityScore == null ? "—" : String(p.qualityScore + delta), t(`admin.vstate.${v}`), String(rt.penalties.filter((x) => x.professionalId === p.id).length), avg];
   });
   return <Table caption={t("admin.s.professionals")} head={[t("admin.col.name"), t("admin.col.area"), t("admin.col.trades"), t("admin.col.level"), t("admin.col.score"), t("admin.col.verification"), t("admin.col.penalties"), t("admin.col.rating")]} rows={rows} />;
@@ -122,7 +122,7 @@ export function JobsSection({ rt, lang }: P) {
     <div className="flex flex-col gap-3">
       <Table caption={t("admin.s.jobs")}
         head={[t("admin.col.category"), t("admin.col.professional"), t("admin.col.state"), t("admin.col.method"), t("admin.col.total"), t("admin.col.payout"), t("admin.col.date")]}
-        rows={[[catName(session.draft.categoryId, lang), proName(c.professionalId), stateLabel(t, st), c.method ? t(`method.${c.method}`) : "—", c.total ? money(c.total) : "—", c.total ? money(round2(c.total * c.payoutRatio)) : "—", c.total ? when(c.jobStart) : "—"]]} />
+        rows={[[<TradeName key="trade" categoryId={session.draft.categoryId} lang={lang} />, proName(c.professionalId), stateLabel(t, st), c.method ? t(`method.${c.method}`) : "—", c.total ? money(c.total) : "—", c.total ? money(round2(c.total * c.payoutRatio)) : "—", c.total ? when(c.jobStart) : "—"]]} />
       {st === "pendingReview" && <ApprovePending rt={rt} />}
     </div>
   );
@@ -148,7 +148,7 @@ export function StandardsSection({ lang }: P) {
   const money = useMoney();
   const rows = categories.map((c) => {
     const r = estimateRange(c.id, false);
-    return [c.names[lang], c.lineType, <DemoValue key="w">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[c.id] ?? 0 })}</DemoValue>,
+    return [<TradeName key={c.id} categoryId={c.id} lang={lang} />, c.lineType, <DemoValue key="w">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[c.id] ?? 0 })}</DemoValue>,
       <DemoValue key="r">{`${money(r.low)} – ${money(r.high)}`}</DemoValue>, String(CHECKLIST_ITEMS.length)];
   });
   return (
@@ -203,7 +203,7 @@ export function WarrantiesSection({ rt, lang }: P) {
   return (
     <div className="flex flex-col gap-3">
       <Table caption={t("admin.s.warranties")} head={[t("admin.col.category"), t("admin.col.warranty"), t("admin.col.ends"), t("admin.col.claim")]}
-        rows={[[catName(session.draft.categoryId, lang), <DemoValue key="d">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[session.draft.categoryId] ?? 0 })}</DemoValue>, when(c.endsAt),
+        rows={[[<TradeName key="trade" categoryId={session.draft.categoryId} lang={lang} />, <DemoValue key="d">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[session.draft.categoryId] ?? 0 })}</DemoValue>, when(c.endsAt),
           st === "claimFiled" || st === "inReview" ? t(`claim.status.${st}`) : st === "expired" ? t("warranty.endedOn", { date: when(c.endsAt) }) : c.lastOutcome ? t(`claim.outcome.${c.lastOutcome}`) : "—"]]} />
       {st === "claimFiled" && <Button variant="secondary" onClick={() => go({ type: "START_REVIEW" })}>{t("admin.claim.start")}</Button>}
       {st === "inReview" && (

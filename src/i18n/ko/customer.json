@@ -1222,5 +1222,10 @@
     "text": "업로드 재시도",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "request.selectedTrade": {
+    "text": "선택한 서비스",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }

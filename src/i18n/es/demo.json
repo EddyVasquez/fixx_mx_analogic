@@ -270,5 +270,29 @@
   "clock.jumpNamed": {
     "text": "+{hours} h",
     "status": "draft"
+  },
+  "demo.mode.label": {
+    "text": "Datos de ejemplo del hogar",
+    "status": "draft"
+  },
+  "demo.mode.note": {
+    "text": "Trabajos y garantías de ejemplo para la casa Santa Sofía. Van marcados para no confundirlos con una reserva real.",
+    "status": "draft"
+  },
+  "demo.job.progress": {
+    "text": "Avance",
+    "status": "draft"
+  },
+  "demo.warranty.expiring": {
+    "text": "Por vencer",
+    "status": "draft"
+  },
+  "demo.warranty.claim": {
+    "text": "Reclamo en curso",
+    "status": "draft"
+  },
+  "demo.warranty.ends": {
+    "text": "La cobertura termina el {date}",
+    "status": "draft"
   }
 }

@@ -10,6 +10,7 @@ import { colors } from "../src/ui/tokens";
 import i18n from "../src/i18n";
 import { runtime } from "../src/demo/runtime";
 import { CustomerApp } from "../src/features/customer/CustomerApp";
+import { setDemoMode } from "../src/features/customer/demoMode";
 import { resetHomeProfile } from "../src/features/customer/homeProfile";
 import { JOB_ID, resetSession, session } from "../src/features/customer/session";
 
@@ -28,6 +29,7 @@ function modules(): string[] {
 describe("My Home hub", () => {
   beforeEach(async () => {
     resetHomeProfile();
+    setDemoMode(false);
     runtime.reset();
     resetSession(false);
     session.signedIn = true;
@@ -36,6 +38,7 @@ describe("My Home hub", () => {
   });
   afterEach(async () => {
     cleanup();
+    setDemoMode(false);
     resetHomeProfile();
     runtime.reset();
     resetSession(false);
@@ -98,7 +101,7 @@ describe("My Home hub", () => {
     fireEvent.click(within(quick).getByRole("button", { name: "Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
-    expect((screen.getByLabelText("Service") as HTMLSelectElement).value).toBe("electrical");
+    expect((screen.getByRole("radio", { name: "Electrical" }) as HTMLInputElement).checked).toBe(true);
 
     cleanup();
     resetSession(false);

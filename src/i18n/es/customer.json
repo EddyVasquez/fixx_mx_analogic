@@ -978,5 +978,9 @@
   "btn.retryUploads": {
     "text": "Reintentar subida",
     "status": "draft"
+  },
+  "request.selectedTrade": {
+    "text": "Oficio elegido",
+    "status": "draft"
   }
 }

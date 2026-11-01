@@ -26,6 +26,7 @@ import { CloseWindowAction } from "./CloseWindowAction";
 import { CompletionCheck } from "./CompletionCheck";
 import { UnderReview } from "./UnderReview";
 import { JOB_ID, session } from "./session";
+import { TradeName } from "./tradeIcons";
 
 export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState; ctx: JobCtx; onEvent: (type: string) => void; onSend?: (e: { type: string } & Record<string, unknown>) => void }) {
   const { t, i18n } = useTranslation();
@@ -52,6 +53,7 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
   return (
     <div className="flex flex-col gap-4">
       <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("timeline.title")}</h2>
+      <p className="font-semibold"><TradeName categoryId={session.draft.categoryId} lang={lang} /></p>
       {status && <JobStatusBar status={status} />}
       <p><HlDate>{t("timeline.when", { when: when(ctx.jobStart) })}</HlDate></p>
       {state === "issueWindow" && ctx.issueWindowEndsAt && (
