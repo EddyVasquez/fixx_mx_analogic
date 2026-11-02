@@ -75,6 +75,17 @@ def tier_key(name):
         return len(TIER_ORDER)
 
 
+# keepCase is an app annotation (acronyms such as TV), not a workbook column.
+# Copy it forward so a price refresh does not drop it.
+previous_keep = {}
+try:
+    with open("src/seed/pricing/catalog.json", encoding="utf-8") as previous:
+        for task_id, task in json.load(previous).get("tasks", {}).items():
+            if task.get("keepCase"):
+                previous_keep[task_id] = task["keepCase"]
+except FileNotFoundError:
+    pass
+
 items = {}
 for r in rows("Prices"):
     name = r["Item (English)"] or ""
@@ -96,6 +107,10 @@ for r in rows("Tasks"):
         jobEs=r.get("Job_Name_ES") or r["Job"],
         jobKo=r.get("Job_Name_KO (machine-translated, needs native review)") or r.get("Job_Name_ES") or r["Job"],
         lines=[]))
+    if r["Task_ID"] in previous_keep and "keepCase" not in t:
+        lines = t.pop("lines")
+        t["keepCase"] = previous_keep[r["Task_ID"]]
+        t["lines"] = lines
     if r.get("Job_Name_ES"):
         t["jobEs"] = r["Job_Name_ES"]
     if r.get("Job_Name_KO (machine-translated, needs native review)"):
