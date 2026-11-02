@@ -1,5 +1,5 @@
 {
- "version": "2026-10-27-629258a4",
+ "version": "2026-11-02-a89df59e",
  "tasks": {
   "FIXX-PNT-001": {
    "id": "FIXX-PNT-001",
@@ -850,7 +850,7 @@
      "itemId": "PLM-K03",
      "qty": 1,
      "basis": "1 angle stop",
-     "unitPrice": 216,
+     "unitPrice": 215,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -952,7 +952,7 @@
      "itemId": "PLM-K07",
      "qty": 2,
      "basis": "2 flex connectors (hot/cold)",
-     "unitPrice": 200,
+     "unitPrice": 199,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -974,7 +974,7 @@
      "itemId": "PLM-K07",
      "qty": 2,
      "basis": "2 flex connectors (hot/cold)",
-     "unitPrice": 200,
+     "unitPrice": 199,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -996,7 +996,7 @@
      "itemId": "PLM-K07",
      "qty": 2,
      "basis": "2 flex connectors (hot/cold)",
-     "unitPrice": 200,
+     "unitPrice": 199,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -1550,7 +1550,7 @@
      "itemId": "ELC-M11",
      "qty": 1,
      "basis": "1 breaker (GE THQL default)",
-     "unitPrice": 470.6,
+     "unitPrice": 527.45,
      "type": "flagged",
      "flag": "FLAGGED-human review",
      "reviewTrigger": "base"
@@ -1561,7 +1561,7 @@
      "itemId": "ELC-M11",
      "qty": 1,
      "basis": "1 breaker (GE THQL default)",
-     "unitPrice": 470.6,
+     "unitPrice": 527.45,
      "type": "flagged",
      "flag": "FLAGGED-human review",
      "reviewTrigger": "base"
@@ -1572,7 +1572,7 @@
      "itemId": "ELC-M11",
      "qty": 1,
      "basis": "1 breaker (GE THQL default)",
-     "unitPrice": 470.6,
+     "unitPrice": 527.45,
      "type": "flagged",
      "flag": "FLAGGED-human review",
      "reviewTrigger": "base"
@@ -1583,7 +1583,7 @@
      "itemId": "ELC-M11",
      "qty": 1,
      "basis": "1 breaker (GE THQL default)",
-     "unitPrice": 470.6,
+     "unitPrice": 527.45,
      "type": "flagged",
      "flag": "FLAGGED-human review",
      "reviewTrigger": "base"
@@ -3509,7 +3509,10 @@
    "job": "TV wall mount, 1 TV (TV excluded; budget/standard tilt ≤70 in, premium articulated)",
    "jobEs": "Instalación de TV en pared, 1 TV",
    "jobKo": "TV 벽걸이 설치, TV 1대",
-   "keepCase": ["en", "ko"],
+   "keepCase": [
+    "en",
+    "ko"
+   ],
    "lines": [
     {
      "id": "L0196",
@@ -3539,7 +3542,7 @@
      "itemId": "HND-M02",
      "qty": 1,
      "basis": "1 mount",
-     "unitPrice": 295,
+     "unitPrice": 319,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3561,7 +3564,7 @@
      "itemId": "HND-M03",
      "qty": 1,
      "basis": "1 mount",
-     "unitPrice": 1150,
+     "unitPrice": 933.8,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3793,7 +3796,7 @@
      "itemId": "PLM-K06",
      "qty": 2,
      "basis": "2 stainless supply lines",
-     "unitPrice": 168,
+     "unitPrice": 169,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3815,7 +3818,7 @@
      "itemId": "PLM-K06",
      "qty": 2,
      "basis": "2 stainless supply lines",
-     "unitPrice": 168,
+     "unitPrice": 169,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3826,7 +3829,7 @@
      "itemId": "PLM-K03",
      "qty": 2,
      "basis": "2 angle stops",
-     "unitPrice": 216,
+     "unitPrice": 215,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3953,7 +3956,7 @@
      "itemId": "ELC-K06",
      "qty": 1,
      "basis": "1 duplex w/ plate",
-     "unitPrice": 51,
+     "unitPrice": 55,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3964,7 +3967,7 @@
      "itemId": "ELC-K07",
      "qty": 1,
      "basis": "1 switch",
-     "unitPrice": 79,
+     "unitPrice": 80,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -3997,7 +4000,7 @@
      "itemId": "ELC-K06",
      "qty": 1,
      "basis": "1 duplex w/ plate",
-     "unitPrice": 51,
+     "unitPrice": 55,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4008,7 +4011,7 @@
      "itemId": "ELC-K07",
      "qty": 1,
      "basis": "1 switch",
-     "unitPrice": 79,
+     "unitPrice": 80,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4179,7 +4182,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "Standard kit × size 1 × intensity 1",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4212,7 +4215,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4289,7 +4292,7 @@
      "itemId": "CLN-K11",
      "qty": 0.15,
      "basis": "Standard kit × size 1.5 × intensity 1",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4322,7 +4325,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4399,7 +4402,7 @@
      "itemId": "CLN-K11",
      "qty": 0.2,
      "basis": "Standard kit × size 2 × intensity 1",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4432,7 +4435,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4523,7 +4526,7 @@
      "itemId": "CLN-K11",
      "qty": 0.15,
      "basis": "Standard kit × size 1 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4556,7 +4559,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4644,7 +4647,7 @@
      "itemId": "CLN-K11",
      "qty": 0.225,
      "basis": "Standard kit × size 1.5 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4677,7 +4680,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4765,7 +4768,7 @@
      "itemId": "CLN-K11",
      "qty": 0.3,
      "basis": "Standard kit × size 2 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4798,7 +4801,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4900,7 +4903,7 @@
      "itemId": "CLN-K11",
      "qty": 0.15,
      "basis": "Standard kit × size 1 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -4933,7 +4936,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5021,7 +5024,7 @@
      "itemId": "CLN-K11",
      "qty": 0.225,
      "basis": "Standard kit × size 1.5 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5054,7 +5057,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5142,7 +5145,7 @@
      "itemId": "CLN-K11",
      "qty": 0.3,
      "basis": "Standard kit × size 2 × intensity 1.5",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5175,7 +5178,7 @@
      "itemId": "CLN-K11",
      "qty": 0.1,
      "basis": "fridge interior: 0.5 L disinfectant; add-on labor $200",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "as-needed",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5277,7 +5280,7 @@
      "itemId": "CLN-K11",
      "qty": 0.2,
      "basis": "Standard kit × size 1 × intensity 2",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5354,7 +5357,7 @@
      "itemId": "CLN-K11",
      "qty": 0.3,
      "basis": "Standard kit × size 1.5 × intensity 2",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5431,7 +5434,7 @@
      "itemId": "CLN-K11",
      "qty": 0.4,
      "basis": "Standard kit × size 2 × intensity 2",
-     "unitPrice": 126,
+     "unitPrice": 151,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5478,7 +5481,7 @@
      "itemId": "CLN-K13",
      "qty": 0.15,
      "basis": "3 seats",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5500,7 +5503,7 @@
      "itemId": "CLN-K13",
      "qty": 0.25,
      "basis": "3 seats",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5533,7 +5536,7 @@
      "itemId": "CLN-K13",
      "qty": 0.25,
      "basis": "3 seats",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5591,7 +5594,7 @@
      "itemId": "CLN-K13",
      "qty": 0.3,
      "basis": "20 m²",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5613,7 +5616,7 @@
      "itemId": "CLN-K13",
      "qty": 0.4,
      "basis": "20 m²",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5646,7 +5649,7 @@
      "itemId": "CLN-K13",
      "qty": 0.4,
      "basis": "20 m²",
-     "unitPrice": 239.75,
+     "unitPrice": 271.04,
      "type": "base",
      "flag": "none",
      "reviewTrigger": "none"
@@ -5900,7 +5903,7 @@
    "store": "Comex",
    "price": 136,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6082,7 +6085,7 @@
    "store": "Cluxer México (official store)",
    "price": 873.26,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6096,7 +6099,7 @@
    "store": "Climas Monterrey",
    "price": 243.99,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "FLAGGED-human review",
    "homeownerChoice": false
   },
@@ -6152,7 +6155,7 @@
    "store": "Home Depot",
    "price": 52,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6250,7 +6253,7 @@
    "store": "Home Depot",
    "price": 408,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6362,7 +6365,7 @@
    "store": "Ferrepat",
    "price": 44,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6376,7 +6379,7 @@
    "store": "Home Depot",
    "price": 54,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6528,9 +6531,9 @@
    "spec": "THQL plug-in",
    "unit": "pc",
    "store": "Amazon MX",
-   "price": 470.6,
+   "price": 527.45,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "FLAGGED-human review",
    "homeownerChoice": false
   },
@@ -6698,7 +6701,7 @@
    "store": "Split México",
    "price": 289,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "REFERENCE ONLY-COFEPRIS",
    "homeownerChoice": false
   },
@@ -6712,7 +6715,7 @@
    "store": "Clikea",
    "price": 299,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "REFERENCE ONLY-COFEPRIS",
    "homeownerChoice": false
   },
@@ -6726,7 +6729,7 @@
    "store": "Biopredatox",
    "price": 1050.4,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "REFERENCE ONLY-COFEPRIS",
    "homeownerChoice": false
   },
@@ -6740,7 +6743,7 @@
    "store": "Comercial Agropecuaria",
    "price": 1350,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "REFERENCE ONLY-COFEPRIS",
    "homeownerChoice": false
   },
@@ -6754,7 +6757,7 @@
    "store": "Cronos Agro",
    "price": 385,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "REFERENCE ONLY-COFEPRIS",
    "homeownerChoice": false
   },
@@ -6768,7 +6771,7 @@
    "store": "Home Depot",
    "price": 615,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6782,7 +6785,7 @@
    "store": "Home Depot",
    "price": 325,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6796,35 +6799,35 @@
    "store": "Home Depot",
    "price": 425,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
   "GRD-M04": {
    "id": "GRD-M04",
    "category": "Gardening",
-   "name": "Black topsoil 25 kg",
+   "name": "Nutrigarden black topsoil with organic matter 25 kg",
    "spanish": "Tierra negra 25 kg",
    "spec": "25 kg",
    "unit": "bag 25 kg",
-   "store": null,
+   "store": "Home Depot",
    "price": 205,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
   "GRD-M05": {
    "id": "GRD-M05",
    "category": "Gardening",
-   "name": "Vigoro prepared soil",
+   "name": "Vigoro prepared soil (black soil + compost) 25 kg",
    "spanish": "Vigoro tierra preparada",
-   "spec": "bag size to confirm",
-   "unit": "bag",
-   "store": null,
+   "spec": "25 kg bag",
+   "unit": "bag 25 kg",
+   "store": "Home Depot",
    "price": 225,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6838,7 +6841,7 @@
    "store": "Home Depot",
    "price": 159,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6852,7 +6855,7 @@
    "store": "Ferreterías Coresi",
    "price": 165,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -6950,7 +6953,7 @@
    "store": "Home Depot",
    "price": 439,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7076,7 +7079,7 @@
    "store": "Palhogar / IMAISA",
    "price": 420,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7104,7 +7107,7 @@
    "store": "Home Depot",
    "price": 348,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7115,10 +7118,10 @@
    "spanish": "Boquilla Bexel",
    "spec": "color per job",
    "unit": "bag",
-   "store": null,
+   "store": "Home Depot",
    "price": 239,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7146,7 +7149,7 @@
    "store": "Home Depot",
    "price": 235,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7244,7 +7247,7 @@
    "store": "Home Depot",
    "price": 875,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7300,7 +7303,7 @@
    "store": "Home Depot",
    "price": 569,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7482,7 +7485,7 @@
    "store": "Home Depot",
    "price": 459,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7510,7 +7513,7 @@
    "store": "Sika Center México",
    "price": 1648,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7524,7 +7527,7 @@
    "store": "Home Depot",
    "price": 1499,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7594,7 +7597,7 @@
    "store": "Home Depot",
    "price": 144,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7734,7 +7737,7 @@
    "store": "Cluxer México (official store)",
    "price": 1397.21,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7748,7 +7751,7 @@
    "store": "Home Depot",
    "price": 51,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7762,7 +7765,7 @@
    "store": "Casa Mixteco",
    "price": 107,
    "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7790,7 +7793,7 @@
    "store": "Ferrepat",
    "price": 37,
    "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7804,7 +7807,7 @@
    "store": "Ferretería Calzada",
    "price": 137,
    "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7818,7 +7821,7 @@
    "store": "Ferrepat",
    "price": 160,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7832,7 +7835,7 @@
    "store": "Ferretera Dial",
    "price": 225.27,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7860,7 +7863,7 @@
    "store": "Climas Monterrey",
    "price": 271.01,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "FLAGGED-human review",
    "homeownerChoice": false
   },
@@ -7874,7 +7877,7 @@
    "store": "Home Depot",
    "price": 1175,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7888,7 +7891,7 @@
    "store": "Home Depot",
    "price": 1515,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7902,7 +7905,7 @@
    "store": "Home Depot",
    "price": 1779,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7916,7 +7919,7 @@
    "store": "Home Depot",
    "price": 959,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7930,7 +7933,7 @@
    "store": "Home Depot",
    "price": 1699,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7944,35 +7947,35 @@
    "store": "Home Depot",
    "price": 197,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
   "HND-M02": {
    "id": "HND-M02",
    "category": "Handyman",
-   "name": "Truper TVSA-70 tilting TV mount",
+   "name": "Volteck/Truper TVSA-70 tilting TV mount 32–70 in (code 48429)",
    "spanish": "Soporte inclinable para TV Truper TVSA-70",
-   "spec": "up to 70 in per model name",
+   "spec": "32–70 in, tilt +5°/−20°, 40 kg max, VESA 100–600",
    "unit": "pc",
-   "store": "Distribuidor Truper",
-   "price": 295,
-   "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "store": "El Ferretero (Monterrey)",
+   "price": 319,
+   "iva": "+16% added",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
   "HND-M03": {
    "id": "HND-M03",
    "category": "Handyman",
-   "name": "Truper TVSM-65 articulated TV mount",
+   "name": "Volteck/Truper TVSM-65 articulated TV mount 26–65 in (code 46096)",
    "spanish": "Soporte articulado para TV Truper TVSM-65",
-   "spec": "up to 65 in per model name",
+   "spec": "26–65 in, articulated ±120°, 60 kg max, VESA 100–600",
    "unit": "pc",
-   "store": "Distribuidor Truper",
-   "price": 1150,
-   "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "store": "El Ferretero (Monterrey)",
+   "price": 933.8,
+   "iva": "+16% added",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -7986,7 +7989,7 @@
    "store": "Comex",
    "price": 136,
    "iva": "assumed included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8000,7 +8003,7 @@
    "store": "Home Depot",
    "price": 179,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8014,7 +8017,7 @@
    "store": "Home Depot",
    "price": 197,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8028,7 +8031,7 @@
    "store": "Home Depot",
    "price": 305,
    "iva": "included",
-   "checkDate": "2026-10-21",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8056,7 +8059,7 @@
    "store": "Home Depot",
    "price": 685,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8070,7 +8073,7 @@
    "store": "Mega Central",
    "price": 1549,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "marketplace",
    "homeownerChoice": false
   },
@@ -8084,7 +8087,7 @@
    "store": "Home Depot",
    "price": 225,
    "iva": "included",
-   "checkDate": "2026-10-20",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8112,7 +8115,7 @@
    "store": "Home Depot",
    "price": 1969,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8126,7 +8129,7 @@
    "store": "Home Depot",
    "price": 455,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8140,7 +8143,7 @@
    "store": "Comex dealer price list (Jan 2026)",
    "price": 1699,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8154,7 +8157,7 @@
    "store": "Comex dealer price list (Jan 2026)",
    "price": 402,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8168,7 +8171,7 @@
    "store": "Home Depot",
    "price": 2595,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8182,7 +8185,7 @@
    "store": "Home Depot",
    "price": 609,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8196,7 +8199,7 @@
    "store": "Comex Pinturas Maravilla",
    "price": 990.5,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8210,7 +8213,7 @@
    "store": "Comex Pinturas Maravilla",
    "price": 562,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8224,7 +8227,7 @@
    "store": "Comex dealer price list (Jan 2026)",
    "price": 704.5,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8238,7 +8241,7 @@
    "store": "Home Depot",
    "price": 36,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8252,7 +8255,7 @@
    "store": "Home Depot",
    "price": 95,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8266,7 +8269,7 @@
    "store": "ToolTown",
    "price": 38,
    "iva": "assumed included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8280,7 +8283,7 @@
    "store": "Home Depot",
    "price": 129,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8294,7 +8297,7 @@
    "store": "Casa Myers",
    "price": 302.66,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8308,7 +8311,7 @@
    "store": "Home Depot",
    "price": 565,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8336,7 +8339,7 @@
    "store": "Home Depot",
    "price": 46,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8364,7 +8367,7 @@
    "store": "Ferreteras La Casa",
    "price": 33,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8378,7 +8381,7 @@
    "store": "Ferreteras La Casa",
    "price": 10.5,
    "iva": "assumed included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8392,7 +8395,7 @@
    "store": "Home Depot",
    "price": 290,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8404,9 +8407,9 @@
    "spec": "15 A + plate",
    "unit": "pc",
    "store": "Home Depot",
-   "price": 51,
+   "price": 55,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8418,9 +8421,9 @@
    "spec": "15 A",
    "unit": "pc",
    "store": "Home Depot",
-   "price": 79,
+   "price": 80,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8434,7 +8437,7 @@
    "store": "Home Depot",
    "price": 299,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8448,7 +8451,7 @@
    "store": "Bticino México (official)",
    "price": 626.15,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8462,7 +8465,7 @@
    "store": "Home Depot",
    "price": 2399,
    "iva": "included",
-   "checkDate": "2026-10-26",
+   "checkDate": "2026-11-02",
    "flag": "FLAGGED-human review",
    "homeownerChoice": false
   },
@@ -8476,7 +8479,7 @@
    "store": "Home Depot",
    "price": 30,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8490,7 +8493,7 @@
    "store": "Ferre La Económica",
    "price": 39.46,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8504,7 +8507,7 @@
    "store": "Home Depot",
    "price": 155,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8518,7 +8521,7 @@
    "store": "Home Depot",
    "price": 341,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8530,9 +8533,9 @@
    "spec": "1/2 × 3/8 in",
    "unit": "pc",
    "store": "Home Depot",
-   "price": 216,
+   "price": 215,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8546,7 +8549,7 @@
    "store": "Home Depot Pro",
    "price": 16.4,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8560,7 +8563,7 @@
    "store": "Home Depot",
    "price": 76,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8572,9 +8575,9 @@
    "spec": "1/2 × 1/2 in, 40 cm",
    "unit": "pc",
    "store": "Home Depot",
-   "price": 168,
+   "price": 169,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8586,9 +8589,9 @@
    "spec": "1/2 in, 80 cm, to 90 °C",
    "unit": "pc",
    "store": "Home Depot",
-   "price": 200,
+   "price": 199,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8602,7 +8605,7 @@
    "store": "Home Depot",
    "price": 199,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8616,7 +8619,7 @@
    "store": "Home Depot Pro",
    "price": 119,
    "iva": "included",
-   "checkDate": "2026-10-24",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8698,9 +8701,9 @@
    "spec": "650 ml trigger",
    "unit": "bottle",
    "store": "Amazon México",
-   "price": 55,
+   "price": 51,
    "iva": "included",
-   "checkDate": "2026-10-25",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8728,7 +8731,7 @@
    "store": "Home Depot",
    "price": 249,
    "iva": "included",
-   "checkDate": "2026-10-25",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8768,9 +8771,9 @@
    "spec": "5 L",
    "unit": "jug",
    "store": "Walmart",
-   "price": 126,
+   "price": 151,
    "iva": "included",
-   "checkDate": "2026-10-25",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8796,9 +8799,9 @@
    "spec": "1.89 L, for extraction machine",
    "unit": "bottle",
    "store": "Amazon México",
-   "price": 239.75,
+   "price": 271.04,
    "iva": "included",
-   "checkDate": "2026-10-25",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8812,7 +8815,7 @@
    "store": "Petco México",
    "price": 799,
    "iva": "included",
-   "checkDate": "2026-10-25",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8854,7 +8857,7 @@
    "store": "Tool Ferreterías",
    "price": 270.47,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8868,7 +8871,7 @@
    "store": "Stihl México (official store)",
    "price": 700,
    "iva": "assumed included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8882,7 +8885,7 @@
    "store": "Cluxer México (official store)",
    "price": 196.84,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   },
@@ -8896,7 +8899,7 @@
    "store": "Cluxer México (official store)",
    "price": 351.18,
    "iva": "included",
-   "checkDate": "2026-10-27",
+   "checkDate": "2026-11-02",
    "flag": "none",
    "homeownerChoice": false
   }
@@ -8915,7 +8918,7 @@
    "typicalRef": 4085,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 2,
    "dailyMin": 349.22,
    "floor": 698.44
@@ -9095,7 +9098,7 @@
    "typicalRef": 650,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.25,
    "dailyMin": 349.84,
    "floor": 349.84
@@ -9113,7 +9116,7 @@
    "typicalRef": 650,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.25,
    "dailyMin": 349.84,
    "floor": 349.84
@@ -9131,7 +9134,7 @@
    "typicalRef": 1800,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.5,
    "dailyMin": 349.84,
    "floor": 349.84
@@ -9167,7 +9170,7 @@
    "typicalRef": 1150,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.25,
    "dailyMin": 349.84,
    "floor": 349.84
@@ -9329,7 +9332,7 @@
    "typicalRef": 330,
    "confidence": "Medium",
    "flag": "none",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.25,
    "dailyMin": 315.04,
    "floor": 315.04
@@ -9347,7 +9350,7 @@
    "typicalRef": 342,
    "confidence": "Low",
    "flag": "assumption",
-   "checkedDate": "2026-10-21",
+   "checkedDate": "2026-11-02",
    "estJobDays": 0.5,
    "dailyMin": 315.04,
    "floor": 315.04
