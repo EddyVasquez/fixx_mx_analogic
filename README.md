@@ -32,3 +32,5 @@ Switch the role to Admin (English or Spanish) to see the console; open the Help 
     npm run dev
 
 Open the demo control panel at the bottom: pick a scenario, press "Start scenario" (it runs to a meaningful point and hands over), or "Finish it for me". See ACCEPTANCE.md for how each acceptance criterion is checked and what still needs a human.
+
+Redeployed after the Nov 9, 2026 GitHub Actions outage.
