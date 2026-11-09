@@ -1,0 +1,18 @@
+/* My Home hero and stat tiles. Grey glass only. Lime is a glow edge on the hero, never a fill. */
+.home-hero {
+  background: color-mix(in srgb, theme("colors.paper") 78%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, theme("colors.accent") 55%, transparent),
+    0 0 18px color-mix(in srgb, theme("colors.accent") 28%, transparent),
+    0 8px 24px rgb(46 46 46 / 0.08);
+}
+
+.home-stat {
+  background: color-mix(in srgb, theme("colors.paper") 70%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid theme("colors.line");
+  box-shadow: 0 2px 8px rgb(46 46 46 / 0.06);
+}

@@ -1,3 +1,4 @@
+import { Check } from "@phosphor-icons/react/Check";
 import { Plus } from "@phosphor-icons/react/Plus";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
@@ -6,7 +7,7 @@ import { categories } from "./data";
 import { TradeIcon } from "./tradeIcons";
 import "./tradePlus.css";
 
-/** Lime circle with a charcoal plus. The hit target is the touch size; the disc is 36px. */
+/** Lime plus, or a charcoal check once the trade is selected. The hit target is 48px; the disc is 36px. */
 export function TradePlusButton({ label, pressed, onClick }: {
   label: string;
   pressed?: boolean;
@@ -21,7 +22,11 @@ export function TradePlusButton({ label, pressed, onClick }: {
       onClick={onClick}
     >
       <span className="trade-plus-face" aria-hidden="true">
-        <Plus aria-hidden="true" size={20} weight="bold" color={colors.ink} />
+        {pressed ? (
+          <Check aria-hidden="true" size={18} weight="bold" color={colors.accent} data-icon="check" />
+        ) : (
+          <Plus aria-hidden="true" size={20} weight="bold" color={colors.ink} data-icon="plus" />
+        )}
       </span>
     </button>
   );
@@ -40,7 +45,11 @@ export function TradePicker({ lang, selectedId, onPick }: {
         const name = category.names[lang];
         const selected = selectedId === category.id;
         return (
-          <li key={category.id} className="flex min-w-0 items-center gap-2 rounded-2xl border border-line bg-paper py-1 pl-3 pr-1">
+          <li
+            key={category.id}
+            data-selected={selected ? "true" : "false"}
+            className={`trade-row flex min-w-0 items-center gap-2 rounded-2xl border py-1 pl-3 pr-1 ${selected ? "border-accent bg-accent font-semibold" : "border-line bg-paper"}`}
+          >
             <TradeIcon categoryId={category.id} />
             <span className="min-w-0 flex-1 break-words text-left">{name}</span>
             <TradePlusButton

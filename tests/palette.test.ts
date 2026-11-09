@@ -6,8 +6,9 @@ import { colors } from "../src/ui/tokens";
 
 /**
  * Hex colors that are not neutral greys, and the files allowed to contain them.
- * Lime is the hub accent. Amber is the pending-review banner. Black and white
- * stay only in the high-contrast override.
+ * Lime #DFFF32 is the accent token: action buttons, selected states, and glow
+ * edges only. Amber is the pending-review banner. Black and white stay only
+ * in the high-contrast override.
  */
 export const PALETTE_ALLOWLIST: Record<string, readonly string[]> = {
   DFFF32: ["src/ui/tokens.ts", "src/features/customer/jobChips.css"],

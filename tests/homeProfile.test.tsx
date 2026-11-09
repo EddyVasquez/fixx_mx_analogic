@@ -6,11 +6,10 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { contrast } from "../src/core/rules/contrast";
-import { colors } from "../src/ui/tokens";
 import i18n from "../src/i18n";
 import { runtime } from "../src/demo/runtime";
 import { CustomerApp } from "../src/features/customer/CustomerApp";
-import { TAB_BAR_BG, TAB_INACTIVE } from "../src/features/customer/CustomerTabBar";
+import { TAB_ACTIVE, TAB_BAR_BG, TAB_INACTIVE } from "../src/features/customer/CustomerTabBar";
 import { matchingAreaTier } from "../src/core/pricing/areaTier";
 import { resetDemoMode } from "../src/features/customer/demoMode";
 import { getHomeProfile, resetHomeProfile, setHomeProfile } from "../src/features/customer/homeProfile";
@@ -94,9 +93,11 @@ describe("My Home tab and request prefill", () => {
     const icons = nav.querySelectorAll("svg");
     expect(icons).toHaveLength(4);
     icons.forEach((icon) => expect(icon.getAttribute("aria-hidden")).toBe("true"));
+    expect(nav.className).toContain("customer-phonebar");
+    expect(document.querySelector(".customer-topnav")).toBeNull();
     expect(icons[0]?.getAttribute("data-weight")).toBe("fill");
-    expect(icons[0]?.getAttribute("width")).toBe("24");
-    expect(icons[0]?.getAttribute("fill")).toBe(colors.brand);
+    expect(icons[0]?.getAttribute("width")).toBe("18");
+    expect(icons[0]?.getAttribute("fill")).toBe(TAB_ACTIVE);
     expect(icons[1]?.getAttribute("data-weight")).toBe("regular");
     expect(icons[1]?.getAttribute("fill")).toBe(TAB_INACTIVE);
     tabs.forEach((link) => expect(link.className).toContain("flex-1"));
@@ -135,6 +136,38 @@ describe("My Home tab and request prefill", () => {
     const helpIcon = within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { name: "Help" }).querySelector("svg");
     expect(helpIcon?.getAttribute("data-weight")).toBe("fill");
     expect(helpIcon?.getAttribute("data-icon")).toBe("help");
+  });
+
+  it("moves the same tabs into the sticky header at tablet width", () => {
+    const original = window.matchMedia;
+    window.matchMedia = ((query: string) => ({
+      matches: query.includes("768"),
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false
+    })) as typeof window.matchMedia;
+    try {
+      render(<CustomerApp />);
+      const nav = screen.getByRole("navigation", { name: "Main" });
+      expect(nav.className).toContain("customer-topnav");
+      expect(nav.getAttribute("data-placement")).toBe("top");
+      expect(document.querySelector(".customer-phonebar")).toBeNull();
+      expect(tabLabels()).toEqual(["My Home", "Request", "Warranty", "Help"]);
+      expect(nav.querySelector(".customer-word")?.textContent).toBe("FIXX");
+      const icons = nav.querySelectorAll("a svg");
+      expect(icons[0]?.getAttribute("width")).toBe("18");
+      expect(icons[0]?.getAttribute("fill")).toBe(TAB_ACTIVE);
+      expect(icons[1]?.getAttribute("fill")).toBe(TAB_INACTIVE);
+      fireEvent.click(within(nav).getByRole("link", { name: "Request" }));
+      expect(within(screen.getByRole("navigation", { name: "Main" })).getAllByRole("link")[1]?.getAttribute("aria-current")).toBe("page");
+    } finally {
+      if (original) window.matchMedia = original;
+      else delete (window as { matchMedia?: typeof window.matchMedia }).matchMedia;
+    }
   });
 
   it("shows Spanish labels for the same profile", async () => {

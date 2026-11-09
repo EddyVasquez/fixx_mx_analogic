@@ -24,6 +24,7 @@ import { useHomeProfile } from "./homeProfile";
 import { JOB_ID, session } from "./session";
 import { TradePicker, TradePlusButton } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
+import "./homeGlass.css";
 
 const DONE: JobState[] = ["paymentReleased", "rated"];
 
@@ -160,7 +161,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
 
   return (
     <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
-      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch rounded-[20px] border border-line bg-accent p-3 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-4`}>
+      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} home-hero flex min-w-0 flex-col self-stretch rounded-[20px] border border-line p-3 md:p-4`}>
         {model && (
           <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-paper md:h-[320px] lg:h-[360px]">
             {/* The name card overlaps this strip, so the model is framed in the visible part. */}
@@ -250,7 +251,7 @@ function StatTiles({ model }: { model: HomeModel }) {
   return (
     <dl className="grid grid-cols-3 gap-3 lg:grid-cols-6">
       {tiles.map((tile) => (
-        <div key={tile.id} className="min-w-0 rounded-2xl bg-accent px-2 py-3 text-ink">
+        <div key={tile.id} className="home-stat min-w-0 rounded-2xl px-2 py-3 text-ink">
           <dt className="flex items-center gap-2 break-words leading-tight">
             <tile.Icon aria-hidden="true" size={22} weight="bold" color={colors.ink} />
             <span>{tile.label}</span>

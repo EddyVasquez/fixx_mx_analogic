@@ -228,6 +228,7 @@ describe("job chip selection", () => {
   it("spotlights the jobs in lime and raises a tray that continues to the description", () => {
     const css = readFileSync(join(process.cwd(), "src/features/customer/jobChips.css"), "utf8");
     expect(css).toMatch(/#DFFF32/);
+    expect(css).toMatch(/inset 0 2px 5px rgb\(0 0 0 \/ 0\.28\)/);
     expect(css).toMatch(/prefers-reduced-motion/);
     expect(css).toMatch(/@keyframes job-rise/);
     render(<Form />);
