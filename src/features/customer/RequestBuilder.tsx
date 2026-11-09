@@ -9,35 +9,27 @@ import { isAgentHours } from "@/core/rules";
 import { zoneNames, zones } from "./data";
 import { TradePicker } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
-import { jobsForCategory, type CatalogJob } from "./catalogJobs";
+import { descriptionForJobs, jobsForCategory } from "./catalogJobs";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import { HomeSummaryCard } from "./HomeSummaryCard";
 import { JobChips, type JobOption } from "./JobChips";
 import { JobTray } from "./JobTray";
-import { buildJobSentence } from "./jobSentence";
 import "./jobChips.css";
 import type { Draft } from "./session";
 
 const UNDO_MS = 5000;
 
-function sentenceFor(categoryId: string, lang: Lang, ids: readonly string[]): string {
-  const byId = new Map(jobsForCategory(categoryId, lang).map((job) => [job.id, job]));
-  const ordered: CatalogJob[] = [];
-  for (const id of ids) {
-    const job = byId.get(id);
-    if (job) ordered.push(job);
-  }
-  return buildJobSentence(ordered.map((job) => ({ label: job.title, keepCase: job.keepCase })), lang);
-}
-
-export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
+export function RequestBuilder({ draft, onChange, onReview, onEditHome, autoFocusDescription = false }: {
   draft: Draft;
   onChange: (p: Partial<Draft>) => void;
   onReview: () => void;
   onEditHome?: () => void;
+  /** Describe-it opens the form with the description ready to type. */
+  autoFocusDescription?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [undo, setUndo] = useState<string | null>(null);
   const jobs = jobsForCategory(draft.categoryId, lang);
@@ -47,6 +39,11 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
     keepCase: job.keepCase,
     status: job.pendingReview ? t("state.pendingReview") : undefined
   }));
+
+  useEffect(() => {
+    if (!autoFocusDescription) return;
+    descriptionRef.current?.focus();
+  }, [autoFocusDescription]);
 
   useEffect(() => {
     if (undo == null) return;
@@ -59,13 +56,13 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
     if (seenLang.current === lang) return;
     seenLang.current = lang;
     if (draft.descriptionEdited) return;
-    const next = sentenceFor(draft.categoryId, lang, draft.selectedJobIds);
+    const next = descriptionForJobs(draft.categoryId, lang, draft.selectedJobIds);
     if (next !== draft.description) onChange({ description: next });
   }, [lang, draft.categoryId, draft.description, draft.descriptionEdited, draft.selectedJobIds, onChange]);
 
   const onJobs = (selectedJobIds: string[]) => {
     if (draft.descriptionEdited) onChange({ selectedJobIds });
-    else onChange({ selectedJobIds, description: sentenceFor(draft.categoryId, lang, selectedJobIds) });
+    else onChange({ selectedJobIds, description: descriptionForJobs(draft.categoryId, lang, selectedJobIds) });
   };
 
   const onDescription = (value: string) => {
@@ -75,7 +72,7 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
 
   const regenerate = () => {
     setUndo(draft.description);
-    onChange({ description: sentenceFor(draft.categoryId, lang, draft.selectedJobIds), descriptionEdited: false });
+    onChange({ description: descriptionForJobs(draft.categoryId, lang, draft.selectedJobIds), descriptionEdited: false });
   };
 
   const focusDescription = () => {
@@ -93,6 +90,7 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
 
   const review = () => {
     const e: string[] = [];
+    if (!draft.categoryId.trim()) e.push("request.errorCategory");
     if (!draft.homeownerName.trim()) e.push("request.errorName");
     if (!draft.community.trim()) e.push("request.errorCommunity");
     if (!draft.description.trim()) e.push("request.errorDescription");
@@ -119,7 +117,7 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
           }}
         />
       </fieldset>
-      <section key={draft.categoryId} aria-labelledby="request-jobs-heading" className="job-spotlight glass flex flex-col gap-2 rounded-[20px] p-4">
+      {draft.categoryId && <section key={draft.categoryId} aria-labelledby="request-jobs-heading" className="job-spotlight glass flex flex-col gap-2 rounded-[20px] p-4">
         <p className="flex flex-wrap items-center gap-2">
           <span className="text-inkSoft">{t("request.selectedTrade")}</span>
           <TradeName categoryId={draft.categoryId} lang={lang} />
@@ -130,10 +128,11 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome }: {
         </h3>
         <p className="text-sm text-inkSoft">{t("request.jobsHint")}</p>
         <JobChips headingId="request-jobs-heading" jobs={options} selectedIds={draft.selectedJobIds} onChange={onJobs} />
-      </section>
+      </section>}
       <Field label={t("request.description")} hint={t("request.descriptionHint")}>
         <textarea
           id="request-description"
+          ref={descriptionRef}
           className={`${inputClass} min-h-[7rem] scroll-mb-32 py-2`}
           required
           placeholder={t("request.descriptionHint")}

@@ -31,6 +31,7 @@ import { stateLabel } from "@/features/admin/sections";
 import { SupportChatView } from "@/features/support/SupportChatView";
 import { TimelineView } from "./TimelineView";
 import { RatingView } from "./RatingView";
+import { descriptionForJobs } from "./catalogJobs";
 import { professionals, zones } from "./data";
 import { CustomerNav, useCustomerWide } from "./CustomerTabBar";
 import { useHomeProfile } from "./homeProfile";
@@ -48,6 +49,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
   const lang = i18n.language as Lang;
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [pre, setPre] = useState<Pre>(session.openBuilder ? "request" : "home");
+  const [autoFocusDescription, setAutoFocusDescription] = useState(false);
   const update = (p: Partial<typeof session>) => { Object.assign(session, p); force(); };
   const setDraft = (p: Partial<Draft>) => update({ draft: { ...session.draft, ...p } });
   const startOver = () => { rt.reset(); resetSession(); setPre("home"); force(); };
@@ -65,7 +67,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
   if (!session.signedIn) return <SignIn onDone={(email) => update({ signedIn: true, email })} />;
 
   if (!job || !state || !ctx) {
-    if (pre === "request") return <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} onEditHome={onEditHome} />;
+    if (pre === "request") return <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} onEditHome={onEditHome} autoFocusDescription={autoFocusDescription} />;
     if (pre === "review") {
       return <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
         rt.languages.customer = lang;
@@ -75,13 +77,34 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
       }} />;
     }
     return <Home name={profile.homeownerName} email={session.email}
-      onPick={(id) => { setDraft({ categoryId: id, emergency: false }); setPre("request"); }}
-      onUrgent={() => { setDraft({ emergency: true }); setPre("request"); }} />;
+      onPick={(id) => {
+        setAutoFocusDescription(false);
+        setDraft({ categoryId: id, emergency: false, selectedJobIds: [], description: "", descriptionEdited: false });
+        setPre("request");
+      }}
+      onJob={(categoryId, taskId) => {
+        setAutoFocusDescription(false);
+        setDraft({
+          categoryId,
+          emergency: false,
+          selectedJobIds: [taskId],
+          description: descriptionForJobs(categoryId, lang, [taskId]),
+          descriptionEdited: false
+        });
+        setPre("request");
+      }}
+      onDescribe={() => {
+        setAutoFocusDescription(true);
+        setDraft({ categoryId: "", emergency: false, selectedJobIds: [], description: "", descriptionEdited: false });
+        setPre("request");
+      }}
+      onUrgent={() => { setAutoFocusDescription(false); setDraft({ emergency: true }); setPre("request"); }} />;
   }
 
   const quote = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
   const proEvent = (type: string) => {
     if (type === "SEND_QUOTE" && pro) {
+      if (quote.pendingPrice) return;
       const fee = travelFeeFor(bandFor(pro.zoneId, draft.zoneId, zones));
       send({ type, total: quote.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: quote.lines, taskId: quote.taskId, tier: quote.tier });
     } else send({ type });
@@ -126,7 +149,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold">{t("wait.title")}</h2>
           <p>{t("wait.body", { name: pro?.name ?? "" })}</p>
-          <ProSimulator state={state} onEvent={proEvent} />
+          {quote.pendingPrice ? <p>{t("estimate.pending")}</p> : <ProSimulator state={state} onEvent={proEvent} />}
           <ChatView jobId={JOB_ID} role="customer" />
         </div>
       );

@@ -5806,6 +5806,17 @@
     "Standard",
     "Premium"
    ]
+  },
+  "MTL-001": {
+   "id": "MTL-001",
+   "category": "Metalwork",
+   "job": "Window security bars",
+   "jobEs": "Protecciones de ventana",
+   "jobKo": "창문 방범창",
+   "lines": [],
+   "tiers": [
+    "Standard"
+   ]
   }
  },
  "items": {
@@ -10290,6 +10301,24 @@
    "estJobDays": 0.38,
    "dailyMin": 342.47,
    "floor": 342.47
+  },
+  "MTL-001|All": {
+   "key": "MTL-001|All",
+   "taskId": "MTL-001",
+   "tierScope": "All",
+   "trade": "Metalwork",
+   "basis": "per job",
+   "rateLow": null,
+   "rateTypical": null,
+   "rateHigh": null,
+   "refQty": null,
+   "typicalRef": null,
+   "confidence": "None",
+   "flag": "none",
+   "checkedDate": null,
+   "estJobDays": null,
+   "dailyMin": null,
+   "floor": null
   }
  },
  "dailyMin": {

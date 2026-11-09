@@ -1,0 +1,56 @@
+{
+  "groups": [
+    {
+      "id": "clog",
+      "phrases": ["se tapo", "tapo", "tapado", "destape", "destapar", "clog", "unclog", "drain", "drenaje"],
+      "primaryTradeId": "plumbing",
+      "primaryJobIds": ["FIXX-PLM-006", "FIXX-PLM-001"],
+      "relatedTradeIds": ["handyman"]
+    },
+    {
+      "id": "clog-bano",
+      "phrases": ["bano"],
+      "requiresAny": ["se tapo", "tapo", "tapado", "destape", "destapar", "clog", "unclog"],
+      "primaryTradeId": "plumbing",
+      "primaryJobIds": ["FIXX-PLM-001", "FIXX-PLM-006"],
+      "relatedTradeIds": ["handyman"]
+    },
+    {
+      "id": "window-bars",
+      "phrases": ["protecciones", "proteccion", "rejas", "reja", "herreria", "bars", "security bars", "window bars"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["MTL-001", "MTL-002", "MTL-003", "MTL-004", "MTL-005"],
+      "relatedTradeIds": ["locksmith"]
+    },
+    {
+      "id": "termite",
+      "phrases": ["termitas", "termita", "termite", "termites"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-002"]
+    },
+    {
+      "id": "cockroach",
+      "phrases": ["cucaracha", "cucarachas", "cockroach", "cockroaches", "alacran", "alacranes", "scorpion", "scorpions"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-001"]
+    },
+    {
+      "id": "pests",
+      "phrases": ["plagas", "plaga", "pests"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-001", "FIXX-PST-002", "FIXX-PST-003"]
+    },
+    {
+      "id": "hvac",
+      "phrases": ["no enfria", "aire", "minisplit", "mini split", "clima"],
+      "primaryTradeId": "hvac",
+      "primaryJobIds": ["FIXX-HVC-001", "FIXX-HVC-002"]
+    },
+    {
+      "id": "electrical-short",
+      "phrases": ["corto", "cortocircuito", "fusible", "fuse", "breaker", "short circuit"],
+      "primaryTradeId": "electrical",
+      "primaryJobIds": ["FIXX-ELC-005"]
+    }
+  ]
+}

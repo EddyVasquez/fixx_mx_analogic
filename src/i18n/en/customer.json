@@ -115,6 +115,38 @@
     "text": "Urgent request",
     "status": "draft"
   },
+  "search.placeholder": {
+    "text": "What do you need to do at home?",
+    "status": "draft"
+  },
+  "search.clear": {
+    "text": "Clear search",
+    "status": "draft"
+  },
+  "search.matches": {
+    "text": "{n, plural, one {# trade matches} other {# trades match}} · {m, plural, one {# job suggested} other {# jobs suggested}}",
+    "status": "draft"
+  },
+  "search.none": {
+    "text": "No matches",
+    "status": "draft"
+  },
+  "search.emptyTitle": {
+    "text": "No matching services",
+    "status": "draft"
+  },
+  "search.emptyBody": {
+    "text": "Try different words, or describe what you need. Regulated jobs still go to review.",
+    "status": "draft"
+  },
+  "search.describe": {
+    "text": "Describe it",
+    "status": "draft"
+  },
+  "search.needsReview": {
+    "text": "needs review",
+    "status": "draft"
+  },
   "request.title": {
     "text": "Tell us about the job",
     "status": "draft"
@@ -283,6 +315,10 @@
     "text": "{minisplits, plural, one {# minisplit} other {# minisplits}}, {bathrooms, plural, one {# bathroom} other {# bathrooms}}, {bedrooms, plural, one {# bedroom} other {# bedrooms}}",
     "status": "draft"
   },
+  "request.errorCategory": {
+    "text": "Choose a service so we know which trade to send.",
+    "status": "draft"
+  },
   "request.errorName": {
     "text": "Add your name so the professional knows who to ask for.",
     "status": "draft"
@@ -345,6 +381,10 @@
   },
   "estimate.note": {
     "text": "This is an estimate. The final price comes in the professional's quote.",
+    "status": "draft"
+  },
+  "estimate.pending": {
+    "text": "We'll confirm the price on the visit. No price is set for this job yet.",
     "status": "draft"
   },
   "estimate.urgent": {

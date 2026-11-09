@@ -4,7 +4,7 @@ The My Home hero loads one GLB. The file in the repo is the starter house (real 
 
 ## Swap in a new export
 
-1. Export GLB from Spline (see [docs/3d/SPLINE_GUIDE.md](3d/SPLINE_GUIDE.md)). Keep the scale, the origin, Y-up, and the material names (`Wall_Grey`, `Trim_Charcoal`, `Glass`, `Site_Light`). Leave `Accent_Lime` for a later highlight. The hero and the stat cards are the only lime in the hub.
+1. Export GLB from Spline (see [docs/3d/SPLINE_GUIDE.md](3d/SPLINE_GUIDE.md)). Keep the scale, the origin, Y-up, and the material names (`Wall_Grey`, `Trim_Charcoal`, `Glass`, `Site_Light`). Leave `Accent_Lime` (High Viz Lime) for a later highlight. The hero and the stat cards are the only High Viz Lime in the hub.
 2. Put the file in `public/models/`.
    - Same name (`santa-sofia-house.glb`): replace the file. No code change.
    - Versioned name (`santa-sofia-house_vNN.glb`): change `HOUSE_MODEL_FILE` in `src/features/customer/blueprint/houseModel.ts` to that name. That constant is the only path the app reads. The URL is `import.meta.env.BASE_URL` plus `models/` plus the file name, so the GitHub Pages base `/fixx_mx_analogic/` stays correct.

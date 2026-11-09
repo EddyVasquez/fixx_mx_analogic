@@ -220,12 +220,16 @@ describe("prices, aliases, diagnosis fee and on-site changes", () => {
   });
 });
 
-describe("fourteen trades, job names and cleaning add-ons", () => {
-  const TRADES = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance", "Roofing", "Handyman", "Locksmith", "Cleaning"];
+describe("workbook trades, job names and cleaning add-ons", () => {
+  const TRADES = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance", "Roofing", "Handyman", "Locksmith", "Cleaning", "Metalwork"];
 
-  it("prices all 14 trades from the workbook, with a job name in English, Spanish and Korean", () => {
+  it("prices the workbook trades, and leaves Metalwork as a visit quote until a price exists", () => {
     const present = new Set(Object.values(cat.tasks).map((t) => t.category));
     expect([...present].sort()).toEqual([...TRADES].sort());
+    const bars = quoteTask(cat, { taskId: "MTL-001", tier: "Standard", urgency: "STANDARD" });
+    expect(bars.status).toBe("QUOTE_ON_SITE");
+    expect(bars.reasons).toContain("no-labor-data");
+    expect(bars.total).toBe(0);
     for (const task of Object.values(cat.tasks)) {
       expect(task.job.length).toBeGreaterThan(0);
       expect(task.jobEs?.length).toBeGreaterThan(0);

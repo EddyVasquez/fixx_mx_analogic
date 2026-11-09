@@ -1,0 +1,206 @@
+/* Choose-a-service search. High Viz Lime (#DFFF32) is only the glow and the Describe it button. */
+
+.service-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 52px;
+  padding: 0 6px 0 14px;
+  border: 1.5px solid theme("colors.line");
+  border-radius: 18px;
+  background: color-mix(in srgb, theme("colors.paper") 78%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (min-width: 768px) {
+  .service-search {
+    min-height: 56px;
+  }
+}
+
+.service-search:focus-within {
+  border-color: #2e2e2e;
+  outline: 3px solid #2e2e2e;
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, #dfff32 55%, transparent),
+    0 0 14px color-mix(in srgb, #dfff32 28%, transparent);
+}
+
+.service-search input {
+  min-width: 0;
+  flex: 1 1 auto;
+  border: 0;
+  background: transparent;
+  color: theme("colors.ink");
+  font: inherit;
+  font-weight: 500;
+  outline: none;
+}
+
+.service-search input::placeholder {
+  color: theme("colors.inkSoft");
+  font-weight: 500;
+  opacity: 1;
+}
+
+.service-search input[type="search"]::-webkit-search-cancel-button,
+.service-search input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.search-clear {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: theme("colors.paper");
+  cursor: pointer;
+  line-height: 1;
+}
+
+.search-clear-disc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: theme("colors.brand");
+}
+
+.search-clear:focus-visible {
+  outline: 3px solid theme("colors.brandDeep");
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+.search-chip {
+  border: 1px solid theme("colors.line");
+  border-radius: 999px;
+  background: theme("colors.paper");
+  color: theme("colors.ink");
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.search-chip:focus-visible {
+  outline: 3px solid theme("colors.brandDeep");
+  outline-offset: 2px;
+}
+
+.search-review {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  border: 2px solid #2e2e2e;
+  border-radius: 999px;
+  background: #ececec;
+  color: #2e2e2e;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.search-describe {
+  border: 0;
+  border-radius: 999px;
+  background: #dfff32;
+  color: #2e2e2e;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.search-describe:focus-visible {
+  outline: 3px solid theme("colors.brandDeep");
+  outline-offset: 2px;
+}
+
+/* Match glow on trade tiles. High Viz Lime edges only; selection fill wins when both apply. */
+.service-card {
+  transition: opacity 120ms ease, box-shadow 120ms ease;
+}
+
+.service-card[data-match="strong"]:not([data-selected="true"]) {
+  box-shadow:
+    0 0 0 2px #dfff32,
+    0 0 18px color-mix(in srgb, #dfff32 55%, transparent),
+    0 0 0 1px color-mix(in srgb, #dfff32 35%, transparent);
+  opacity: 1;
+}
+
+.service-card[data-match="soft"]:not([data-selected="true"]) {
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, #dfff32 70%, transparent),
+    0 0 10px color-mix(in srgb, #dfff32 28%, transparent);
+  opacity: 0.92;
+}
+
+.service-card[data-match="dim"] {
+  opacity: 0.38;
+}
+
+.service-card[data-selected="true"] {
+  opacity: 1;
+}
+
+.service-card-home {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 112px;
+  padding: 10px 8px 52px 10px;
+}
+
+.service-card-home .trade-label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.service-card-home .trade-plus {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+@media (min-width: 768px) {
+  .service-card-home {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    min-height: 0;
+    padding: 4px 4px 4px 12px;
+  }
+
+  .service-card-home .trade-label {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
+  .service-card-home .trade-plus {
+    position: static;
+  }
+}
+
+@media (hover: hover) {
+  .search-chip:hover {
+    border-color: theme("colors.inkSoft");
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card {
+    transition: none;
+  }
+}

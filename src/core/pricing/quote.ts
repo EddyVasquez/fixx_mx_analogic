@@ -11,7 +11,7 @@ const CATALOG_CATEGORY: Record<string, string> = {
   plumbing: "Plumbing", electrical: "Electrical", hvac: "HVAC", painting: "Painting",
   pest_control: "Pest", gardening: "Gardening", flooring: "Flooring", concrete: "Concrete",
   carpentry: "Carpentry", appliance: "Appliance", roofing: "Roofing", handyman: "Handyman",
-  locksmith: "Locksmith", cleaning: "Cleaning"
+  locksmith: "Locksmith", cleaning: "Cleaning", metalwork: "Metalwork"
 };
 
 /** The urgent checkbox uses the catalog's emergency labor rate. It is not a separate fee. */
@@ -95,10 +95,21 @@ function rangeFromCatalog(categoryId: string, urgency: UrgencyLevel, scope?: Quo
  * Lowest and highest fixed catalog total for a trade.
  * Urgent requests use the emergency labor rate inside those totals. There is no extra surcharge.
  */
-export function estimateRange(categoryId: string, emergency: boolean, scope?: QuoteScope) {
+export interface EstimateRange {
+  low: number;
+  high: number;
+  surcharge: number;
+  /** False when this trade is in the catalog but has no fixed price yet (quote on the visit). */
+  priced: boolean;
+}
+
+export function estimateRange(categoryId: string, emergency: boolean, scope?: QuoteScope): EstimateRange {
   const r = rangeFromCatalog(categoryId, urgencyFor(emergency), scope);
-  if (!r) throw new Error(`No estimate range configured for ${categoryId}`);
-  return { low: r[0], high: r[1], surcharge: 0 };
+  if (!r) {
+    if (!CATALOG_CATEGORY[categoryId]) throw new Error(`No estimate range configured for ${categoryId}`);
+    return { low: 0, high: 0, surcharge: 0, priced: false };
+  }
+  return { low: r[0], high: r[1], surcharge: 0, priced: true };
 }
 
 const reviewByCategory = new Map<string, TaskQuote["humanReview"]>();
@@ -140,6 +151,8 @@ export interface BookedQuote {
   payout: number;
   taskId: string;
   tier: string;
+  /** True when the catalog has no fixed price. Totals are not a customer price. */
+  pendingPrice: boolean;
 }
 
 /** Customer lines. The booking line is omitted when the amount is zero. */
@@ -158,7 +171,23 @@ export function customerLines(parts: { materials: number; labor: number; booking
  */
 export function buildQuote(categoryId: string, emergency: boolean, scope?: QuoteScope): BookedQuote {
   const quotes = fixedQuotes(categoryId, urgencyFor(emergency), scope);
-  if (quotes.length === 0) throw new Error(`No estimate range configured for ${categoryId}`);
+  if (quotes.length === 0) {
+    if (!CATALOG_CATEGORY[categoryId]) throw new Error(`No estimate range configured for ${categoryId}`);
+    const category = CATALOG_CATEGORY[categoryId];
+    const task = Object.values(catalog.tasks).find((item) => item.category === category);
+    return {
+      total: 0,
+      lines: [],
+      labor: 0,
+      materials: 0,
+      wageFloor: 0,
+      bookingFee: 0,
+      payout: 0,
+      taskId: task?.id ?? "",
+      tier: task?.tiers[0] ?? "",
+      pendingPrice: true
+    };
+  }
   const sorted = [...quotes].sort((a, b) => a.total - b.total || a.taskId.localeCompare(b.taskId) || a.tier.localeCompare(b.tier));
   const quote = sorted[Math.floor((sorted.length - 1) / 2)]!;
   const wageFloor = payoutFloor(quote.floor, quote.multiplier);
@@ -171,6 +200,7 @@ export function buildQuote(categoryId: string, emergency: boolean, scope?: Quote
     bookingFee: quote.bookingFee,
     payout: quote.payout,
     taskId: quote.taskId,
-    tier: quote.tier
+    tier: quote.tier,
+    pendingPrice: false
   };
 }

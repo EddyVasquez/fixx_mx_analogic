@@ -33,7 +33,9 @@ export const TRADE_ICONS: Record<string, Icon> = {
   roofing: HouseLine,
   handyman: Hammer,
   locksmith: Key,
-  cleaning: Broom
+  cleaning: Broom,
+  // Fence is not in the pinned Phosphor set. Wrench stands in for Herrería.
+  metalwork: Wrench
 };
 
 export function TradeIcon({ categoryId, size = 24 }: { categoryId: string; size?: number }) {

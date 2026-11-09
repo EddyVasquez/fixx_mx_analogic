@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadSeed } from "../src/mocks/db/seedData";
 
-const TRADES = ["plumbing", "electrical", "hvac", "painting", "pest_control", "gardening", "flooring", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning"];
+const TRADES = ["plumbing", "electrical", "hvac", "painting", "pest_control", "gardening", "flooring", "concrete", "carpentry", "appliance", "roofing", "handyman", "locksmith", "cleaning", "metalwork"];
 
 describe("seed data", () => {
   const s = loadSeed();
-  it("has all 14 trades, with English, Spanish and Korean names from the workbook categories", () => {
+  it("has all 15 trades, with English, Spanish and Korean names from the workbook categories", () => {
     expect(s.categories.map((c) => c.id)).toEqual(TRADES);
     s.categories.forEach((c) => Object.values(c.names).forEach((n) => expect(n.length).toBeGreaterThan(0)));
     const catalog = JSON.parse(readFileSync(join(process.cwd(), "src/seed/pricing/catalog.json"), "utf8")) as { tasks: Record<string, { category: string }> };
