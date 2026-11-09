@@ -80,6 +80,8 @@ function titleScore(query: string, title: string): number {
     const qt = qTokens[0] ?? "";
     if (tTokens.includes(qt) || (qt.length >= 5 && tTokens.some((tt) => prefixHit(qt, tt) || prefixHit(tt, qt)))) return 85;
   }
+  // One shared word in a longer question (for example "baño" inside "se tapó el baño") is not a job match.
+  if (hits < 2) return 0;
   return Math.min(75, 40 + hits * 15);
 }
 

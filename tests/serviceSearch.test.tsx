@@ -21,9 +21,11 @@ describe("catalog search", () => {
   });
 
   it("keeps job titles and metalwork ids out of the screen code", () => {
-    expect(uiSource).not.toMatch(/Window security bars|Protecciones de ventana|MTL-00/);
-    expect(jobsForCategory("metalwork", "en").map((job) => job.title)).toEqual(["Window security bars"]);
-    expect(jobsForCategory("metalwork", "es").map((job) => job.title)).toEqual(["Protecciones de ventana"]);
+    expect(uiSource).not.toMatch(/Window security bars|Protecciones de ventana|FIXX-MTL-00/);
+    const titles = jobsForCategory("metalwork", "en").map((job) => job.title);
+    expect(titles.some((title) => title.startsWith("Window security bars"))).toBe(true);
+    expect(titles).toHaveLength(5);
+    expect(jobsForCategory("handyman", "en").some((job) => job.title.startsWith("Broken glass pane"))).toBe(true);
   });
 
   it("lights plumbing for a clogged bathroom and suggests the catalog drain and toilet jobs", () => {
@@ -37,14 +39,19 @@ describe("catalog search", () => {
     expect(result.empty).toBe(false);
   });
 
-  it("matches protecciones to the catalog window-bar job and ignores metalwork ids that are not priced in yet", () => {
-    const result = searchServices("protecciones", "en");
-    expect(result.trades.metalwork).toBe("strong");
-    expect(result.trades.locksmith).toBe("soft");
-    expect(result.chips.map((chip) => chip.taskId)).toEqual(["MTL-001"]);
-    expect(result.chips[0]?.title).toBe("Window security bars");
-    expect(result.chips[0]?.tradeName).toBe("Metalwork");
-    expect(result.chips[0]?.pendingReview).toBe(true);
+  it("matches protecciones, rejas, and glass words to the workbook jobs", () => {
+    const bars = searchServices("protecciones", "en");
+    expect(bars.trades.metalwork).toBe("strong");
+    expect(bars.chips[0]?.taskId).toBe("FIXX-MTL-001");
+    expect(bars.chips[0]?.title.startsWith("Window security bars")).toBe(true);
+    expect(bars.chips[0]?.pendingReview).toBe(false);
+    expect(searchServices("rejas", "es").chips.some((chip) => chip.taskId === "FIXX-MTL-001")).toBe(true);
+    for (const query of ["vidrio", "cristal", "glass"]) {
+      const found = searchServices(query, query === "glass" ? "en" : "es");
+      expect(found.chips.some((chip) => chip.taskId === "FIXX-HND-003" || chip.taskId === "FIXX-HND-005")).toBe(true);
+    }
+    const held = searchServices("carport", "en");
+    expect(held.chips.some((chip) => chip.taskId === "FIXX-MTL-005" && chip.pendingReview)).toBe(true);
   });
 
   it("matches a Spanish query while the chip label stays in the active language", () => {
@@ -52,7 +59,7 @@ describe("catalog search", () => {
     expect(english.trades.plumbing).toBe("strong");
     expect(english.chips.some((chip) => chip.title === "Drain cleaning")).toBe(true);
     const spanish = searchServices("protecciones", "es");
-    expect(spanish.chips[0]?.title).toBe("Protecciones de ventana");
+    expect(spanish.chips[0]?.title.startsWith("Protecciones para ventana")).toBe(true);
     expect(spanish.chips[0]?.tradeName).toBe("Herrería");
     expect(searchServices("plomería", "en").trades.plumbing).toBe("strong");
   });
@@ -73,15 +80,16 @@ describe("catalog search", () => {
     expect(searchServices("baño", "es").trades.plumbing).not.toBe("strong");
   });
 
-  it("does not invent a metalwork price", () => {
-    const range = estimateRange("metalwork", false);
-    expect(range.priced).toBe(false);
-    expect(range.pendingQuotes).toBe(true);
-    const quote = buildQuote("metalwork", false);
-    expect(quote.pendingPrice).toBe(true);
-    expect(quote.pendingQuotes).toBe(true);
-    expect(quote.lines).toEqual([]);
-    expect(quote.total).toBe(0);
+  it("prices bookable metalwork from the workbook and does not treat it as pending quotes", () => {
+    const range = estimateRange("metalwork", false, { taskIds: ["FIXX-MTL-001"] });
+    expect(range.priced).toBe(true);
+    expect(range.pendingQuotes).toBe(false);
+    expect(range.low).not.toBe(Math.round(range.low));
+    const quote = buildQuote("metalwork", false, { taskIds: ["FIXX-MTL-001"] });
+    expect(quote.pendingPrice).toBe(false);
+    expect(quote.pendingQuotes).toBe(false);
+    expect(quote.total).toBeGreaterThan(0);
+    expect(quote.total).not.toBe(Math.round(quote.total));
   });
 });
 

@@ -15,7 +15,7 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
   const lang = i18n.language as Lang;
   const money = useMoney();
   const r = estimateRange(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
-  const needsReview = humanReviewForCategory(draft.categoryId).length > 0;
+  const needsReview = humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0;
   return (
     <div className="flex min-w-0 flex-col gap-4">
       {needsReview && <PendingReviewBanner />}

@@ -242,12 +242,18 @@ describe("workbook trades, job names and cleaning add-ons", () => {
     const present = new Set(Object.values(cat.tasks).map((t) => t.category));
     const named = categories.map((category) => category.catalogCategory);
     expect([...present].sort()).toEqual([...named].sort());
-    const bars = quoteTask(cat, { taskId: "MTL-001", tier: "Standard", urgency: "STANDARD" });
-    expect(bars.status).toBe("QUOTE_ON_SITE");
-    expect(bars.needsHumanReview).toBe(true);
-    expect(bars.humanReview.some((item) => item.reason === "pending quotes")).toBe(true);
-    expect(bars.reasons).toContain("no-labor-data");
-    expect(bars.total).toBe(0);
+    const bars = quoteTask(cat, { taskId: "FIXX-MTL-001", tier: "Budget", urgency: "STANDARD" });
+    expect(bars.status).toBe("FIXED");
+    expect(bars.needsHumanReview).toBe(false);
+    expect(bars.labor).toBe(887.5);
+    expect(bars.total).toBe(roundMoney(bars.materials + bars.labor + bars.bookingFee));
+    const gate = quoteTask(cat, { taskId: "FIXX-MTL-002", tier: "Budget", urgency: "STANDARD" });
+    expect(gate.labor).toBe(5407.58);
+    expect(gate.marketLabor).toBe(5407.58);
+    const carport = quoteTask(cat, { taskId: "FIXX-MTL-005", tier: "Budget", urgency: "STANDARD" });
+    expect(carport.status).toBe("FIXED");
+    expect(carport.needsHumanReview).toBe(true);
+    expect(carport.humanReview.some((item) => item.reason === "structural")).toBe(true);
     for (const task of Object.values(cat.tasks)) {
       expect(task.job.length).toBeGreaterThan(0);
       expect(task.jobEs?.length).toBeGreaterThan(0);

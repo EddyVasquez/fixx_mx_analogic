@@ -19,8 +19,38 @@
       "id": "window-bars",
       "phrases": ["protecciones", "proteccion", "rejas", "reja", "herreria", "bars", "security bars", "window bars"],
       "primaryTradeId": "metalwork",
-      "primaryJobIds": ["MTL-001", "MTL-002", "MTL-003", "MTL-004", "MTL-005"],
+      "primaryJobIds": ["FIXX-MTL-001", "FIXX-MTL-003"],
       "relatedTradeIds": ["locksmith"]
+    },
+    {
+      "id": "metal-gate",
+      "phrases": ["porton", "gate", "gates"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-002"]
+    },
+    {
+      "id": "railing",
+      "phrases": ["barandal", "railing", "railings"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-003"]
+    },
+    {
+      "id": "welding",
+      "phrases": ["soldadura", "welding", "weld"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-004"]
+    },
+    {
+      "id": "carport",
+      "phrases": ["carport", "techumbre", "cochera ligera"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-005"]
+    },
+    {
+      "id": "glass",
+      "phrases": ["vidrio", "cristal", "glass", "vidrio templado", "shower screen"],
+      "primaryTradeId": "handyman",
+      "primaryJobIds": ["FIXX-HND-003", "FIXX-HND-005", "FIXX-HND-004"]
     },
     {
       "id": "termite",

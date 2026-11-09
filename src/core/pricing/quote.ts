@@ -124,14 +124,18 @@ const reviewByCategory = new Map<string, TaskQuote["humanReview"]>();
  * Review reasons for a trade when no optional line is selected.
  * Base triggers and regulated labor count. As-needed lines (cleaning at height or mold, a gas connector) do not, until the homeowner selects them on that task.
  */
-export function humanReviewForCategory(categoryId: string): TaskQuote["humanReview"] {
-  const cached = reviewByCategory.get(categoryId);
+export function humanReviewForCategory(categoryId: string, taskIds?: readonly string[]): TaskQuote["humanReview"] {
+  const scopeKey = taskIds?.length ? [...taskIds].sort().join(",") : "*";
+  const cacheKey = `${categoryId}|${scopeKey}`;
+  const cached = reviewByCategory.get(cacheKey);
   if (cached) return cached;
   const category = CATALOG_CATEGORY[categoryId];
+  const wanted = taskIds?.length ? new Set(taskIds) : null;
   const seen = new Map<string, TaskQuote["humanReview"][number]>();
   if (category) {
     for (const task of Object.values(catalog.tasks)) {
       if (task.category !== category) continue;
+      if (wanted && !wanted.has(task.id)) continue;
       for (const tier of task.tiers) {
         const quote = quoteTask(catalog, { taskId: task.id, tier, urgency: "STANDARD" });
         for (const item of quote.humanReview) seen.set(`${item.kind}:${item.ref}`, item);
@@ -139,7 +143,7 @@ export function humanReviewForCategory(categoryId: string): TaskQuote["humanRevi
     }
   }
   const list = [...seen.values()];
-  reviewByCategory.set(categoryId, list);
+  reviewByCategory.set(cacheKey, list);
   return list;
 }
 

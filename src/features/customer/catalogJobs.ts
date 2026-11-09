@@ -4,16 +4,18 @@ import { isPendingQuotes } from "@/core/pricing/reviewStatus";
 import { buildJobSentence } from "./jobSentence";
 import { categories } from "./data";
 
-interface NamedTask { id: string; category: string; job: string; jobEs?: string; jobKo?: string; keepCase?: Lang[] }
+interface NamedLine { reviewTrigger?: string }
+interface NamedTask { id: string; category: string; job: string; jobEs?: string; jobKo?: string; keepCase?: Lang[]; lines?: NamedLine[] }
 interface LaborRow { taskId: string; flag: string; reviewStatus?: string | null }
 
 const catalog = catalogJson as { tasks: Record<string, NamedTask>; labor: Record<string, LaborRow> };
 const tasks = Object.values(catalog.tasks);
-const reviewTasks = new Set(
-  Object.values(catalog.labor)
+const reviewTasks = new Set([
+  ...Object.values(catalog.labor)
     .filter((row) => row.flag === "regulated" || isPendingQuotes(row.flag, row.reviewStatus))
-    .map((row) => row.taskId)
-);
+    .map((row) => row.taskId),
+  ...tasks.filter((task) => (task.lines ?? []).some((line) => line.reviewTrigger === "base")).map((task) => task.id)
+]);
 
 export interface CatalogJob {
   id: string;

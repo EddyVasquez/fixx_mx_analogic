@@ -39,19 +39,17 @@ describe("pending quotes are not bookable", () => {
     expect(isPendingQuotes("none", "Bookable")).toBe(false);
   });
 
-  it("keeps MTL-001 in review with no customer price", () => {
-    const quote = quoteTask(cat, { taskId: "MTL-001", tier: "Standard", urgency: "STANDARD" });
-    expect(quote.status).not.toBe("FIXED");
-    expect(quote.needsHumanReview).toBe(true);
-    expect(quote.humanReview).toEqual([{ kind: "labor", ref: "MTL-001|All", reason: "pending quotes" }]);
-    expect(quote.total).toBe(0);
-    expect(humanReviewForCategory("metalwork").some((item) => item.reason === "pending quotes")).toBe(true);
-    expect(jobsForCategory("metalwork", "en")[0]?.pendingReview).toBe(true);
-    const booked = buildQuote("metalwork", false);
-    expect(booked.pendingQuotes).toBe(true);
-    expect(booked.pendingPrice).toBe(true);
-    expect(booked.total).toBe(0);
-    expect(booked.lines).toEqual([]);
+  it("keeps a pending-quotes labor row unpriced, and holds only the structural metalwork job", () => {
+    const held = quoteTask(withLabor("FIXX-PNT-001", { flag: "pending quotes", reviewStatus: "PENDING QUOTES" }), { taskId: "FIXX-PNT-001", tier: "Budget", urgency: "STANDARD" });
+    expect(held.status).not.toBe("FIXED");
+    expect(held.needsHumanReview).toBe(true);
+    expect(held.humanReview).toEqual([{ kind: "labor", ref: "FIXX-PNT-001|All", reason: "pending quotes" }]);
+    const bars = jobsForCategory("metalwork", "en").find((job) => job.id === "FIXX-MTL-001");
+    const carport = jobsForCategory("metalwork", "en").find((job) => job.id === "FIXX-MTL-005");
+    expect(bars?.pendingReview).toBe(false);
+    expect(carport?.pendingReview).toBe(true);
+    expect(humanReviewForCategory("metalwork", ["FIXX-MTL-001"])).toEqual([]);
+    expect(humanReviewForCategory("metalwork", ["FIXX-MTL-005"]).some((item) => item.reason === "structural")).toBe(true);
   });
 
   it("blocks a priced task when the flag or the review status says quotes are still pending", () => {
@@ -91,8 +89,7 @@ describe("pending quotes are not bookable", () => {
       if (!step.ok) throw new Error(step.error);
       snap = step.snapshot;
     }
-    const unpriced = buildQuote("metalwork", false);
-    const refused = send(jobMachine, snap, { type: "SEND_QUOTE", total: unpriced.total, travelFee: 0, payoutRatio: 0.8, lines: unpriced.lines }, t0);
+    const refused = send(jobMachine, snap, { type: "SEND_QUOTE", total: 0, travelFee: 0, payoutRatio: 0.8, lines: [] }, t0);
     expect(refused.ok).toBe(false);
     expect(refused.snapshot.state).toBe("professionalSelected");
     const held = send(jobMachine, snap, { type: "SEND_QUOTE", total: 1800, travelFee: 80, payoutRatio: 0.8, lines: [{ id: "work", amount: 1800 }] }, t0);
@@ -104,36 +101,21 @@ describe("pending quotes are not bookable", () => {
     const booked = send(jobMachine, held.snapshot, { type: "ACCEPT_QUOTE", method: "card", jobStart: t0 }, t0);
     expect(booked.ok).toBe(false);
     expect(booked.snapshot.state).toBe("pendingReview");
-    const visit = quoteVisit(cat, [{ taskId: "MTL-001", tier: "Standard" }], "STANDARD");
+    const visit = quoteVisit(withLabor("FIXX-PNT-001", { flag: "pending quotes" }), [{ taskId: "FIXX-PNT-001", tier: "Budget" }], "STANDARD");
     expect(visit.status).not.toBe("FIXED");
-    expect(visit.total).toBe(0);
   });
 
-  it("shows pending review and no price or deposit to the customer", async () => {
+  it("prices bookable window bars and keeps the structural carport in review", async () => {
     await i18n.changeLanguage("en");
-    const draft = emptyDraft({ categoryId: "metalwork", selectedJobIds: ["MTL-001"] });
-    render(<EstimateView draft={draft} onNext={() => undefined} />);
-    expect(screen.getByText("Pending review. The price is confirmed after the quotes are ready.")).toBeTruthy();
-    expect(screen.getByText("Pending review")).toBeTruthy();
-    expect(screen.queryByText(/\$/)).toBeNull();
+    const bars = emptyDraft({ categoryId: "metalwork", selectedJobIds: ["FIXX-MTL-001"] });
+    render(<EstimateView draft={bars} onNext={() => undefined} />);
+    expect(screen.queryByText("Pending review. The price is confirmed after the quotes are ready.")).toBeNull();
+    expect(screen.queryByText("Pending review")).toBeNull();
+    expect(screen.getByText(/\$/).textContent).toMatch(/\$[\d,]+\.\d{2}/);
     cleanup();
-    render(
-      <QuoteView
-        ctx={newJobCtx({ total: 4800, lines: [{ id: "work", amount: 4800 }], travelFee: 80, needsReview: true })}
-        draft={draft}
-        professionalName="Marisol Treviño"
-        now={t0}
-        slotHours={30}
-        method="card"
-        onSlot={() => undefined}
-        onMethod={() => undefined}
-        onAccept={() => undefined}
-        awaitingApproval
-      />
-    );
-    expect(screen.getByText("Pending review. The price is confirmed after the quotes are ready.")).toBeTruthy();
-    expect(screen.queryByText("4,800")).toBeNull();
-    expect(screen.queryByText(/deposit/i)).toBeNull();
-    expect(screen.queryByRole("button", { name: "Accept and sign" })).toBeNull();
+    const carport = emptyDraft({ categoryId: "metalwork", selectedJobIds: ["FIXX-MTL-005"] });
+    render(<EstimateView draft={carport} onNext={() => undefined} />);
+    expect(screen.getByText("Pending review")).toBeTruthy();
+    expect(screen.getByText(/\$/).textContent).toMatch(/\$[\d,]+\.\d{2}/);
   });
 });

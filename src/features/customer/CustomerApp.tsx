@@ -71,7 +71,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
     if (pre === "review") {
       return <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
         rt.languages.customer = lang;
-        rt.spawn(JOB_ID, "job", jobMachine, newJobCtx({ needsReview: humanReviewForCategory(draft.categoryId).length > 0 }), { categoryId: draft.categoryId });
+        rt.spawn(JOB_ID, "job", jobMachine, newJobCtx({ needsReview: humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0 }), { categoryId: draft.categoryId });
         send({ type: draft.zoneId === "outside" ? "OUT_OF_AREA" : "ESTIMATE_READY" });
         force();
       }} />;
