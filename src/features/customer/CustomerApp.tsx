@@ -149,7 +149,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold">{t("wait.title")}</h2>
           <p>{t("wait.body", { name: pro?.name ?? "" })}</p>
-          {quote.pendingPrice ? <p>{t("estimate.pending")}</p> : <ProSimulator state={state} onEvent={proEvent} />}
+          {quote.pendingPrice ? <p>{t(quote.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p> : <ProSimulator state={state} onEvent={proEvent} />}
           <ChatView jobId={JOB_ID} role="customer" />
         </div>
       );

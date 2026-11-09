@@ -27,7 +27,7 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
           {r.surcharge > 0 && <p className="font-semibold"><DemoValue>{t("estimate.urgent", { amount: money(r.surcharge) })}</DemoValue></p>}
         </>
       ) : (
-        <p className="text-lg font-semibold">{t("estimate.pending")}</p>
+        <p className="text-lg font-semibold">{t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p>
       )}
       <HomeQuoteFacts draft={draft} />
       <p className="text-inkSoft">{t("estimate.note")}</p>

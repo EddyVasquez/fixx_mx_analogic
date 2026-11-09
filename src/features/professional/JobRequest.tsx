@@ -59,7 +59,7 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
       <HomeQuoteFacts draft={draft} />
 
       <h3 className="text-xl font-bold">{t("pquote.title")}</h3>
-      {pendingPrice ? <p className="font-semibold">{t("estimate.pending")}</p> : <p className="font-semibold">{t("pquote.suggested", { amount: money(suggested) })}</p>}
+      {pendingPrice ? <p className="font-semibold">{t(base.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p> : <p className="font-semibold">{t("pquote.suggested", { amount: money(suggested) })}</p>}
       {!pendingPrice && (
         <>
           <Field label={t("pquote.yourPayout")}>

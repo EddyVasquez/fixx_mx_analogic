@@ -1,15 +1,18 @@
 import catalogJson from "@/seed/pricing/catalog.json";
 import type { Lang } from "@/core/config/fixx.config";
+import { isPendingQuotes } from "@/core/pricing/reviewStatus";
 import { buildJobSentence } from "./jobSentence";
 import { categories } from "./data";
 
 interface NamedTask { id: string; category: string; job: string; jobEs?: string; jobKo?: string; keepCase?: Lang[] }
-interface LaborRow { taskId: string; flag: string }
+interface LaborRow { taskId: string; flag: string; reviewStatus?: string | null }
 
 const catalog = catalogJson as { tasks: Record<string, NamedTask>; labor: Record<string, LaborRow> };
 const tasks = Object.values(catalog.tasks);
-const regulatedTasks = new Set(
-  Object.values(catalog.labor).filter((row) => row.flag === "regulated").map((row) => row.taskId)
+const reviewTasks = new Set(
+  Object.values(catalog.labor)
+    .filter((row) => row.flag === "regulated" || isPendingQuotes(row.flag, row.reviewStatus))
+    .map((row) => row.taskId)
 );
 
 export interface CatalogJob {
@@ -49,7 +52,7 @@ export function catalogJobRecords(): CatalogJobRecord[] {
       categoryId,
       titles: { en: jobTitle(task, "en"), es: jobTitle(task, "es"), ko: jobTitle(task, "ko") },
       keepCase: task.keepCase ?? [],
-      pendingReview: regulatedTasks.has(task.id)
+      pendingReview: reviewTasks.has(task.id)
     }];
   });
 }

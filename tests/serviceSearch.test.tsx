@@ -44,6 +44,7 @@ describe("catalog search", () => {
     expect(result.chips.map((chip) => chip.taskId)).toEqual(["MTL-001"]);
     expect(result.chips[0]?.title).toBe("Window security bars");
     expect(result.chips[0]?.tradeName).toBe("Metalwork");
+    expect(result.chips[0]?.pendingReview).toBe(true);
   });
 
   it("matches a Spanish query while the chip label stays in the active language", () => {
@@ -73,9 +74,12 @@ describe("catalog search", () => {
   });
 
   it("does not invent a metalwork price", () => {
-    expect(estimateRange("metalwork", false).priced).toBe(false);
+    const range = estimateRange("metalwork", false);
+    expect(range.priced).toBe(false);
+    expect(range.pendingQuotes).toBe(true);
     const quote = buildQuote("metalwork", false);
     expect(quote.pendingPrice).toBe(true);
+    expect(quote.pendingQuotes).toBe(true);
     expect(quote.lines).toEqual([]);
     expect(quote.total).toBe(0);
   });

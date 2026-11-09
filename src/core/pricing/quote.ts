@@ -101,15 +101,21 @@ export interface EstimateRange {
   surcharge: number;
   /** False when this trade is in the catalog but has no fixed price yet (quote on the visit). */
   priced: boolean;
+  /** True when labor is waiting on quotes and must not be booked or priced. */
+  pendingQuotes: boolean;
+}
+
+function categoryHasPendingQuotes(categoryId: string): boolean {
+  return humanReviewForCategory(categoryId).some((item) => item.reason === "pending quotes");
 }
 
 export function estimateRange(categoryId: string, emergency: boolean, scope?: QuoteScope): EstimateRange {
   const r = rangeFromCatalog(categoryId, urgencyFor(emergency), scope);
   if (!r) {
     if (!CATALOG_CATEGORY[categoryId]) throw new Error(`No estimate range configured for ${categoryId}`);
-    return { low: 0, high: 0, surcharge: 0, priced: false };
+    return { low: 0, high: 0, surcharge: 0, priced: false, pendingQuotes: categoryHasPendingQuotes(categoryId) };
   }
-  return { low: r[0], high: r[1], surcharge: 0, priced: true };
+  return { low: r[0], high: r[1], surcharge: 0, priced: true, pendingQuotes: false };
 }
 
 const reviewByCategory = new Map<string, TaskQuote["humanReview"]>();
@@ -153,6 +159,8 @@ export interface BookedQuote {
   tier: string;
   /** True when the catalog has no fixed price. Totals are not a customer price. */
   pendingPrice: boolean;
+  /** True when the trade is waiting on quotes and must not be booked. */
+  pendingQuotes: boolean;
 }
 
 /** Customer lines. The booking line is omitted when the amount is zero. */
@@ -185,7 +193,8 @@ export function buildQuote(categoryId: string, emergency: boolean, scope?: Quote
       payout: 0,
       taskId: task?.id ?? "",
       tier: task?.tiers[0] ?? "",
-      pendingPrice: true
+      pendingPrice: true,
+      pendingQuotes: categoryHasPendingQuotes(categoryId)
     };
   }
   const sorted = [...quotes].sort((a, b) => a.total - b.total || a.taskId.localeCompare(b.taskId) || a.tier.localeCompare(b.tier));
@@ -201,6 +210,7 @@ export function buildQuote(categoryId: string, emergency: boolean, scope?: Quote
     payout: quote.payout,
     taskId: quote.taskId,
     tier: quote.tier,
-    pendingPrice: false
+    pendingPrice: false,
+    pendingQuotes: false
   };
 }

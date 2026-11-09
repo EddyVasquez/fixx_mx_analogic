@@ -148,7 +148,7 @@ export function StandardsSection({ lang }: P) {
   const money = useMoney();
   const rows = categories.map((c) => {
     const r = estimateRange(c.id, false);
-    const range = r.priced ? `${money(r.low)} – ${money(r.high)}` : t("estimate.pending");
+    const range = r.priced ? `${money(r.low)} – ${money(r.high)}` : t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending");
     return [<TradeName key={c.id} categoryId={c.id} lang={lang} />, c.lineType, <DemoValue key="w">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[c.id] ?? 0 })}</DemoValue>,
       r.priced ? <DemoValue key="r">{range}</DemoValue> : <span key="r">{range}</span>, String(CHECKLIST_ITEMS.length)];
   });

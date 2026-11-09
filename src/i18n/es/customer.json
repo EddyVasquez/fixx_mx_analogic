@@ -387,6 +387,10 @@
     "text": "Confirmaremos el precio en la visita. Este trabajo todavía no tiene precio.",
     "status": "draft"
   },
+  "estimate.pendingQuotes": {
+    "text": "Requiere revisión. El precio se confirma cuando las cotizaciones estén listas.",
+    "status": "draft"
+  },
   "estimate.urgent": {
     "text": "Cargo por urgencia: {amount}",
     "status": "draft"

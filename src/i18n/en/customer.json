@@ -387,6 +387,10 @@
     "text": "We'll confirm the price on the visit. No price is set for this job yet.",
     "status": "draft"
   },
+  "estimate.pendingQuotes": {
+    "text": "Pending review. The price is confirmed after the quotes are ready.",
+    "status": "draft"
+  },
   "estimate.urgent": {
     "text": "Urgent surcharge: {amount}",
     "status": "draft"

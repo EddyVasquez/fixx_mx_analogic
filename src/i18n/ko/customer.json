@@ -484,6 +484,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "estimate.pendingQuotes": {
+    "text": "검토가 필요해요. 견적이 준비되면 가격을 안내해 드릴게요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "estimate.urgent": {
     "text": "긴급 추가 요금: {amount}",
     "status": "draft",
