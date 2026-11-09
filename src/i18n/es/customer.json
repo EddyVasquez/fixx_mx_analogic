@@ -115,6 +115,38 @@
     "text": "Solicitud urgente",
     "status": "draft"
   },
+  "search.placeholder": {
+    "text": "¿Qué necesitas hacer en casa?",
+    "status": "draft"
+  },
+  "search.clear": {
+    "text": "Borrar búsqueda",
+    "status": "draft"
+  },
+  "search.matches": {
+    "text": "{n, plural, one {# oficio coincide} other {# oficios coinciden}} · {m, plural, one {# trabajo sugerido} other {# trabajos sugeridos}}",
+    "status": "draft"
+  },
+  "search.none": {
+    "text": "Sin resultados",
+    "status": "draft"
+  },
+  "search.emptyTitle": {
+    "text": "No hay servicios que coincidan",
+    "status": "draft"
+  },
+  "search.emptyBody": {
+    "text": "Prueba otras palabras o descríbenos qué necesitas. Los trabajos regulados siguen a revisión.",
+    "status": "draft"
+  },
+  "search.describe": {
+    "text": "Describir",
+    "status": "draft"
+  },
+  "search.needsReview": {
+    "text": "requiere revisión",
+    "status": "draft"
+  },
   "request.title": {
     "text": "Cuéntanos del trabajo",
     "status": "draft"
@@ -283,6 +315,10 @@
     "text": "{minisplits, plural, one {# minisplit} other {# minisplits}}, {bathrooms, plural, one {# baño} other {# baños}}, {bedrooms, plural, one {# recámara} other {# recámaras}}",
     "status": "draft"
   },
+  "request.errorCategory": {
+    "text": "Elige un servicio para saber qué oficio enviar.",
+    "status": "draft"
+  },
   "request.errorName": {
     "text": "Agrega tu nombre para que el profesional sepa a quién buscar.",
     "status": "draft"
@@ -345,6 +381,14 @@
   },
   "estimate.note": {
     "text": "Es un estimado. El precio final llega en la cotización de la persona profesional.",
+    "status": "draft"
+  },
+  "estimate.pending": {
+    "text": "Confirmaremos el precio en la visita. Este trabajo todavía no tiene precio.",
+    "status": "draft"
+  },
+  "estimate.pendingQuotes": {
+    "text": "Requiere revisión. El precio se confirma cuando las cotizaciones estén listas.",
     "status": "draft"
   },
   "estimate.urgent": {

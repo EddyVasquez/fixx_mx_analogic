@@ -1,0 +1,86 @@
+{
+  "groups": [
+    {
+      "id": "clog",
+      "phrases": ["se tapo", "tapo", "tapado", "destape", "destapar", "clog", "unclog", "drain", "drenaje"],
+      "primaryTradeId": "plumbing",
+      "primaryJobIds": ["FIXX-PLM-006", "FIXX-PLM-001"],
+      "relatedTradeIds": ["handyman"]
+    },
+    {
+      "id": "clog-bano",
+      "phrases": ["bano"],
+      "requiresAny": ["se tapo", "tapo", "tapado", "destape", "destapar", "clog", "unclog"],
+      "primaryTradeId": "plumbing",
+      "primaryJobIds": ["FIXX-PLM-001", "FIXX-PLM-006"],
+      "relatedTradeIds": ["handyman"]
+    },
+    {
+      "id": "window-bars",
+      "phrases": ["protecciones", "proteccion", "rejas", "reja", "herreria", "bars", "security bars", "window bars"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-001", "FIXX-MTL-003"],
+      "relatedTradeIds": ["locksmith"]
+    },
+    {
+      "id": "metal-gate",
+      "phrases": ["porton", "gate", "gates"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-002"]
+    },
+    {
+      "id": "railing",
+      "phrases": ["barandal", "railing", "railings"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-003"]
+    },
+    {
+      "id": "welding",
+      "phrases": ["soldadura", "welding", "weld"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-004"]
+    },
+    {
+      "id": "carport",
+      "phrases": ["carport", "techumbre", "cochera ligera"],
+      "primaryTradeId": "metalwork",
+      "primaryJobIds": ["FIXX-MTL-005"]
+    },
+    {
+      "id": "glass",
+      "phrases": ["vidrio", "cristal", "glass", "vidrio templado", "shower screen"],
+      "primaryTradeId": "handyman",
+      "primaryJobIds": ["FIXX-HND-003", "FIXX-HND-005", "FIXX-HND-004"]
+    },
+    {
+      "id": "termite",
+      "phrases": ["termitas", "termita", "termite", "termites"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-002"]
+    },
+    {
+      "id": "cockroach",
+      "phrases": ["cucaracha", "cucarachas", "cockroach", "cockroaches", "alacran", "alacranes", "scorpion", "scorpions"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-001"]
+    },
+    {
+      "id": "pests",
+      "phrases": ["plagas", "plaga", "pests"],
+      "primaryTradeId": "pest_control",
+      "primaryJobIds": ["FIXX-PST-001", "FIXX-PST-002", "FIXX-PST-003"]
+    },
+    {
+      "id": "hvac",
+      "phrases": ["no enfria", "aire", "minisplit", "mini split", "clima"],
+      "primaryTradeId": "hvac",
+      "primaryJobIds": ["FIXX-HVC-001", "FIXX-HVC-002"]
+    },
+    {
+      "id": "electrical-short",
+      "phrases": ["corto", "cortocircuito", "fusible", "fuse", "breaker", "short circuit"],
+      "primaryTradeId": "electrical",
+      "primaryJobIds": ["FIXX-ELC-005"]
+    }
+  ]
+}

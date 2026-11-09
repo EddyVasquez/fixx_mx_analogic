@@ -5,6 +5,7 @@
  * share kept by FIXX are applied only in src/config/revenue.ts. Urgency multiplies labor only.
  */
 import { bookingFee, materialsPrice, payoutFloor, proLaborPayout, roundMoney, wageFloorForDays } from "../../config/revenue";
+import { isHeldLineFlag, isPendingQuotes } from "./reviewStatus";
 export type UrgencyLevel = "STANDARD" | "MEDIUM" | "HIGH" | "EMERGENCY";
 export type UiUrgency = "standard" | "medium" | "high";
 
@@ -15,6 +16,8 @@ export interface CatalogTask { id: string; category: string; job: string; jobEs?
 export interface CatalogLabor {
   key: string; taskId: string; tierScope: string; trade: string; basis: string; rateLow: number | null; rateTypical: number | null; rateHigh: number | null;
   refQty: number | null; typicalRef: number | null; confidence: string; flag: string; checkedDate: string | null; estJobDays: number | null; dailyMin: number | null; floor: number | null;
+  /** Workbook Review_Status. "PENDING QUOTES…" means the labor is not bookable yet. */
+  reviewStatus?: string | null;
 }
 export interface Catalog {
   version: string; tasks: Record<string, CatalogTask>; items: Record<string, CatalogItem>; labor: Record<string, CatalogLabor>;
@@ -91,12 +94,12 @@ export function priceFreshness(checkDate: string | null, now: Date): Freshness {
   return days <= 7 ? "fresh" : days <= 30 ? "stale" : "blocked";
 }
 
-const PENDING_FLAGS = new Set(["FLAGGED-human review", "REFERENCE ONLY-COFEPRIS", "structural"]);
-/** Reference and flagged lines stay out of the homeowner-choice range. Review itself follows Review_Trigger. */
-const heldOutOfChoice = (l: CatalogLine) => l.type === "flagged" || PENDING_FLAGS.has(l.flag);
+/** Reference and flagged lines stay out of the homeowner-choice range. Pending quotes are held the same way. */
+const heldOutOfChoice = (l: CatalogLine) => l.type === "flagged" || isHeldLineFlag(l.flag);
 const isChoice = (l: CatalogLine) => l.type === "reference" && !heldOutOfChoice(l);
-/** Base triggers review immediately. As-needed triggers only when the homeowner selects that line. */
+/** Base triggers review immediately. As-needed triggers only when the homeowner selects that line. Pending quotes always do. */
 function triggersReview(l: CatalogLine, selectedIds: ReadonlySet<string>): boolean {
+  if (isPendingQuotes(l.flag)) return true;
   if (l.type === "reference") return false;
   if (l.reviewTrigger === "base") return true;
   if (l.reviewTrigger === "as-needed") return selectedIds.has(l.id);
@@ -178,7 +181,14 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
 
   const key = laborKeyFor(cat, taskId, input.tier);
   const lab = cat.labor[key];
-  if (!lab || lab.rateTypical == null || lab.refQty == null) return blank(["no-labor-data"], { laborKey: key });
+  const pendingQuotes = isPendingQuotes(lab?.flag, lab?.reviewStatus);
+  if (!lab || lab.rateTypical == null || lab.refQty == null) {
+    return blank(pendingQuotes ? ["pending-quotes", "no-labor-data"] : ["no-labor-data"], {
+      laborKey: key,
+      laborFlag: lab?.flag ?? "none",
+      ...(pendingQuotes ? { needsHumanReview: true, humanReview: [{ kind: "labor" as const, ref: key, reason: "pending quotes" }] } : {})
+    });
+  }
 
   const scale = input.scopeQty != null && lab.refQty > 0 ? input.scopeQty / lab.refQty : 1;
   const qtyForLabor = input.scopeQty ?? lab.refQty;
@@ -217,6 +227,7 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const laborAfterUrgency = laborBasis * mult;
   const labor = round2(laborAfterUrgency);
   if (lab.flag === "regulated") humanReview.push({ kind: "labor", ref: key, reason: "regulated" });
+  if (isPendingQuotes(lab.flag, lab.reviewStatus)) humanReview.push({ kind: "labor", ref: key, reason: "pending quotes" });
 
   // separate lists. Flagged cleaning lines (work at height, mold) are reviewTrigger "as-needed": pending only when selected.
   const pendingReview = lines.filter((l) => triggersReview(l, wanted)).map((l) => lineOut(cat, l, scale));
@@ -235,6 +246,10 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
 
   let status: QuoteStatus = "FIXED";
   if (unpricedBase.length) { status = "QUOTE_ON_SITE"; reasons.push("unpriced-base-line"); }
+  if (isPendingQuotes(lab.flag, lab.reviewStatus) || lines.some((line) => isPendingQuotes(line.flag))) {
+    status = "QUOTE_ON_SITE";
+    reasons.push("pending-quotes");
+  }
   if (blocked) { status = "BLOCKED_STALE_PRICE"; reasons.push("price-older-than-30-days"); }
 
   const usedFloor = payoutFloor(floor, mult);

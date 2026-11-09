@@ -16,7 +16,7 @@
 (balcony, minisplit, pergola, side fins). Hide a group with the eye icon to see inside.
 
 Materials (keep these names): `Wall_Grey` #E5E7EB, `Trim_Charcoal` #374151, `Glass` translucent grey,
-`Site_Light` #F3F4F6, `Accent_Lime` #DFFF32 (unused – save it for highlights like an active-job room).
+`Site_Light` #F3F4F6, `Accent_Lime` #DFFF32 High Viz Lime (unused – save it for highlights like an active-job room).
 
 ## 3. Recommended scene setup (the "grey blueprint" look)
 - **Camera:** Orthographic, or Perspective with ~35 mm focal length. Level 3/4 view: rotate around Y only, camera height ~5 m, looking at the house center. No tilted/rolled camera.

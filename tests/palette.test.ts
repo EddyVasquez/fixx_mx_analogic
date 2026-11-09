@@ -6,12 +6,12 @@ import { colors } from "../src/ui/tokens";
 
 /**
  * Hex colors that are not neutral greys, and the files allowed to contain them.
- * Lime #DFFF32 is the accent token: action buttons, selected states, and glow
+ * High Viz Lime #DFFF32 is the accent token: action buttons, selected states, and glow
  * edges only. Amber is the pending-review banner. Black and white stay only
  * in the high-contrast override.
  */
 export const PALETTE_ALLOWLIST: Record<string, readonly string[]> = {
-  DFFF32: ["src/ui/tokens.ts", "src/features/customer/jobChips.css"],
+  DFFF32: ["src/ui/tokens.ts", "src/features/customer/jobChips.css", "src/features/customer/serviceSearch.css"],
   FFE8A3: ["src/ui/tokens.ts"],
   "3F2A00": ["src/ui/tokens.ts"],
   FFFFFF: ["src/app/index.css"],

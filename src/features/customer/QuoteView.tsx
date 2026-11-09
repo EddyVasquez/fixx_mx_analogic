@@ -10,9 +10,11 @@ import { DemoValue } from "@/ui/DemoBadge";
 import { ErrorText, Field, inputClass } from "@/ui/Field";
 import { HlAmount, HlDate, HlOk, Label } from "@/ui/Highlights";
 import { useMoney } from "@/features/shared/Money";
+import { buildQuote } from "@/core/pricing/quote";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { TradeName } from "./tradeIcons";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
+import { quoteScopeFromDraft } from "./homeModel";
 import type { Draft } from "./session";
 import { PendingReviewBanner } from "./PendingReviewBanner";
 
@@ -42,6 +44,16 @@ export function QuoteView(props: {
 
   const slot = (h: number) => new Date(Math.ceil((now.getTime() + h * 3_600_000) / 3_600_000) * 3_600_000);
   const when = (d: Date) => formatDateTime(d, localeFor[lang]);
+  const booked = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
+  if (booked.pendingQuotes) {
+    return (
+      <div className="flex min-w-0 flex-col gap-4">
+        <PendingReviewBanner />
+        <h2 className="text-2xl font-bold">{t("quote.title")}</h2>
+        <p className="font-semibold">{t("estimate.pendingQuotes")}</p>
+      </div>
+    );
+  }
   const { deposit, balance } = splitDepositBalance(ctx.total);
   const pct = config.deposit.sharePct;
   const warranty = config.warrantyDaysByCategory[draft.categoryId] ?? 0;

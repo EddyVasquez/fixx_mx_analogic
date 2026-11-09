@@ -25,6 +25,7 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
   const money = useMoney();
   const base = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
   const suggested = base.payout;
+  const pendingPrice = base.pendingPrice;
   const bounds = payoutLimits(suggested, base.wageFloor);
   const [payout, setPayout] = useState(String(suggested));
   const [reason, setReason] = useState("");
@@ -58,20 +59,24 @@ export function JobRequest({ draft, me, customerLang, viewerLang, send }: { draf
       <HomeQuoteFacts draft={draft} />
 
       <h3 className="text-xl font-bold">{t("pquote.title")}</h3>
-      <p className="font-semibold">{t("pquote.suggested", { amount: money(suggested) })}</p>
-      <Field label={t("pquote.yourPayout")}>
-        <input className={inputClass} inputMode="decimal" value={payout} onChange={(e) => setPayout(e.target.value)} />
-      </Field>
-      <p className="text-sm"><DemoValue>{t("pquote.limits", { min: money(bounds.min), max: money(bounds.max) })}</DemoValue></p>
-      <Field label={t("pquote.reason")}>
-        <input className={inputClass} value={reason} onChange={(e) => setReason(e.target.value)} />
-      </Field>
-      <p className="text-sm text-inkSoft"><DemoValue>{t("pquote.travel", { amount: money(fee) })}</DemoValue></p>
+      {pendingPrice ? <p className="font-semibold">{t(base.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p> : <p className="font-semibold">{t("pquote.suggested", { amount: money(suggested) })}</p>}
+      {!pendingPrice && (
+        <>
+          <Field label={t("pquote.yourPayout")}>
+            <input className={inputClass} inputMode="decimal" value={payout} onChange={(e) => setPayout(e.target.value)} />
+          </Field>
+          <p className="text-sm"><DemoValue>{t("pquote.limits", { min: money(bounds.min), max: money(bounds.max) })}</DemoValue></p>
+          <Field label={t("pquote.reason")}>
+            <input className={inputClass} value={reason} onChange={(e) => setReason(e.target.value)} />
+          </Field>
+          <p className="text-sm text-inkSoft"><DemoValue>{t("pquote.travel", { amount: money(fee) })}</DemoValue></p>
+        </>
+      )}
       <p className="text-sm text-inkSoft">{t("translation.officialNote", { language: languageNames[customerLang] })}</p>
       {error && <ErrorText>{t(error)}</ErrorText>}
       <div className="flex gap-2">
         <Button variant="secondary" onClick={() => send({ type: "PROFESSIONAL_DECLINES" })}>{t("btn.decline")}</Button>
-        <Button className="flex-1" onClick={submit}>{t("btn.sendQuote")}</Button>
+        {!pendingPrice && <Button className="flex-1" onClick={submit}>{t("btn.sendQuote")}</Button>}
       </div>
     </div>
   );

@@ -144,6 +144,46 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "search.placeholder": {
+    "text": "집에서 무엇을 해야 하나요?",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.clear": {
+    "text": "검색 지우기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.matches": {
+    "text": "업종 {n}개 · 작업 {m}개 제안",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.none": {
+    "text": "결과 없음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.emptyTitle": {
+    "text": "일치하는 서비스 없음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.emptyBody": {
+    "text": "다른 말로 검색하거나 필요한 내용을 적어 주세요. 규제 작업은 검토로 넘어가요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.describe": {
+    "text": "직접 적기",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.needsReview": {
+    "text": "검토 필요",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.title": {
     "text": "작업에 대해 알려 주세요",
     "status": "draft",
@@ -354,6 +394,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "request.errorCategory": {
+    "text": "어떤 업종으로 보낼지 알 수 있도록 서비스를 선택해 주세요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "request.errorName": {
     "text": "전문가가 누구를 찾는지 알 수 있도록 이름을 입력해 주세요.",
     "status": "draft",
@@ -431,6 +476,16 @@
   },
   "estimate.note": {
     "text": "예상 금액이에요. 최종 가격은 전문가의 견적서에서 확인해요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "estimate.pending": {
+    "text": "방문 때 가격을 안내해 드릴게요. 이 작업은 아직 가격이 없어요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "estimate.pendingQuotes": {
+    "text": "검토가 필요해요. 견적이 준비되면 가격을 안내해 드릴게요.",
     "status": "draft",
     "needsNativeReview": true
   },

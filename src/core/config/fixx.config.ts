@@ -15,7 +15,9 @@ export const config = {
   warrantyDaysByCategory: {
     plumbing: 60, electrical: 90, hvac: 60, painting: 30,
     pest_control: 30, gardening: 30, flooring: 90, concrete: 90,
-    carpentry: 90, appliance: 30, roofing: 90, handyman: 30, locksmith: 30, cleaning: 30
+    carpentry: 90, appliance: 30, roofing: 90, handyman: 30, locksmith: 30, cleaning: 30,
+    // Same demo placeholder as locksmith until Metalwork warranty is decided. Prices are not set.
+    metalwork: 30
   } as Record<string, number>,
   // TODO(decision): business hours for human Agents (Mon-Sat).
   businessHours: { days: [1, 2, 3, 4, 5, 6], start: "09:00", end: "18:00" },

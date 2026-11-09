@@ -82,5 +82,11 @@
     "catalogCategory": "Cleaning",
     "names": { "en": "Cleaning", "es": "Limpieza", "ko": "청소" },
     "lineType": "perVisit"
+  },
+  {
+    "id": "metalwork",
+    "catalogCategory": "Metalwork",
+    "names": { "en": "Metalwork", "es": "Herrería", "ko": "철물" },
+    "lineType": "perItem"
   }
 ]

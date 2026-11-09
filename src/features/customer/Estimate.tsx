@@ -15,14 +15,20 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
   const lang = i18n.language as Lang;
   const money = useMoney();
   const r = estimateRange(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
-  const needsReview = humanReviewForCategory(draft.categoryId).length > 0;
+  const needsReview = humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0;
   return (
     <div className="flex min-w-0 flex-col gap-4">
       {needsReview && <PendingReviewBanner />}
       <h2 className="text-2xl font-bold">{t("estimate.title")}</h2>
       <p className="text-lg font-semibold"><TradeName categoryId={draft.categoryId} lang={lang} /></p>
-      <p className="min-w-0 break-words text-3xl font-bold"><DemoValue>{t("estimate.range", { low: money(r.low), high: money(r.high) })}</DemoValue></p>
-      {r.surcharge > 0 && <p className="font-semibold"><DemoValue>{t("estimate.urgent", { amount: money(r.surcharge) })}</DemoValue></p>}
+      {r.priced ? (
+        <>
+          <p className="min-w-0 break-words text-3xl font-bold"><DemoValue>{t("estimate.range", { low: money(r.low), high: money(r.high) })}</DemoValue></p>
+          {r.surcharge > 0 && <p className="font-semibold"><DemoValue>{t("estimate.urgent", { amount: money(r.surcharge) })}</DemoValue></p>}
+        </>
+      ) : (
+        <p className="text-lg font-semibold">{t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p>
+      )}
       <HomeQuoteFacts draft={draft} />
       <p className="text-inkSoft">{t("estimate.note")}</p>
       <Button onClick={onNext}>{t("btn.seeProfessionals")}</Button>

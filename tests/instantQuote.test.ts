@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { bookingFee, materialsPrice, payoutFloor, proLaborPayout, roundMoney } from "../src/config/revenue";
+import categories from "../src/seed/categories.json";
+import { isPendingQuotes } from "../src/core/pricing/reviewStatus";
 const rawLabor = (x: { laborBasis: number; multiplier: number }) => x.laborBasis * x.multiplier;
 import {
   quoteTask, quoteVisit, toUrgencyLevel, diagnosisFeeFor, repairDueAfterDiagnosis, reconcileScopeChange, priceFreshness, resolveTaskId,
@@ -9,20 +11,35 @@ import {
 } from "../src/core/pricing/instantQuote";
 
 const cat = JSON.parse(readFileSync(join(process.cwd(), "src/seed/pricing/catalog.json"), "utf8")) as Catalog;
-interface Ref { taskId: string; tier: string; urgency: UrgencyLevel; materials: number; typicalLabor: number | null; multiplier: number; labor: number | null; total: number | null; payout: number | null; status: string }
+interface Ref { taskId: string; tier: string; urgency: UrgencyLevel; materials: number; typicalLabor: number | null; multiplier: number; labor: number | null; total: number | null; payout: number | null; status: string; reviewStatus?: string; laborFlag?: string }
 const qb = JSON.parse(readFileSync(join(process.cwd(), "tests/fixtures/quote_builder.json"), "utf8")) as Ref[];
 const near = (a: number | null | undefined, b: number | null | undefined) => a != null && b != null && Math.abs(a - b) <= 0.01;
 const URG: UrgencyLevel[] = ["STANDARD", "MEDIUM", "HIGH", "EMERGENCY"];
 const q = (taskId: string, tier: string, urgency: UrgencyLevel, extra: object = {}) => quoteTask(cat, { taskId, tier, urgency, ...extra });
 
 describe("acceptance: every Quote_Builder row", () => {
-  it("has one reference row for every task, tier and urgency, including the six added trades", () => {
-    expect(qb).toHaveLength(504);
-    expect(new Set(qb.map((r) => r.taskId)).size).toBe(41);
+  it("has one reference row for every quoted task and tier, at every urgency", () => {
+    const tiersByTask = new Map<string, Set<string>>();
+    for (const row of qb) {
+      const tiers = tiersByTask.get(row.taskId) ?? new Set<string>();
+      tiers.add(row.tier);
+      tiersByTask.set(row.taskId, tiers);
+    }
+    let expected = 0;
+    for (const [taskId, tiers] of tiersByTask) {
+      for (const tier of tiers) {
+        const urgencies = new Set(qb.filter((row) => row.taskId === taskId && row.tier === tier).map((row) => row.urgency));
+        expect([...urgencies].sort()).toEqual([...URG].sort());
+        expected += URG.length;
+      }
+    }
+    expect(qb).toHaveLength(expected);
+    expect(tiersByTask.size).toBeGreaterThan(0);
   });
   it("keeps workbook labor and raw materials, then prices materials and payout once", () => {
     const wrong = qb.filter((r) => {
       const x = q(r.taskId, r.tier, r.urgency);
+      if (isPendingQuotes(r.laborFlag, r.reviewStatus)) return !(x.needsHumanReview && x.status !== "FIXED");
       return !(x.status === "FIXED"
         && near(x.labor, r.labor)
         && near(x.materialsRaw, r.materials)
@@ -220,12 +237,23 @@ describe("prices, aliases, diagnosis fee and on-site changes", () => {
   });
 });
 
-describe("fourteen trades, job names and cleaning add-ons", () => {
-  const TRADES = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance", "Roofing", "Handyman", "Locksmith", "Cleaning"];
-
-  it("prices all 14 trades from the workbook, with a job name in English, Spanish and Korean", () => {
+describe("workbook trades, job names and cleaning add-ons", () => {
+  it("prices every home-screen trade from the catalog, and leaves pending-quote labor unpriced", () => {
     const present = new Set(Object.values(cat.tasks).map((t) => t.category));
-    expect([...present].sort()).toEqual([...TRADES].sort());
+    const named = categories.map((category) => category.catalogCategory);
+    expect([...present].sort()).toEqual([...named].sort());
+    const bars = quoteTask(cat, { taskId: "FIXX-MTL-001", tier: "Budget", urgency: "STANDARD" });
+    expect(bars.status).toBe("FIXED");
+    expect(bars.needsHumanReview).toBe(false);
+    expect(bars.labor).toBe(887.5);
+    expect(bars.total).toBe(roundMoney(bars.materials + bars.labor + bars.bookingFee));
+    const gate = quoteTask(cat, { taskId: "FIXX-MTL-002", tier: "Budget", urgency: "STANDARD" });
+    expect(gate.labor).toBe(5407.58);
+    expect(gate.marketLabor).toBe(5407.58);
+    const carport = quoteTask(cat, { taskId: "FIXX-MTL-005", tier: "Budget", urgency: "STANDARD" });
+    expect(carport.status).toBe("FIXED");
+    expect(carport.needsHumanReview).toBe(true);
+    expect(carport.humanReview.some((item) => item.reason === "structural")).toBe(true);
     for (const task of Object.values(cat.tasks)) {
       expect(task.job.length).toBeGreaterThan(0);
       expect(task.jobEs?.length).toBeGreaterThan(0);

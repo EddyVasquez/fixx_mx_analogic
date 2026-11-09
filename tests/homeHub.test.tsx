@@ -100,7 +100,7 @@ describe("My Home hub", () => {
   it("opens a request for a real category, and leaves maintenance as an example", () => {
     render(<CustomerApp />);
     const quick = screen.getByRole("region", { name: "Get help with" });
-    const names = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest control", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance repair", "Roofing", "Handyman", "Locksmith", "Cleaning"];
+    const names = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest control", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance repair", "Roofing", "Handyman", "Locksmith", "Cleaning", "Metalwork"];
     expect(within(quick).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
     names.forEach((name) => expect(within(quick).getByText(name)).toBeTruthy());
     expect(screen.queryByRole("link", { name: "See all services" })).toBeNull();
