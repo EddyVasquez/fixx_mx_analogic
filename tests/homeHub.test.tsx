@@ -68,7 +68,11 @@ describe("My Home hub", () => {
     expect(modules()).toEqual(["hero", "active", "quick", "warranty", "maintenance", "details", "history", "documents"]);
     const hero = screen.getByRole("region", { name: "Eduardo L. Vasquez" });
     expect(hero.className).toContain("lg:col-span-8");
-    expect(hero.className).toContain("bg-accent");
+    expect(hero.className).toContain("home-hero");
+    expect(hero.className).not.toContain("bg-accent");
+    const tiles = hero.querySelectorAll(".home-stat");
+    expect(tiles).toHaveLength(6);
+    tiles.forEach((tile) => expect(tile.className).not.toContain("bg-accent"));
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-4");
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-9");
     expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-4");
@@ -106,7 +110,15 @@ describe("My Home hub", () => {
     fireEvent.click(within(quick).getByRole("button", { name: "Add Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Add Electrical" }).getAttribute("aria-pressed")).toBe("true");
+    const selectedTrade = screen.getByRole("button", { name: "Add Electrical" });
+    expect(selectedTrade.getAttribute("aria-pressed")).toBe("true");
+    expect(selectedTrade.querySelector("svg")?.getAttribute("data-icon")).toBe("check");
+    expect(selectedTrade.closest("li")?.getAttribute("data-selected")).toBe("true");
+    expect(selectedTrade.closest("li")?.className).toContain("bg-accent");
+    const unselectedTrade = screen.getByRole("button", { name: "Add Plumbing" });
+    expect(unselectedTrade.getAttribute("aria-pressed")).toBe("false");
+    expect(unselectedTrade.querySelector("svg")?.getAttribute("data-icon")).toBe("plus");
+    expect(unselectedTrade.closest("li")?.className).not.toContain("bg-accent");
 
     cleanup();
     resetSession(false);

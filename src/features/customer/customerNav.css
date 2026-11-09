@@ -1,0 +1,117 @@
+/* Option A. One segmented pill: charcoal active segment, lime glow edge, inkSoft inactive. */
+.customer-topnav {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  border-bottom: 1px solid theme("colors.line");
+  background: color-mix(in srgb, theme("colors.paper") 72%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.customer-topnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 8px 0;
+}
+
+.customer-brand {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 10px;
+  min-width: max-content;
+}
+
+.customer-mark {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: theme("colors.brand");
+  color: theme("colors.paper");
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, theme("colors.accent") 70%, transparent),
+    0 0 12px color-mix(in srgb, theme("colors.accent") 35%, transparent);
+}
+
+.customer-word {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: theme("colors.brand");
+  white-space: nowrap;
+}
+
+.customer-topnav-spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.customer-seg {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  min-width: 0;
+  padding: 4px;
+  border: 1px solid theme("colors.line");
+  border-radius: 999px;
+  background: color-mix(in srgb, theme("colors.mist") 80%, transparent);
+}
+
+.customer-seg-top {
+  flex: 0 1 auto;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.customer-phonebar {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid theme("colors.line");
+  background: color-mix(in srgb, theme("colors.paper") 78%, transparent);
+  box-shadow: 0 -8px 24px rgb(46 46 46 / 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.customer-phonebar .customer-seg {
+  width: 100%;
+}
+
+body.has-customer-phonebar {
+  padding-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+.customer-tab {
+  color: theme("colors.inkSoft");
+  text-decoration: none;
+}
+
+.customer-tab[aria-current="page"] {
+  position: relative;
+  z-index: 1;
+  background: theme("colors.brand");
+  color: theme("colors.paper");
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, theme("colors.accent") 70%, transparent),
+    0 0 12px color-mix(in srgb, theme("colors.accent") 35%, transparent);
+}
+
+.customer-tab:focus-visible {
+  outline: 3px solid theme("colors.brandDeep");
+  outline-offset: 2px;
+}

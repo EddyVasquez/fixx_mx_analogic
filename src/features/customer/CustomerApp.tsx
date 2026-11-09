@@ -32,7 +32,7 @@ import { SupportChatView } from "@/features/support/SupportChatView";
 import { TimelineView } from "./TimelineView";
 import { RatingView } from "./RatingView";
 import { professionals, zones } from "./data";
-import { CustomerTabBar } from "./CustomerTabBar";
+import { CustomerNav, useCustomerWide } from "./CustomerTabBar";
 import { useHomeProfile } from "./homeProfile";
 import { ChatView } from "@/features/chat/ChatView";
 import { settleClabe } from "./refundActions";
@@ -195,19 +195,22 @@ export function CustomerApp() {
   const lang = i18n.language as Lang;
   const [, force] = useReducer((x: number) => x + 1, 0);
   const rt = useRuntime();
+  const wide = useCustomerWide();
   const jobState = rt.get(JOB_ID)?.snap.state;
+  const selectTab = (tab: typeof session.tab) => { if (tab === "request") session.openBuilder = false; session.tab = tab; force(); };
   if (!session.signedIn) return <SignIn onDone={(email) => { session.signedIn = true; session.email = email; session.tab = "home"; force(); }} />;
   return (
     <div className="flex min-h-[calc(100dvh-8.5rem)] flex-col gap-4">
       {/* Announces job status changes to screen readers */}
       <p role="status" className="sr-only">{jobState ? `${t("status.label")}: ${stateLabel(t, jobState)}` : ""}</p>
+      {wide && <CustomerNav placement="top" active={session.tab} onSelect={selectTab} />}
       <div className="flex flex-1 flex-col gap-4">
         {session.tab === "request" && <RequestFlow onEditHome={() => { session.tab = "home"; force(); }} />}
         {session.tab === "home" && <MyHomeTab lang={lang} onNavigate={force} />}
         {session.tab === "warranty" && <WarrantyTab lang={lang} />}
         {session.tab === "help" && <SupportChatView lang={lang} />}
       </div>
-      <CustomerTabBar active={session.tab} onSelect={(tab) => { if (tab === "request") session.openBuilder = false; session.tab = tab; force(); }} />
+      {!wide && <CustomerNav placement="phone" active={session.tab} onSelect={selectTab} />}
     </div>
   );
 }

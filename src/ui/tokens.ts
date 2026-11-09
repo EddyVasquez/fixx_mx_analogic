@@ -17,7 +17,7 @@ export const colors = {
   warnInk: "#2E2E2E",
   warnAmberBg: "#FFE8A3",  // pending-review banner
   warnAmberInk: "#3F2A00",
-  /** Hub accent. Backgrounds only: the My Home hero frame, stat tiles, trade plus buttons, and the job spotlight. Ink sits on top. Never text. */
+  /** Lime. Action buttons, selected states, and glowing edges only. Never a large background, and never text. */
   accent: "#DFFF32"
 } as const;
 
