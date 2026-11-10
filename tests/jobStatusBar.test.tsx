@@ -12,9 +12,7 @@ import {
   CURRENT_LINE_GAP_PX,
   LINE_CLEARANCE_PX,
   PHASES,
-  R1_GLOW_PX,
   R1_OUTER_PX,
-  R2_GLOW_PX,
   R2_OUTER_PX,
   meterStep,
   phaseForStatus,
@@ -42,9 +40,11 @@ describe("job progress phases", () => {
     expect(phaseIndexForStep(12)).toBe(3);
   });
 
-  it("stops both connectors past the current ring and its glow", () => {
-    expect(CURRENT_LINE_GAP_PX).toBeGreaterThanOrEqual(R2_OUTER_PX + R2_GLOW_PX + LINE_CLEARANCE_PX);
-    expect(CURRENT_LINE_GAP_PX).toBeGreaterThanOrEqual(R1_OUTER_PX + R1_GLOW_PX + LINE_CLEARANCE_PX);
+  it("stops both connectors about 2px outside the lime ring, ignoring the glow", () => {
+    expect(LINE_CLEARANCE_PX).toBe(2);
+    expect(CURRENT_LINE_GAP_PX).toBe(Math.max(R2_OUTER_PX, R1_OUTER_PX) + LINE_CLEARANCE_PX);
+    expect(CURRENT_LINE_GAP_PX).toBeGreaterThan(R2_OUTER_PX);
+    expect(CURRENT_LINE_GAP_PX).toBeGreaterThan(R1_OUTER_PX);
     const css = readFileSync(join(process.cwd(), "src/features/shared/jobStatusBar.css"), "utf8");
     expect(css).toContain("border-radius: 999px");
     expect(css).toContain("calc(var(--to-current) - var(--line-gap))");

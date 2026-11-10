@@ -86,7 +86,7 @@
   justify-content: center;
 }
 
-/* 3px connectors. Ends are round caps. They stop --line-gap short of the current node center, on both sides. */
+/* 3px connectors with round caps. Both ends stop --line-gap from the current node center: about 2px outside the lime ring. Glow is not part of that stop. */
 .job-meter-line {
   position: absolute;
   z-index: 0;

@@ -10,31 +10,24 @@ export const PHASES = [
 
 export type PhaseId = (typeof PHASES)[number]["id"];
 
-/** R2 turning ring. High Viz Lime is the stroke and its glow, never a fill. */
+/** R2 turning ring. High Viz Lime is the stroke only; the soft glow is not part of the line stop. */
 export const R2_RADIUS_PX = 21;
 export const R2_STROKE_PX = 3;
 /** Outer edge of the 3px stroke (the radius plus half the stroke). */
 export const R2_OUTER_PX = R2_RADIUS_PX + R2_STROKE_PX / 2;
-/** drop-shadow blur on the turning arc. */
-export const R2_GLOW_PX = 10;
 
 /** Reduced-motion fallback: a static full ring (R1). Outer radius of the 46px ring. */
 export const R1_OUTER_PX = 23;
-/** Larger box-shadow blur on that static ring. */
-export const R1_GLOW_PX = 18;
 
-/** Paper still showing past the glow, before a connector begins. */
-export const LINE_CLEARANCE_PX = 4;
+/** Clear paper between a connector cap and the ring's outer edge. Glow is ignored. */
+export const LINE_CLEARANCE_PX = 2;
 
 /**
  * Both connectors stop this far from the current node center.
- * Sized so the turning arc and the static ring, including their glow, stay off the line.
- * The same distance is used on both sides.
+ * That is about 2px outside the lime ring (the larger of the turning arc and the static ring).
+ * The same distance is used on both sides, so the arc never crosses a line.
  */
-export const CURRENT_LINE_GAP_PX = Math.max(
-  R2_OUTER_PX + R2_GLOW_PX + LINE_CLEARANCE_PX,
-  R1_OUTER_PX + R1_GLOW_PX + LINE_CLEARANCE_PX
-);
+export const CURRENT_LINE_GAP_PX = Math.max(R2_OUTER_PX, R1_OUTER_PX) + LINE_CLEARANCE_PX;
 
 export function stepNumber(status: JobStatus): number {
   return JOB_STATUS_ORDER.indexOf(status) + 1;
