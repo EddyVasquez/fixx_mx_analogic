@@ -1,4 +1,5 @@
 import type { Lang } from "@/core/config/fixx.config";
+import { rooms, storeyPhrases, storeyTokens, tradeSynonyms, type RoomSynonym } from "@/data/searchSynonyms";
 import { catalogJobRecords } from "./catalogJobs";
 import { categories } from "./data";
 import fillerJson from "./searchFillers.json";
@@ -116,6 +117,144 @@ function contentTokens(value: string): string[] {
   return meaningfulTokens(normalizeSearch(value));
 }
 
+/** A token that can light a trade. Filler words stay in the phrase window ("no hay luz") but never match on their own. */
+function isContentToken(token: string): boolean {
+  return token.length >= MIN_TOKEN && !/^\d+$/.test(token) && !isFiller(token);
+}
+
+const STOREY_PATTERNS = [
+  String.raw`\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|ground|top|upper|lower|(?:[1-9]|1\d|2\d)(?:st|nd|rd|th)?)\s+floors?\b`,
+  String.raw`\b(?:primer[oa]?|segund[oa]|tercer[oa]?|cuart[oa]|quint[oa]|sext[oa]|(?:[1-9]|1\d|2\d)(?:er|do|ro|to|o)?)\s+pisos?\b`,
+  String.raw`\b(?:primer[oa]?|segund[oa]|tercer[oa]?|cuart[oa]|quint[oa])\s+plantas?\b`,
+  String.raw`\bnivel(?:es)?\s+(?:de\s+)?(?:arriba|abajo)\b`,
+  String.raw`\b(?:primer[oa]?|segund[oa]|tercer[oa]?|(?:[1-9]|1\d|2\d)(?:er|do|ro|to|o)?)\s+nivel(?:es)?\b`,
+  String.raw`\bplantas?\s+(?:alta|baja)\b`,
+  String.raw`\bpisos?\s+de\s+(?:arriba|abajo)\b`
+];
+
+const storeyPhraseList = storeyPhrases
+  .map((phrase) => normalizeSearch(phrase))
+  .filter((phrase) => phrase.includes(" "))
+  .sort((a, b) => b.length - a.length);
+
+const storeyTokenSet = new Set(storeyTokens.map((token) => normalizeSearch(token)).filter(Boolean));
+
+/** "Second floor" / "segundo piso" / "2층" is which storey, not a floor covering. */
+function stripStorey(query: string): string {
+  let next = ` ${query} `;
+  for (const phrase of storeyPhraseList) {
+    const needle = ` ${phrase} `;
+    if (next.includes(needle)) next = next.split(needle).join(" ");
+  }
+  next = next.replace(/\s+/g, " ").trim();
+  for (const source of STOREY_PATTERNS) next = next.replace(new RegExp(source, "g"), " ");
+  return next
+    .split(" ")
+    .filter((token) => token && !storeyTokenSet.has(token) && !/^\d+층$/.test(token))
+    .join(" ");
+}
+
+interface PhraseEntry {
+  phrase: string;
+  tradeId: string;
+  related: string[];
+  jobs: string[];
+  score: number;
+}
+
+interface RoomPhrase {
+  phrase: string;
+  room: RoomSynonym;
+}
+
+function listedPhrases(words: string[]): string[] {
+  return words.map((word) => normalizeSearch(word)).filter((phrase) => phrase.length >= MIN_TOKEN);
+}
+
+const synonymPhrases: PhraseEntry[] = tradeSynonyms
+  .flatMap((entry) => listedPhrases(entry.words).map((phrase) => ({
+    phrase,
+    tradeId: entry.tradeId,
+    related: entry.related ?? [],
+    jobs: entry.jobs ?? [],
+    score: entry.score ?? 100
+  })))
+  .sort((a, b) => b.phrase.length - a.phrase.length || a.phrase.localeCompare(b.phrase));
+
+const roomPhrases: RoomPhrase[] = rooms
+  .flatMap((room) => listedPhrases(room.words).map((phrase) => ({ phrase, room })))
+  .sort((a, b) => b.phrase.length - a.phrase.length || a.phrase.localeCompare(b.phrase));
+
+/**
+ * Single words that already mean something. "lavar" must not prefix-match
+ * "lavadora", and "ac" must not prefix-match "acero". A typed stem that is
+ * not its own word still reaches the longer word ("fug" -> "fuga").
+ */
+const reservedTokens = new Set<string>([
+  ...synonymPhrases.filter((entry) => !entry.phrase.includes(" ")).map((entry) => entry.phrase),
+  ...roomPhrases.filter((entry) => !entry.phrase.includes(" ")).map((entry) => entry.phrase)
+]);
+
+/**
+ * Synonym and room words. Trade names and the slang list keep the wider
+ * prefix rule ("pl" -> plumbing, "prot" -> protecciones).
+ */
+function synonymTokenHit(token: string, term: string): boolean {
+  if (token === term) return true;
+  if (token.startsWith(term)) return token.length - term.length <= 2;
+  if (!term.startsWith(token)) return false;
+  const extra = term.length - token.length;
+  if (extra <= 2) return true;
+  return token.length >= 3 && extra <= 14 && !reservedTokens.has(token);
+}
+
+function phraseSpan(tokens: string[], phrase: string): number[] | null {
+  const parts = phrase.split(" ").filter(Boolean);
+  const size = parts.length;
+  if (size === 0) return null;
+  if (size === 1) {
+    const part = parts[0] ?? "";
+    const index = tokens.findIndex((token) => isContentToken(token) && synonymTokenHit(token, part));
+    return index >= 0 ? [index] : null;
+  }
+  for (let start = 0; start <= tokens.length - size; start += 1) {
+    const indexes: number[] = [];
+    let matched = true;
+    for (let offset = 0; offset < size; offset += 1) {
+      const token = tokens[start + offset];
+      const part = parts[offset];
+      if (!token || !part) { matched = false; break; }
+      const hit = offset === size - 1 ? synonymTokenHit(token, part) : token === part;
+      if (!hit) { matched = false; break; }
+      indexes.push(start + offset);
+    }
+    if (matched) return indexes;
+  }
+  return null;
+}
+
+/** Whole-phrase hit, including a phrase whose middle word is shorter than a token. */
+function locatePhrase(query: string, tokens: string[], phrase: string): number[] | null {
+  const span = phraseSpan(tokens, phrase);
+  if (span) return span;
+  if (!phrase.includes(" ") || !containsPhrase(query, phrase)) return null;
+  const parts = new Set(phrase.split(" "));
+  return tokens.flatMap((token, index) => (parts.has(token) ? [index] : []));
+}
+
+function spanIsFree(tokens: string[], span: number[], consumed: Set<string>): boolean {
+  const content = span.filter((index) => isContentToken(tokens[index] ?? ""));
+  if (content.length === 0) return span.length === 0;
+  return content.some((index) => !consumed.has(tokens[index] ?? ""));
+}
+
+function consumeSpan(tokens: string[], span: number[], consumed: Set<string>): void {
+  for (const index of span) {
+    const token = tokens[index];
+    if (token && isContentToken(token)) consumed.add(token);
+  }
+}
+
 /**
  * Query token hits a catalog or slang word.
  * "pl" hits "plumbing" / "plomería". "변기를" hits "변기" (short Hangul particle).
@@ -215,18 +354,23 @@ function idleResult(query: string): SearchResult {
 }
 
 /**
- * Match trade names, catalog titles (EN/ES/KO) and slang by meaningful tokens.
- * One trigger is enough. Words that match nothing are ignored, and they never
- * turn a hit into the empty state. Filler and a single letter stay idle.
- * Job ids in the slang file that are not in the catalog are skipped.
+ * Match trade names, catalog titles (EN/ES/KO), slang, and the lay-word map
+ * in src/data/searchSynonyms.ts. One trigger is enough. Words that match
+ * nothing are ignored, and they never turn a hit into the empty state.
+ * Filler, a storey ("second floor"), and a single letter stay idle.
+ * A direct word glows strong. A room by itself glows soft, except a room
+ * that names one trade (a bathroom glows Plumbing strong).
+ * Job chips stay at three. Room chips are used only when no direct word
+ * suggested a job, and only the first two. Unknown slang job ids are skipped.
  */
 export function searchServices(raw: string, lang: Lang): SearchResult {
-  const query = normalizeSearch(raw);
+  const query = normalizeSearch(raw.replace(/a\/c/gi, "ac"));
   if (!query) return idleResult(query);
 
-  const stripped = stripFillerPhrases(query);
+  const stripped = stripStorey(stripFillerPhrases(query));
   const tokens = meaningfulTokens(stripped);
   if (tokens.length === 0) return idleResult(query);
+  const phraseTokens = stripped.split(" ").filter((token) => token.length >= MIN_TOKEN);
 
   const tradeLevel = new Map<string, number>();
   const jobScore = new Map<string, number>();
@@ -249,15 +393,41 @@ export function searchServices(raw: string, lang: Lang): SearchResult {
     if (tokens.some((token) => trade.tokens.some((name) => tokenHitsTerm(token, name)))) bumpTrade(trade.id, 2);
   }
 
-  const matchedGroups = slangGroups.filter((group) => groupMatches(query, tokens, group));
-  const consumed = new Set<string>();
+  const matchedGroups = slangGroups.filter((group) => groupMatches(stripped, tokens, group));
+  // Slang keeps a word from also matching a catalog title. It does not hide a room:
+  // "baño" in "se tapó el baño" still lights the bathroom trades.
+  const slangHit = new Set<string>();
   for (const group of matchedGroups) {
     for (const token of tokens) {
-      if (group.phrases.some((phrase) => tokenHitsPhrase(token, phrase))) consumed.add(token);
+      if (group.phrases.some((phrase) => tokenHitsPhrase(token, phrase))) slangHit.add(token);
     }
   }
 
-  const freeTokens = tokens.filter((token) => !consumed.has(token));
+  // Longer lay phrases claim their words first, so "piso roto" beats "roto"
+  // and "cuarto de baño" beats "cuarto".
+  const taken = new Set<string>();
+  let synonymOrder = 400;
+  for (const entry of synonymPhrases) {
+    const span = locatePhrase(stripped, phraseTokens, entry.phrase);
+    if (!span || !spanIsFree(phraseTokens, span, taken)) continue;
+    bumpTrade(entry.tradeId, 2);
+    for (const id of entry.related) bumpTrade(id, 1);
+    entry.jobs.forEach((id, index) => bumpJob(id, entry.score - index, synonymOrder + index));
+    synonymOrder += entry.jobs.length + 1;
+    consumeSpan(phraseTokens, span, taken);
+  }
+
+  const roomJobs: string[] = [];
+  for (const entry of roomPhrases) {
+    const span = locatePhrase(stripped, phraseTokens, entry.phrase);
+    if (!span || !spanIsFree(phraseTokens, span, taken)) continue;
+    for (const id of entry.room.trades) bumpTrade(id, 1);
+    for (const id of entry.room.strong ?? []) bumpTrade(id, 2);
+    for (const id of entry.room.jobs ?? []) if (!roomJobs.includes(id)) roomJobs.push(id);
+    consumeSpan(phraseTokens, span, taken);
+  }
+
+  const freeTokens = tokens.filter((token) => !taken.has(token) && !slangHit.has(token));
   if (freeTokens.length > 0) {
     indexedJobs.forEach((job, index) => {
       const best = titleScore(freeTokens, job.tokens);
@@ -271,6 +441,10 @@ export function searchServices(raw: string, lang: Lang): SearchResult {
     for (const id of group.relatedTradeIds ?? []) bumpTrade(id, 1);
     for (const id of group.primaryJobIds ?? []) bumpJob(id, 100, slangOrder++);
     for (const id of group.relatedJobIds ?? []) bumpJob(id, 50, slangOrder++);
+  }
+
+  if (jobScore.size === 0) {
+    roomJobs.slice(0, 2).forEach((id, index) => bumpJob(id, 48 - index, 800 + index));
   }
 
   const tradeCount = indexedTrades.filter((trade) => (tradeLevel.get(trade.id) ?? 0) > 0).length;

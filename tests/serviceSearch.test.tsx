@@ -7,9 +7,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { buildQuote, estimateRange } from "../src/core/pricing/quote";
 import i18n from "../src/i18n";
-import { jobsForCategory } from "../src/features/customer/catalogJobs";
+import { catalogJobRecords, jobsForCategory } from "../src/features/customer/catalogJobs";
+import { categories } from "../src/features/customer/data";
 import { Home } from "../src/features/customer/Home";
 import { searchServices } from "../src/features/customer/searchIndex";
+import { koreanSynonymStatus, rooms, tradeSynonyms } from "../src/data/searchSynonyms";
 
 const uiSource = ["ServiceSearch.tsx", "searchIndex.ts", "Home.tsx", "tradePicker.tsx"]
   .map((name) => readFileSync(join(process.cwd(), "src/features/customer", name), "utf8"))
@@ -32,7 +34,9 @@ describe("catalog search", () => {
     const result = searchServices("se tapó el baño", "en");
     expect(result.trades.plumbing).toBe("strong");
     expect(result.trades.handyman).toBe("soft");
-    expect(result.trades.painting).toBe("dim");
+    // "baño" is the room, so the other bathroom trades glow soft beside the clog.
+    expect(result.trades.painting).toBe("soft");
+    expect(result.trades.electrical).toBe("soft");
     expect(result.trades.metalwork).toBe("dim");
     expect(result.chips.map((chip) => chip.taskId)).toEqual(["FIXX-PLM-006", "FIXX-PLM-001"]);
     expect(result.chips.map((chip) => chip.title)).toEqual(["Drain cleaning", "Toilet repair"]);
@@ -80,7 +84,6 @@ describe("catalog search", () => {
     expect(searchServices("xyz unicorn spa", "ko").empty).toBe(true);
     expect(searchServices("zzzz", "en")).toMatchObject({ empty: true, status: "empty", tradeCount: 0 });
     expect(searchServices("something random please", "en").empty).toBe(true);
-    expect(searchServices("baño", "es").trades.plumbing).not.toBe("strong");
   });
 
   it("keeps a single letter and unfinished 2-character misses on the idle grid", () => {
@@ -153,7 +156,8 @@ describe("catalog search", () => {
     expect(toilet.status).toBe("hit");
     expect(toilet.empty).toBe(false);
     expect(toilet.trades.plumbing).toBe("strong");
-    expect(toilet.trades.painting).toBe("dim");
+    expect(toilet.trades.painting).toBe("soft");
+    expect(toilet.trades.electrical).toBe("soft");
     expect(toilet.chips.some((chip) => chip.taskId === "FIXX-PLM-001" && chip.title === "Toilet repair")).toBe(true);
 
     const bars = searchServices("necesito ayuda con las protecciones", "en");
@@ -189,6 +193,101 @@ describe("catalog search", () => {
     const hvac = searchServices("no enfría", "en");
     expect(hvac.trades.hvac).toBe("strong");
     expect(hvac.empty).toBe(false);
+  });
+
+  it("covers every trade and every catalog job, and marks Korean wording as a draft", () => {
+    expect(koreanSynonymStatus).toEqual({ status: "draft", needsNativeReview: true });
+    const known = new Set(categories.map((category) => category.id));
+    const listedTrades = new Set(tradeSynonyms.map((entry) => entry.tradeId));
+    for (const id of known) expect(listedTrades.has(id), id).toBe(true);
+    const listedJobs = new Set(tradeSynonyms.flatMap((entry) => entry.jobs ?? []));
+    for (const job of catalogJobRecords()) expect(listedJobs.has(job.id), job.id).toBe(true);
+    for (const room of rooms) {
+      for (const id of [...room.trades, ...(room.strong ?? [])]) expect(known.has(id), `${room.id}:${id}`).toBe(true);
+    }
+  });
+
+  it("lights the trades that work in a living room, softer than a direct word", () => {
+    const living = searchServices("I need help with my living room", "en");
+    expect(living.status).toBe("hit");
+    expect(living.empty).toBe(false);
+    const expected = ["painting", "flooring", "electrical", "hvac", "handyman", "carpentry", "cleaning", "pest_control", "appliance"];
+    for (const id of expected) expect(living.trades[id], id).toBe("soft");
+    expect(Object.values(living.trades).filter((tier) => tier === "strong" || tier === "soft").length).toBeGreaterThanOrEqual(4);
+    expect(living.trades.locksmith).toBe("dim");
+    expect(living.trades.plumbing).toBe("dim");
+    expect(living.chips.length).toBeGreaterThan(0);
+    expect(living.chips.length).toBeLessThanOrEqual(3);
+    expect(living.chips.every((chip) => chip.categoryId === "painting")).toBe(true);
+  });
+
+  it("lights plumbing for a restroom and does not treat a storey as flooring", () => {
+    const rest = searchServices("I need help with my restroom on the second floor", "en");
+    expect(rest.status).toBe("hit");
+    expect(rest.trades.plumbing).toBe("strong");
+    expect(rest.trades.electrical).toBe("soft");
+    expect(rest.trades.handyman).toBe("soft");
+    expect(rest.trades.flooring).toBe("soft");
+    expect(rest.trades.painting).toBe("soft");
+    expect(rest.trades.cleaning).toBe("soft");
+    // The word "floor" adds nothing: the same bathroom glow, and no flooring chip.
+    expect(searchServices("restroom", "en").trades.flooring).toBe(rest.trades.flooring);
+    expect(searchServices("restroom", "en").trades.cleaning).toBe(rest.trades.cleaning);
+    expect(rest.chips.length).toBeLessThanOrEqual(3);
+    expect(rest.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
+    expect(rest.chips.some((chip) => chip.categoryId === "flooring")).toBe(false);
+
+    for (const query of ["second floor", "segundo piso", "2층", "planta alta", "upstairs"]) {
+      const storey = searchServices(query, "en");
+      expect(storey.status, query).toBe("idle");
+      expect(storey.empty, query).toBe(false);
+      expect(storey.trades.flooring, query).toBe("idle");
+    }
+    expect(searchServices("floor", "en").trades.flooring).toBe("strong");
+    expect(searchServices("floor", "en").trades.cleaning).not.toBe("strong");
+    expect(searchServices("piso", "es").trades.flooring).toBe("strong");
+    const upstairs = searchServices("2층 화장실", "ko");
+    expect(upstairs.trades.plumbing).toBe("strong");
+    expect(upstairs.trades.flooring).not.toBe("strong");
+  });
+
+  it("matches bathroom, climate, power, and roof words in everyday language", () => {
+    const bano = searchServices("baño", "es");
+    expect(bano.trades.plumbing).toBe("strong");
+    expect(bano.trades.flooring).toBe("soft");
+    expect(bano.trades.concrete).toBe("dim");
+    expect(bano.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
+
+    expect(searchServices("my AC is too hot", "en").trades.hvac).toBe("strong");
+    expect(searchServices("my AC is too hot", "en").trades.metalwork).toBe("dim");
+    expect(searchServices("el clima no enfría", "es").trades.hvac).toBe("strong");
+    expect(searchServices("a/c", "en").trades.hvac).toBe("strong");
+
+    const luz = searchServices("no hay luz", "es");
+    expect(luz.trades.electrical).toBe("strong");
+    expect(luz.chips.some((chip) => chip.taskId === "FIXX-ELC-002")).toBe(true);
+
+    const gotera = searchServices("gotera", "es");
+    expect(gotera.trades.roofing).toBe("strong");
+    expect(gotera.trades.plumbing).toBe("soft");
+    expect(gotera.chips[0]?.categoryId).toBe("roofing");
+
+    expect(searchServices("화장실", "ko").trades.plumbing).toBe("strong");
+    expect(searchServices("욕실 수리해 주세요", "ko").trades.plumbing).toBe("strong");
+    expect(searchServices("taza", "es").trades.plumbing).toBe("strong");
+    expect(searchServices("regadera", "es").trades.plumbing).toBe("strong");
+    expect(searchServices("zancudos", "es").trades.pest_control).toBe("strong");
+    expect(searchServices("apagador", "es").trades.electrical).toBe("strong");
+    expect(searchServices("calentador", "es").trades.plumbing).toBe("strong");
+    expect(searchServices("squeaky door", "en").trades.carpentry).toBe("strong");
+
+    expect(searchServices("zzzz", "en")).toMatchObject({ empty: true, status: "empty", tradeCount: 0 });
+    const filler = searchServices("I need help with", "en");
+    expect(filler.status).toBe("idle");
+    expect(filler.empty).toBe(false);
+    expect(Object.values(filler.trades).every((tier) => tier === "idle")).toBe(true);
+    expect(searchServices("lavar", "es").trades.cleaning).toBe("strong");
+    expect(searchServices("lavar", "es").trades.appliance).not.toBe("strong");
   });
 
   it("prices bookable metalwork from the workbook and does not treat it as pending quotes", () => {
@@ -243,12 +342,12 @@ describe("choose a service screen", () => {
 
     expect(screen.getByRole("button", { name: "Add Plumbing" }).closest("li")?.getAttribute("data-match")).toBe("strong");
     expect(screen.getByRole("button", { name: "Add Handyman" }).closest("li")?.getAttribute("data-match")).toBe("soft");
-    expect(screen.getByRole("button", { name: "Add Painting" }).closest("li")?.getAttribute("data-match")).toBe("dim");
+    expect(screen.getByRole("button", { name: "Add Painting" }).closest("li")?.getAttribute("data-match")).toBe("soft");
     const drain = screen.getByRole("button", { name: /Drain cleaning/ });
     expect(drain.textContent).toContain("Plumbing");
     fireEvent.click(drain);
     expect(jobs).toEqual(["plumbing:FIXX-PLM-006"]);
-    expect(screen.getByText("2 trades match · 2 jobs suggested")).toBeTruthy();
+    expect(screen.getByText("6 trades match · 2 jobs suggested")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Clear search" }));
     expect((input as HTMLInputElement).value).toBe("");
@@ -297,7 +396,7 @@ describe("choose a service screen", () => {
     typeAndWait("I need help with my toilet");
     expect(screen.queryByRole("heading", { name: "No matching services" })).toBeNull();
     expect(screen.getByRole("button", { name: "Add Plumbing" }).closest("li")?.getAttribute("data-match")).toBe("strong");
-    expect(screen.getByRole("button", { name: "Add Electrical" }).closest("li")?.getAttribute("data-match")).toBe("dim");
+    expect(screen.getByRole("button", { name: "Add Electrical" }).closest("li")?.getAttribute("data-match")).toBe("soft");
     const toilet = screen.getByRole("button", { name: /Toilet repair/ });
     expect(toilet.textContent).toContain("Plumbing");
     fireEvent.click(toilet);
