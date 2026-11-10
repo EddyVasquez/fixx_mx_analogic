@@ -1,6 +1,9 @@
 import { JOB_STATUS_ORDER, type JobStatus } from "@/core/types/jobStatus";
 
-/** Four phases over the twelve real statuses. Labels come from status.phase.*. */
+/**
+ * Phase groups over the twelve statuses. The meter no longer draws these labels —
+ * every step has its own icon — but the grouping stays available.
+ */
 export const PHASES = [
   { id: "request", from: 1, to: 2 },
   { id: "quote", from: 3, to: 5 },
@@ -54,4 +57,105 @@ export function meterStatus(status: JobStatus, pendingReview = false): JobStatus
 
 export function meterStep(status: JobStatus, pendingReview = false): number {
   return stepNumber(meterStatus(status, pendingReview));
+}
+
+/** One node per real status. */
+export const STEP_COUNT = JOB_STATUS_ORDER.length;
+
+export const NODE_PX = 36;
+/** Gap between node edges on the phone strip. Stride is 50px. */
+export const STRIP_GAP_PX = 14;
+export const STRIP_STRIDE_PX = NODE_PX + STRIP_GAP_PX;
+
+/**
+ * Room inside the scrolling strip so the current ring is not cut off when a
+ * node is clamped to an end. The strip clips overflow in order to scroll.
+ * The full row does not scroll, so its glow spills into the panel padding
+ * and this inset is not applied there.
+ */
+export const STRIP_INSET_PX = 14;
+
+/** Full row: edge-to-edge gap between the 36px nodes. */
+export const FULL_GAP_MIN_PX = 24;
+export const FULL_GAP_MAX_PX = 48;
+
+/** 12×36 + 11×24. A narrower rail stays on the strip. */
+export const RAIL_FULL_MIN_PX = NODE_PX * STEP_COUNT + FULL_GAP_MIN_PX * (STEP_COUNT - 1);
+
+/** 12×36 + 11×48. The full row is capped here and centered. */
+export const RAIL_FULL_MAX_PX = NODE_PX * STEP_COUNT + FULL_GAP_MAX_PX * (STEP_COUNT - 1);
+
+/** Matches the app's tablet breakpoint. Below this the meter stays a strip. */
+export const VIEWPORT_FULL_MIN_PX = 768;
+
+/** Short label under the current node. Wraps to two lines, never truncates. */
+export const CAPTION_MAX_PX = 140;
+
+export const FADE_PX = 24;
+
+/** Full row only when the viewport is at the tablet breakpoint and the rail can hold a 24px gap. */
+export function meterUsesFullRow(viewportWide: boolean, railWidth: number): boolean {
+  return viewportWide && railWidth >= RAIL_FULL_MIN_PX;
+}
+
+export function stripContentWidth(): number {
+  return STRIP_INSET_PX * 2 + NODE_PX * STEP_COUNT + STRIP_GAP_PX * (STEP_COUNT - 1);
+}
+
+/** Center of a strip node, including the ring inset at the ends. */
+export function stripNodeCenter(step: number): number {
+  const index = clampStep(step) - 1;
+  return STRIP_INSET_PX + index * STRIP_STRIDE_PX + NODE_PX / 2;
+}
+
+/**
+ * Scroll offset that centers the current node, then clamps so the first and
+ * last steps sit against the ends instead of floating in an empty rail.
+ */
+export function stripScrollLeft(step: number, viewportWidth: number): number {
+  const contentWidth = stripContentWidth();
+  const maxScroll = Math.max(0, contentWidth - Math.max(0, viewportWidth));
+  const target = stripNodeCenter(step) - viewportWidth / 2;
+  return Math.min(maxScroll, Math.max(0, target));
+}
+
+/** Width of the full-row track. Capped so the gap never exceeds 48px. */
+export function fullRowTrackWidth(railWidth: number): number {
+  return Math.min(Math.max(0, railWidth), RAIL_FULL_MAX_PX);
+}
+
+/** Edge-to-edge gap once the track is capped. Below 696px this is under 24px, so the strip is used instead. */
+export function fullRowGap(railWidth: number): number {
+  return (fullRowTrackWidth(railWidth) - NODE_PX * STEP_COUNT) / (STEP_COUNT - 1);
+}
+
+/** Center of a full-row node inside a track of `trackWidth`. */
+export function fullNodeCenter(step: number, trackWidth: number): number {
+  const index = clampStep(step) - 1;
+  const span = Math.max(0, trackWidth - NODE_PX);
+  return NODE_PX / 2 + (span * index) / (STEP_COUNT - 1);
+}
+
+export type CaptionAlign = "start" | "center" | "end";
+
+/** Step 1 stays left-aligned on the rail. Step 12 stays right-aligned. The rest are centered on the node. */
+export function captionAlign(step: number): CaptionAlign {
+  if (step <= 1) return "start";
+  if (step >= STEP_COUNT) return "end";
+  return "center";
+}
+
+/**
+ * Paper fades on the strip. A fade is hidden on the side that has reached
+ * its scroll end, so a clamped step is not covered.
+ */
+export function edgeFadeVisibility(scrollLeft: number, clientWidth: number, scrollWidth: number): { start: boolean; end: boolean } {
+  const maxScroll = Math.max(0, scrollWidth - Math.max(0, clientWidth));
+  const atStart = scrollLeft <= 1;
+  const atEnd = scrollLeft >= maxScroll - 1;
+  return { start: !atStart, end: !atEnd };
+}
+
+function clampStep(step: number): number {
+  return Math.min(STEP_COUNT, Math.max(1, Math.round(step)));
 }
