@@ -68,6 +68,14 @@
     "수리", "수리해", "고쳐", "고쳐요", "고쳐주세요",
     "있어요", "없어요", "입니다", "이에요", "예요",
     "이거", "그거", "저거", "여기", "저기",
-    "싶어", "싶어요", "하고", "부탁", "드려요"
+    "싶어", "싶어요", "하고", "부탁", "드려요",
+    "repair", "repairs", "repairing", "repaired", "install", "installs", "installing", "installed", "installation",
+    "replace", "replacement", "change", "changed", "changing", "visit", "visits", "working", "works",
+    "reparar", "repara", "reparacion", "reparaciones", "instalar", "instala", "instalacion",
+    "reemplazar", "reemplazo", "cambiar", "cambia", "cambio", "cambios", "visita", "visitas",
+    "home", "house", "houses", "casa", "casas", "vivienda", "hogar",
+    "not", "now", "see", "set", "mantenimiento", "maintenance", "general",
+    "solo", "interior", "budget", "salida", "remoto", "remote", "structural", "estructural", "control",
+    "설치", "교체", "설치해", "교체해"
   ]
 }

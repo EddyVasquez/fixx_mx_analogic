@@ -42,8 +42,8 @@ describe("catalog search", () => {
     expect(result.trades.cleaning).toBe("dim");
     expect(result.trades.metalwork).toBe("dim");
     expect(result.tradeCount).toBe(2);
-    expect(result.chips.map((chip) => chip.taskId)).toEqual(["FIXX-PLM-006", "FIXX-PLM-001"]);
-    expect(result.chips.map((chip) => chip.title)).toEqual(["Drain cleaning", "Toilet repair"]);
+    expect(result.chips.map((chip) => chip.taskId)).toEqual(["FIXX-PLM-001", "FIXX-PLM-006"]);
+    expect(result.chips.map((chip) => chip.title)).toEqual(["Toilet repair", "Drain cleaning"]);
     expect(result.empty).toBe(false);
   });
 
@@ -106,7 +106,8 @@ describe("catalog search", () => {
     const pl = searchServices("pl", "en");
     expect(pl.status).toBe("hit");
     expect(pl.empty).toBe(false);
-    expect(pl.trades.plumbing).toBe("strong");
+    // Two letters stay soft. The finished trade name is strong.
+    expect(pl.trades.plumbing).toBe("soft");
     expect(pl.trades.painting).toBe("dim");
 
     const plom = searchServices("plom", "ko");
@@ -117,12 +118,12 @@ describe("catalog search", () => {
 
     const herr = searchServices("herr", "en");
     expect(herr.trades.metalwork).toBe("strong");
-    expect(herr.trades.locksmith).toBe("soft");
+    expect(herr.trades.locksmith).toBe("dim");
     expect(herr.trades.plumbing).toBe("dim");
 
     const prot = searchServices("prot", "es");
     expect(prot.trades.metalwork).toBe("strong");
-    expect(prot.trades.locksmith).toBe("soft");
+    expect(prot.trades.locksmith).toBe("dim");
     expect(prot.chips[0]?.taskId).toBe("FIXX-MTL-001");
     expect(prot.empty).toBe(false);
 
@@ -160,13 +161,13 @@ describe("catalog search", () => {
     expect(toilet.status).toBe("hit");
     expect(toilet.empty).toBe(false);
     expect(toilet.trades.plumbing).toBe("strong");
-    expect(toilet.trades.painting).toBe("soft");
-    expect(toilet.trades.electrical).toBe("soft");
+    expect(toilet.trades.painting).toBe("dim");
+    expect(toilet.trades.electrical).toBe("dim");
     expect(toilet.chips.some((chip) => chip.taskId === "FIXX-PLM-001" && chip.title === "Toilet repair")).toBe(true);
 
     const bars = searchServices("necesito ayuda con las protecciones", "en");
     expect(bars.trades.metalwork).toBe("strong");
-    expect(bars.trades.locksmith).toBe("soft");
+    expect(bars.trades.locksmith).toBe("dim");
     expect(bars.chips[0]?.title.startsWith("Window security bars")).toBe(true);
     expect(bars.chips[0]?.tradeName).toBe("Metalwork");
     expect(bars.empty).toBe(false);
@@ -207,7 +208,8 @@ describe("catalog search", () => {
     const listedJobs = new Set(tradeSynonyms.flatMap((entry) => entry.jobs ?? []));
     for (const job of catalogJobRecords()) expect(listedJobs.has(job.id), job.id).toBe(true);
     for (const room of rooms) {
-      for (const id of [...room.trades, ...(room.strong ?? [])]) expect(known.has(id), `${room.id}:${id}`).toBe(true);
+      for (const id of [...room.trades, ...(room.primary ?? [])]) expect(known.has(id), `${room.id}:${id}`).toBe(true);
+      expect(room.primary ?? [], room.id).not.toEqual(room.trades);
     }
   });
 
@@ -215,7 +217,7 @@ describe("catalog search", () => {
     const living = searchServices("I need help with my living room", "en");
     expect(living.status).toBe("hit");
     expect(living.empty).toBe(false);
-    const expected = ["painting", "flooring", "electrical", "hvac", "handyman", "carpentry", "cleaning", "pest_control", "appliance"];
+    const expected = ["painting", "flooring", "electrical", "hvac", "handyman", "carpentry", "cleaning", "pest_control"];
     for (const id of expected) expect(living.trades[id], id).toBe("soft");
     expect(Object.values(living.trades).filter((tier) => tier === "strong" || tier === "soft").length).toBeGreaterThanOrEqual(4);
     expect(living.trades.locksmith).toBe("dim");
@@ -225,24 +227,19 @@ describe("catalog search", () => {
     expect(living.chips.every((chip) => chip.categoryId === "painting")).toBe(true);
   });
 
-  it("lights plumbing for a restroom and does not treat a storey as flooring", () => {
+  it("keeps a restroom broad and does not treat a storey as flooring", () => {
+    const bath = ["plumbing", "electrical", "handyman", "flooring", "painting", "cleaning"];
     const rest = searchServices("I need help with my restroom on the second floor", "en");
     expect(rest.status).toBe("hit");
-    expect(rest.trades.plumbing).toBe("strong");
-    expect(rest.tradeCount).toBe(1);
-    expect(rest.trades.electrical).toBe("dim");
-    expect(rest.trades.handyman).toBe("dim");
-    expect(rest.trades.flooring).toBe("dim");
-    expect(rest.trades.painting).toBe("dim");
-    expect(rest.trades.cleaning).toBe("dim");
-    // The word "floor" adds nothing: the same bathroom glow, and no flooring chip.
-    expect(searchServices("restroom", "en").trades.flooring).toBe(rest.trades.flooring);
-    expect(searchServices("restroom", "en").trades.cleaning).toBe(rest.trades.cleaning);
-    expect(rest.chips.length).toBeLessThanOrEqual(3);
+    expect(rest.tradeCount).toBe(bath.length);
+    for (const id of bath) expect(rest.trades[id], id).toBe("soft");
+    expect(Object.values(rest.trades).some((tier) => tier === "strong")).toBe(false);
+    // "Second floor" does not change the bathroom list and does not add a flooring chip.
+    expect(searchServices("restroom", "en").trades).toEqual(rest.trades);
     expect(rest.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
     expect(rest.chips.some((chip) => chip.categoryId === "flooring")).toBe(false);
 
-    for (const query of ["second floor", "segundo piso", "2층", "planta alta", "upstairs"]) {
+    for (const query of ["second floor", "segundo piso", "2층", "planta alta", "upstairs", "abajo", "arriba"]) {
       const storey = searchServices(query, "en");
       expect(storey.status, query).toBe("idle");
       expect(storey.empty, query).toBe(false);
@@ -252,24 +249,20 @@ describe("catalog search", () => {
     expect(searchServices("floor", "en").trades.cleaning).not.toBe("strong");
     expect(searchServices("piso", "es").trades.flooring).toBe("strong");
     const upstairs = searchServices("2층 화장실", "ko");
-    expect(upstairs.trades.plumbing).toBe("strong");
-    expect(upstairs.trades.flooring).toBe("dim");
-    expect(upstairs.tradeCount).toBe(1);
-
-    const short = searchServices("restroom on the second floor", "en");
-    expect(short.trades.plumbing).toBe("strong");
-    expect(short.tradeCount).toBe(1);
-    expect(short.trades.flooring).toBe("dim");
-    expect(short.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
+    expect(upstairs.trades.plumbing).toBe("soft");
+    expect(upstairs.trades.flooring).toBe("soft");
+    expect(upstairs.tradeCount).toBe(bath.length);
+    expect(upstairs.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
   });
 
   it("matches bathroom, climate, power, and roof words in everyday language", () => {
     const bano = searchServices("baño", "es");
-    expect(bano.trades.plumbing).toBe("strong");
-    expect(bano.trades.flooring).toBe("dim");
-    expect(bano.trades.electrical).toBe("dim");
+    expect(bano.trades.plumbing).toBe("soft");
+    expect(bano.trades.flooring).toBe("soft");
+    expect(bano.trades.electrical).toBe("soft");
     expect(bano.trades.concrete).toBe("dim");
-    expect(bano.tradeCount).toBe(1);
+    expect(bano.tradeCount).toBe(6);
+    expect(Object.values(bano.trades).some((tier) => tier === "strong")).toBe(false);
     expect(bano.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
 
     expect(searchServices("my AC is too hot", "en").trades.hvac).toBe("strong");
@@ -286,10 +279,11 @@ describe("catalog search", () => {
     expect(gotera.trades.plumbing).toBe("soft");
     expect(gotera.chips[0]?.categoryId).toBe("roofing");
 
-    expect(searchServices("화장실", "ko").trades.plumbing).toBe("strong");
-    expect(searchServices("욕실 수리해 주세요", "ko").trades.plumbing).toBe("strong");
+    expect(searchServices("화장실", "ko").trades.plumbing).toBe("soft");
+    expect(searchServices("욕실 수리해 주세요", "ko").trades.plumbing).toBe("soft");
     expect(searchServices("taza", "es").trades.plumbing).toBe("strong");
     expect(searchServices("regadera", "es").trades.plumbing).toBe("strong");
+    expect(searchServices("regadera", "es").chips[0]?.taskId).toBe("FIXX-PLM-007");
     expect(searchServices("zancudos", "es").trades.pest_control).toBe("strong");
     expect(searchServices("apagador", "es").trades.electrical).toBe("strong");
     expect(searchServices("calentador", "es").trades.plumbing).toBe("strong");
@@ -327,18 +321,22 @@ describe("catalog search", () => {
     const win = searchServices("I need help with win", "en");
     expect(win.status).toBe("hit");
     expect(win.empty).toBe(false);
-    expect(win.trades.metalwork).toBe("strong");
-    expect(win.chips.some((chip) => chip.taskId === "FIXX-MTL-001" && chip.title.startsWith("Window security bars"))).toBe(true);
+    expect(win.trades.handyman).toBe("soft");
+    expect(win.trades.cleaning).toBe("soft");
+    expect(win.trades.metalwork).toBe("dim");
+    expect(win.trades.locksmith).toBe("dim");
+    expect(win.chips.map((chip) => chip.taskId)).toEqual(["FIXX-HND-004", "FIXX-CLN-007"]);
 
     const alone = searchServices("wi", "en");
     expect(alone.status).toBe("hit");
-    expect(alone.trades.metalwork).toBe("strong");
-    expect(alone.trades.electrical).toBe("strong");
+    expect(alone.trades.handyman).toBe("soft");
+    expect(alone.trades.metalwork).toBe("dim");
+    expect(alone.trades.electrical).toBe("dim");
     const mine = searchServices("my wi", "en");
-    expect(mine.status).toBe("hit");
-    expect(mine.trades.metalwork).toBe("strong");
-    expect(searchServices("co", "en").trades.concrete).toBe("strong");
-    expect(searchServices("pl", "en").trades.plumbing).toBe("strong");
+    expect(mine.trades.handyman).toBe("soft");
+    expect(mine.trades.metalwork).toBe("dim");
+    expect(searchServices("co", "en").status).toBe("idle");
+    expect(searchServices("pl", "en").trades.plumbing).toBe("soft");
   });
 
   it("lets a specific word replace the room list, and keeps a room-only query soft", () => {
@@ -365,13 +363,14 @@ describe("catalog search", () => {
     expect(Object.values(kitchen.trades).some((tier) => tier === "strong")).toBe(false);
 
     const rest = searchServices("restroom on the second floor", "en");
-    expect(rest.trades.plumbing).toBe("strong");
-    expect(rest.tradeCount).toBe(1);
+    expect(rest.trades.plumbing).toBe("soft");
+    expect(rest.tradeCount).toBe(6);
+    expect(Object.values(rest.trades).some((tier) => tier === "strong")).toBe(false);
     expect(rest.chips.every((chip) => chip.categoryId === "plumbing")).toBe(true);
     expect(rest.chips.some((chip) => chip.categoryId === "flooring")).toBe(false);
 
     const living = searchServices("living room", "en");
-    const livingTrades = ["painting", "flooring", "electrical", "hvac", "handyman", "carpentry", "cleaning", "pest_control", "appliance"];
+    const livingTrades = ["painting", "flooring", "electrical", "hvac", "handyman", "carpentry", "cleaning", "pest_control"];
     expect(living.tradeCount).toBe(livingTrades.length);
     for (const id of livingTrades) expect(living.trades[id], id).toBe("soft");
     expect(living.trades.locksmith).toBe("dim");
@@ -487,7 +486,7 @@ describe("choose a service screen", () => {
     typeAndWait("I need help with my toilet");
     expect(screen.queryByRole("heading", { name: "No matching services" })).toBeNull();
     expect(screen.getByRole("button", { name: "Add Plumbing" }).closest("li")?.getAttribute("data-match")).toBe("strong");
-    expect(screen.getByRole("button", { name: "Add Electrical" }).closest("li")?.getAttribute("data-match")).toBe("soft");
+    expect(screen.getByRole("button", { name: "Add Electrical" }).closest("li")?.getAttribute("data-match")).toBe("dim");
     const toilet = screen.getByRole("button", { name: /Toilet repair/ });
     expect(toilet.textContent).toContain("Plumbing");
     fireEvent.click(toilet);
@@ -514,7 +513,7 @@ describe("choose a service screen", () => {
     expect(screen.queryByRole("button", { name: /Window security bars/ })).toBeNull();
 
     typeAndWait("I need help with my kitchen");
-    expect(screen.getByText("9 trades match · 0 jobs suggested")).toBeTruthy();
+    expect(screen.getByText("9 trades can help")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Add Plumbing" }).closest("li")?.getAttribute("data-match")).toBe("soft");
     expect(screen.getByRole("button", { name: "Add HVAC" }).closest("li")?.getAttribute("data-match")).toBe("dim");
     expect(screen.getByRole("button", { name: "Add Flooring" }).closest("li")?.getAttribute("data-match")).toBe("soft");

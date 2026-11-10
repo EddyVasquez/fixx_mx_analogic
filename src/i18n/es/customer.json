@@ -124,7 +124,19 @@
     "status": "draft"
   },
   "search.matches": {
-    "text": "{n, plural, one {# oficio coincide} other {# oficios coinciden}} · {m, plural, one {# trabajo sugerido} other {# trabajos sugeridos}}",
+    "text": "{n, plural, one {# oficio coincide} other {# oficios coinciden}}{m, plural, =0 {} one { · # trabajo sugerido} other { · # trabajos sugeridos}}",
+    "status": "draft"
+  },
+  "search.canHelp": {
+    "text": "{n, plural, one {# oficio puede ayudar} other {# oficios pueden ayudar}}{m, plural, =0 {} one { · # trabajo sugerido} other { · # trabajos sugeridos}}",
+    "status": "draft"
+  },
+  "search.gasTitle": {
+    "text": "Fuga de gas",
+    "status": "draft"
+  },
+  "search.gasBody": {
+    "text": "Sal de la casa. Llama al 911 o a la compañía de gas. No hay nada que agendar.",
     "status": "draft"
   },
   "search.none": {

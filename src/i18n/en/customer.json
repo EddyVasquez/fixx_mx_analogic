@@ -124,7 +124,19 @@
     "status": "draft"
   },
   "search.matches": {
-    "text": "{n, plural, one {# trade matches} other {# trades match}} · {m, plural, one {# job suggested} other {# jobs suggested}}",
+    "text": "{n, plural, one {# trade matches} other {# trades match}}{m, plural, =0 {} one { · # job suggested} other { · # jobs suggested}}",
+    "status": "draft"
+  },
+  "search.canHelp": {
+    "text": "{n, plural, one {# trade can help} other {# trades can help}}{m, plural, =0 {} one { · # job suggested} other { · # jobs suggested}}",
+    "status": "draft"
+  },
+  "search.gasTitle": {
+    "text": "Gas leak",
+    "status": "draft"
+  },
+  "search.gasBody": {
+    "text": "Leave the house. Call 911 or your gas company. There is nothing to book.",
     "status": "draft"
   },
   "search.none": {

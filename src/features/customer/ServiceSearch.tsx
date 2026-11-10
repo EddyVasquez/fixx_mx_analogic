@@ -51,11 +51,15 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
   // Filler and a single letter stay idle: no dim, no count, no "No matches".
   const showHits = result.status === "hit";
   const showEmpty = result.status === "empty";
-  const live = showEmpty
-    ? t("search.none")
-    : showHits
-      ? t("search.matches", { n: result.tradeCount, m: result.jobCount })
-      : "";
+  const showSafety = result.status === "safety";
+  const hasStrong = showHits && Object.values(result.trades).some((tier) => tier === "strong");
+  const live = showSafety
+    ? `${t("search.gasTitle")} ${t("search.gasBody")}`
+    : showEmpty
+      ? t("search.none")
+      : showHits
+        ? t(hasStrong ? "search.matches" : "search.canHelp", { n: result.tradeCount, m: result.jobCount })
+        : "";
 
   return (
     <div className="flex flex-col gap-4">
@@ -103,10 +107,17 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
 
       <p id={LIVE_ID} aria-live="polite" className={showHits || showEmpty ? "text-sm font-semibold text-inkSoft" : "sr-only"}>{live}</p>
 
-      {showEmpty ? (
+      {showSafety ? (
+        <div role="status" className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
+          <h3 className="font-semibold">{t("search.gasTitle")}</h3>
+          <p className="text-sm">{t("search.gasBody")}</p>
+        </div>
+      ) : null}
+
+      {showEmpty || showSafety ? (
         <div id={GRID_ID} hidden />
       ) : null}
-      {showEmpty ? (
+      {showSafety ? null : showEmpty ? (
         <div className="flex flex-col gap-3 rounded-2xl border-2 border-dashed border-ink bg-paper p-4">
           <h3 className="text-lg font-bold">{t("search.emptyTitle")}</h3>
           <p>{t("search.emptyBody")}</p>
@@ -124,7 +135,7 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
 
       <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
         <p className="text-sm">{t("home.emergencyLine")}</p>
-        {!showEmpty && <Button onClick={onUrgent}>{t("btn.urgentRequest")}</Button>}
+        {!showEmpty && !showSafety && <Button onClick={onUrgent}>{t("btn.urgentRequest")}</Button>}
       </div>
     </div>
   );
