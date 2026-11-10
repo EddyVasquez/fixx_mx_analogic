@@ -1,9 +1,11 @@
 import type { Lang } from "@/core/config/fixx.config";
 import { catalogJobRecords } from "./catalogJobs";
 import { categories } from "./data";
+import fillerJson from "./searchFillers.json";
 import slangJson from "./searchSlang.json";
 
 export type TradeVisual = "idle" | "strong" | "soft" | "dim";
+export type SearchStatus = "idle" | "hit" | "empty";
 
 export interface SearchChip {
   taskId: string;
@@ -20,7 +22,13 @@ export interface SearchResult {
   chips: SearchChip[];
   tradeCount: number;
   jobCount: number;
-  /** True when the query is non-empty and nothing matched. */
+  /**
+   * idle: filler or still too short to judge. The grid stays at full strength.
+   * hit: at least one trigger token matched. Unmatched words do not cancel it.
+   * empty: a real token of 3+ characters matched nothing.
+   */
+  status: SearchStatus;
+  /** True only for status "empty". A one-letter or filler query is not empty. */
   empty: boolean;
 }
 
@@ -34,12 +42,20 @@ interface SlangGroup {
   relatedJobIds?: string[];
 }
 
-const STOP = new Set([
-  "a", "an", "the", "of", "to", "at", "and", "or", "for", "in", "on", "my", "is", "it",
-  "el", "la", "los", "las", "de", "del", "un", "una", "y", "o", "en", "con", "para", "por", "al", "se", "que", "mi", "lo"
-]);
+interface FillerFile {
+  phrases: string[];
+  tokens: string[];
+}
 
 const STRONG_SCORE = 80;
+/** A 2-character token can light a prefix hit, but it is too short to declare "no matches". */
+const MIN_TOKEN = 2;
+const MIN_EMPTY = 3;
+
+const HANGUL_PARTICLES = ["에서는", "에서도", "으로", "에서", "에게", "한테", "처럼", "까지", "부터", "보다", "마다", "은", "는", "이", "가", "을", "를", "도", "만", "과", "와", "로", "의", "요"]
+  .sort((a, b) => b.length - a.length);
+
+const fillers = fillerJson as FillerFile;
 
 /** Lowercase, strip accents, and collapse whitespace so "tapó" matches "tapo". */
 export function normalizeSearch(value: string): string {
@@ -52,8 +68,66 @@ export function normalizeSearch(value: string): string {
     .trim();
 }
 
-function tokens(value: string): string[] {
-  return value.split(" ").filter((token) => token.length >= 2 && !STOP.has(token));
+const FILLER = new Set(fillers.tokens.map((token) => normalizeSearch(token)).filter(Boolean));
+
+const fillerPhrases = [...fillers.phrases]
+  .map((phrase) => normalizeSearch(phrase))
+  .filter((phrase) => phrase.includes(" "))
+  .sort((a, b) => b.length - a.length);
+
+function stripFillerPhrases(query: string): string {
+  let next = ` ${query} `;
+  for (const phrase of fillerPhrases) {
+    const needle = ` ${phrase} `;
+    if (next.includes(needle)) next = next.split(needle).join(" ");
+  }
+  return next.replace(/\s+/g, " ").trim();
+}
+
+function stripParticle(token: string): string {
+  if (!/\p{Script=Hangul}/u.test(token)) return token;
+  for (const particle of HANGUL_PARTICLES) {
+    if (token.length - particle.length >= MIN_TOKEN && token.endsWith(particle)) {
+      return token.slice(0, -particle.length);
+    }
+  }
+  return token;
+}
+
+function isFiller(token: string): boolean {
+  if (FILLER.has(token)) return true;
+  const stem = stripParticle(token);
+  return stem !== token && FILLER.has(stem);
+}
+
+/** Words that can hit a trade, a job title, or slang. Filler and 1-character tokens are dropped. */
+function meaningfulTokens(value: string): string[] {
+  const out: string[] = [];
+  for (const raw of value.split(" ")) {
+    if (raw.length < MIN_TOKEN || /^\d+$/.test(raw) || isFiller(raw)) continue;
+    const token = stripParticle(raw);
+    if (token.length < MIN_TOKEN || /^\d+$/.test(token) || FILLER.has(token)) continue;
+    out.push(token);
+  }
+  return out;
+}
+
+function contentTokens(value: string): string[] {
+  return meaningfulTokens(normalizeSearch(value));
+}
+
+/**
+ * Query token hits a catalog or slang word.
+ * "pl" hits "plumbing" / "plomería". "변기를" hits "변기" (short Hangul particle).
+ * "toilets" hits "toilet".
+ */
+function tokenHitsTerm(queryToken: string, term: string): boolean {
+  if (queryToken.length < MIN_TOKEN || term.length < MIN_TOKEN) return false;
+  if (term.startsWith(queryToken)) return true;
+  if (!queryToken.startsWith(term)) return false;
+  const extra = queryToken.length - term.length;
+  const limit = /\p{Script=Hangul}/u.test(term) ? 4 : 2;
+  return extra > 0 && extra <= limit;
 }
 
 function containsPhrase(query: string, phrase: string): boolean {
@@ -62,55 +136,36 @@ function containsPhrase(query: string, phrase: string): boolean {
   return ` ${query} `.includes(` ${phrase} `);
 }
 
-function titleScore(query: string, title: string): number {
-  if (!query || !title) return 0;
-  if (title === query) return 100;
-  if (query.length >= 3 && title.includes(query)) return 90;
-  if (title.length >= 3 && query.includes(title)) return 85;
-  const qTokens = tokens(query);
-  const tTokens = tokens(title);
-  if (qTokens.length === 0 || tTokens.length === 0) return 0;
-  const prefixHit = (left: string, right: string) => left.length >= 5 && right.startsWith(left);
-  let hits = 0;
-  for (const qt of qTokens) {
-    if (tTokens.some((tt) => tt === qt || prefixHit(qt, tt) || prefixHit(tt, qt))) hits += 1;
-  }
-  if (hits === 0) return 0;
-  if (qTokens.length === 1) {
-    const qt = qTokens[0] ?? "";
-    if (tTokens.includes(qt) || (qt.length >= 5 && tTokens.some((tt) => prefixHit(qt, tt) || prefixHit(tt, qt)))) return 85;
-  }
-  // One shared word in a longer question (for example "baño" inside "se tapó el baño") is not a job match.
-  if (hits < 2) return 0;
-  return Math.min(75, 40 + hits * 15);
+function phraseTokens(phrase: string): string[] {
+  return phrase.split(" ").filter((token) => token.length >= MIN_TOKEN);
 }
 
 interface IndexedJob {
   id: string;
   categoryId: string;
   titles: Record<Lang, string>;
-  normalizedTitles: string[];
+  tokens: string[];
   pendingReview: boolean;
 }
 
 interface IndexedTrade {
   id: string;
   names: Record<Lang, string>;
-  normalizedNames: string[];
+  tokens: string[];
 }
 
 const indexedJobs: IndexedJob[] = catalogJobRecords().map((job) => ({
   id: job.id,
   categoryId: job.categoryId,
   titles: job.titles,
-  normalizedTitles: [job.titles.en, job.titles.es, job.titles.ko].map(normalizeSearch),
+  tokens: contentTokens([job.titles.en, job.titles.es, job.titles.ko].join(" ")),
   pendingReview: job.pendingReview
 }));
 
 const indexedTrades: IndexedTrade[] = categories.map((category) => ({
   id: category.id,
   names: category.names,
-  normalizedNames: [category.names.en, category.names.es, category.names.ko].map(normalizeSearch)
+  tokens: contentTokens([category.names.en, category.names.es, category.names.ko].join(" "))
 }));
 
 const jobById = new Map(indexedJobs.map((job) => [job.id, job]));
@@ -122,20 +177,56 @@ const slangGroups: SlangGroup[] = (slangJson.groups as SlangGroup[]).map((group)
   requiresAny: group.requiresAny?.map(normalizeSearch)
 }));
 
-function groupMatches(query: string, group: SlangGroup): boolean {
-  if (!group.phrases.some((phrase) => containsPhrase(query, phrase))) return false;
+function tokenHitsPhrase(token: string, phrase: string): boolean {
+  return phraseTokens(phrase).some((part) => tokenHitsTerm(token, part));
+}
+
+function groupMatches(query: string, tokens: string[], group: SlangGroup): boolean {
+  const phraseHit = group.phrases.some((phrase) => containsPhrase(query, phrase) || tokens.some((token) => tokenHitsPhrase(token, phrase)));
+  if (!phraseHit) return false;
   if (!group.requiresAny?.length) return true;
-  return group.requiresAny.some((phrase) => containsPhrase(query, phrase));
+  return group.requiresAny.some((phrase) => containsPhrase(query, phrase) || tokens.some((token) => tokenHitsPhrase(token, phrase)));
+}
+
+function titleScore(queryTokens: string[], titleTokens: string[]): number {
+  let matched = 0;
+  let best = 0;
+  for (const qt of queryTokens) {
+    let tokenBest = 0;
+    for (const tt of titleTokens) {
+      if (qt === tt) tokenBest = Math.max(tokenBest, 90);
+      else if (tt.startsWith(qt) && qt.length >= 3) tokenBest = Math.max(tokenBest, 84);
+      else if (tt.startsWith(qt)) tokenBest = Math.max(tokenBest, 70);
+      else if (tokenHitsTerm(qt, tt)) tokenBest = Math.max(tokenBest, 86);
+    }
+    if (tokenBest > 0) {
+      matched += 1;
+      best = Math.max(best, tokenBest);
+    }
+  }
+  if (matched === 0) return 0;
+  if (matched >= 2) return Math.min(98, best + 8);
+  return best;
+}
+
+function idleResult(query: string): SearchResult {
+  const trades = Object.fromEntries(indexedTrades.map((trade) => [trade.id, "idle" as const]));
+  return { query, trades, chips: [], tradeCount: 0, jobCount: 0, status: "idle", empty: false };
 }
 
 /**
- * Client-side match against trade names, catalog job titles (EN/ES/KO) and the slang list.
+ * Match trade names, catalog titles (EN/ES/KO) and slang by meaningful tokens.
+ * One trigger is enough. Words that match nothing are ignored, and they never
+ * turn a hit into the empty state. Filler and a single letter stay idle.
  * Job ids in the slang file that are not in the catalog are skipped.
  */
 export function searchServices(raw: string, lang: Lang): SearchResult {
   const query = normalizeSearch(raw);
-  const idle = Object.fromEntries(indexedTrades.map((trade) => [trade.id, "idle" as const]));
-  if (!query) return { query, trades: idle, chips: [], tradeCount: 0, jobCount: 0, empty: false };
+  if (!query) return idleResult(query);
+
+  const stripped = stripFillerPhrases(query);
+  const tokens = meaningfulTokens(stripped);
+  if (tokens.length === 0) return idleResult(query);
 
   const tradeLevel = new Map<string, number>();
   const jobScore = new Map<string, number>();
@@ -154,45 +245,46 @@ export function searchServices(raw: string, lang: Lang): SearchResult {
     bumpTrade(job.categoryId, score >= STRONG_SCORE ? 2 : 1);
   };
 
-  const exactTradeIds = new Set(
-    indexedTrades
-      .filter((trade) => trade.normalizedNames.some((name) => name === query))
-      .map((trade) => trade.id)
-  );
-
   for (const trade of indexedTrades) {
-    const named = trade.normalizedNames.some((name) =>
-      name === query || (query.length >= 3 && name.length >= 3 && (name.includes(query) || query.includes(name)))
-    );
-    if (named) bumpTrade(trade.id, 2);
+    if (tokens.some((token) => trade.tokens.some((name) => tokenHitsTerm(token, name)))) bumpTrade(trade.id, 2);
   }
 
-  indexedJobs.forEach((job, index) => {
-    const crossed = exactTradeIds.size > 0 && !exactTradeIds.has(job.categoryId);
-    let best = 0;
-    for (const title of job.normalizedTitles) {
-      if (crossed) {
-        if (title === query) best = 100;
-      } else best = Math.max(best, titleScore(query, title));
+  const matchedGroups = slangGroups.filter((group) => groupMatches(query, tokens, group));
+  const consumed = new Set<string>();
+  for (const group of matchedGroups) {
+    for (const token of tokens) {
+      if (group.phrases.some((phrase) => tokenHitsPhrase(token, phrase))) consumed.add(token);
     }
-    if (best > 0) bumpJob(job.id, best, 1000 + index);
-  });
+  }
+
+  const freeTokens = tokens.filter((token) => !consumed.has(token));
+  if (freeTokens.length > 0) {
+    indexedJobs.forEach((job, index) => {
+      const best = titleScore(freeTokens, job.tokens);
+      if (best > 0) bumpJob(job.id, best, 1000 + index);
+    });
+  }
 
   let slangOrder = 0;
-  for (const group of slangGroups) {
-    if (!groupMatches(query, group)) continue;
+  for (const group of matchedGroups) {
     bumpTrade(group.primaryTradeId, 2);
     for (const id of group.relatedTradeIds ?? []) bumpTrade(id, 1);
     for (const id of group.primaryJobIds ?? []) bumpJob(id, 100, slangOrder++);
     for (const id of group.relatedJobIds ?? []) bumpJob(id, 50, slangOrder++);
   }
 
+  const tradeCount = indexedTrades.filter((trade) => (tradeLevel.get(trade.id) ?? 0) > 0).length;
+  if (tradeCount === 0) {
+    const ready = tokens.some((token) => token.length >= MIN_EMPTY);
+    if (!ready) return idleResult(query);
+    const trades = Object.fromEntries(indexedTrades.map((trade) => [trade.id, "dim" as const]));
+    return { query, trades, chips: [], tradeCount: 0, jobCount: 0, status: "empty", empty: true };
+  }
+
   const trades: Record<string, TradeVisual> = {};
-  let tradeCount = 0;
   for (const trade of indexedTrades) {
     const level = tradeLevel.get(trade.id) ?? 0;
     trades[trade.id] = level >= 2 ? "strong" : level === 1 ? "soft" : "dim";
-    if (level > 0) tradeCount += 1;
   }
 
   const chips = [...jobScore.entries()]
@@ -219,6 +311,7 @@ export function searchServices(raw: string, lang: Lang): SearchResult {
     chips,
     tradeCount,
     jobCount: chips.length,
-    empty: tradeCount === 0
+    status: "hit",
+    empty: false
   };
 }

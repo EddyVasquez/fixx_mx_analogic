@@ -48,12 +48,14 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
   };
 
   const result = searchServices(applied, lang);
-  const searching = applied.trim().length > 0;
-  const live = !searching
-    ? ""
-    : result.empty
-      ? t("search.none")
-      : t("search.matches", { n: result.tradeCount, m: result.jobCount });
+  // Filler and a single letter stay idle: no dim, no count, no "No matches".
+  const showHits = result.status === "hit";
+  const showEmpty = result.status === "empty";
+  const live = showEmpty
+    ? t("search.none")
+    : showHits
+      ? t("search.matches", { n: result.tradeCount, m: result.jobCount })
+      : "";
 
   return (
     <div className="flex flex-col gap-4">
@@ -91,7 +93,7 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
         )}
       </form>
 
-      {searching && result.chips.length > 0 && (
+      {showHits && result.chips.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {result.chips.map((chip) => (
             <SuggestionChip key={chip.taskId} chip={chip} review={t("search.needsReview")} onPick={() => onJob(chip.categoryId, chip.taskId)} />
@@ -99,12 +101,12 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
         </div>
       )}
 
-      <p id={LIVE_ID} aria-live="polite" className={searching ? "text-sm font-semibold text-inkSoft" : "sr-only"}>{live}</p>
+      <p id={LIVE_ID} aria-live="polite" className={showHits || showEmpty ? "text-sm font-semibold text-inkSoft" : "sr-only"}>{live}</p>
 
-      {result.empty ? (
+      {showEmpty ? (
         <div id={GRID_ID} hidden />
       ) : null}
-      {result.empty ? (
+      {showEmpty ? (
         <div className="flex flex-col gap-3 rounded-2xl border-2 border-dashed border-ink bg-paper p-4">
           <h3 className="text-lg font-bold">{t("search.emptyTitle")}</h3>
           <p>{t("search.emptyBody")}</p>
@@ -116,13 +118,13 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
       ) : (
         <>
           <h3 className="font-semibold">{t("home.choose")}</h3>
-          <TradePicker lang={lang} layout="home" gridId={GRID_ID} matches={searching ? result.trades : undefined} onPick={onPick} />
+          <TradePicker lang={lang} layout="home" gridId={GRID_ID} matches={showHits ? result.trades : undefined} onPick={onPick} />
         </>
       )}
 
       <div className="flex flex-col gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
         <p className="text-sm">{t("home.emergencyLine")}</p>
-        {!result.empty && <Button onClick={onUrgent}>{t("btn.urgentRequest")}</Button>}
+        {!showEmpty && <Button onClick={onUrgent}>{t("btn.urgentRequest")}</Button>}
       </div>
     </div>
   );
