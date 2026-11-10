@@ -12,10 +12,11 @@
  *    ("fug" -> "fuga", "calent" -> "calentador") already match, so add the
  *    base word. A word that is its own entry will not swallow a longer
  *    different word ("lavar" does not hit "lavadora", "ac" does not hit "acero").
- * 3. Room or space: add it under `rooms`. Those trades glow soft. `strong`
- *    is only for the trade that should glow harder (a bathroom glows Plumbing
- *    strong). `jobs` on a room are used only when the sentence has no direct
- *    word, and should stay at one or two chips.
+ * 3. Room or space: add it under `rooms`. With only a room in the sentence,
+ *    those trades glow soft. `strong` is the trade that should glow harder
+ *    (a bathroom glows Plumbing strong). A direct word, or that strong trade,
+ *    turns the other room trades off. `jobs` on a room are used only when the
+ *    sentence has no direct word, and should stay at one or two chips.
  * 4. A storey ("second floor", "segundo piso", "2층"): add the phrase to
  *    `storeyPhrases` or the single token to `storeyTokens`. That keeps
  *    "floor" / "piso" for Flooring and stops "second floor" from lighting it.
@@ -609,7 +610,8 @@ export const rooms: RoomSynonym[] = [
   {
     id: "kitchen",
     words: ["kitchen", "cocina", "cocina integral", "주방"],
-    trades: ["plumbing", "electrical", "appliance", "painting", "flooring", "cleaning", "handyman", "pest_control", "hvac", "carpentry"]
+    // A minisplit belongs in the living room or a bedroom, not the kitchen.
+    trades: ["plumbing", "electrical", "appliance", "painting", "flooring", "cleaning", "handyman", "pest_control", "carpentry"]
   },
   {
     id: "bathroom",
@@ -625,12 +627,14 @@ export const rooms: RoomSynonym[] = [
   {
     id: "garage",
     words: ["garage", "cochera", "estacionamiento", "차고"],
-    trades: ["concrete", "electrical", "painting", "metalwork", "locksmith", "pest_control", "handyman", "cleaning", "plumbing"]
+    // Water fixtures live in the laundry and the bathrooms, not the garage.
+    trades: ["concrete", "electrical", "painting", "metalwork", "locksmith", "pest_control", "handyman", "cleaning"]
   },
   {
     id: "patio",
     words: ["patio", "backyard", "yard", "yarda", "terraza", "마당"],
-    trades: ["gardening", "concrete", "pest_control", "electrical", "cleaning", "metalwork", "plumbing", "handyman"]
+    // A hose tap is not enough to light Plumbing next to the garden and the slab.
+    trades: ["gardening", "concrete", "pest_control", "electrical", "cleaning", "metalwork", "handyman"]
   },
   {
     id: "roof",
@@ -652,7 +656,7 @@ export const rooms: RoomSynonym[] = [
   {
     id: "stairs",
     words: ["stairs", "staircase", "stairway", "escalera", "escaleras", "계단"],
-    trades: ["metalwork", "carpentry", "painting", "electrical", "handyman", "cleaning"]
+    trades: ["metalwork", "carpentry", "painting", "electrical", "handyman"]
   },
   {
     id: "hallway",
@@ -662,7 +666,7 @@ export const rooms: RoomSynonym[] = [
   {
     id: "ceiling",
     words: ["ceiling", "ceilings", "plafon", "plafón", "cielo raso", "천장"],
-    trades: ["painting", "electrical", "handyman", "cleaning"],
+    trades: ["painting", "electrical", "handyman"],
     strong: ["painting"]
   },
   {
@@ -674,7 +678,8 @@ export const rooms: RoomSynonym[] = [
   {
     id: "windows",
     words: ["window", "windows", "ventana", "ventanas", "창문"],
-    trades: ["handyman", "cleaning", "metalwork", "painting"],
+    // Frame paint is a stretch next to the glass, the bars, and a window wash.
+    trades: ["handyman", "cleaning", "metalwork"],
     strong: ["handyman"],
     jobs: ["FIXX-HND-004", "FIXX-CLN-007"]
   },
