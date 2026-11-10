@@ -155,7 +155,22 @@
     "needsNativeReview": true
   },
   "search.matches": {
-    "text": "업종 {n}개 · 작업 {m}개 제안",
+    "text": "{n, plural, other {업종 #개 일치}}{m, plural, =0 {} other { · 작업 #개 제안}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.canHelp": {
+    "text": "{n, plural, other {업종 #곳이 도울 수 있음}}{m, plural, =0 {} other { · 작업 #개 제안}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.gasTitle": {
+    "text": "가스 누출",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "search.gasBody": {
+    "text": "집에서 나가세요. 911이나 가스 회사에 전화하세요. 예약할 수 없습니다.",
     "status": "draft",
     "needsNativeReview": true
   },

@@ -3,23 +3,27 @@
  *
  * How to add a word
  * -----------------
- * 1. Direct trade or problem: add the base word to `tradeSynonyms` on that
- *    trade. A hit glows the trade strong and suggests `jobs` (best first).
- *    Trades in `related` glow soft. Put the specific phrase above the short
- *    word when both exist ("piso roto" above "roto") so the specific job wins.
- * 2. Every catalog job id should appear in some `jobs` list. Words are
- *    accent-insensitive. Plurals ("pisos", "toilets") and a typed prefix
- *    ("fug" -> "fuga", "calent" -> "calentador") already match, so add the
- *    base word. A word that is its own entry will not swallow a longer
- *    different word ("lavar" does not hit "lavadora", "ac" does not hit "acero").
- * 3. Room or space: add it under `rooms`. With only a room in the sentence,
- *    those trades glow soft. `strong` is the trade that should glow harder
- *    (a bathroom glows Plumbing strong). A direct word, or that strong trade,
- *    turns the other room trades off. `jobs` on a room are used only when the
- *    sentence has no direct word, and should stay at one or two chips.
- * 4. A storey ("second floor", "segundo piso", "2층"): add the phrase to
- *    `storeyPhrases` or the single token to `storeyTokens`. That keeps
- *    "floor" / "piso" for Flooring and stops "second floor" from lighting it.
+ * 1. Specific object or problem: add the base word to `tradeSynonyms`.
+ *    An object glows its trade strong. `related` is at most one soft trade.
+ *    `kind: "symptom"` (leak, no enfría, broken) glows strong only when no
+ *    object was found. `kind: "broad"` glows every id in `trades` soft.
+ *    Put the longer phrase in its own entry when it should win ("water heater"
+ *    above "water", "ventana rota" above "roto").
+ * 2. Every catalog job id should appear in some `jobs` list. Plurals
+ *    ("pisos", "toilets") match. Only the last word may be a prefix while
+ *    it is being typed ("fug" -> "fuga"). A finished word does not swallow
+ *    a longer different word ("water" is not "waterproof", "lavar" is not
+ *    "lavadora").
+ * 3. Room or space: add it under `rooms`. A room alone glows its whole list
+ *    soft. `primary` only sorts (Plumbing first for a bathroom). It never
+ *    glows strong and never hides the rest of the list. A specific word
+ *    turns the room list off. `narrow` marks a door, window, or closet so
+ *    its chip comes before the room that contains it.
+ * 4. A storey ("second floor", "segundo piso", "abajo", "2층"): add the
+ *    phrase to `storeyPhrases` or the token to `storeyTokens`.
+ * 5. Gas phrases live in `gasPhrases` and book nothing.
+ * 6. Trade names live in `tradeKeywords`. Do not put display-name filler
+ *    there (cocheras, patios, general, control, repair, techos).
  *
  * Korean wording in this file is a draft and still needs a native speaker,
  * same convention as src/i18n/ko (`status: "draft"`, `needsNativeReview`).
@@ -34,19 +38,28 @@ export const koreanSynonymStatus = {
 /** Soft trades that belong with a bathroom fixture or the bathroom itself. */
 const bathRelated = ["electrical", "handyman", "flooring", "painting", "cleaning"];
 
+export type SynonymKind = "object" | "symptom" | "broad";
+
 export interface TradeSynonym {
-  /** Home-screen category id. A hit glows this trade strong. */
+  /** Home-screen category id. An object or symptom glows this trade strong. */
   tradeId: string;
   /** English, Mexican Spanish, and draft Korean. */
   words: string[];
-  /** Other trades that glow soft when one of these words hits. */
+  /** At most one other trade, glowing soft. Ignored for `kind: "broad"`. */
   related?: string[];
   /** Catalog task ids, best suggestion first. At most three are shown. */
   jobs?: string[];
   /**
-   * Chip rank. Specific jobs stay at 100. Vague words ("broken") stay lower
-   * so they do not jump ahead of a toilet, a leak, or a glass pane.
+   * object: a thing or a named problem (toilet, rejas, tile).
+   * symptom: leak, no enfría, broken. Ignored when an object is also present.
+   * broad: every id in `trades` glows soft (humidity, hot, cold).
    */
+  kind?: SynonymKind;
+  /** Soft trades for `kind: "broad"`. */
+  trades?: string[];
+  /** Vague symptom. Next to a room, the room's jobs are used instead. */
+  vague?: boolean;
+  /** Kept so a later edit can still rank chips. The matcher uses word order. */
   score?: number;
 }
 
@@ -54,11 +67,20 @@ export interface RoomSynonym {
   id: string;
   /** Phrases and single words. Longer phrases win over a word inside them. */
   words: string[];
-  /** Soft glow, including any id also listed in `strong`. */
+  /** Soft glow when the query is only this room. */
   trades: string[];
-  /** Room match that should still glow strong. Bathroom -> plumbing. */
-  strong?: string[];
-  /** Suggested only when no direct word matched a job. Keep this to 1 or 2. */
+  /** Listed first. Still soft, and never the only trade. */
+  primary?: string[];
+  /** A door, window, or closet beats the room around it when chips are chosen. */
+  narrow?: boolean;
+  /** Suggested only when no specific word matched a job. Keep this to 1 or 2. */
+  jobs?: string[];
+}
+
+export interface TradeKeyword {
+  tradeId: string;
+  /** Curated names only. Not the parenthetical words in the display name. */
+  words: string[];
   jobs?: string[];
 }
 
@@ -68,19 +90,18 @@ export const tradeSynonyms: TradeSynonym[] = [
     tradeId: "plumbing",
     words: [
       "toilet", "wc", "excusado", "taza", "inodoro", "retrete",
+      "no baja", "no jala", "no le baja",
       "변기", "양변기"
     ],
-    related: bathRelated,
     jobs: ["FIXX-PLM-001"]
   },
   {
     tradeId: "plumbing",
     words: [
-      "faucet", "tap", "monomando", "llave de agua", "grifo", "mezcladora",
+      "faucet", "tap", "llave de agua", "grifo",
       "lavabo", "sink", "fregadero", "tarja", "fregadero tapado",
       "세면대", "싱크대", "수전"
     ],
-    related: bathRelated,
     jobs: ["FIXX-PLM-002", "FIXX-PLM-003"]
   },
   {
@@ -92,7 +113,7 @@ export const tradeSynonyms: TradeSynonym[] = [
     tradeId: "plumbing",
     words: [
       "water heater", "boiler", "calentador", "calentador de agua", "boiler no calienta",
-      "calentador no calienta", "no calienta el agua", "agua fria", "hot water", "agua caliente",
+      "calentador no calienta", "no calienta el agua", "agua fria", "cold water", "hot water", "agua caliente",
       "sin agua caliente", "온수기"
     ],
     jobs: ["FIXX-PLM-004"]
@@ -108,6 +129,18 @@ export const tradeSynonyms: TradeSynonym[] = [
   },
   {
     tradeId: "plumbing",
+    words: ["water", "agua", "물", "물이", "water leak", "leaking water"],
+    jobs: ["FIXX-PLM-006"]
+  },
+  {
+    // A clog named with the bathroom is the toilet. The shorter "se tapó" stays a drain.
+    tradeId: "plumbing",
+    words: ["se tapo el bano", "se tapo el excusado", "se tapo la taza", "bano tapado", "taza tapada"],
+    related: ["handyman"],
+    jobs: ["FIXX-PLM-001", "FIXX-PLM-006"]
+  },
+  {
+    tradeId: "plumbing",
     words: [
       "clog", "clogged", "unclog", "drain", "drenaje", "coladera", "desague",
       "tapado", "tapada", "tapon", "atascado", "atascada", "destape", "destapar",
@@ -118,29 +151,41 @@ export const tradeSynonyms: TradeSynonym[] = [
   },
   {
     tradeId: "plumbing",
+    kind: "object",
     words: [
-      "leak", "leaking", "leaky", "fuga", "fuga de agua", "goteo", "gotea", "goteando",
-      "se sale el agua", "tuberia", "tubo", "pipe", "pipes", "pvc", "pex", "cobre", "copper",
-      "tinaco", "cisterna", "aljibe", "bomba de agua", "sin agua", "no hay agua", "baja presion",
-      "presion de agua", "valvula", "flotador", "sapo", "mugre del tinaco",
-      "누수", "배관", "수도"
+      "tuberia", "tubo", "pipe", "pipes", "pvc", "pex", "cobre", "copper",
+      "tinaco", "cisterna", "aljibe", "bomba", "bomba de agua", "sin agua", "no hay agua",
+      "baja presion", "presion de agua", "valvula", "flotador", "sapo", "mugre del tinaco",
+      "배관", "수도"
     ],
-    related: ["roofing"],
     jobs: ["FIXX-PLM-006"]
   },
   {
+    kind: "symptom",
     tradeId: "plumbing",
     words: [
-      "regadera", "ducha", "shower", "showerhead", "lluvia",
-      "샤워", "샤워기"
+      "leak", "leaking", "leaky", "fuga", "fuga de agua", "goteo", "gotea", "goteando",
+      "se sale el agua", "se metio el agua", "물이 새요", "물 새요",
+      "누수"
     ],
-    related: bathRelated
+    jobs: ["FIXX-PLM-006"]
+  },
+  {
+    // Shower head and mixer. A future catalog id only needs to be added to `jobs`.
+    // PLM-007 is that job. Electric shower heads are electrical and are listed separately.
+    tradeId: "plumbing",
+    words: [
+      "regadera", "ducha", "shower", "showerhead", "shower head", "lluvia",
+      "mezcladora", "monomando",
+      "샤워", "샤워기", "샤워헤드"
+    ],
+    jobs: ["FIXX-PLM-007"]
   },
   {
     tradeId: "plumbing",
     words: [
       "smells", "stinks", "huele mal", "mal olor", "olor a drenaje", "olor a caño",
-      "냄새", "하수구 냄새"
+      "huele a cano", "냄새", "하수구 냄새"
     ],
     related: ["pest_control"],
     jobs: ["FIXX-PLM-006"]
@@ -154,9 +199,20 @@ export const tradeSynonyms: TradeSynonym[] = [
       "power outage", "blackout", "apagon", "se fue la corriente", "no hay corriente",
       "luz", "foco", "focos", "foco fundido", "bombilla", "bombillo", "bulb",
       "lampara", "luminaria", "light", "lights", "lighting",
-      "정전", "전등", "조명", "불이 안 켜요"
+      "lightbulb", "light bulb", "doorbell", "door bell", "timbre",
+      "정전", "전등", "조명", "불이 안 켜요", "초인종"
     ],
     jobs: ["FIXX-ELC-002"]
+  },
+  {
+    // High-load electric shower heads are not the plumbing shower job.
+    tradeId: "electrical",
+    words: ["electric shower", "electric shower head", "electric showerhead", "regadera electrica", "ducha electrica"]
+  },
+  {
+    // Extractor / exhaust. No ceiling-fan chip: there is no exhaust-fan task yet.
+    tradeId: "electrical",
+    words: ["exhaust fan", "bathroom fan", "extractor", "extractor de aire", "extractor de bano", "ventilador de extraccion", "환풍기"]
   },
   {
     tradeId: "electrical",
@@ -177,8 +233,7 @@ export const tradeSynonyms: TradeSynonym[] = [
   },
   {
     tradeId: "electrical",
-    words: ["circuito 220", "220 v", "minisplit circuit", "pastilla del minisplit"],
-    related: ["hvac"],
+    words: ["circuito 220", "220 v", "220", "220v", "minisplit circuit", "pastilla del minisplit"],
     jobs: ["FIXX-ELC-004"]
   },
   {
@@ -186,7 +241,10 @@ export const tradeSynonyms: TradeSynonym[] = [
     words: [
       "short", "short circuit", "corto", "cortocircuito", "chispa", "chispas",
       "breaker", "fuse", "fusible", "pastilla", "pastillas", "se bota la pastilla",
-      "centro de carga", "cable", "cableado", "wiring", "wire", "chispazo",
+      "centro de carga", "breaker panel", "electrical panel", "panel electrico",
+      "tablero", "tablero electrico", "load center", "panel",
+      "cable", "cableado", "wiring", "wire", "rewire", "rewiring", "recablear", "chispazo",
+      "circuit", "circuito",
       "단락", "차단기", "누전"
     ],
     jobs: ["FIXX-ELC-005"]
@@ -195,6 +253,7 @@ export const tradeSynonyms: TradeSynonym[] = [
   // --- HVAC ---
   {
     tradeId: "hvac",
+    kind: "symptom",
     words: [
       "too hot", "too cold", "not cooling", "no cooling", "does not cool", "doesn't cool",
       "no enfria", "no calienta", "hace calor", "hace frio", "esta caliente",
@@ -221,6 +280,7 @@ export const tradeSynonyms: TradeSynonym[] = [
       "paint", "painting", "repaint", "pintar", "pintura", "pintura vinilica",
       "esmalte", "brocha", "rodillo", "mancha en la pared", "pared manchada",
       "descascarada", "se cae la pintura",
+      "wallpaper", "papel tapiz", "tapiz", "empapelado", "stain", "stains",
       "페인트", "도색", "도장"
     ],
     jobs: ["FIXX-PNT-001"]
@@ -267,7 +327,6 @@ export const tradeSynonyms: TradeSynonym[] = [
       "lawn", "grass", "garden", "pasto", "cesped", "jardin", "jardineria",
       "잔디", "정원"
     ],
-    related: ["pest_control", "cleaning", "handyman"],
     jobs: ["FIXX-GRD-001"]
   },
   {
@@ -311,7 +370,7 @@ export const tradeSynonyms: TradeSynonym[] = [
   // --- Concrete ---
   {
     tradeId: "concrete",
-    words: ["crack", "cracks", "grieta", "grietas", "resane", "resanar", "concrete crack"],
+    words: ["crack", "cracks", "grieta", "grietas", "resane", "resanar", "concrete crack", "barda", "bardas"],
     related: ["painting"],
     jobs: ["FIXX-CON-001"]
   },
@@ -352,6 +411,7 @@ export const tradeSynonyms: TradeSynonym[] = [
     tradeId: "carpentry",
     words: [
       "mueble", "muebles", "madera", "wood", "triplay", "mdf", "gabinete",
+      "cabinet", "cabinets", "kitchen cabinet", "kitchen cabinets", "alacena",
       "가구", "문짝"
     ],
     related: ["handyman"],
@@ -403,7 +463,7 @@ export const tradeSynonyms: TradeSynonym[] = [
   {
     tradeId: "handyman",
     words: ["tv", "television", "televisor", "tele", "pantalla", "티비", "텔레비전"],
-    related: ["appliance", "electrical"],
+    related: ["electrical"],
     jobs: ["FIXX-HND-001"]
   },
   {
@@ -430,8 +490,19 @@ export const tradeSynonyms: TradeSynonym[] = [
       "broken", "roto", "rota", "descompuesto", "descompuesta", "no sirve", "se descompuso",
       "고장", "망가졌어요"
     ],
+    kind: "symptom",
+    vague: true,
     jobs: ["FIXX-HND-002"],
     score: 90
+  },
+  {
+    tradeId: "handyman",
+    words: ["broken window", "ventana rota", "ventanas rotas", "vidrio estrellado"],
+    jobs: ["FIXX-HND-003", "FIXX-HND-004"]
+  },
+  {
+    tradeId: "handyman",
+    words: ["mosquitero", "mosquiteros", "screen door", "window screen", "bug screen", "screen", "방충망"]
   },
   {
     tradeId: "handyman",
@@ -480,12 +551,6 @@ export const tradeSynonyms: TradeSynonym[] = [
     ],
     jobs: ["FIXX-LCK-002"]
   },
-  {
-    tradeId: "locksmith",
-    words: ["puerta principal", "front door", "entrada principal"],
-    related: ["carpentry", "metalwork"],
-    jobs: ["FIXX-LCK-001"]
-  },
 
   // --- Cleaning ---
   {
@@ -525,7 +590,6 @@ export const tradeSynonyms: TradeSynonym[] = [
       "window cleaning", "clean the windows", "limpiar ventanas", "limpieza de ventanas", "vidrios sucios",
       "창문 청소"
     ],
-    related: ["handyman"],
     jobs: ["FIXX-CLN-007"]
   },
   {
@@ -546,7 +610,6 @@ export const tradeSynonyms: TradeSynonym[] = [
       "herreria", "herrero",
       "방범창", "철창"
     ],
-    related: ["locksmith"],
     jobs: ["FIXX-MTL-001"]
   },
   {
@@ -573,12 +636,28 @@ export const tradeSynonyms: TradeSynonym[] = [
     tradeId: "metalwork",
     words: ["metal", "metalwork", "fierro", "hierro", "acero inoxidable", "solera", "철물"],
     jobs: ["FIXX-MTL-004", "FIXX-MTL-001"]
+  },
+  {
+    kind: "broad",
+    tradeId: "roofing",
+    trades: ["roofing", "painting", "plumbing"],
+    words: ["humidity", "damp", "mold", "mildew", "humedad", "moho", "salitre", "습기", "곰팡이"]
+  },
+  {
+    kind: "broad",
+    tradeId: "hvac",
+    trades: ["hvac", "plumbing"],
+    words: ["hot", "cold"]
   }
 ];
 
 const livingTrades = [
   "painting", "flooring", "electrical", "hvac", "handyman", "carpentry",
-  "cleaning", "pest_control", "appliance"
+  "cleaning", "pest_control"
+];
+
+const patioTrades = [
+  "gardening", "concrete", "pest_control", "electrical", "cleaning", "metalwork", "handyman"
 ];
 
 export const rooms: RoomSynonym[] = [
@@ -604,8 +683,7 @@ export const rooms: RoomSynonym[] = [
       "dormitorio", "alcoba", "cuarto",
       "침실"
     ],
-    // A bedroom door lock is a real job. The living room does not get one.
-    trades: [...livingTrades, "locksmith"]
+    trades: livingTrades
   },
   {
     id: "kitchen",
@@ -621,26 +699,31 @@ export const rooms: RoomSynonym[] = [
       "화장실", "욕실"
     ],
     trades: ["plumbing", ...bathRelated],
-    strong: ["plumbing"],
+    primary: ["plumbing"],
     jobs: ["FIXX-PLM-001", "FIXX-PLM-002"]
   },
   {
     id: "garage",
-    words: ["garage", "cochera", "estacionamiento", "차고"],
+    words: ["garage", "cochera", "estacionamiento", "entrada de coches", "driveway", "차고"],
     // Water fixtures live in the laundry and the bathrooms, not the garage.
     trades: ["concrete", "electrical", "painting", "metalwork", "locksmith", "pest_control", "handyman", "cleaning"]
   },
   {
     id: "patio",
-    words: ["patio", "backyard", "yard", "yarda", "terraza", "마당"],
+    words: ["patio", "backyard", "yard", "yarda", "마당"],
     // A hose tap is not enough to light Plumbing next to the garden and the slab.
-    trades: ["gardening", "concrete", "pest_control", "electrical", "cleaning", "metalwork", "handyman"]
+    trades: patioTrades
+  },
+  {
+    id: "terrace",
+    words: ["terraza", "roof terrace"],
+    trades: [...patioTrades, "roofing"]
   },
   {
     id: "roof",
     words: ["azotea", "rooftop", "roof", "techo", "옥상", "지붕"],
     trades: ["roofing", "plumbing", "electrical", "cleaning", "handyman"],
-    strong: ["roofing"],
+    primary: ["roofing"],
     jobs: ["FIXX-ROF-001"]
   },
   {
@@ -660,46 +743,49 @@ export const rooms: RoomSynonym[] = [
   },
   {
     id: "hallway",
-    words: ["hallway", "hall", "corridor", "pasillo", "recibidor", "entrada", "복도"],
-    trades: ["painting", "electrical", "flooring", "cleaning", "handyman", "locksmith"]
+    words: ["hallway", "hall", "corridor", "pasillo", "recibidor", "entrada", "zaguan", "복도"],
+    trades: ["painting", "electrical", "flooring", "cleaning", "handyman"]
   },
   {
     id: "ceiling",
     words: ["ceiling", "ceilings", "plafon", "plafón", "cielo raso", "천장"],
-    trades: ["painting", "electrical", "handyman"],
-    strong: ["painting"]
+    trades: ["painting", "electrical", "handyman", "roofing"],
+    primary: ["painting"]
   },
   {
     id: "walls",
     words: ["wall", "walls", "pared", "paredes", "muro", "muros", "벽면"],
-    trades: ["painting", "electrical", "handyman", "carpentry"],
-    strong: ["painting"]
+    trades: ["painting", "handyman", "electrical", "concrete"],
+    primary: ["painting"]
   },
   {
     id: "windows",
     words: ["window", "windows", "ventana", "ventanas", "창문"],
-    // Frame paint is a stretch next to the glass, the bars, and a window wash.
-    trades: ["handyman", "cleaning", "metalwork"],
-    strong: ["handyman"],
+    // Glass and a wash. Bars are a metalwork word, not the window itself.
+    trades: ["handyman", "cleaning"],
+    primary: ["handyman"],
+    narrow: true,
     jobs: ["FIXX-HND-004", "FIXX-CLN-007"]
   },
   {
     id: "doors",
-    words: ["door", "doors", "puerta", "puertas", "현관문"],
-    trades: ["carpentry", "locksmith", "handyman", "painting"],
-    strong: ["carpentry"],
+    words: ["door", "doors", "puerta", "puertas", "front door", "puerta principal", "entrada principal", "현관문"],
+    trades: ["carpentry", "locksmith", "handyman", "painting", "metalwork"],
+    primary: ["carpentry"],
+    narrow: true,
     jobs: ["FIXX-CAR-001"]
   },
   {
     id: "closet",
     words: ["closet", "closets", "vestidor", "armario", "guardarropa", "옷장"],
     trades: ["carpentry", "handyman", "painting", "cleaning"],
-    strong: ["carpentry"]
+    primary: ["carpentry"],
+    narrow: true
   },
   {
     id: "balcony",
     words: ["balcony", "balcon", "balcón", "발코니"],
-    trades: ["metalwork", "painting", "cleaning", "roofing", "handyman"]
+    trades: ["metalwork", "painting", "cleaning", "handyman"]
   },
   {
     id: "basement",
@@ -735,8 +821,38 @@ export const storeyPhrases: string[] = [
 
 /** Single tokens that mean a storey, including draft Korean. */
 export const storeyTokens: string[] = [
-  "upstairs", "downstairs",
+  "upstairs", "downstairs", "abajo", "arriba", "planta", "plantas", "nivel", "niveles",
   "1층", "2층", "3층", "4층", "5층",
   "일층", "이층", "삼층", "사층", "오층",
   "위층", "아래층"
+];
+
+/** Gas is safety copy, not a job. Korean wording here is a draft. */
+export const gasPhrases: string[] = [
+  "gas leak", "gas leaks", "natural gas", "smell of gas", "gas smell",
+  "fuga de gas", "fugas de gas", "olor a gas", "huele a gas", "tanque de gas", "gas natural",
+  "gas", "gases",
+  "가스 누출", "가스 냄새", "가스누출", "가스냄새", "가스"
+];
+
+/**
+ * Trade names a customer actually says. Display-name filler (cocheras, patios,
+ * general, control, repair, techos, mantenimiento) is not in this list.
+ */
+export const tradeKeywords: TradeKeyword[] = [
+  { tradeId: "plumbing", words: ["plumbing", "plumber", "plomeria", "plomero", "plomeros", "배관"] },
+  { tradeId: "electrical", words: ["electrical", "electrician", "electricista", "electricidad", "전기"] },
+  { tradeId: "hvac", words: ["hvac", "climatizacion", "냉난방"] },
+  { tradeId: "painting", words: ["painter", "pintor"] },
+  { tradeId: "pest_control", words: ["pest control", "control de plagas", "fumigador", "fumigacion", "해충 방제"] },
+  { tradeId: "gardening", words: ["gardening", "gardener", "jardinero", "정원 관리"] },
+  { tradeId: "flooring", words: ["flooring", "바닥 시공"] },
+  { tradeId: "concrete", words: ["콘크리트"] },
+  { tradeId: "carpentry", words: ["carpentry", "carpenter", "carpintero", "carpinteria", "목공"] },
+  { tradeId: "appliance", words: ["appliance", "appliances"] },
+  { tradeId: "roofing", words: ["roofing", "impermeabilizador"] },
+  { tradeId: "handyman", words: ["handyman", "todologo", "생활 수리"] },
+  { tradeId: "locksmith", words: ["locksmith", "cerrajero", "cerrajeria"] },
+  { tradeId: "cleaning", words: ["house cleaning", "limpieza de casa"] },
+  { tradeId: "metalwork", words: ["herrero"] }
 ];

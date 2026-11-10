@@ -1,5 +1,5 @@
 {
- "version": "2026-11-09-7ad4ca62",
+ "version": "2026-11-10-e01f1601",
  "tasks": {
   "FIXX-PNT-001": {
    "id": "FIXX-PNT-001",
@@ -8701,6 +8701,185 @@
     "Standard",
     "Premium"
    ]
+  },
+  "FIXX-PLM-007": {
+   "id": "FIXX-PLM-007",
+   "category": "Plumbing",
+   "job": "Shower head replacement, 1 shower, with optional mixer valve",
+   "jobEs": "Cambio de regadera, 1 ducha, mezcladora/monomando opcional",
+   "jobKo": "샤워헤드 교체, 샤워 1개, 믹서 밸브 선택 사항",
+   "lines": [
+    {
+     "id": "L0729",
+     "tier": "Budget",
+     "itemId": "PLM-K11",
+     "qty": 1,
+     "basis": "1 shower head (regadera)",
+     "unitPrice": 239,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0730",
+     "tier": "Budget",
+     "itemId": "PLM-K04",
+     "qty": 0.5,
+     "basis": "½ roll teflon",
+     "unitPrice": 16.4,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0731",
+     "tier": "Budget",
+     "itemId": "PLM-K14",
+     "qty": 1,
+     "basis": "1 mixer valve (mezcladora / monomando)",
+     "unitPrice": 469,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0732",
+     "tier": "Budget",
+     "itemId": "PLM-K17",
+     "qty": 1,
+     "basis": "1 shower arm + flange (brazo y chapetón)",
+     "unitPrice": 225,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0733",
+     "tier": "Budget",
+     "itemId": "PLM-K18",
+     "qty": 1,
+     "basis": "1 mixer cartridge (two-handle)",
+     "unitPrice": 121,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0734",
+     "tier": "Standard",
+     "itemId": "PLM-K12",
+     "qty": 1,
+     "basis": "1 shower head (regadera)",
+     "unitPrice": 461,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0735",
+     "tier": "Standard",
+     "itemId": "PLM-K04",
+     "qty": 0.5,
+     "basis": "½ roll teflon",
+     "unitPrice": 16.4,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0736",
+     "tier": "Standard",
+     "itemId": "PLM-K15",
+     "qty": 1,
+     "basis": "1 mixer valve (mezcladora / monomando)",
+     "unitPrice": 1385,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0737",
+     "tier": "Standard",
+     "itemId": "PLM-K17",
+     "qty": 1,
+     "basis": "1 shower arm + flange (brazo y chapetón)",
+     "unitPrice": 225,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0738",
+     "tier": "Standard",
+     "itemId": "PLM-K18",
+     "qty": 1,
+     "basis": "1 mixer cartridge (two-handle)",
+     "unitPrice": 121,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0739",
+     "tier": "Premium",
+     "itemId": "PLM-K13",
+     "qty": 1,
+     "basis": "1 shower head (regadera)",
+     "unitPrice": 1839,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0740",
+     "tier": "Premium",
+     "itemId": "PLM-K04",
+     "qty": 0.5,
+     "basis": "½ roll teflon",
+     "unitPrice": 16.4,
+     "type": "base",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0741",
+     "tier": "Premium",
+     "itemId": "PLM-K16",
+     "qty": 1,
+     "basis": "1 mixer valve (mezcladora / monomando)",
+     "unitPrice": 2556.6,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0742",
+     "tier": "Premium",
+     "itemId": "PLM-K17",
+     "qty": 1,
+     "basis": "1 shower arm + flange (brazo y chapetón)",
+     "unitPrice": 225,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    },
+    {
+     "id": "L0743",
+     "tier": "Premium",
+     "itemId": "PLM-K18",
+     "qty": 1,
+     "basis": "1 mixer cartridge (two-handle)",
+     "unitPrice": 121,
+     "type": "as-needed",
+     "flag": "none",
+     "reviewTrigger": "none"
+    }
+   ],
+   "tiers": [
+    "Budget",
+    "Standard",
+    "Premium"
+   ]
   }
  },
  "items": {
@@ -12637,6 +12816,118 @@
    "checkDate": "2026-11-09",
    "flag": "none",
    "homeownerChoice": false
+  },
+  "PLM-K11": {
+   "id": "PLM-K11",
+   "category": "Plumbing",
+   "name": "Coflex 2PRC401 self-regulating chrome shower head (budget)",
+   "spanish": "Regadera autorregulable Coflex 2PRC401 cromada",
+   "spec": "chrome, flow restrictor, wall-mounted head (no arm)",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 239,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K12": {
+   "id": "PLM-K12",
+   "category": "Plumbing",
+   "name": "Coflex 2PRC402 20 cm cascade/rain chrome shower head (standard)",
+   "spanish": "Regadera de cascada Coflex 2PRC402 20 cm cromada",
+   "spec": "ABS chrome, 20 cm face, anti-scale, wall-mounted head (no arm)",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 461,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K13": {
+   "id": "PLM-K13",
+   "category": "Plumbing",
+   "name": "Moen S1695 rain shower head, round ABS chrome (premium)",
+   "spanish": "Regadera tipo lluvia Moen S1695 redonda ABS cromo",
+   "spec": "1 function, wide coverage, wall-mounted head (no arm)",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 1839,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K14": {
+   "id": "PLM-K14",
+   "category": "Plumbing",
+   "name": "Rotoplas 3/4 in chrome two-handle shower valve set (budget)",
+   "spanish": "Juego de llaves para regadera Rotoplas 3/4\" metal cromo",
+   "spec": "two recessed valves + 2 handles + 2 flanges, 3/4 in, chrome; typical Santa Sofía two-handle setup",
+   "unit": "set",
+   "store": "Home Depot",
+   "price": 469,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K15": {
+   "id": "PLM-K15",
+   "category": "Plumbing",
+   "name": "Fortum FST3006 chrome shower monomando, 35 mm ceramic cartridge (standard)",
+   "spanish": "Monomando para regadera Fortum FST3006 cromo, cartucho cerámico 35 mm",
+   "spec": "single-lever shower valve, chrome, 35 mm ceramic cartridge",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 1385,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K16": {
+   "id": "PLM-K16",
+   "category": "Plumbing",
+   "name": "Helvex E-708 Century brass chrome shower monomando (premium)",
+   "spanish": "Monomando para regadera Helvex E-708 Century latón cromado",
+   "spec": "brass single-lever shower/tub valve, no diverter, temperature control",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 2556.6,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K17": {
+   "id": "PLM-K17",
+   "category": "Plumbing",
+   "name": "Fortum FS2008 6 in shower arm with flange, chrome (as-needed)",
+   "spanish": "Brazo para regadera Fortum FS2008 6\" con chapetón cromo",
+   "spec": "6 in arm + flange, chrome",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 225,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
+  },
+  "PLM-K18": {
+   "id": "PLM-K18",
+   "category": "Plumbing",
+   "name": "Urrea R470082 42 mm brass cartridge for 4 in and 8 in mixers (as-needed)",
+   "spanish": "Cartucho Urrea R470082 42 mm para mezcladoras de 4\" y 8\"",
+   "spec": "42 mm brass, splined inlet; for two-handle mixers",
+   "unit": "pc",
+   "store": "Home Depot",
+   "price": 121,
+   "iva": "included",
+   "checkDate": "2026-11-10",
+   "flag": "none",
+   "homeownerChoice": false
   }
  },
  "labor": {
@@ -12906,6 +13197,24 @@
    "confidence": "Medium",
    "flag": "none",
    "checkedDate": "2026-11-02",
+   "estJobDays": 0.25,
+   "dailyMin": 349.84,
+   "floor": 349.84
+  },
+  "FIXX-PLM-007|All": {
+   "key": "FIXX-PLM-007|All",
+   "taskId": "FIXX-PLM-007",
+   "tierScope": "All",
+   "trade": "Plumber",
+   "basis": "per job",
+   "rateLow": 417.31,
+   "rateTypical": 775,
+   "rateHigh": 1073.08,
+   "refQty": 1,
+   "typicalRef": 775,
+   "confidence": "Medium",
+   "flag": "none",
+   "checkedDate": "2026-11-10",
    "estJobDays": 0.25,
    "dailyMin": 349.84,
    "floor": 349.84
@@ -14406,6 +14715,6 @@
   "FIXX-CLN-005": "FIXX-CLN-005",
   "FIXX-CLN-006": "FIXX-CLN-006",
   "FIXX-CLN-007": "FIXX-CLN-007",
-  "(new)": "FIXX-HND-005"
+  "(new)": "FIXX-PLM-007"
  }
 }

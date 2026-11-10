@@ -53,6 +53,45 @@ describe("acceptance: every Quote_Builder row", () => {
   });
 });
 
+describe("FIXX-PLM-007 shower head", () => {
+  const rawBase: Record<string, number> = { Budget: 1022.2, Standard: 1244.2, Premium: 2622.2 };
+  const mixer: Record<string, { id: string; cost: number }> = {
+    Budget: { id: "L0731", cost: 469 },
+    Standard: { id: "L0736", cost: 1385 },
+    Premium: { id: "L0741", cost: 2556.6 }
+  };
+  it("prices the head as the bookable base and keeps the mixer, arm, and cartridge optional", () => {
+    const task = cat.tasks["FIXX-PLM-007"]!;
+    expect(task.job).toBe("Shower head replacement, 1 shower, with optional mixer valve");
+    expect(task.jobEs).toBe("Cambio de regadera, 1 ducha, mezcladora/monomando opcional");
+    expect(task.jobKo).toBe("샤워헤드 교체, 샤워 1개, 믹서 밸브 선택 사항");
+    expect(task.tiers).toEqual(["Budget", "Standard", "Premium"]);
+    for (const tier of ["Budget", "Standard", "Premium"] as const) {
+      const quote = q("FIXX-PLM-007", tier, "STANDARD");
+      const row = qb.find((item) => item.taskId === "FIXX-PLM-007" && item.tier === tier && item.urgency === "STANDARD")!;
+      expect(quote.status).toBe("FIXED");
+      expect(quote.needsHumanReview).toBe(false);
+      expect(quote.labor).toBe(775);
+      expect(near(quote.materialsRaw, rawBase[tier]! - 775)).toBe(true);
+      expect(near(row.total, rawBase[tier]!)).toBe(true);
+      expect(quote.materials).toBe(materialsPrice(quote.materialsRaw));
+      expect(quote.total).toBe(roundMoney(quote.materials + quote.labor + quote.bookingFee));
+      expect(near(quote.labor, row.labor)).toBe(true);
+      expect(near(quote.materialsRaw, row.materials)).toBe(true);
+      const mixerLine = quote.asNeeded.options.find((line) => line.lineId === mixer[tier]!.id)!;
+      const arm = quote.asNeeded.options.find((line) => line.itemId === "PLM-K17")!;
+      const cartridge = quote.asNeeded.options.find((line) => line.itemId === "PLM-K18")!;
+      expect(mixerLine.cost).toBe(mixer[tier]!.cost);
+      expect(arm.cost).toBe(225);
+      expect(cartridge.cost).toBe(121);
+      expect(quote.asNeeded.selected).toEqual([]);
+      const withMixer = q("FIXX-PLM-007", tier, "STANDARD", { asNeededLineIds: [mixerLine.lineId] });
+      expect(withMixer.total).toBe(roundMoney(quote.total + materialsPrice(mixerLine.cost ?? 0)));
+      expect(withMixer.needsHumanReview).toBe(false);
+    }
+  });
+});
+
 describe("spec examples", () => {
   it("PLM-001 toilet repair prices raw materials once and pays labor after the labor share", () => {
     const labor = [800, 920, 1040, 1200];
