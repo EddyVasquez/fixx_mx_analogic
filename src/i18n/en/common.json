@@ -119,6 +119,26 @@
     "text": "Step {current} of {total}",
     "status": "draft"
   },
+  "status.next": {
+    "text": "Next: {step}",
+    "status": "draft"
+  },
+  "status.phase.request": {
+    "text": "Request",
+    "status": "draft"
+  },
+  "status.phase.quote": {
+    "text": "Quote",
+    "status": "draft"
+  },
+  "status.phase.visit": {
+    "text": "Visit",
+    "status": "draft"
+  },
+  "status.phase.finish": {
+    "text": "Finish",
+    "status": "draft"
+  },
   "status.requestSubmitted": {
     "text": "Request sent",
     "status": "draft"

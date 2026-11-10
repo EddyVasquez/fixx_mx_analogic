@@ -57,8 +57,7 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
 
   return (
     <div className="flex flex-col gap-4">
-      {status && <JobStatusBar status={status} />}
-      <p><HlDate>{t("work.scheduled", { when: formatDateTime(ctx.jobStart, localeFor[lang]) })}</HlDate></p>
+      {status && <JobStatusBar status={status} scheduledAt={ctx.jobStart} />}
       {showChecklist && (
         <>
           <p className="text-xl font-bold">{t("work.pendingBalance", { amount: money(pending) })}</p>
