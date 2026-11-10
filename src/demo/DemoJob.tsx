@@ -56,6 +56,8 @@ export function DemoJob() {
 
   const state = actor?.snap.state as JobState | undefined;
   const status = state ? statusFor(state) : null;
+  const jobCtx = actor?.snap.ctx as JobCtx | undefined;
+  const pendingReview = state === "pendingReview";
   const timers = rt.scheduler.list(JOB);
 
   return (
@@ -86,7 +88,9 @@ export function DemoJob() {
       </div>
       <Button onClick={start}>{t("btn.newJob")}</Button>
 
-      {state && (status ? <JobStatusBar status={status} /> : <p className="rounded-2xl border-2 border-ink p-3 font-bold">{t(`state.${state}`)}</p>)}
+      {state && (status || pendingReview
+        ? <JobStatusBar status={status ?? "requestSubmitted"} pendingReview={pendingReview} scheduledAt={jobCtx?.jobStart} />
+        : <p className="rounded-2xl border-2 border-ink p-3 font-bold">{t(`state.${state}`)}</p>)}
 
       {state && (
         <div>

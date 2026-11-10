@@ -149,6 +149,31 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "status.next": {
+    "text": "다음: {step}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.phase.request": {
+    "text": "요청",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.phase.quote": {
+    "text": "견적",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.phase.visit": {
+    "text": "방문",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "status.phase.finish": {
+    "text": "마무리",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "status.requestSubmitted": {
     "text": "요청 전송됨",
     "status": "draft",

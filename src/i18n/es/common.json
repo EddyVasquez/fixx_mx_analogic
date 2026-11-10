@@ -119,6 +119,26 @@
     "text": "Paso {current} de {total}",
     "status": "draft"
   },
+  "status.next": {
+    "text": "Siguiente: {step}",
+    "status": "draft"
+  },
+  "status.phase.request": {
+    "text": "Solicitud",
+    "status": "draft"
+  },
+  "status.phase.quote": {
+    "text": "Cotización",
+    "status": "draft"
+  },
+  "status.phase.visit": {
+    "text": "Visita",
+    "status": "draft"
+  },
+  "status.phase.finish": {
+    "text": "Cierre",
+    "status": "draft"
+  },
   "status.requestSubmitted": {
     "text": "Solicitud enviada",
     "status": "draft"

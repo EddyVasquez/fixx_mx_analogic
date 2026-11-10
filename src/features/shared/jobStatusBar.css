@@ -1,0 +1,266 @@
+/* Job progress meter. Greyscale, plus High Viz Lime as a ring or glow only — never text, never a fill. */
+
+.job-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.job-meter-badge,
+.job-meter-chip {
+  align-self: flex-start;
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 2px solid theme("colors.ink");
+  border-radius: 999px;
+  background: theme("colors.mist");
+  color: theme("colors.ink");
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.job-meter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  height: 28px;
+  padding: 0 10px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.job-meter-panel {
+  background: theme("colors.paper");
+  border: 1px solid theme("colors.line");
+  border-radius: 20px;
+  padding: 18px 16px 16px;
+  box-shadow: 0 4px 12px rgb(46 46 46 / 0.06);
+  overflow: visible;
+}
+
+.job-meter-title {
+  margin: 0;
+  color: theme("colors.ink");
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 32;
+  overflow-wrap: break-word;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+.job-meter-title-ko {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.job-meter-step {
+  margin: 6px 0 0;
+  color: theme("colors.inkSoft");
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.job-meter-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  margin-top: 20px;
+  /* Room so the ring and its glow are not clipped. Equal top and bottom keep the line on the node centers. */
+  padding: 16px 0;
+}
+
+.job-meter-slot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* 3px connectors with round caps. Both ends stop --line-gap from the current node center: about 2px outside the lime ring. Glow is not part of that stop. */
+.job-meter-line {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  height: 3px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.job-meter-line-done {
+  left: 12.5%;
+  width: max(0px, calc(var(--to-current) - var(--line-gap)));
+  background: theme("colors.ink");
+}
+
+.job-meter-line-rest {
+  left: calc(12.5% + var(--to-current) + var(--line-gap));
+  width: max(0px, calc(75% - var(--to-current) - var(--line-gap)));
+  background: theme("colors.line");
+}
+
+.job-meter-node {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.job-meter-node-done,
+.job-meter-node-current {
+  background: theme("colors.ink");
+  border: 2px solid theme("colors.ink");
+}
+
+.job-meter-node-upcoming {
+  background: theme("colors.mist");
+  border: 2px solid theme("colors.ink");
+}
+
+/* Opaque charcoal disc so the arc's inward glow does not tint the fill. */
+.job-meter-node-current::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 50%;
+  background: theme("colors.ink");
+  pointer-events: none;
+}
+
+.job-meter-icon {
+  position: relative;
+  z-index: 3;
+  display: block;
+}
+
+/* R2 — High Viz Lime arc, 270 degrees, turning once every 2.4s. The node and the icon stay still. */
+.job-meter-arc {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  overflow: visible;
+  color: theme("colors.accent");
+  pointer-events: none;
+  transform-origin: center center;
+  filter:
+    drop-shadow(0 0 4px color-mix(in srgb, theme("colors.accent") 70%, transparent))
+    drop-shadow(0 0 10px color-mix(in srgb, theme("colors.accent") 35%, transparent));
+  animation: job-meter-spin 2.4s linear infinite;
+}
+
+@keyframes job-meter-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* R1 — static full ring. Shown only when motion is reduced. The gap ring is panel paper, never white. */
+.job-meter-r1 {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.job-meter-r1-gap,
+.job-meter-r1-ring {
+  position: absolute;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+}
+
+.job-meter-r1-gap {
+  inset: -2px;
+  z-index: 1;
+  border: 2px solid theme("colors.paper");
+}
+
+.job-meter-r1-ring {
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border: 3px solid theme("colors.accent");
+  box-shadow:
+    0 0 10px color-mix(in srgb, theme("colors.accent") 55%, transparent),
+    0 0 18px color-mix(in srgb, theme("colors.accent") 28%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .job-meter-arc { display: none !important; animation: none !important; }
+  .job-meter-r1 { display: block !important; }
+}
+
+.job-meter-labels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.job-meter-labels span {
+  padding: 0 2px;
+  color: theme("colors.inkSoft");
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+.job-meter-labels .is-now {
+  color: theme("colors.ink");
+  font-weight: 700;
+}
+
+.job-meter-next {
+  margin: 0;
+  color: theme("colors.ink");
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+
+.job-meter-next-step {
+  font-weight: 700;
+}
+
+.job-meter-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 12px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+
+.job-meter-help {
+  margin: 0;
+  color: theme("colors.inkSoft");
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
