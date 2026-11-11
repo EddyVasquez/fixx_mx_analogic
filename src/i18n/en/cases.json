@@ -399,6 +399,23 @@
     "text": "Garage",
     "status": "draft"
   },
+  "myhome.room.garage": { "text": "Garage", "status": "draft" },
+  "myhome.room.kitchen": { "text": "Kitchen", "status": "draft" },
+  "myhome.room.laundry": { "text": "Laundry", "status": "draft" },
+  "myhome.room.bathGround": { "text": "Downstairs bathroom", "status": "draft" },
+  "myhome.room.bathUpper": { "text": "Upstairs bathroom", "status": "draft" },
+  "myhome.room.mainBed": { "text": "Main bedroom", "status": "draft" },
+  "myhome.room.bed2": { "text": "Bedroom 2", "status": "draft" },
+  "myhome.room.bed3": { "text": "Bedroom 3", "status": "draft" },
+  "myhome.room.hall": { "text": "Hall", "status": "draft" },
+  "myhome.room.ground": { "text": "Ground floor", "status": "draft" },
+  "myhome.room.upper": { "text": "Upper floor", "status": "draft" },
+  "myhome.room.roof": { "text": "Roof", "status": "draft" },
+  "myhome.room.footprint": { "text": "Footprint", "status": "draft" },
+  "myhome.room.condenser": { "text": "Outdoor minisplit", "status": "draft" },
+  "myhome.room.indoor": { "text": "Indoor minisplit", "status": "draft" },
+  "myhome.hub.requestHere": { "text": "Request {trade} here", "status": "draft" },
+  "myhome.hub.backHome": { "text": "Back", "status": "draft" },
   "myhome.hub.areaValue": {
     "text": "{area} m²",
     "status": "draft"
