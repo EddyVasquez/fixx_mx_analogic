@@ -13,6 +13,7 @@ import {
   MeshStandardMaterial,
   PCFSoftShadowMap,
   ShaderMaterial,
+  Vector2,
   Vector3,
   type Group,
   type Material,
@@ -33,7 +34,7 @@ import {
   type Vec3
 } from "./houseModel";
 import { applyHouseFocus, clearHouseFocus, frameBox } from "./houseHighlight";
-import type { FactId } from "./houseFocus";
+import { keepsFrontView, type FactId } from "./houseFocus";
 
 const OUTLINE = "#404040";
 
@@ -251,12 +252,14 @@ function lerpAngle(from: number, to: number, t: number): number {
   return from + delta * t;
 }
 
-function Scene({ motion, reduced, draw, focus, wide, onClear }: {
+function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
   motion: MutableRefObject<Motion>;
   reduced: boolean;
   draw: MutableRefObject<() => void>;
   focus: FactId | null;
   wide: boolean;
+  /** 768–1023. The HUD covers the house here, so the default view shifts right too. */
+  tablet: boolean;
   onClear?: () => void;
 }) {
   const group = useRef<Group>(null);
@@ -334,6 +337,7 @@ function Scene({ motion, reduced, draw, focus, wide, onClear }: {
     pivot.updateWorldMatrix(true, true);
     let toYaw = 0;
     let placement;
+    const hudBias = tablet ? (focus ? 0.22 : 0.14) : focus && wide ? 0.28 : 0;
     if (!focus) {
       clearHouseFocus(house);
       const box = new Box3();
@@ -341,22 +345,30 @@ function Scene({ motion, reduced, draw, focus, wide, onClear }: {
       placement = placeCamera(
         { x: box.min.x, y: box.min.y, z: box.min.z },
         { x: box.max.x, y: box.max.y, z: box.max.z },
-        aspect
+        aspect,
+        180,
+        hudBias
       );
     } else {
-      const frame = applyHouseFocus(house, focus);
+      const frame = applyHouseFocus(house, focus, new Vector2(size.width, size.height));
       const local = frameBox(frame.meshes);
+      if (focus === "bathrooms") local.expandByScalar(1.4);
       const center = local.getCenter(new Vector3());
-      toYaw = local.isEmpty() ? savedYaw : yawToFace({ x: center.x, y: center.y, z: center.z });
+      toYaw = local.isEmpty() || keepsFrontView(focus) ? 0 : yawToFace({ x: center.x, y: center.y, z: center.z });
       pivot.rotation.y = toYaw;
       pivot.updateWorldMatrix(true, true);
       const world = frameBox(frame.meshes);
+      if (focus === "bathrooms") world.expandByScalar(1.4);
       const box = world.isEmpty() ? new Box3().setFromObject(house) : world;
       placement = fitCameraOnce(
         { x: box.min.x, y: box.min.y, z: box.min.z },
         { x: box.max.x, y: box.max.y, z: box.max.z },
         aspect,
-        wide ? 0.34 : 0
+        hudBias,
+        {
+          distanceScale: focus === "minisplits" ? 1.15 : 1,
+          elevate: focus === "built" ? 0.55 : 0
+        }
       );
     }
     pivot.rotation.y = savedYaw;
@@ -383,7 +395,7 @@ function Scene({ motion, reduced, draw, focus, wide, onClear }: {
       shot.current = { fromYaw: motion.current.yaw, toYaw, fromPos, toPos, fromLook: lookNow, toLook, start: performance.now(), ms, done: false };
     }
     invalidate();
-  }, [camera, focus, house, invalidate, motion, reduced, size.height, size.width, wide]);
+  }, [camera, focus, house, invalidate, motion, reduced, size.height, size.width, tablet, wide]);
 
   useFrame((_, delta) => {
     const current = motion.current;
@@ -424,11 +436,13 @@ function Scene({ motion, reduced, draw, focus, wide, onClear }: {
 
 useLoader.preload(GLTFLoader, HOUSE_MODEL_URL);
 
-export default function HouseBlueprint({ label, focus = null, wide = false, onClear }: {
+export default function HouseBlueprint({ label, focus = null, wide = false, tablet = false, onClear }: {
   label: string;
   focus?: FactId | null;
-  /** Tablet and desktop keep a HUD plate on the left, so the framed space sits to its right. */
+  /** 768 and up. A selected fact is framed to the right of the HUD. */
   wide?: boolean;
+  /** 768–1023. The default view is framed to the right of the HUD as well. */
+  tablet?: boolean;
   onClear?: () => void;
 }) {
   const motion = useRef<Motion>({ yaw: 0, dragging: false, idle: true });
@@ -497,7 +511,7 @@ export default function HouseBlueprint({ label, focus = null, wide = false, onCl
         camera={{ fov: CAMERA_FOV_DEG, position: [-8, 5, 14], near: 0.05, far: 200 }}
         gl={{ antialias: true, powerPreference: "low-power", alpha: false }}
       >
-        <Scene motion={motion} reduced={reduced || hidden} draw={draw} focus={focus} wide={wide} onClear={onClear} />
+        <Scene motion={motion} reduced={reduced || hidden} draw={draw} focus={focus} wide={wide} tablet={tablet} onClear={onClear} />
       </Canvas>
     </div>
   );

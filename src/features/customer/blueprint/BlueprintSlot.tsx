@@ -15,10 +15,11 @@ export function canUseWebGL(): boolean {
 }
 
 /** Loads the 3D chunk only when WebGL exists. The fallback is the first paint. */
-export function BlueprintSlot({ label, focus = null, wide = false, onClear }: {
+export function BlueprintSlot({ label, focus = null, wide = false, tablet = false, onClear }: {
   label: string;
   focus?: FactId | null;
   wide?: boolean;
+  tablet?: boolean;
   onClear?: () => void;
 }) {
   const [webgl, setWebgl] = useState<boolean | null>(null);
@@ -26,7 +27,7 @@ export function BlueprintSlot({ label, focus = null, wide = false, onClear }: {
   if (!webgl) return <BlueprintFallback label={label} />;
   return (
     <Suspense fallback={<BlueprintFallback label={label} />}>
-      <HouseBlueprint label={label} focus={focus} wide={wide} onClear={onClear} />
+      <HouseBlueprint label={label} focus={focus} wide={wide} tablet={tablet} onClear={onClear} />
     </Suspense>
   );
 }

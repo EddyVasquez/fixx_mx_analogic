@@ -108,6 +108,9 @@ describe("My Home hub", () => {
     const css = readFileSync(join(process.cwd(), "src/features/customer/homeGlass.css"), "utf8");
     expect(css).not.toMatch(/\.home-hero/);
     expect(css).toMatch(/\.home-readout\[aria-pressed="true"\]/);
+    const readout = css.indexOf(".home-readout {");
+    const wideReadout = css.indexOf(".cockpit-console .home-readout { min-height: 104px");
+    expect(wideReadout).toBeGreaterThan(readout);
   });
 
   it("selects one readout at a time and announces the space", () => {
@@ -120,7 +123,8 @@ describe("My Home hub", () => {
     expect(garage.getAttribute("aria-pressed")).toBe("false");
     expect(document.querySelector(".cockpit-callout")?.textContent).toBe("Bedrooms 3");
     fireEvent.click(document.querySelector<HTMLButtonElement>('[data-fact="bedrooms"]')!);
-    expect(document.querySelector(".cockpit-callout")).toBeNull();
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("");
+    expect(document.querySelector(".cockpit-callout")?.getAttribute("aria-live")).toBe("polite");
     fireEvent.click(garage);
     fireEvent.keyDown(window, { key: "Escape" });
     expect(garage.getAttribute("aria-pressed")).toBe("false");

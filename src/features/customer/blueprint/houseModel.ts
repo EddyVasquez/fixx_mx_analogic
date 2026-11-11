@@ -104,9 +104,9 @@ export function yawToFace(point: Vec3): number {
  * Frame one box at its current orientation. A positive ndcBiasX shifts the
  * subject to the right so a left-hand HUD does not cover it.
  */
-export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0): CameraPlacement {
+export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0, options?: { distanceScale?: number; elevate?: number }): CameraPlacement {
   const pivot: Vec3 = { x: (min.x + max.x) / 2, y: (min.y + max.y) / 2, z: (min.z + max.z) / 2 };
-  const dir = normalize(VIEW_DIRECTION);
+  const dir = normalize({ ...VIEW_DIRECTION, y: VIEW_DIRECTION.y + (options?.elevate ?? 0) });
   const look = { x: -dir.x, y: -dir.y, z: -dir.z };
   const right = normalize(cross(look, { x: 0, y: 1, z: 0 }));
   const up = cross(right, look);
@@ -121,7 +121,7 @@ export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0
     const hy = Math.abs(dot(offset, up));
     dist = Math.max(dist, towardCamera + hx / tanH, towardCamera + hy / tanV);
   }
-  dist *= FIT_PAD;
+  dist *= FIT_PAD * (options?.distanceScale ?? 1);
   const shift = dist * tanH * ndcBiasX;
   const target = { x: pivot.x - right.x * shift, y: pivot.y, z: pivot.z - right.z * shift };
   return {
@@ -133,7 +133,7 @@ export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0
   };
 }
 
-export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180): CameraPlacement {
+export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180, ndcBiasX = 0): CameraPlacement {
   const pivot: Vec3 = { x: 0, y: (min.y + max.y) / 2, z: 0 };
   const dir = normalize(VIEW_DIRECTION);
   const look = { x: -dir.x, y: -dir.y, z: -dir.z };
@@ -154,9 +154,11 @@ export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180)
     }
   }
   dist *= FIT_PAD;
+  const shift = dist * tanH * ndcBiasX;
+  const target = { x: pivot.x - right.x * shift, y: pivot.y, z: pivot.z - right.z * shift };
   return {
-    position: { x: pivot.x + dir.x * dist, y: pivot.y + dir.y * dist, z: pivot.z + dir.z * dist },
-    target: pivot,
+    position: { x: target.x + dir.x * dist, y: target.y + dir.y * dist, z: target.z + dir.z * dist },
+    target,
     near: 0.05,
     far: dist + 50,
     fov: CAMERA_FOV_DEG

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hidesForCutaway, matchesFact, usesCutaway } from "../src/features/customer/blueprint/houseFocus";
+import { focusMode, keepsFrontView, matchesFact } from "../src/features/customer/blueprint/houseFocus";
 import { fitCameraOnce, projectedNdc, yawToFace } from "../src/features/customer/blueprint/houseModel";
 
 const NAMES = [
@@ -12,30 +12,32 @@ const NAMES = [
 ];
 
 describe("house fact focus", () => {
-  it("matches the named spaces and cuts the roof away for interior rooms", () => {
+  it("frames floors and the slab as volumes, and leaves interior rooms unoutlined", () => {
     expect(NAMES.filter((name) => matchesFact(name, "garage"))).toEqual([
       "GarageDoor_Panel_1", "Site_Driveway", "Ground_Wall_Interior_Garage"
     ]);
     expect(NAMES.filter((name) => matchesFact(name, "minisplits"))).toEqual([
       "Minisplit_Condenser", "Minisplit_Indoor_MainBed"
     ]);
-    expect(NAMES.filter((name) => matchesFact(name, "bedrooms"))).toEqual([
-      "Upper_MainBed_BalconyDoor_FrameL", "Upper_Bed2_Window_Sill", "Upper_Bed3_Window_Glass", "Upper_Wall_Interior_Bed23"
-    ]);
+    expect(matchesFact("Upper_Wall_Interior_Bed23", "bedrooms")).toBe(true);
+    expect(matchesFact("Ground_Slab", "bedrooms")).toBe(false);
     expect(NAMES.filter((name) => matchesFact(name, "bathrooms"))).toEqual([
       "Ground_Wall_Interior_Bath", "Upper_Wall_Interior_Bath"
     ]);
     expect(matchesFact("Ground_Slab", "built")).toBe(true);
-    expect(matchesFact("Upper_Slab.001", "built")).toBe(true);
+    expect(matchesFact("Ground_Slab.001", "built")).toBe(true);
+    expect(matchesFact("Upper_Slab", "built")).toBe(false);
     expect(matchesFact("Site_Lot", "built")).toBe(false);
     expect(matchesFact("Ground_Wall_Front", "stories")).toBe(true);
     expect(matchesFact("Roof_Slab", "stories")).toBe(false);
-    expect(usesCutaway("bedrooms")).toBe(true);
-    expect(usesCutaway("bathrooms")).toBe(true);
-    expect(usesCutaway("garage")).toBe(false);
-    expect(hidesForCutaway("Roof_Slab")).toBe(true);
-    expect(hidesForCutaway("Upper_Wall_Front")).toBe(true);
-    expect(hidesForCutaway("Upper_Wall_Interior_Bed23")).toBe(false);
+    expect(focusMode("stories")).toBe("bands");
+    expect(focusMode("built")).toBe("slab");
+    expect(focusMode("bedrooms")).toBe("frame");
+    expect(focusMode("bathrooms")).toBe("frame");
+    expect(focusMode("garage")).toBe("edges");
+    expect(keepsFrontView("bedrooms")).toBe(true);
+    expect(keepsFrontView("bathrooms")).toBe(true);
+    expect(keepsFrontView("minisplits")).toBe(false);
   });
 
   it("frames a small box and can shift it to the right of a left HUD", () => {

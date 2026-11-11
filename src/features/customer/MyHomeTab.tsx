@@ -95,6 +95,19 @@ function warrantyRatio(startsAt: Date, endsAt: Date, now: Date): number {
   return Math.min(1, Math.max(0, (now.getTime() - startsAt.getTime()) / span));
 }
 
+function useMatch(query: string): boolean {
+  const [on, setOn] = useState(() => typeof window.matchMedia === "function" && window.matchMedia(query).matches);
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia(query);
+    const apply = () => setOn(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, [query]);
+  return on;
+}
+
 function OutlineBadge({ label }: { label: string }) {
   return (
     <p className="home-outline-badge">
@@ -172,6 +185,7 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
     onNavigate();
   };
   const wide = useCustomerWide();
+  const tablet = useMatch("(min-width: 768px) and (max-width: 1023.98px)");
   const [pressed, setPressed] = useState<FactId | null>(null);
   const [hover, setHover] = useState<FactId | null>(null);
   const shown = pressed ?? hover;
@@ -204,9 +218,9 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
           >
             <div className="cockpit-ticks" aria-hidden="true"><span /><span /><span /><span /></div>
             <div className="cockpit-stage" aria-hidden="true">
-              <BlueprintSlot label={t("myhome.hub.blueprint")} focus={shown} wide={wide} onClear={() => setPressed(null)} />
+              <BlueprintSlot label={t("myhome.hub.blueprint")} focus={shown} wide={wide} tablet={tablet} onClear={() => setPressed(null)} />
             </div>
-            {model && shown && <p className="cockpit-callout" aria-live="polite">{calloutText(t, shown, model)}</p>}
+            <p className="cockpit-callout" aria-live="polite" data-empty={model && shown ? "false" : "true"}>{model && shown ? calloutText(t, shown, model) : ""}</p>
           </div>
           {model && (
             <Readouts
@@ -344,7 +358,7 @@ function Readouts({ model, pressed, onToggle, onHover }: {
           <button
             key={tile.id}
             type="button"
-            className="home-readout min-h-touch"
+            className="home-readout min-h-[5.5rem]"
             data-fact={tile.id}
             aria-pressed={selected}
             aria-label={tile.id === "garage" ? `${tile.label} ${range}` : undefined}
