@@ -34,6 +34,7 @@ import {
   meterStep,
   meterUsesFullRow,
   stripContentWidth,
+  stripFits,
   stripScrollLeft
 } from "./jobPhases";
 import "./jobStatusBar.css";
@@ -86,11 +87,13 @@ function NextLine({ step }: { step: string }) {
 type Fades = { start: boolean; end: boolean };
 
 /**
- * Strip below 768px, and also when the rail itself is under 696px.
+ * Strip below 768px, and also when the rail itself is under 674px.
  * Crossing either threshold re-centers the strip on the current step.
+ * A strip with nothing to scroll is centered, and both edge fades stay hidden.
  */
-function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: number): { full: boolean; fades: Fades } {
+function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: number): { full: boolean; fades: Fades; fits: boolean } {
   const [full, setFull] = useState(false);
+  const [fits, setFits] = useState(false);
   const [fades, setFades] = useState<Fades>({ start: false, end: false });
 
   useLayoutEffect(() => {
@@ -100,16 +103,16 @@ function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: numb
 
     const contentWidth = () => (el.scrollWidth > el.clientWidth ? el.scrollWidth : stripContentWidth());
 
-    const paintFades = (scrollLeft: number, nextFull: boolean) => {
-      const next = nextFull
+    const paintFades = (scrollLeft: number, hideBoth: boolean) => {
+      const next = hideBoth
         ? { start: false, end: false }
         : edgeFadeVisibility(scrollLeft, el.clientWidth, contentWidth());
       setFades((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
     };
 
     const onScroll = () => {
-      const nextFull = meterUsesFullRow(wideMedia?.matches ?? false, el.clientWidth);
-      if (nextFull) return;
+      const width = el.clientWidth;
+      if (meterUsesFullRow(wideMedia?.matches ?? false, width) || stripFits(width)) return;
       paintFades(el.scrollLeft, false);
     };
 
@@ -117,9 +120,12 @@ function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: numb
     const place = () => {
       const width = el.clientWidth;
       const nextFull = meterUsesFullRow(wideMedia?.matches ?? viewportIsWide(), width);
+      const nextFits = !nextFull && stripFits(width);
       setFull((prev) => (prev === nextFull ? prev : nextFull));
-      if (nextFull || width <= 0) {
+      setFits((prev) => (prev === nextFits ? prev : nextFits));
+      if (nextFull || width <= 0 || nextFits) {
         aimed = -1;
+        if (nextFits && el.scrollLeft > 1) el.scrollLeft = 0;
         paintFades(0, true);
         return;
       }
@@ -151,7 +157,7 @@ function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: numb
     };
   }, [current, railRef]);
 
-  return { full, fades };
+  return { full, fades, fits };
 }
 
 /**
@@ -176,7 +182,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
   const nextLabel = nextKey ? t(`status.${nextKey}`) : undefined;
   const hasSchedule = !pendingReview && scheduledAt != null && scheduledAt.getTime() > 0;
   const railRef = useRef<HTMLDivElement>(null);
-  const { full, fades } = useMeterLayout(railRef, current);
+  const { full, fades, fits } = useMeterLayout(railRef, current);
   const index = current - 1;
   const railStyle = {
     "--index": String(index),
@@ -214,6 +220,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
             ref={railRef}
             style={railStyle}
             data-layout={full ? "full" : "strip"}
+            data-fits={!full && fits ? "true" : "false"}
             tabIndex={full ? undefined : -1}
           >
             <div className="job-meter-track">

@@ -76,10 +76,10 @@ export const STRIP_STRIDE_PX = NODE_PX + STRIP_GAP_PX;
 export const STRIP_INSET_PX = 14;
 
 /** Full row: edge-to-edge gap between the 36px nodes. */
-export const FULL_GAP_MIN_PX = 24;
+export const FULL_GAP_MIN_PX = 22;
 export const FULL_GAP_MAX_PX = 48;
 
-/** 12×36 + 11×24. A narrower rail stays on the strip. */
+/** 12×36 + 11×22. A narrower rail stays on the strip. */
 export const RAIL_FULL_MIN_PX = NODE_PX * STEP_COUNT + FULL_GAP_MIN_PX * (STEP_COUNT - 1);
 
 /** 12×36 + 11×48. The full row is capped here and centered. */
@@ -93,9 +93,14 @@ export const CAPTION_MAX_PX = 140;
 
 export const FADE_PX = 24;
 
-/** Full row only when the viewport is at the tablet breakpoint and the rail can hold a 24px gap. */
+/** Full row only when the viewport is at the tablet breakpoint and the rail can hold a 22px gap. */
 export function meterUsesFullRow(viewportWide: boolean, railWidth: number): boolean {
   return viewportWide && railWidth >= RAIL_FULL_MIN_PX;
+}
+
+/** The strip has nothing to scroll when its row is narrower than the rail. */
+export function stripFits(railWidth: number): boolean {
+  return railWidth > 0 && stripContentWidth() <= railWidth;
 }
 
 export function stripContentWidth(): number {
@@ -124,9 +129,17 @@ export function fullRowTrackWidth(railWidth: number): number {
   return Math.min(Math.max(0, railWidth), RAIL_FULL_MAX_PX);
 }
 
-/** Edge-to-edge gap once the track is capped. Below 696px this is under 24px, so the strip is used instead. */
+/** Edge-to-edge gap once the track is capped. Below 674px this is under 22px, so the strip is used instead. */
 export function fullRowGap(railWidth: number): number {
   return (fullRowTrackWidth(railWidth) - NODE_PX * STEP_COUNT) / (STEP_COUNT - 1);
+}
+
+/**
+ * Connector still showing between the line stop and the neighbouring node edge.
+ * The stop is CURRENT_LINE_GAP_PX from the current node's center.
+ */
+export function visibleLinePx(gap: number): number {
+  return NODE_PX / 2 + gap - CURRENT_LINE_GAP_PX;
 }
 
 /** Center of a full-row node inside a track of `trackWidth`. */

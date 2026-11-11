@@ -27,8 +27,10 @@ import {
   phaseForStatus,
   phaseIndexForStep,
   stripContentWidth,
+  stripFits,
   stripNodeCenter,
-  stripScrollLeft
+  stripScrollLeft,
+  visibleLinePx
 } from "../src/features/shared/jobPhases";
 
 const APPOINTMENT = new Date("2026-11-12T02:00:00.000Z");
@@ -88,17 +90,21 @@ describe("twelve-step layout", () => {
     expect(STEP_ICONS.rated.displayName).toBe("StarIcon");
   });
 
-  it("uses the full row only at the tablet breakpoint when the rail is at least 696px", () => {
-    expect(RAIL_FULL_MIN_PX).toBe(696);
+  it("uses the full row only at the tablet breakpoint when the rail is at least 674px", () => {
+    expect(RAIL_FULL_MIN_PX).toBe(674);
     expect(RAIL_FULL_MAX_PX).toBe(960);
-    expect(FULL_GAP_MIN_PX).toBe(24);
+    expect(FULL_GAP_MIN_PX).toBe(22);
     expect(FULL_GAP_MAX_PX).toBe(48);
     expect(meterUsesFullRow(false, 800)).toBe(false);
     expect(meterUsesFullRow(false, 1200)).toBe(false);
-    expect(meterUsesFullRow(true, 695)).toBe(false);
-    expect(meterUsesFullRow(true, 696)).toBe(true);
-    expect(fullRowGap(695)).toBeLessThan(24);
-    expect(fullRowGap(696)).toBe(24);
+    expect(meterUsesFullRow(true, 673)).toBe(false);
+    expect(meterUsesFullRow(true, 674)).toBe(true);
+    expect(meterUsesFullRow(true, 686)).toBe(true);
+    expect(fullRowGap(673)).toBeLessThan(22);
+    expect(fullRowGap(674)).toBe(22);
+    expect(fullRowGap(686)).toBeCloseTo(23.0909, 3);
+    expect(visibleLinePx(fullRowGap(686))).toBeCloseTo(16.0909, 3);
+    expect(visibleLinePx(22)).toBe(15);
     expect(fullRowGap(960)).toBe(48);
     expect(fullRowGap(1280)).toBe(48);
     expect(CAPTION_MAX_PX).toBe(140);
@@ -120,6 +126,10 @@ describe("twelve-step layout", () => {
     expect(mid).toBeGreaterThan(0);
     expect(mid).toBeLessThan(maxScroll);
     expect(stripScrollLeft(6, content + 40)).toBe(0);
+    expect(stripFits(content - 1)).toBe(false);
+    expect(stripFits(content)).toBe(true);
+    expect(stripFits(content + 40)).toBe(true);
+    expect(edgeFadeVisibility(0, content + 40, content)).toEqual({ start: false, end: false });
     expect(edgeFadeVisibility(0, view, content)).toEqual({ start: false, end: true });
     expect(edgeFadeVisibility(maxScroll, view, content)).toEqual({ start: true, end: false });
     expect(edgeFadeVisibility(mid, view, content)).toEqual({ start: true, end: true });
@@ -270,28 +280,43 @@ describe("meter layout switch", () => {
     await i18n.changeLanguage("en");
   });
 
-  it("keeps the strip below 768px and when the rail is under 696px", () => {
+  it("keeps the strip below 768px and when the rail is under 674px", () => {
     wide = false;
     railWidth = 400;
     install();
     render(<JobStatusBar status="scheduled" />);
     expect(document.querySelector(".job-meter-frame")?.getAttribute("data-layout")).toBe("strip");
+    expect(document.querySelector(".job-meter-rail")?.getAttribute("data-fits")).toBe("false");
     expect(document.querySelector(".job-meter-rail")?.getAttribute("tabindex")).toBe("-1");
     expect(scrollCalls.at(-1)).toEqual({ left: stripScrollLeft(6, 400), behavior: "smooth" });
 
     cleanup();
     scrollCalls.length = 0;
     wide = true;
-    railWidth = 695;
+    railWidth = 673;
     render(<JobStatusBar status="scheduled" />);
     expect(document.querySelector(".job-meter-frame")?.getAttribute("data-layout")).toBe("strip");
-    expect(stripScrollLeft(6, 695)).toBe(0);
-    expect(scrollCalls).toEqual([]);
+    expect(document.querySelector(".job-meter-rail")?.getAttribute("data-fits")).toBe("true");
+    expect(document.querySelector(".job-meter-fade")).toBeNull();
   });
 
-  it("switches to the full row at 768px once the rail reaches 696px, with no scroll and no fades", () => {
+  it("centers a strip that has nothing to scroll and hides both fades", () => {
+    wide = false;
+    railWidth = stripContentWidth() + 40;
+    install();
+    render(<JobStatusBar status="scheduled" />);
+    const rail = document.querySelector(".job-meter-rail");
+    expect(document.querySelector(".job-meter-frame")?.getAttribute("data-layout")).toBe("strip");
+    expect(rail?.getAttribute("data-fits")).toBe("true");
+    expect(document.querySelector(".job-meter-fade-start")).toBeNull();
+    expect(document.querySelector(".job-meter-fade-end")).toBeNull();
+    expect(scrollCalls).toEqual([]);
+    expect(rail?.scrollLeft ?? 0).toBe(0);
+  });
+
+  it("switches to the full row at 768px once the rail reaches 674px, with no scroll and no fades", () => {
     wide = true;
-    railWidth = 696;
+    railWidth = 674;
     install();
     render(<JobStatusBar status="scheduled" />);
     expect(document.querySelector(".job-meter-frame")?.getAttribute("data-layout")).toBe("full");

@@ -112,6 +112,16 @@
   width: max-content;
 }
 
+/* Nothing to scroll: center the row and leave both fades off. */
+.job-meter-rail[data-layout="strip"][data-fits="true"] {
+  display: flex;
+  justify-content: center;
+}
+
+.job-meter-rail[data-layout="strip"][data-fits="true"] .job-meter-track {
+  margin-inline: auto;
+}
+
 .job-meter-rail[data-layout="full"] .job-meter-track {
   width: min(100%, var(--rail-max));
   margin-inline: auto;
