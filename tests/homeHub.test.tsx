@@ -65,34 +65,37 @@ describe("My Home hub", () => {
 
   it("lays the real modules out in phone order, with example tags only on placeholders", () => {
     render(<CustomerApp />);
-    expect(modules()).toEqual(["hero", "active", "warranty", "maintenance", "details", "history", "documents"]);
+    expect(modules()).toEqual(["hero", "active", "warranty", "maintenance", "documents", "history", "details", "demo"]);
     const hero = screen.getByRole("region", { name: "Eduardo L. Vasquez" });
-    expect(hero.className).toContain("lg:col-span-8");
-    expect(hero.className).toContain("home-hero");
+    expect(hero.className).toContain("lg:col-span-12");
+    expect(hero.className).not.toContain("home-hero");
     expect(hero.className).not.toContain("bg-accent");
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-4");
-    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-9");
-    expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-4");
-    expect(document.querySelector("[data-module='maintenance']")?.className).toContain("lg:col-span-8");
-    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-span-12");
+    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-1");
+    expect(document.querySelector("[data-module='warranty']")?.className).toContain("lg:col-start-5");
+    expect(document.querySelector("[data-module='maintenance']")?.className).toContain("lg:col-start-9");
+    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-start-9");
+    expect(document.querySelector("[data-module='details']")?.className).toContain("lg:col-span-8");
     expect(document.querySelector("[data-module='history']")?.className).toContain("lg:col-span-4");
+    expect(document.querySelector("[data-module='demo']")?.className).toContain("lg:col-span-12");
+    expect(document.querySelector("[data-module='active'] .home-outline-badge, [data-module='active'] input")).toBeNull();
 
-    const tiles = [...hero.querySelectorAll(".home-stat")];
+    const tiles = [...hero.querySelectorAll(".home-readout")];
     expect(tiles).toHaveLength(6);
-    tiles.forEach((tile) => expect(tile.className).not.toContain("bg-accent"));
-    expect(tiles.map((tile) => tile.querySelector("dt")?.textContent?.trim())).toEqual(["Stories", "Built", "Bedrooms", "Bathrooms", "Minisplits", "Garage"]);
-    expect(tiles.slice(0, 5).map((tile) => tile.querySelector("dd")?.textContent)).toEqual(["2", "100.49 m²", "3", "2", "1"]);
+    expect(tiles.map((tile) => tile.getAttribute("data-fact"))).toEqual(["stories", "built", "bedrooms", "bathrooms", "minisplits", "garage"]);
     tiles.forEach((tile) => {
-      const icon = tile.querySelector("dt svg");
+      expect(tile.getAttribute("aria-pressed")).toBe("false");
+      const icon = tile.querySelector("svg");
       expect(icon?.getAttribute("aria-hidden")).toBe("true");
-      expect(icon?.getAttribute("width")).toBe("20");
+      expect(icon?.getAttribute("width")).toBe("22");
       expect(icon?.getAttribute("fill")).toBe(colors.ink);
     });
-    const garage = tiles[5]!;
-    expect(garage.querySelector("dd")?.textContent).toContain("Garage: 2 cars");
-    expect(garage.querySelectorAll("dd svg")).toHaveLength(2);
-    expect(within(hero).queryByText("1–2")).toBeNull();
+    expect(tiles[1]?.textContent).toContain("100.49");
+    expect(tiles[1]?.textContent).toContain("m²");
+    expect(tiles[5]?.getAttribute("aria-label")).toBe("Garage 1–2");
+    expect(tiles[5]?.textContent).toContain("1–2");
     expect(within(hero).queryByText("Get help with")).toBeNull();
+    expect(screen.getByRole("checkbox", { name: "Sample home data" }).closest("[data-module='demo']")).toBeTruthy();
     expect(within(hero).queryByText("Example")).toBeNull();
     expect(screen.getAllByText("Example")).toHaveLength(4);
     expect(screen.getAllByText("Example only. Nothing here is scheduled for your home yet.")).toHaveLength(2);
@@ -100,8 +103,27 @@ describe("My Home hub", () => {
     expect(screen.getByText("No active jobs. Need something fixed?")).toBeTruthy();
     expect(screen.getByText("No completed jobs yet. Your service history builds up here.")).toBeTruthy();
     expect(screen.getByText("Warranty starts when a job is finished.")).toBeTruthy();
-    expect(screen.getByRole("img", { name: "Blueprint of your home. Drag or use arrow keys to turn it." })).toBeTruthy();
+    expect(document.querySelector("[data-blueprint='fallback']")?.getAttribute("alt")).toBe("Blueprint of your home. Drag or use arrow keys to turn it.");
     expect(screen.getByText(/Updated /)).toBeTruthy();
+    const css = readFileSync(join(process.cwd(), "src/features/customer/homeGlass.css"), "utf8");
+    expect(css).not.toMatch(/\.home-hero/);
+    expect(css).toMatch(/\.home-readout\[aria-pressed="true"\]/);
+  });
+
+  it("selects one readout at a time and announces the space", () => {
+    render(<CustomerApp />);
+    const garage = document.querySelector<HTMLButtonElement>('[data-fact="garage"]')!;
+    fireEvent.click(garage);
+    expect(garage.getAttribute("aria-pressed")).toBe("true");
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("Garage for 1–2 cars");
+    fireEvent.click(document.querySelector<HTMLButtonElement>('[data-fact="bedrooms"]')!);
+    expect(garage.getAttribute("aria-pressed")).toBe("false");
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("Bedrooms 3");
+    fireEvent.click(document.querySelector<HTMLButtonElement>('[data-fact="bedrooms"]')!);
+    expect(document.querySelector(".cockpit-callout")).toBeNull();
+    fireEvent.click(garage);
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(garage.getAttribute("aria-pressed")).toBe("false");
   });
 
   it("starts the Request tab with no trade selected, including after a refresh", () => {
@@ -174,8 +196,9 @@ describe("My Home hub", () => {
     runtime.spawn(JOB_ID, "job", jobMachine, newJobCtx({ total: 1800.5, professionalId: "p3", needsReview: true }), { categoryId: "electrical" }, "pendingReview");
     render(<CustomerApp />);
     const badge = screen.getByText("Pending review");
-    expect(badge.className).toContain("bg-warnAmberBg");
-    expect(badge.className).toContain("text-warnAmberInk");
+    expect(badge.className).toContain("home-outline-badge");
+    expect(badge.className).not.toContain("warnAmber");
+    expect(badge.querySelector("svg")).toBeTruthy();
     expect(screen.getByText("Total: $1,800.50 MXN")).toBeTruthy();
     expect(screen.getByText("Electrical with Jorge Salinas")).toBeTruthy();
     expect(screen.queryByText(/booked/i)).toBeNull();
@@ -234,7 +257,7 @@ describe("My Home hub", () => {
     expect(screen.getByText("No tienes trabajos en curso. ¿Necesitas arreglar algo?")).toBeTruthy();
     expect(screen.getByText("Total: $1,250.00 MXN")).toBeTruthy();
     expect(screen.getAllByText("Ejemplo").length).toBeGreaterThan(0);
-    expect(screen.getByRole("img", { name: "Plano de tu casa. Arrástralo o usa las flechas para girarlo." })).toBeTruthy();
+    expect(document.querySelector("[data-blueprint='fallback']")?.getAttribute("alt")).toBe("Plano de tu casa. Arrástralo o usa las flechas para girarlo.");
 
     await i18n.changeLanguage("ko");
     expect(screen.getByText("한국어 문구는 초안이에요.")).toBeTruthy();
@@ -246,7 +269,9 @@ describe("My Home hub", () => {
 describe("blueprint folder stays free of three on the static path", () => {
   it("keeps the 3D module behind the lazy import only", () => {
     const dir = join(process.cwd(), "src/features/customer/blueprint");
-    const eager = readdirSync(dir).filter((name) => name !== "HouseBlueprint.tsx");
+    const eager = readdirSync(dir).filter((name) => name !== "HouseBlueprint.tsx" && name !== "houseHighlight.ts");
+    const slot = readFileSync(join(dir, "BlueprintSlot.tsx"), "utf8");
+    expect(slot).not.toMatch(/houseHighlight/);
     for (const name of eager) {
       const src = readFileSync(join(dir, name), "utf8");
       expect(src).not.toMatch(/from ["']three["']/);

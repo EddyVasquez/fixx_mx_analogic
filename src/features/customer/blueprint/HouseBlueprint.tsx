@@ -13,6 +13,7 @@ import {
   MeshStandardMaterial,
   PCFSoftShadowMap,
   ShaderMaterial,
+  Vector3,
   type Group,
   type Material,
   type PerspectiveCamera
@@ -24,11 +25,15 @@ import {
   CAMERA_FOV_DEG,
   HOUSE_MODEL_URL,
   OUTLINE_THRESHOLD_DEG,
+  fitCameraOnce,
   placeCamera,
   shouldAutoRotate,
   toNeutralGrey,
+  yawToFace,
   type Vec3
 } from "./houseModel";
+import { applyHouseFocus, clearHouseFocus, frameBox } from "./houseHighlight";
+import type { FactId } from "./houseFocus";
 
 const OUTLINE = "#404040";
 
@@ -106,24 +111,6 @@ function dress(source: Group): Dressed {
     },
     dispose: () => { disposables.forEach((item) => item.dispose()); }
   };
-}
-
-function FitCamera({ bounds }: { bounds: { min: Vec3; max: Vec3 } }) {
-  const camera = useThree((s) => s.camera) as PerspectiveCamera;
-  const size = useThree((s) => s.size);
-  const invalidate = useThree((s) => s.invalidate);
-  useLayoutEffect(() => {
-    if (size.width < 2 || size.height < 2) return;
-    const placement = placeCamera(bounds.min, bounds.max, size.width / size.height);
-    camera.fov = placement.fov;
-    camera.position.set(placement.position.x, placement.position.y, placement.position.z);
-    camera.near = placement.near;
-    camera.far = placement.far;
-    camera.lookAt(placement.target.x, placement.target.y, placement.target.z);
-    camera.updateProjectionMatrix();
-    invalidate();
-  }, [bounds, camera, size.width, size.height, invalidate]);
-  return null;
 }
 
 function KeyLight() {
@@ -227,24 +214,62 @@ function ContactShadow() {
   );
 }
 
-function HouseModel() {
+function HouseModel({ onScene }: { onScene: (scene: Group | null) => void }) {
   const gltf = useLoader(GLTFLoader, HOUSE_MODEL_URL);
   const dressed = useMemo(() => dress(gltf.scene), [gltf]);
-  useEffect(() => () => { dressed.dispose(); }, [dressed]);
+  useEffect(() => {
+    onScene(dressed.scene);
+    return () => {
+      onScene(null);
+      dressed.dispose();
+    };
+  }, [dressed, onScene]);
   return (
     <group>
       <primitive object={dressed.scene} />
       <ContactShadow />
-      <FitCamera bounds={dressed.bounds} />
     </group>
   );
 }
 
-function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; reduced: boolean; draw: MutableRefObject<() => void> }) {
+interface Shot {
+  fromYaw: number;
+  toYaw: number;
+  fromPos: Vector3;
+  toPos: Vector3;
+  fromLook: Vector3;
+  toLook: Vector3;
+  start: number;
+  ms: number;
+  done: boolean;
+}
+
+function lerpAngle(from: number, to: number, t: number): number {
+  let delta = to - from;
+  while (delta > Math.PI) delta -= Math.PI * 2;
+  while (delta < -Math.PI) delta += Math.PI * 2;
+  return from + delta * t;
+}
+
+function Scene({ motion, reduced, draw, focus, wide, onClear }: {
+  motion: MutableRefObject<Motion>;
+  reduced: boolean;
+  draw: MutableRefObject<() => void>;
+  focus: FactId | null;
+  wide: boolean;
+  onClear?: () => void;
+}) {
   const group = useRef<Group>(null);
+  const [house, setHouse] = useState<Group | null>(null);
+  const shot = useRef<Shot | null>(null);
+  const framed = useRef(false);
   const invalidate = useThree((s) => s.invalidate);
+  const camera = useThree((s) => s.camera) as PerspectiveCamera;
+  const size = useThree((s) => s.size);
   const gl = useThree((s) => s.gl);
   const idleRef = useRef(motion);
+  const clearRef = useRef(onClear);
+  clearRef.current = onClear;
 
   useEffect(() => { draw.current = invalidate; }, [draw, invalidate]);
 
@@ -259,9 +284,11 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
   useEffect(() => {
     const el = gl.domElement;
     let lastX = 0;
+    let moved = 0;
     let resume = 0;
     const down = (event: PointerEvent) => {
       resume += 1;
+      moved = 0;
       idleRef.current.current.dragging = true;
       idleRef.current.current.idle = false;
       lastX = event.clientX;
@@ -272,6 +299,7 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
       if (!current.dragging) return;
       const dx = event.clientX - lastX;
       lastX = event.clientX;
+      moved += Math.abs(dx);
       current.yaw += dx * 0.01;
       invalidate();
     };
@@ -281,7 +309,8 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
       current.dragging = false;
       if (el.hasPointerCapture(event.pointerId)) el.releasePointerCapture(event.pointerId);
       const token = ++resume;
-      window.setTimeout(() => { if (token === resume) current.idle = true; }, 1600);
+      if (moved < 6) clearRef.current?.();
+      window.setTimeout(() => { if (token === resume && !focus) current.idle = true; }, focus ? 4000 : 1600);
       invalidate();
     };
     el.addEventListener("pointerdown", down);
@@ -294,11 +323,81 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
       el.removeEventListener("pointerup", up);
       el.removeEventListener("pointercancel", up);
     };
-  }, [gl, invalidate]);
+  }, [gl, invalidate, focus]);
+
+  useLayoutEffect(() => {
+    const pivot = group.current;
+    if (!house || !pivot || size.width < 2 || size.height < 2) return;
+    const aspect = size.width / size.height;
+    const savedYaw = pivot.rotation.y;
+    pivot.rotation.y = 0;
+    pivot.updateWorldMatrix(true, true);
+    let toYaw = 0;
+    let placement;
+    if (!focus) {
+      clearHouseFocus(house);
+      const box = new Box3();
+      box.setFromObject(house);
+      placement = placeCamera(
+        { x: box.min.x, y: box.min.y, z: box.min.z },
+        { x: box.max.x, y: box.max.y, z: box.max.z },
+        aspect
+      );
+    } else {
+      const frame = applyHouseFocus(house, focus);
+      const local = frameBox(frame.meshes);
+      const center = local.getCenter(new Vector3());
+      toYaw = local.isEmpty() ? savedYaw : yawToFace({ x: center.x, y: center.y, z: center.z });
+      pivot.rotation.y = toYaw;
+      pivot.updateWorldMatrix(true, true);
+      const world = frameBox(frame.meshes);
+      const box = world.isEmpty() ? new Box3().setFromObject(house) : world;
+      placement = fitCameraOnce(
+        { x: box.min.x, y: box.min.y, z: box.min.z },
+        { x: box.max.x, y: box.max.y, z: box.max.z },
+        aspect,
+        wide ? 0.34 : 0
+      );
+    }
+    pivot.rotation.y = savedYaw;
+    pivot.updateWorldMatrix(true, true);
+    const ms = !framed.current || reduced ? 0 : 400;
+    framed.current = true;
+    const fromPos = camera.position.clone();
+    const fromLook = new Vector3();
+    camera.getWorldDirection(fromLook);
+    const lookNow = fromPos.clone().add(fromLook);
+    const toPos = new Vector3(placement.position.x, placement.position.y, placement.position.z);
+    const toLook = new Vector3(placement.target.x, placement.target.y, placement.target.z);
+    camera.fov = placement.fov;
+    camera.near = placement.near;
+    camera.far = placement.far;
+    if (ms === 0) {
+      camera.position.copy(toPos);
+      camera.lookAt(toLook);
+      motion.current.yaw = toYaw;
+      pivot.rotation.y = toYaw;
+      camera.updateProjectionMatrix();
+      shot.current = { fromYaw: toYaw, toYaw, fromPos: toPos, toPos, fromLook: toLook, toLook, start: 0, ms: 0, done: true };
+    } else {
+      shot.current = { fromYaw: motion.current.yaw, toYaw, fromPos, toPos, fromLook: lookNow, toLook, start: performance.now(), ms, done: false };
+    }
+    invalidate();
+  }, [camera, focus, house, invalidate, motion, reduced, size.height, size.width, wide]);
 
   useFrame((_, delta) => {
     const current = motion.current;
-    if (shouldAutoRotate(reduced, current.idle, current.dragging)) current.yaw += delta * AUTO_YAW_PER_SEC;
+    const anim = shot.current;
+    if (anim && !anim.done) {
+      const t = Math.min(1, (performance.now() - anim.start) / anim.ms);
+      const k = t * t * (3 - 2 * t);
+      current.yaw = lerpAngle(anim.fromYaw, anim.toYaw, k);
+      camera.position.lerpVectors(anim.fromPos, anim.toPos, k);
+      camera.lookAt(anim.fromLook.clone().lerp(anim.toLook, k));
+      if (t >= 1) anim.done = true;
+    } else if (shouldAutoRotate(reduced, current.idle, current.dragging)) {
+      current.yaw += delta * AUTO_YAW_PER_SEC;
+    }
     if (group.current) group.current.rotation.y = current.yaw;
   });
 
@@ -317,7 +416,7 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
       </mesh>
       <FadingGrid />
       <group ref={group}>
-        <HouseModel />
+        <HouseModel onScene={setHouse} />
       </group>
     </>
   );
@@ -325,7 +424,13 @@ function Scene({ motion, reduced, draw }: { motion: MutableRefObject<Motion>; re
 
 useLoader.preload(GLTFLoader, HOUSE_MODEL_URL);
 
-export default function HouseBlueprint({ label }: { label: string }) {
+export default function HouseBlueprint({ label, focus = null, wide = false, onClear }: {
+  label: string;
+  focus?: FactId | null;
+  /** Tablet and desktop keep a HUD plate on the left, so the framed space sits to its right. */
+  wide?: boolean;
+  onClear?: () => void;
+}) {
   const motion = useRef<Motion>({ yaw: 0, dragging: false, idle: true });
   const draw = useRef<() => void>(() => {});
   const [reduced, setReduced] = useState(() => {
@@ -333,6 +438,20 @@ export default function HouseBlueprint({ label }: { label: string }) {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   });
   const [hidden, setHidden] = useState(false);
+  const skipIdle = useRef(true);
+
+  useEffect(() => {
+    if (skipIdle.current) {
+      skipIdle.current = false;
+      return;
+    }
+    if (focus) {
+      motion.current.idle = false;
+      return;
+    }
+    const timer = window.setTimeout(() => { motion.current.idle = true; }, 4000);
+    return () => window.clearTimeout(timer);
+  }, [focus]);
 
   useEffect(() => {
     if (typeof window.matchMedia !== "function") return;
@@ -378,7 +497,7 @@ export default function HouseBlueprint({ label }: { label: string }) {
         camera={{ fov: CAMERA_FOV_DEG, position: [-8, 5, 14], near: 0.05, far: 200 }}
         gl={{ antialias: true, powerPreference: "low-power", alpha: false }}
       >
-        <Scene motion={motion} reduced={reduced || hidden} draw={draw} />
+        <Scene motion={motion} reduced={reduced || hidden} draw={draw} focus={focus} wide={wide} onClear={onClear} />
       </Canvas>
     </div>
   );

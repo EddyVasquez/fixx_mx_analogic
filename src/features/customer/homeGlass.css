@@ -1,87 +1,238 @@
-/* My Home hero and stat tiles. Grey glass only. Lime is a glow edge on the hero, never a fill. */
-.home-hero {
-  background: color-mix(in srgb, theme("colors.paper") 78%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, theme("colors.accent") 55%, transparent),
-    0 0 18px color-mix(in srgb, theme("colors.accent") 28%, transparent),
-    0 8px 24px rgb(46 46 46 / 0.08);
-}
+/* Cockpit console. Lime is only a selected edge or a room outline, never a fill and never text. */
 
-.home-stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  align-items: stretch;
-}
-
-@media (min-width: 768px) {
-  .home-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-.home-stat {
+.cockpit {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 8px;
   min-width: 0;
-  height: 100%;
-  padding: 10px 12px;
-  background: color-mix(in srgb, theme("colors.paper") 70%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid theme("colors.line");
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgb(46 46 46 / 0.06);
-  color: theme("colors.ink");
+  container-type: inline-size;
 }
 
-.home-stat-label {
+.cockpit-viewport {
+  position: relative;
+  height: 236px;
+  overflow: hidden;
+  border: 1px solid theme("colors.line");
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  background: theme("colors.paper");
+}
+
+.cockpit-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.cockpit-ticks {
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cockpit-ticks span {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: color-mix(in srgb, theme("colors.inkSoft") 60%, transparent);
+  border-style: solid;
+}
+
+.cockpit-ticks span:nth-child(1) { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; }
+.cockpit-ticks span:nth-child(2) { top: 0; right: 0; border-width: 1.5px 1.5px 0 0; }
+.cockpit-ticks span:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 1.5px 1.5px; }
+.cockpit-ticks span:nth-child(4) { right: 0; bottom: 0; border-width: 0 1.5px 1.5px 0; }
+
+.cockpit-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.cockpit-callout {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 3;
+  max-width: calc(100% - 24px);
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: theme("colors.ink");
+  color: theme("colors.paper");
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.cockpit-console {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid theme("colors.line");
+  border-radius: 0 0 20px 20px;
+  background: theme("colors.paper");
+}
+
+@container (min-width: 680px) {
+  .cockpit-console {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .home-readout { min-height: 104px; }
+  .home-readout-value { font-size: 28px; }
+}
+
+.home-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 0;
+  min-height: 88px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid theme("colors.line");
+  border-radius: 12px;
+  background: color-mix(in srgb, theme("colors.paper") 70%, transparent);
+  box-shadow: inset 0 2px 0 theme("colors.line"), 0 2px 8px rgb(46 46 46 / 0.06);
+  color: theme("colors.ink");
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-readout svg { flex: 0 0 auto; }
+
+.home-readout-label {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.home-readout-value {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-width: 0;
-  margin: 0;
-  color: theme("colors.ink");
-  font-size: 13px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 1.2;
-}
-
-.home-stat-label svg {
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
-}
-
-.home-stat-label span {
-  min-width: 0;
-  white-space: nowrap;
-}
-
-.home-stat-value {
-  display: flex;
-  align-items: center;
-  min-height: 20px;
-  margin: 0;
-  color: theme("colors.ink");
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
-.home-stat-cars {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 20px;
+.home-readout-unit { font-size: 0.6em; font-weight: 700; }
+
+.home-readout-range { font-size: 13px; font-weight: 700; }
+
+.home-car-slot {
+  display: inline-flex;
+  padding: 1px;
+  border: 1.5px dashed currentColor;
+  border-radius: 6px;
+  opacity: 0.75;
 }
 
-.home-stat-cars svg {
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+.home-readout:focus-visible {
+  outline: 3px solid theme("colors.ink");
+  outline-offset: 2px;
+}
+
+.home-readout:active:not([aria-pressed="true"]) {
+  background: theme("colors.mist");
+  border-color: theme("colors.inkSoft");
+  transform: none;
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
+}
+
+.home-readout[aria-pressed="true"] {
+  border-color: theme("colors.ink");
+  background: theme("colors.ink");
+  color: theme("colors.mist");
+  box-shadow:
+    inset 0 2px 5px rgb(0 0 0 / 0.28),
+    0 0 0 1px color-mix(in srgb, theme("colors.accent") 70%, transparent),
+    0 0 12px color-mix(in srgb, theme("colors.accent") 35%, transparent);
+}
+
+@media (hover: hover) {
+  .home-readout:hover:not([aria-pressed="true"]) {
+    border-color: theme("colors.inkSoft");
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 2px 0 theme("colors.line"),
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+}
+
+@media (min-width: 768px) {
+  .cockpit-viewport { height: 320px; }
+  .cockpit-identity {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 3;
+    width: min(340px, calc(100% - 40px));
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid theme("colors.line");
+    border-radius: 18px;
+    background: color-mix(in srgb, theme("colors.mist") 72%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cockpit-viewport { height: 400px; }
+  .cockpit-identity { width: min(380px, calc(100% - 40px)); }
+  .cockpit-stage {
+    -webkit-mask-image: linear-gradient(90deg, transparent, rgb(0 0 0) 10%, rgb(0 0 0) 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, rgb(0 0 0) 10%, rgb(0 0 0) 90%, transparent);
+  }
+}
+
+.home-outline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  height: 28px;
+  margin: 0;
+  padding: 0 10px;
+  border: 2px solid theme("colors.ink");
+  border-radius: 999px;
+  background: theme("colors.mist");
+  color: theme("colors.ink");
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.home-rooms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 1024px) {
+  .home-rooms {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-readout { transition: none; }
 }

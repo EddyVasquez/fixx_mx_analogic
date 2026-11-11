@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { BlueprintFallback } from "./BlueprintFallback";
+import type { FactId } from "./houseFocus";
 
 const HouseBlueprint = lazy(() => import("./HouseBlueprint"));
 
@@ -14,13 +15,18 @@ export function canUseWebGL(): boolean {
 }
 
 /** Loads the 3D chunk only when WebGL exists. The fallback is the first paint. */
-export function BlueprintSlot({ label }: { label: string }) {
+export function BlueprintSlot({ label, focus = null, wide = false, onClear }: {
+  label: string;
+  focus?: FactId | null;
+  wide?: boolean;
+  onClear?: () => void;
+}) {
   const [webgl, setWebgl] = useState<boolean | null>(null);
   useEffect(() => { setWebgl(canUseWebGL()); }, []);
   if (!webgl) return <BlueprintFallback label={label} />;
   return (
     <Suspense fallback={<BlueprintFallback label={label} />}>
-      <HouseBlueprint label={label} />
+      <HouseBlueprint label={label} focus={focus} wide={wide} onClear={onClear} />
     </Suspense>
   );
 }

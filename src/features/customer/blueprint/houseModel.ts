@@ -95,6 +95,44 @@ export function yawPoint(point: Vec3, angle: number): Vec3 {
  * A corner closer to the lens needs more distance than its size at the pivot, so
  * the fit uses that nearer depth instead of a flat bounding sphere.
  */
+/** Yaw that turns a local point toward the fixed camera. */
+export function yawToFace(point: Vec3): number {
+  return Math.atan2(VIEW_DIRECTION.x, VIEW_DIRECTION.z) - Math.atan2(point.x, point.z);
+}
+
+/**
+ * Frame one box at its current orientation. A positive ndcBiasX shifts the
+ * subject to the right so a left-hand HUD does not cover it.
+ */
+export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0): CameraPlacement {
+  const pivot: Vec3 = { x: (min.x + max.x) / 2, y: (min.y + max.y) / 2, z: (min.z + max.z) / 2 };
+  const dir = normalize(VIEW_DIRECTION);
+  const look = { x: -dir.x, y: -dir.y, z: -dir.z };
+  const right = normalize(cross(look, { x: 0, y: 1, z: 0 }));
+  const up = cross(right, look);
+  const vFov = (CAMERA_FOV_DEG * Math.PI) / 180;
+  const tanV = Math.tan(vFov / 2);
+  const tanH = tanV * Math.max(aspect, 0.2);
+  let dist = 0.5;
+  for (const corner of boxCorners(min, max)) {
+    const offset = { x: corner.x - pivot.x, y: corner.y - pivot.y, z: corner.z - pivot.z };
+    const towardCamera = dot(offset, dir);
+    const hx = Math.abs(dot(offset, right));
+    const hy = Math.abs(dot(offset, up));
+    dist = Math.max(dist, towardCamera + hx / tanH, towardCamera + hy / tanV);
+  }
+  dist *= FIT_PAD;
+  const shift = dist * tanH * ndcBiasX;
+  const target = { x: pivot.x - right.x * shift, y: pivot.y, z: pivot.z - right.z * shift };
+  return {
+    position: { x: target.x + dir.x * dist, y: target.y + dir.y * dist, z: target.z + dir.z * dist },
+    target,
+    near: 0.05,
+    far: dist + 80,
+    fov: CAMERA_FOV_DEG
+  };
+}
+
 export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180): CameraPlacement {
   const pivot: Vec3 = { x: 0, y: (min.y + max.y) / 2, z: 0 };
   const dir = normalize(VIEW_DIRECTION);

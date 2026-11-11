@@ -5,6 +5,7 @@ import { Question } from "@phosphor-icons/react/Question";
 import { ShieldCheck } from "@phosphor-icons/react/ShieldCheck";
 import { Wrench } from "@phosphor-icons/react/Wrench";
 import { colors } from "@/ui/tokens";
+import { DemoBadge } from "@/ui/DemoBadge";
 import { CUSTOMER_TAB_ORDER, type CustomerTab } from "./session";
 import "./customerNav.css";
 
@@ -148,6 +149,7 @@ function FixxMark() {
         </svg>
       </span>
       <span className="customer-word">{t("app.name")}</span>
+      <DemoBadge />
     </div>
   );
 }

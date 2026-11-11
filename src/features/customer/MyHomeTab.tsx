@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bathtub } from "@phosphor-icons/react/Bathtub";
 import { Bed } from "@phosphor-icons/react/Bed";
 import { Car } from "@phosphor-icons/react/Car";
+import { Clock } from "@phosphor-icons/react/Clock";
 import { Ruler } from "@phosphor-icons/react/Ruler";
 import { Snowflake } from "@phosphor-icons/react/Snowflake";
 import { Stairs } from "@phosphor-icons/react/Stairs";
@@ -16,6 +18,8 @@ import { useMoney } from "@/features/shared/Money";
 import { Button } from "@/ui/Button";
 import { colors } from "@/ui/tokens";
 import { BlueprintSlot } from "./blueprint/BlueprintSlot";
+import type { FactId } from "./blueprint/houseFocus";
+import { useCustomerWide } from "./CustomerTabBar";
 import { categories, professionals } from "./data";
 import { setDemoMode, useDemoMode } from "./demoMode";
 import { demoJobViews, demoWarrantyViews, type DemoJobView, type DemoWarrantyView } from "./demoSamples";
@@ -41,18 +45,19 @@ const WARRANTY_CHIP: Record<WarrantyState, string> = {
   expired: "myhome.hub.warrantyState.expired"
 };
 
-/** Phone order. Wider layouts place these with explicit columns so focus stays in this order. */
+/** H2 cockpit. Phone stacks in source order. Tablet is 6 columns and desktop is 12, with no empty cells. */
 const PLACE = {
-  hero: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 lg:col-span-8 lg:col-start-1 lg:row-start-1",
-  active: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-1",
-  warranty: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-2",
-  maintenance: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-3 lg:col-span-8 lg:col-start-1 lg:row-start-2",
-  documents: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-3 lg:col-span-12 lg:col-start-1 lg:row-start-3",
-  details: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-4 lg:col-span-8 lg:col-start-1 lg:row-start-4",
-  history: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-5 lg:col-span-4 lg:col-start-9 lg:row-start-4"
+  hero: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 lg:col-span-12 lg:col-start-1 lg:row-start-1",
+  active: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-2 lg:col-span-4 lg:col-start-1 lg:row-start-2 lg:row-span-2",
+  warranty: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-2 lg:col-span-4 lg:col-start-5 lg:row-start-2 lg:row-span-2",
+  maintenance: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-3 lg:col-span-4 lg:col-start-9 lg:row-start-2",
+  documents: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-4 lg:col-span-4 lg:col-start-9 lg:row-start-3",
+  history: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-3 md:row-span-2 lg:col-span-4 lg:col-start-9 lg:row-start-4 lg:row-span-1",
+  details: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-5 lg:col-span-8 lg:col-start-1 lg:row-start-4",
+  demo: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-6 lg:col-span-12 lg:col-start-1 lg:row-start-5"
 } as const;
 
-const card = "flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6";
+const card = "flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:rounded-3xl md:p-6";
 
 interface JobView {
   total: number;
@@ -88,6 +93,15 @@ function warrantyRatio(startsAt: Date, endsAt: Date, now: Date): number {
   const span = endsAt.getTime() - startsAt.getTime();
   if (span <= 0) return 1;
   return Math.min(1, Math.max(0, (now.getTime() - startsAt.getTime()) / span));
+}
+
+function OutlineBadge({ label }: { label: string }) {
+  return (
+    <p className="home-outline-badge">
+      <Clock aria-hidden="true" size={16} weight="bold" color={colors.ink} />
+      {label}
+    </p>
+  );
 }
 
 function ExampleTag() {
@@ -157,28 +171,51 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
     session.tab = "warranty";
     onNavigate();
   };
+  const wide = useCustomerWide();
+  const [pressed, setPressed] = useState<FactId | null>(null);
+  const [hover, setHover] = useState<FactId | null>(null);
+  const shown = pressed ?? hover;
+  const [roomsOpen, setRoomsOpen] = useState(wide);
+  useEffect(() => { setRoomsOpen(wide); }, [wide]);
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setPressed(null);
+      setHover(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div data-testid="home-hub" className="grid grid-cols-1 items-stretch gap-4 text-[16px] leading-6 text-ink md:grid-cols-6 md:gap-6 lg:grid-cols-12">
-      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} home-hero flex min-w-0 flex-col self-stretch rounded-[20px] border border-line p-3 md:p-4`}>
-        {model && (
-          <div className="relative h-[240px] overflow-hidden rounded-2xl border border-line bg-paper md:h-[320px] lg:h-[360px]">
-            {/* The name card overlaps this strip, so the model is framed in the visible part. */}
-            <div className="absolute inset-x-0 top-0 bottom-8 md:bottom-12">
-              <BlueprintSlot label={t("myhome.hub.blueprint")} />
+      <section aria-labelledby="home-hero-name" data-module="hero" className={`${PLACE.hero} flex min-w-0 flex-col self-stretch`}>
+        <div className="cockpit">
+          <div className="cockpit-identity">
+            <Identity lang={lang} name={profile.homeownerName} community={profile.community} address={profile.address} model={model} time={formatClockTime(now, locale)} />
+          </div>
+          <div
+            className="cockpit-viewport"
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              if (target.closest(".cockpit-callout")) return;
+              setPressed(null);
+            }}
+          >
+            <div className="cockpit-ticks" aria-hidden="true"><span /><span /><span /><span /></div>
+            <div className="cockpit-stage" aria-hidden="true">
+              <BlueprintSlot label={t("myhome.hub.blueprint")} focus={shown} wide={wide} onClear={() => setPressed(null)} />
             </div>
+            {model && shown && <p className="cockpit-callout" aria-live="polite">{calloutText(t, shown, model)}</p>}
           </div>
-        )}
-        <div className={`relative z-10 flex flex-col gap-4 rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6 ${model ? "-mt-8 md:-mt-12" : ""}`}>
-          {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
-          <div className="flex flex-col gap-1">
-            <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[32px]">{profile.homeownerName}</h1>
-            <p className="break-words">{t("myhome.community", { name: profile.community })}</p>
-            <p className="break-words">{t("myhome.address", { address: profile.address })}</p>
-            {model && <p className="break-words font-semibold">{t("myhome.hub.modelLine", { model: t("myhome.model.santaSofia"), developer: model.developer })}</p>}
-            <p className="text-inkSoft">{t("myhome.hub.updated", { time: formatClockTime(now, locale) })}</p>
-          </div>
-          {model && <StatTiles model={model} />}
+          {model && (
+            <Readouts
+              model={model}
+              pressed={pressed}
+              onToggle={(id) => setPressed((current) => current === id ? null : id)}
+              onHover={setHover}
+            />
+          )}
         </div>
       </section>
 
@@ -206,19 +243,6 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
           </ul>
         </section>
 
-        {model && (
-          <section aria-labelledby="hub-rooms" data-module="details" className={`${card} ${PLACE.details}`}>
-            <details open>
-              <summary className="min-h-touch cursor-pointer py-2">
-                <h2 id="hub-rooms" className="inline text-[22px] font-bold leading-tight">{t("myhome.hub.rooms")}</h2>
-              </summary>
-              <HomeModelCard model={model} />
-            </details>
-          </section>
-        )}
-
-        <HistoryCard lang={lang} state={state} ctx={ctx} />
-
         <section aria-labelledby="hub-documents" data-module="documents" className={`${card} ${PLACE.documents}`}>
           <div className="flex flex-wrap items-center gap-2">
             <h2 id="hub-documents" className="text-[22px] font-bold leading-tight">{t("myhome.hub.documents")}</h2>
@@ -227,54 +251,133 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
           <p className="break-words">{t("myhome.hub.exampleNote")}</p>
           <p className="break-words">{t("myhome.hub.docsEmpty")}</p>
         </section>
+
+        <HistoryCard lang={lang} state={state} ctx={ctx} />
+
+        {model && (
+          <section aria-labelledby="hub-rooms" data-module="details" className={`${card} ${PLACE.details}`}>
+            <details open={roomsOpen} onToggle={(event) => setRoomsOpen((event.currentTarget as HTMLDetailsElement).open)}>
+              <summary className="min-h-touch cursor-pointer py-2">
+                <h2 id="hub-rooms" className="inline text-[22px] font-bold leading-tight">{t("myhome.hub.rooms")}</h2>
+              </summary>
+              <HomeModelCard model={model} />
+            </details>
+          </section>
+        )}
+
+        <section aria-labelledby="hub-demo" data-module="demo" className={`${card} ${PLACE.demo}`}>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 id="hub-demo" className="sr-only">{t("demo.badge")}</h2>
+            <DemoTag />
+          </div>
+          <DemoModeSwitch />
+        </section>
     </div>
   );
 }
 
-const STAT_ICON = 20;
+function Identity({ lang, name, community, address, model, time }: {
+  lang: Lang;
+  name: string;
+  community: string;
+  address: string;
+  model: HomeModel | null | undefined;
+  time: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {lang === "ko" && <p className="font-semibold">{t("myhome.translationDraft")}</p>}
+      <h1 id="home-hero-name" className="break-words text-[24px] font-bold leading-tight md:text-[20px]">{name}</h1>
+      <p className="break-words">{t("myhome.community", { name: community })}</p>
+      <p className="break-words">{t("myhome.address", { address })}</p>
+      {model && <p className="break-words font-semibold">{t("myhome.hub.modelLine", { model: t("myhome.model.santaSofia"), developer: model.developer })}</p>}
+      <p className="text-inkSoft">{t("myhome.hub.updated", { time })}</p>
+    </>
+  );
+}
 
-function StatTiles({ model }: { model: HomeModel }) {
+function calloutText(t: (key: string, vars?: Record<string, string | number>) => string, fact: FactId, model: HomeModel): string {
+  if (fact === "garage") return t("myhome.garage", { min: model.garageCarsMin, max: model.garageCarsMax });
+  const bathrooms = model.groundFullBathrooms + model.upperFullBathrooms;
+  const label = t(`myhome.hub.stat.${fact}`);
+  const value = fact === "built" ? t("myhome.hub.areaValue", { area: formatArea(model.builtM2) }) : String(fact === "stories" ? model.stories : fact === "bedrooms" ? model.bedrooms : fact === "bathrooms" ? bathrooms : model.minisplits);
+  return `${label} ${value}`;
+}
+
+function BuiltValue({ area }: { area: string }) {
+  const { t } = useTranslation();
+  const text = t("myhome.hub.areaValue", { area });
+  const split = text.lastIndexOf(" ");
+  if (split < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, split)}
+      <span className="home-readout-unit">{text.slice(split)}</span>
+    </>
+  );
+}
+
+function Readouts({ model, pressed, onToggle, onHover }: {
+  model: HomeModel;
+  pressed: FactId | null;
+  onToggle: (id: FactId) => void;
+  onHover: (id: FactId | null) => void;
+}) {
   const { t } = useTranslation();
   const bathrooms = model.groundFullBathrooms + model.upperFullBathrooms;
-  const cars = model.garageCarsMax;
-  const tiles: { id: string; label: string; value: string; Icon: Icon }[] = [
-    { id: "stories", label: t("myhome.hub.stat.stories"), value: String(model.stories), Icon: Stairs },
-    { id: "built", label: t("myhome.hub.stat.built"), value: t("myhome.hub.areaValue", { area: formatArea(model.builtM2) }), Icon: Ruler },
-    { id: "bedrooms", label: t("myhome.hub.stat.bedrooms"), value: String(model.bedrooms), Icon: Bed },
-    { id: "bathrooms", label: t("myhome.hub.stat.bathrooms"), value: String(bathrooms), Icon: Bathtub },
-    { id: "minisplits", label: t("myhome.hub.stat.minisplits"), value: String(model.minisplits), Icon: Snowflake }
+  const range = model.garageCarsMin === model.garageCarsMax ? String(model.garageCarsMax) : `${model.garageCarsMin}–${model.garageCarsMax}`;
+  const tiles: { id: FactId; label: string; Icon: Icon }[] = [
+    { id: "stories", label: t("myhome.hub.stat.stories"), Icon: Stairs },
+    { id: "built", label: t("myhome.hub.stat.built"), Icon: Ruler },
+    { id: "bedrooms", label: t("myhome.hub.stat.bedrooms"), Icon: Bed },
+    { id: "bathrooms", label: t("myhome.hub.stat.bathrooms"), Icon: Bathtub },
+    { id: "minisplits", label: t("myhome.hub.stat.minisplits"), Icon: Snowflake },
+    { id: "garage", label: t("myhome.hub.stat.garage"), Icon: Car }
   ];
-  const garageLabel = cars > 0 ? t("myhome.hub.garageCars", { count: cars }) : t("myhome.hub.garageNone");
   return (
-    <dl className="home-stats">
-      {tiles.map((tile) => (
-        <div key={tile.id} className="home-stat">
-          <dt className="home-stat-label">
-            <tile.Icon aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
-            <span>{tile.label}</span>
-          </dt>
-          <dd className="home-stat-value">{tile.value}</dd>
-        </div>
-      ))}
-      <div className="home-stat">
-        <dt className="home-stat-label">
-          <Car aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
-          <span aria-hidden="true">{t("myhome.hub.stat.garage")}</span>
-        </dt>
-        <dd className="home-stat-value">
-          <span className="sr-only">{garageLabel}</span>
-          {cars > 0 ? (
-            <span className="home-stat-cars" aria-hidden="true">
-              {Array.from({ length: cars }, (_, index) => (
-                <Car key={index} aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
-              ))}
+    <div className="cockpit-console" role="group" aria-label={t("myhome.hub.rooms")}>
+      {tiles.map((tile) => {
+        const selected = pressed === tile.id;
+        const ink = selected ? colors.mist : colors.ink;
+        return (
+          <button
+            key={tile.id}
+            type="button"
+            className="home-readout min-h-touch"
+            data-fact={tile.id}
+            aria-pressed={selected}
+            aria-label={tile.id === "garage" ? `${tile.label} ${range}` : undefined}
+            onClick={() => onToggle(tile.id)}
+            onPointerEnter={(event) => { if (event.pointerType === "mouse") onHover(tile.id); }}
+            onPointerLeave={() => onHover(null)}
+          >
+            <tile.Icon aria-hidden="true" size={22} weight="bold" color={ink} />
+            <span className="home-readout-label">{tile.label}</span>
+            <span className="home-readout-value" aria-hidden={tile.id === "garage" ? true : undefined}>
+              {tile.id === "built" && <BuiltValue area={formatArea(model.builtM2)} />}
+              {tile.id === "stories" && model.stories}
+              {tile.id === "bedrooms" && model.bedrooms}
+              {tile.id === "bathrooms" && bathrooms}
+              {tile.id === "minisplits" && model.minisplits}
+              {tile.id === "garage" && (
+                model.garageCarsMax <= 0 ? t("myhome.hub.none") : (
+                  <>
+                    <Car aria-hidden="true" size={26} weight="fill" color={ink} />
+                    {model.garageCarsMax > model.garageCarsMin && (
+                      <span className="home-car-slot">
+                        <Car aria-hidden="true" size={22} weight="bold" color={ink} />
+                      </span>
+                    )}
+                    <span className="home-readout-range">{range}</span>
+                  </>
+                )
+              )}
             </span>
-          ) : (
-            <span aria-hidden="true">{t("myhome.hub.none")}</span>
-          )}
-        </dd>
-      </div>
-    </dl>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -301,7 +404,6 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
   return (
     <section aria-labelledby="hub-active" data-module="active" className={`${card} ${PLACE.active}`}>
       <h2 id="hub-active" className="text-[22px] font-bold leading-tight">{t("myhome.hub.activeJob")}</h2>
-      <DemoModeSwitch />
       {active && (
         <div className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-3">
           <div className="flex items-start gap-2">
@@ -315,7 +417,7 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
           <div className="flex items-start gap-2">
             <span aria-hidden="true" className="mt-1.5 h-3 w-3 shrink-0 rounded-full bg-ink" />
             {active.state === "pendingReview" ? (
-              <p aria-live="polite" className="min-w-0 break-words rounded-full bg-warnAmberBg px-3 py-1 font-semibold text-warnAmberInk">{t("review.pending.title")}</p>
+              <OutlineBadge label={t("review.pending.title")} />
             ) : (
               <p aria-live="polite" className="min-w-0 break-words">{statusText}</p>
             )}
@@ -354,7 +456,7 @@ function DemoJobCard({ lang, job }: { lang: Lang; job: DemoJobView }) {
       <div className="flex flex-wrap items-center gap-2">
         <DemoTag />
         {job.pendingReview ? (
-          <p className="min-w-0 break-words rounded-full bg-warnAmberBg px-3 py-1 font-semibold text-warnAmberInk">{t("review.pending.title")}</p>
+          <OutlineBadge label={t("review.pending.title")} />
         ) : (
           <p className="break-words font-semibold">{job.status === "inProgress" ? t("status.inProgress") : t("status.scheduled")}</p>
         )}
@@ -469,12 +571,15 @@ function HistoryCard({ lang, state, ctx }: { lang: Lang; state: JobState | undef
 function HomeModelCard({ model }: { model: HomeModel }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-2 pt-2">
+    <div className="home-rooms pt-2">
+      <div className="flex flex-col gap-2">
       <h3 id="home-model-heading" className="text-lg font-bold">{t("myhome.model.santaSofia")}</h3>
       <p className="break-words">{t("myhome.source")}</p>
       <p>{t("myhome.stories", { count: model.stories })}</p>
       <p>{model.lotApproximate ? t("myhome.lotAbout", { area: formatArea(model.lotM2) }) : t("myhome.lot", { area: formatArea(model.lotM2) })}</p>
       <p>{t("myhome.built", { area: formatArea(model.builtM2) })}</p>
+      </div>
+      <div className="flex flex-col gap-2">
       <h4 className="font-bold">{t("myhome.ground")}</h4>
       <ul className="flex list-disc flex-col gap-1 pl-5">
         <li>{t("myhome.garage", { min: model.garageCarsMin, max: model.garageCarsMax })}</li>
@@ -487,6 +592,8 @@ function HomeModelCard({ model }: { model: HomeModel }) {
         {model.backPatio && <li>{t("myhome.backPatio")}</li>}
         {model.sidePassage && <li>{t("myhome.sidePassage")}</li>}
       </ul>
+      </div>
+      <div className="flex flex-col gap-2">
       <h4 className="font-bold">{t("myhome.upper")}</h4>
       <ul className="flex list-disc flex-col gap-1 pl-5">
         <li>{t("myhome.bedrooms", { count: model.bedrooms })}</li>
@@ -496,6 +603,7 @@ function HomeModelCard({ model }: { model: HomeModel }) {
         <li>{t("myhome.sharedBathroom", { count: model.upperFullBathrooms })}</li>
       </ul>
       {model.plansVaryByPhase && <p>{t("myhome.plansVary")}</p>}
+      </div>
     </div>
   );
 }
