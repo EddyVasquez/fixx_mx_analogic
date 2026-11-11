@@ -22,7 +22,7 @@ import { demoJobViews, demoWarrantyViews, type DemoJobView, type DemoWarrantyVie
 import { formatArea, type HomeModel } from "./homeModel";
 import { useHomeProfile } from "./homeProfile";
 import { JOB_ID, session } from "./session";
-import { TradePicker, TradePlusButton } from "./tradePicker";
+import { TradePlusButton } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
 import "./homeGlass.css";
 
@@ -45,12 +45,11 @@ const WARRANTY_CHIP: Record<WarrantyState, string> = {
 const PLACE = {
   hero: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-1 lg:col-span-8 lg:col-start-1 lg:row-start-1",
   active: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-1",
-  quick: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-3 lg:col-span-8 lg:col-start-1 lg:row-start-2",
   warranty: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-2 lg:col-span-4 lg:col-start-9 lg:row-start-2",
-  maintenance: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-4 lg:col-span-6 lg:col-start-1 lg:row-start-3",
-  documents: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-4 lg:col-span-6 lg:col-start-7 lg:row-start-3",
-  details: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-5 lg:col-span-8 lg:col-start-1 lg:row-start-4",
-  history: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-6 lg:col-span-4 lg:col-start-9 lg:row-start-4"
+  maintenance: "col-span-1 md:col-span-3 md:col-start-1 md:row-start-3 lg:col-span-8 lg:col-start-1 lg:row-start-2",
+  documents: "col-span-1 md:col-span-3 md:col-start-4 md:row-start-3 lg:col-span-12 lg:col-start-1 lg:row-start-3",
+  details: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-4 lg:col-span-8 lg:col-start-1 lg:row-start-4",
+  history: "col-span-1 md:col-span-6 md:col-start-1 md:row-start-5 lg:col-span-4 lg:col-start-9 lg:row-start-4"
 } as const;
 
 const card = "flex min-w-0 flex-col gap-3 self-stretch rounded-[20px] border border-line bg-paper p-4 shadow-[0_8px_24px_rgba(46,46,46,0.08)] md:p-6";
@@ -185,11 +184,6 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
 
       <ActiveJob lang={lang} active={active} now={now} onView={() => openRequest(null)} onRequest={() => openRequest(null)} />
 
-        <section aria-labelledby="hub-quick" data-module="quick" className={`${card} ${PLACE.quick}`}>
-          <h2 id="hub-quick" className="text-[22px] font-bold leading-tight">{t("myhome.hub.quick")}</h2>
-          <TradePicker lang={lang} selectedId={session.draft.categoryId} onPick={(id) => openRequest(id)} />
-        </section>
-
         <WarrantyCard lang={lang} actor={warrantyActor} now={now} onOpen={openWarranty} />
 
         <section aria-labelledby="hub-maintenance" data-module="maintenance" className={`${card} ${PLACE.maintenance}`}>
@@ -237,28 +231,49 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
   );
 }
 
+const STAT_ICON = 20;
+
 function StatTiles({ model }: { model: HomeModel }) {
   const { t } = useTranslation();
   const bathrooms = model.groundFullBathrooms + model.upperFullBathrooms;
+  const cars = model.garageCarsMax;
   const tiles: { id: string; label: string; value: string; Icon: Icon }[] = [
     { id: "stories", label: t("myhome.hub.stat.stories"), value: String(model.stories), Icon: Stairs },
     { id: "built", label: t("myhome.hub.stat.built"), value: t("myhome.hub.areaValue", { area: formatArea(model.builtM2) }), Icon: Ruler },
     { id: "bedrooms", label: t("myhome.hub.stat.bedrooms"), value: String(model.bedrooms), Icon: Bed },
     { id: "bathrooms", label: t("myhome.hub.stat.bathrooms"), value: String(bathrooms), Icon: Bathtub },
-    { id: "minisplits", label: t("myhome.hub.stat.minisplits"), value: String(model.minisplits), Icon: Snowflake },
-    { id: "garage", label: t("myhome.hub.stat.garage"), value: t("myhome.hub.span", { min: model.garageCarsMin, max: model.garageCarsMax }), Icon: Car }
+    { id: "minisplits", label: t("myhome.hub.stat.minisplits"), value: String(model.minisplits), Icon: Snowflake }
   ];
+  const garageLabel = cars > 0 ? t("myhome.hub.garageCars", { count: cars }) : t("myhome.hub.garageNone");
   return (
-    <dl className="grid grid-cols-3 gap-3 lg:grid-cols-6">
+    <dl className="home-stats">
       {tiles.map((tile) => (
-        <div key={tile.id} className="home-stat min-w-0 rounded-2xl px-2 py-3 text-ink">
-          <dt className="flex items-center gap-2 break-words leading-tight">
-            <tile.Icon aria-hidden="true" size={22} weight="bold" color={colors.ink} />
+        <div key={tile.id} className="home-stat">
+          <dt className="home-stat-label">
+            <tile.Icon aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
             <span>{tile.label}</span>
           </dt>
-          <dd className="mt-1 text-[22px] font-semibold leading-tight">{tile.value}</dd>
+          <dd className="home-stat-value">{tile.value}</dd>
         </div>
       ))}
+      <div className="home-stat">
+        <dt className="home-stat-label">
+          <Car aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
+          <span aria-hidden="true">{t("myhome.hub.stat.garage")}</span>
+        </dt>
+        <dd className="home-stat-value">
+          <span className="sr-only">{garageLabel}</span>
+          {cars > 0 ? (
+            <span className="home-stat-cars" aria-hidden="true">
+              {Array.from({ length: cars }, (_, index) => (
+                <Car key={index} aria-hidden="true" size={STAT_ICON} weight="bold" color={colors.ink} />
+              ))}
+            </span>
+          ) : (
+            <span aria-hidden="true">{t("myhome.hub.none")}</span>
+          )}
+        </dd>
+      </div>
     </dl>
   );
 }

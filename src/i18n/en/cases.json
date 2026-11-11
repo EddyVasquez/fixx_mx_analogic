@@ -303,10 +303,6 @@
     "text": "Exact plans vary by phase.",
     "status": "draft"
   },
-  "myhome.hub.quick": {
-    "text": "Get help with",
-    "status": "draft"
-  },
   "myhome.hub.activeJob": {
     "text": "Active job",
     "status": "draft"
@@ -407,8 +403,16 @@
     "text": "{area} m²",
     "status": "draft"
   },
-  "myhome.hub.span": {
-    "text": "{min}–{max}",
+  "myhome.hub.none": {
+    "text": "None",
+    "status": "draft"
+  },
+  "myhome.hub.garageCars": {
+    "text": "Garage: {count, plural, one {# car} other {# cars}}",
+    "status": "draft"
+  },
+  "myhome.hub.garageNone": {
+    "text": "Garage: None",
     "status": "draft"
   },
   "myhome.hub.due": {

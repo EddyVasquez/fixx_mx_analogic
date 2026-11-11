@@ -65,27 +65,34 @@ describe("My Home hub", () => {
 
   it("lays the real modules out in phone order, with example tags only on placeholders", () => {
     render(<CustomerApp />);
-    expect(modules()).toEqual(["hero", "active", "quick", "warranty", "maintenance", "details", "history", "documents"]);
+    expect(modules()).toEqual(["hero", "active", "warranty", "maintenance", "details", "history", "documents"]);
     const hero = screen.getByRole("region", { name: "Eduardo L. Vasquez" });
     expect(hero.className).toContain("lg:col-span-8");
     expect(hero.className).toContain("home-hero");
     expect(hero.className).not.toContain("bg-accent");
-    const tiles = hero.querySelectorAll(".home-stat");
-    expect(tiles).toHaveLength(6);
-    tiles.forEach((tile) => expect(tile.className).not.toContain("bg-accent"));
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-4");
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-9");
     expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-4");
-    expect(document.querySelector("[data-module='quick']")?.className).toContain("lg:col-span-8");
-    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-span-6");
+    expect(document.querySelector("[data-module='maintenance']")?.className).toContain("lg:col-span-8");
+    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-span-12");
     expect(document.querySelector("[data-module='history']")?.className).toContain("lg:col-span-4");
 
-    const values = [...hero.querySelectorAll("dd")].map((dd) => dd.textContent);
-    expect(values).toEqual(["2", "100.49 m²", "3", "2", "1", "1–2"]);
-    hero.querySelectorAll("dl svg").forEach((icon) => {
-      expect(icon.getAttribute("aria-hidden")).toBe("true");
-      expect(icon.getAttribute("fill")).toBe(colors.ink);
+    const tiles = [...hero.querySelectorAll(".home-stat")];
+    expect(tiles).toHaveLength(6);
+    tiles.forEach((tile) => expect(tile.className).not.toContain("bg-accent"));
+    expect(tiles.map((tile) => tile.querySelector("dt")?.textContent?.trim())).toEqual(["Stories", "Built", "Bedrooms", "Bathrooms", "Minisplits", "Garage"]);
+    expect(tiles.slice(0, 5).map((tile) => tile.querySelector("dd")?.textContent)).toEqual(["2", "100.49 m²", "3", "2", "1"]);
+    tiles.forEach((tile) => {
+      const icon = tile.querySelector("dt svg");
+      expect(icon?.getAttribute("aria-hidden")).toBe("true");
+      expect(icon?.getAttribute("width")).toBe("20");
+      expect(icon?.getAttribute("fill")).toBe(colors.ink);
     });
+    const garage = tiles[5]!;
+    expect(garage.querySelector("dd")?.textContent).toContain("Garage: 2 cars");
+    expect(garage.querySelectorAll("dd svg")).toHaveLength(2);
+    expect(within(hero).queryByText("1–2")).toBeNull();
+    expect(within(hero).queryByText("Get help with")).toBeNull();
     expect(within(hero).queryByText("Example")).toBeNull();
     expect(screen.getAllByText("Example")).toHaveLength(4);
     expect(screen.getAllByText("Example only. Nothing here is scheduled for your home yet.")).toHaveLength(2);
@@ -97,35 +104,47 @@ describe("My Home hub", () => {
     expect(screen.getByText(/Updated /)).toBeTruthy();
   });
 
-  it("starts Get help with with no trade selected, including after a refresh", () => {
+  it("starts the Request tab with no trade selected, including after a refresh", () => {
     localStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
     sessionStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
     session.draft = { ...session.draft, categoryId: "painting" };
     resetSession(true);
     expect(session.draft.categoryId).toBe("");
     session.signedIn = true;
+    session.tab = "request";
     render(<CustomerApp />);
-    const quick = screen.getByRole("region", { name: "Get help with" });
-    expect(quick.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
-    const painting = within(quick).getByRole("button", { name: "Add Painting" });
-    expect(painting.getAttribute("aria-pressed")).toBe("false");
+    expect(screen.queryByRole("region", { name: "Get help with" })).toBeNull();
+    expect(document.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+    const painting = screen.getByRole("button", { name: "Add Painting" });
+    expect(painting.getAttribute("aria-pressed")).not.toBe("true");
     expect(painting.querySelector("svg")?.getAttribute("data-icon")).toBe("plus");
+    expect(painting.closest("li")?.getAttribute("data-selected")).not.toBe("true");
     expect(painting.closest("li")?.className).not.toContain("bg-accent");
     localStorage.removeItem("fixx.draft");
     sessionStorage.removeItem("fixx.draft");
   });
 
-  it("opens a request for a real category, and leaves maintenance as an example", () => {
+  it("opens Request from My Home without a trade already chosen", () => {
     render(<CustomerApp />);
-    const quick = screen.getByRole("region", { name: "Get help with" });
+    expect(screen.queryByRole("heading", { name: "Get help with" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Request" }));
+    expect(session.tab).toBe("request");
+    expect(session.draft.categoryId).toBe("");
+    expect(screen.getByRole("heading", { name: "Choose a service" })).toBeTruthy();
+    expect(document.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+  });
+
+  it("opens a request for a real category, and leaves maintenance as an example", () => {
+    session.tab = "request";
+    render(<CustomerApp />);
     const names = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest control", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance repair", "Roofing", "Handyman", "Locksmith", "Cleaning", "Metalwork"];
-    expect(within(quick).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
-    names.forEach((name) => expect(within(quick).getByText(name)).toBeTruthy());
+    expect(screen.getAllByRole("button").filter((button) => (button.getAttribute("aria-label") ?? "").startsWith("Add ")).map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
+    names.forEach((name) => expect(screen.getByText(name)).toBeTruthy());
     expect(screen.queryByRole("link", { name: "See all services" })).toBeNull();
-    const plumbing = within(quick).getByRole("button", { name: "Add Plumbing" });
+    const plumbing = screen.getByRole("button", { name: "Add Plumbing" });
     expect(plumbing.className).toContain("min-h-touch");
     expect(plumbing.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
-    fireEvent.click(within(quick).getByRole("button", { name: "Add Electrical" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
     const selectedTrade = screen.getByRole("button", { name: "Add Electrical" });

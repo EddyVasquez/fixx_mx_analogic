@@ -379,11 +379,6 @@
     "status": "draft",
     "needsNativeReview": true
   },
-  "myhome.hub.quick": {
-    "text": "어떤 도움이 필요하세요?",
-    "status": "draft",
-    "needsNativeReview": true
-  },
   "myhome.hub.activeJob": {
     "text": "진행 중인 작업",
     "status": "draft",
@@ -509,8 +504,18 @@
     "status": "draft",
     "needsNativeReview": true
   },
-  "myhome.hub.span": {
-    "text": "{min}–{max}",
+  "myhome.hub.none": {
+    "text": "없음",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.garageCars": {
+    "text": "차고: {count, plural, other {자동차 #대}}",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "myhome.hub.garageNone": {
+    "text": "차고: 없음",
     "status": "draft",
     "needsNativeReview": true
   },
