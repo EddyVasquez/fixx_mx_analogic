@@ -65,27 +65,37 @@ describe("My Home hub", () => {
 
   it("lays the real modules out in phone order, with example tags only on placeholders", () => {
     render(<CustomerApp />);
-    expect(modules()).toEqual(["hero", "active", "quick", "warranty", "maintenance", "details", "history", "documents"]);
+    expect(modules()).toEqual(["hero", "active", "warranty", "maintenance", "documents", "history", "details", "demo"]);
     const hero = screen.getByRole("region", { name: "Eduardo L. Vasquez" });
-    expect(hero.className).toContain("lg:col-span-8");
-    expect(hero.className).toContain("home-hero");
+    expect(hero.className).toContain("lg:col-span-12");
+    expect(hero.className).not.toContain("home-hero");
     expect(hero.className).not.toContain("bg-accent");
-    const tiles = hero.querySelectorAll(".home-stat");
-    expect(tiles).toHaveLength(6);
-    tiles.forEach((tile) => expect(tile.className).not.toContain("bg-accent"));
     expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-span-4");
-    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-9");
-    expect(document.querySelector("[data-module='warranty']")?.className).toContain("md:col-start-4");
-    expect(document.querySelector("[data-module='quick']")?.className).toContain("lg:col-span-8");
-    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-span-6");
+    expect(document.querySelector("[data-module='active']")?.className).toContain("lg:col-start-1");
+    expect(document.querySelector("[data-module='warranty']")?.className).toContain("lg:col-start-5");
+    expect(document.querySelector("[data-module='maintenance']")?.className).toContain("lg:col-start-9");
+    expect(document.querySelector("[data-module='documents']")?.className).toContain("lg:col-start-9");
+    expect(document.querySelector("[data-module='details']")?.className).toContain("lg:col-span-8");
     expect(document.querySelector("[data-module='history']")?.className).toContain("lg:col-span-4");
+    expect(document.querySelector("[data-module='demo']")?.className).toContain("lg:col-span-12");
+    expect(document.querySelector("[data-module='active'] .home-outline-badge, [data-module='active'] input")).toBeNull();
 
-    const values = [...hero.querySelectorAll("dd")].map((dd) => dd.textContent);
-    expect(values).toEqual(["2", "100.49 m²", "3", "2", "1", "1–2"]);
-    hero.querySelectorAll("dl svg").forEach((icon) => {
-      expect(icon.getAttribute("aria-hidden")).toBe("true");
-      expect(icon.getAttribute("fill")).toBe(colors.ink);
+    const tiles = [...hero.querySelectorAll(".home-readout")];
+    expect(tiles).toHaveLength(6);
+    expect(tiles.map((tile) => tile.getAttribute("data-fact"))).toEqual(["stories", "built", "bedrooms", "bathrooms", "minisplits", "garage"]);
+    tiles.forEach((tile) => {
+      expect(tile.getAttribute("aria-pressed")).toBe("false");
+      const icon = tile.querySelector("svg");
+      expect(icon?.getAttribute("aria-hidden")).toBe("true");
+      expect(icon?.getAttribute("width")).toBe("22");
+      expect(icon?.getAttribute("fill")).toBe(colors.ink);
     });
+    expect(tiles[1]?.textContent).toContain("100.49");
+    expect(tiles[1]?.textContent).toContain("m²");
+    expect(tiles[5]?.getAttribute("aria-label")).toBe("Garage 1–2");
+    expect(tiles[5]?.textContent).toContain("1–2");
+    expect(within(hero).queryByText("Get help with")).toBeNull();
+    expect(screen.getByRole("checkbox", { name: "Sample home data" }).closest("[data-module='demo']")).toBeTruthy();
     expect(within(hero).queryByText("Example")).toBeNull();
     expect(screen.getAllByText("Example")).toHaveLength(4);
     expect(screen.getAllByText("Example only. Nothing here is scheduled for your home yet.")).toHaveLength(2);
@@ -93,39 +103,74 @@ describe("My Home hub", () => {
     expect(screen.getByText("No active jobs. Need something fixed?")).toBeTruthy();
     expect(screen.getByText("No completed jobs yet. Your service history builds up here.")).toBeTruthy();
     expect(screen.getByText("Warranty starts when a job is finished.")).toBeTruthy();
-    expect(screen.getByRole("img", { name: "Blueprint of your home. Drag or use arrow keys to turn it." })).toBeTruthy();
+    expect(document.querySelector("[data-blueprint='fallback']")?.getAttribute("alt")).toBe("Blueprint of your home. Drag or use arrow keys to turn it.");
     expect(screen.getByText(/Updated /)).toBeTruthy();
+    const css = readFileSync(join(process.cwd(), "src/features/customer/homeGlass.css"), "utf8");
+    expect(css).not.toMatch(/\.home-hero/);
+    expect(css).toMatch(/\.home-readout\[aria-pressed="true"\]/);
+    const readout = css.indexOf(".home-readout {");
+    const wideReadout = css.indexOf(".cockpit-console .home-readout { min-height: 104px");
+    expect(wideReadout).toBeGreaterThan(readout);
   });
 
-  it("starts Get help with with no trade selected, including after a refresh", () => {
+  it("selects one readout at a time and announces the space", () => {
+    render(<CustomerApp />);
+    const garage = document.querySelector<HTMLButtonElement>('[data-fact="garage"]')!;
+    fireEvent.click(garage);
+    expect(garage.getAttribute("aria-pressed")).toBe("true");
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("Garage for 1–2 cars");
+    fireEvent.click(document.querySelector<HTMLButtonElement>('[data-fact="bedrooms"]')!);
+    expect(garage.getAttribute("aria-pressed")).toBe("false");
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("Bedrooms 3");
+    fireEvent.click(document.querySelector<HTMLButtonElement>('[data-fact="bedrooms"]')!);
+    expect(document.querySelector(".cockpit-callout")?.textContent).toBe("");
+    expect(document.querySelector(".cockpit-callout")?.getAttribute("aria-live")).toBe("polite");
+    fireEvent.click(garage);
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(garage.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("starts the Request tab with no trade selected, including after a refresh", () => {
     localStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
     sessionStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
     session.draft = { ...session.draft, categoryId: "painting" };
     resetSession(true);
     expect(session.draft.categoryId).toBe("");
     session.signedIn = true;
+    session.tab = "request";
     render(<CustomerApp />);
-    const quick = screen.getByRole("region", { name: "Get help with" });
-    expect(quick.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
-    const painting = within(quick).getByRole("button", { name: "Add Painting" });
-    expect(painting.getAttribute("aria-pressed")).toBe("false");
+    expect(screen.queryByRole("region", { name: "Get help with" })).toBeNull();
+    expect(document.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+    const painting = screen.getByRole("button", { name: "Add Painting" });
+    expect(painting.getAttribute("aria-pressed")).not.toBe("true");
     expect(painting.querySelector("svg")?.getAttribute("data-icon")).toBe("plus");
+    expect(painting.closest("li")?.getAttribute("data-selected")).not.toBe("true");
     expect(painting.closest("li")?.className).not.toContain("bg-accent");
     localStorage.removeItem("fixx.draft");
     sessionStorage.removeItem("fixx.draft");
   });
 
-  it("opens a request for a real category, and leaves maintenance as an example", () => {
+  it("opens Request from My Home without a trade already chosen", () => {
     render(<CustomerApp />);
-    const quick = screen.getByRole("region", { name: "Get help with" });
+    expect(screen.queryByRole("heading", { name: "Get help with" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Request" }));
+    expect(session.tab).toBe("request");
+    expect(session.draft.categoryId).toBe("");
+    expect(screen.getByRole("heading", { name: "Choose a service" })).toBeTruthy();
+    expect(document.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+  });
+
+  it("opens a request for a real category, and leaves maintenance as an example", () => {
+    session.tab = "request";
+    render(<CustomerApp />);
     const names = ["Plumbing", "Electrical", "HVAC", "Painting", "Pest control", "Gardening", "Flooring", "Concrete", "Carpentry", "Appliance repair", "Roofing", "Handyman", "Locksmith", "Cleaning", "Metalwork"];
-    expect(within(quick).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
-    names.forEach((name) => expect(within(quick).getByText(name)).toBeTruthy());
+    expect(screen.getAllByRole("button").filter((button) => (button.getAttribute("aria-label") ?? "").startsWith("Add ")).map((button) => button.getAttribute("aria-label"))).toEqual(names.map((name) => `Add ${name}`));
+    names.forEach((name) => expect(screen.getByText(name)).toBeTruthy());
     expect(screen.queryByRole("link", { name: "See all services" })).toBeNull();
-    const plumbing = within(quick).getByRole("button", { name: "Add Plumbing" });
+    const plumbing = screen.getByRole("button", { name: "Add Plumbing" });
     expect(plumbing.className).toContain("min-h-touch");
     expect(plumbing.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
-    fireEvent.click(within(quick).getByRole("button", { name: "Add Electrical" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add Electrical" }));
     expect(session.draft.categoryId).toBe("electrical");
     expect(screen.getByRole("heading", { name: "Tell us about the job" })).toBeTruthy();
     const selectedTrade = screen.getByRole("button", { name: "Add Electrical" });
@@ -155,8 +200,9 @@ describe("My Home hub", () => {
     runtime.spawn(JOB_ID, "job", jobMachine, newJobCtx({ total: 1800.5, professionalId: "p3", needsReview: true }), { categoryId: "electrical" }, "pendingReview");
     render(<CustomerApp />);
     const badge = screen.getByText("Pending review");
-    expect(badge.className).toContain("bg-warnAmberBg");
-    expect(badge.className).toContain("text-warnAmberInk");
+    expect(badge.className).toContain("home-outline-badge");
+    expect(badge.className).not.toContain("warnAmber");
+    expect(badge.querySelector("svg")).toBeTruthy();
     expect(screen.getByText("Total: $1,800.50 MXN")).toBeTruthy();
     expect(screen.getByText("Electrical with Jorge Salinas")).toBeTruthy();
     expect(screen.queryByText(/booked/i)).toBeNull();
@@ -215,7 +261,7 @@ describe("My Home hub", () => {
     expect(screen.getByText("No tienes trabajos en curso. ¿Necesitas arreglar algo?")).toBeTruthy();
     expect(screen.getByText("Total: $1,250.00 MXN")).toBeTruthy();
     expect(screen.getAllByText("Ejemplo").length).toBeGreaterThan(0);
-    expect(screen.getByRole("img", { name: "Plano de tu casa. Arrástralo o usa las flechas para girarlo." })).toBeTruthy();
+    expect(document.querySelector("[data-blueprint='fallback']")?.getAttribute("alt")).toBe("Plano de tu casa. Arrástralo o usa las flechas para girarlo.");
 
     await i18n.changeLanguage("ko");
     expect(screen.getByText("한국어 문구는 초안이에요.")).toBeTruthy();
@@ -227,7 +273,9 @@ describe("My Home hub", () => {
 describe("blueprint folder stays free of three on the static path", () => {
   it("keeps the 3D module behind the lazy import only", () => {
     const dir = join(process.cwd(), "src/features/customer/blueprint");
-    const eager = readdirSync(dir).filter((name) => name !== "HouseBlueprint.tsx");
+    const eager = readdirSync(dir).filter((name) => name !== "HouseBlueprint.tsx" && name !== "houseHighlight.ts");
+    const slot = readFileSync(join(dir, "BlueprintSlot.tsx"), "utf8");
+    expect(slot).not.toMatch(/houseHighlight/);
     for (const name of eager) {
       const src = readFileSync(join(dir, name), "utf8");
       expect(src).not.toMatch(/from ["']three["']/);

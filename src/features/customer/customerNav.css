@@ -1,4 +1,8 @@
 /* Option A. One segmented pill: charcoal active segment, lime glow edge, inkSoft inactive. */
+@media (min-width: 768px) {
+  .demo-shell-chrome { display: none; }
+}
+
 .customer-topnav {
   position: sticky;
   top: 0;

@@ -303,10 +303,6 @@
     "text": "Los planos exactos cambian según la etapa.",
     "status": "draft"
   },
-  "myhome.hub.quick": {
-    "text": "¿Con qué te ayudamos?",
-    "status": "draft"
-  },
   "myhome.hub.activeJob": {
     "text": "Trabajo en curso",
     "status": "draft"
@@ -407,8 +403,16 @@
     "text": "{area} m²",
     "status": "draft"
   },
-  "myhome.hub.span": {
-    "text": "{min}–{max}",
+  "myhome.hub.none": {
+    "text": "Ninguna",
+    "status": "draft"
+  },
+  "myhome.hub.garageCars": {
+    "text": "Cochera: {count, plural, one {# auto} other {# autos}}",
+    "status": "draft"
+  },
+  "myhome.hub.garageNone": {
+    "text": "Cochera: Ninguna",
     "status": "draft"
   },
   "myhome.hub.due": {
