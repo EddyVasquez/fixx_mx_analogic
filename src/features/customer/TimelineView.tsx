@@ -2,8 +2,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { buildSchedule, splitDepositBalance } from "@/core/rules";
-import { statusFor, type JobCtx, type JobState } from "@/core/machines";
-import { JobStatusBar } from "@/features/shared/JobStatusBar";
+import type { JobCtx, JobState } from "@/core/machines";
 import { useMoney } from "@/features/shared/Money";
 import { NotificationCenterView } from "@/demo/NotificationCenterView";
 import { Button } from "@/ui/Button";
@@ -29,7 +28,6 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const money = useMoney();
-  const status = statusFor(state);
   const cardLike = ctx.method === "card" || ctx.method === "wallet";
   const rt = useRuntime();
   const [, force] = useReducer((n: number) => n + 1, 0);
@@ -50,7 +48,6 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
     <div className="flex flex-col gap-4">
       <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("timeline.title")}</h2>
       <p className="font-semibold"><TradeName categoryId={session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || ""} lang={lang} /></p>
-      {status && <JobStatusBar status={status} scheduledAt={ctx.jobStart} />}
       {state === "issueWindow" && ctx.issueWindowEndsAt && (
         <>
           <CompletionCheck ctx={ctx} categoryId={session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || ""} now={now} lang={lang} onToggle={force}

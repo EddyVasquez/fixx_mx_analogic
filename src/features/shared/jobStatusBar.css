@@ -1,4 +1,4 @@
-/* Job progress meter. Greyscale, plus High Viz Lime as a ring or glow only — never text, never a fill. */
+/* Job progress meter. Greyscale, plus High Viz Lime on the current ring and the partial connector. Never lime text, never a lime node fill. */
 
 .job-meter {
   display: flex;
@@ -192,6 +192,71 @@
 .job-meter-rail[data-layout="full"] .job-meter-line-partial {
   left: calc(var(--node) / 2 + var(--index) * (100% - var(--node)) / 11 + var(--line-gap));
   width: calc(var(--progress) * ((100% - var(--node)) / 11 - var(--line-gap) - var(--node) / 2));
+}
+
+/* Before a trade is chosen the spine is empty: one grey track, no gap and no charcoal. */
+.job-meter-rail[data-stage="choose"][data-layout="strip"] .job-meter-line-rest {
+  left: calc(var(--strip-inset) + var(--node) / 2);
+  width: calc(11 * var(--stride));
+}
+
+.job-meter-rail[data-stage="choose"][data-layout="full"] .job-meter-line-rest {
+  left: calc(var(--node) / 2);
+  width: calc(100% - var(--node));
+}
+
+.job-meter-sentinel {
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+
+.job-meter-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  margin-bottom: 4px;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid theme("colors.line");
+  background: color-mix(in srgb, theme("colors.paper") 78%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@media (min-width: 768px) {
+  .job-meter-sticky { top: 80px; }
+}
+
+.job-meter-sticky.is-stuck .job-meter-panel {
+  padding: 8px 12px 8px;
+  background: color-mix(in srgb, theme("colors.paper") 88%, transparent);
+  box-shadow: none;
+}
+
+.job-meter-sticky.is-stuck .job-meter-title {
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.job-meter-sticky.is-stuck .job-meter-step {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.job-meter-sticky.is-stuck .job-meter {
+  gap: 6px;
+}
+
+.job-meter-sticky.is-stuck .job-meter-frame {
+  margin-top: 8px;
+}
+
+.job-meter-sticky.is-stuck .job-meter-track {
+  padding: 6px 0 28px;
+}
+
+.job-meter-sticky.is-stuck .job-meter-next {
+  font-size: 13px;
 }
 
 .job-meter-node {
