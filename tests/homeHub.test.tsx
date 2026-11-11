@@ -97,6 +97,24 @@ describe("My Home hub", () => {
     expect(screen.getByText(/Updated /)).toBeTruthy();
   });
 
+  it("starts Get help with with no trade selected, including after a refresh", () => {
+    localStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
+    sessionStorage.setItem("fixx.draft", JSON.stringify({ categoryId: "painting" }));
+    session.draft = { ...session.draft, categoryId: "painting" };
+    resetSession(true);
+    expect(session.draft.categoryId).toBe("");
+    session.signedIn = true;
+    render(<CustomerApp />);
+    const quick = screen.getByRole("region", { name: "Get help with" });
+    expect(quick.querySelectorAll('[data-selected="true"]')).toHaveLength(0);
+    const painting = within(quick).getByRole("button", { name: "Add Painting" });
+    expect(painting.getAttribute("aria-pressed")).toBe("false");
+    expect(painting.querySelector("svg")?.getAttribute("data-icon")).toBe("plus");
+    expect(painting.closest("li")?.className).not.toContain("bg-accent");
+    localStorage.removeItem("fixx.draft");
+    sessionStorage.removeItem("fixx.draft");
+  });
+
   it("opens a request for a real category, and leaves maintenance as an example", () => {
     render(<CustomerApp />);
     const quick = screen.getByRole("region", { name: "Get help with" });

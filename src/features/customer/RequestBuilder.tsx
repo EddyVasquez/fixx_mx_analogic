@@ -199,7 +199,8 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome, autoFocu
       </div>
 
       {errors.length > 0 && <ErrorText>{errors.map((k) => <span key={k} className="block">{t(k)}</span>)}</ErrorText>}
-      <Button onClick={review}>{t("btn.reviewRequest")}</Button>
+      {!draft.categoryId.trim() && <p className="text-sm text-inkSoft">{t("request.errorCategory")}</p>}
+      <Button onClick={review} disabled={!draft.categoryId.trim()}>{t("btn.reviewRequest")}</Button>
       <JobTray labels={chosenLabels} onContinue={focusDescription} />
     </div>
   );

@@ -28,6 +28,15 @@ describe("request journey meter", () => {
     expect(screen.queryByText("Pending review")).toBeNull();
   });
 
+  it("asks for a trade before the request can be reviewed", () => {
+    const draft = emptyDraft({ categoryId: "", description: "Paint the hall" });
+    render(<RequestBuilder draft={draft} onChange={noop} onReview={noop} />);
+    const review = screen.getByRole("button", { name: "Review request" }) as HTMLButtonElement;
+    expect(review.disabled).toBe(true);
+    expect(screen.getByText("Choose a service so we know which trade to send.")).toBeTruthy();
+    expect(document.querySelector('[data-selected="true"]')).toBeNull();
+  });
+
   it("fills half the line on the request form when the trade and the details are done", () => {
     const draft = emptyDraft({
       categoryId: "painting",

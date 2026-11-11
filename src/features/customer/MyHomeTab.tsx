@@ -274,7 +274,9 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
   const money = useMoney();
   const demoOn = useDemoMode();
   const samples = demoOn ? demoJobViews(now, lang) : [];
-  const category = categories.find((item) => item.id === session.draft.categoryId);
+  const rt = useRuntime();
+  const categoryId = session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || "";
+  const category = categories.find((item) => item.id === categoryId);
   const proId = active?.ctx.professionalId ?? session.proId;
   const pro = professionals.find((item) => item.id === proId);
   const price = active ? priced(active.ctx) : null;
@@ -288,7 +290,7 @@ function ActiveJob({ lang, active, now, onView, onRequest }: {
       {active && (
         <div className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-3">
           <div className="flex items-start gap-2">
-            <TradeIcon categoryId={session.draft.categoryId} />
+            <TradeIcon categoryId={categoryId} />
             <p className="break-words font-semibold">
               {pro
                 ? t("myhome.entry", { category: category?.names[lang] ?? "", professional: pro.name })
@@ -426,7 +428,8 @@ function HistoryCard({ lang, state, ctx }: { lang: Lang; state: JobState | undef
   const money = useMoney();
   const job = rt.get(JOB_ID);
   const doneAt = job?.snap.history.find((h) => h.event === "MARK_COMPLETE")?.at;
-  const category = categories.find((item) => item.id === session.draft.categoryId);
+  const categoryId = session.draft.categoryId || job?.meta.categoryId || "";
+  const category = categories.find((item) => item.id === categoryId);
   const pro = professionals.find((item) => item.id === (ctx?.professionalId ?? session.proId));
   const finished = Boolean(state && ctx && DONE.includes(state));
   return (
@@ -436,7 +439,7 @@ function HistoryCard({ lang, state, ctx }: { lang: Lang; state: JobState | undef
         <ul className="flex flex-col gap-2">
           <li className="flex flex-col gap-1">
             <div className="flex items-start gap-2">
-              <TradeIcon categoryId={session.draft.categoryId} />
+              <TradeIcon categoryId={categoryId} />
               <p className="break-words font-semibold">{t("myhome.entry", { category: category?.names[lang] ?? "", professional: pro?.name ?? "" })}</p>
             </div>
             {doneAt && <p className="break-words">{t("myhome.completed", { date: formatDateTime(new Date(doneAt), localeFor[lang]) })}</p>}
