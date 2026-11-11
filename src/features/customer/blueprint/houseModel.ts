@@ -165,6 +165,102 @@ export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180,
   };
 }
 
+/** Left edge, in NDC, that stays 16px right of the tablet HUD plate. */
+export function hudClearNdc(canvasWidth: number): number {
+  const plate = Math.min(340, Math.max(0, canvasWidth - 40));
+  // 16px of clearance, plus the outline stroke that sits outside the mesh box.
+  const clearPx = 20 + plate + 28;
+  return (clearPx / Math.max(canvasWidth, 1)) * 2 - 1;
+}
+
+function cameraDistance(placement: CameraPlacement): number {
+  return Math.hypot(
+    placement.position.x - placement.target.x,
+    placement.position.y - placement.target.y,
+    placement.position.z - placement.target.z
+  ) || 1;
+}
+
+function withDistance(placement: CameraPlacement, scale: number): CameraPlacement {
+  const dx = placement.position.x - placement.target.x;
+  const dy = placement.position.y - placement.target.y;
+  const dz = placement.position.z - placement.target.z;
+  return {
+    ...placement,
+    position: {
+      x: placement.target.x + dx * scale,
+      y: placement.target.y + dy * scale,
+      z: placement.target.z + dz * scale
+    },
+    far: placement.far * scale + 20
+  };
+}
+
+/** Slide the subject right. Positive bias matches fitCameraOnce. */
+export function shiftSubject(placement: CameraPlacement, aspect: number, ndcBiasX: number): CameraPlacement {
+  if (Math.abs(ndcBiasX) < 1e-4) return placement;
+  const dist = cameraDistance(placement);
+  const dir = normalize({
+    x: (placement.position.x - placement.target.x) / dist,
+    y: (placement.position.y - placement.target.y) / dist,
+    z: (placement.position.z - placement.target.z) / dist
+  });
+  const look = { x: -dir.x, y: -dir.y, z: -dir.z };
+  const right = normalize(cross(look, { x: 0, y: 1, z: 0 }));
+  const tanH = Math.tan((placement.fov * Math.PI) / 180 / 2) * Math.max(aspect, 0.2);
+  const shift = dist * tanH * ndcBiasX;
+  const target = {
+    x: placement.target.x - right.x * shift,
+    y: placement.target.y,
+    z: placement.target.z - right.z * shift
+  };
+  return {
+    ...placement,
+    target,
+    position: { x: target.x + dir.x * dist, y: target.y + dir.y * dist, z: target.z + dir.z * dist }
+  };
+}
+
+function horizontalExtents(min: Vec3, max: Vec3, placement: CameraPlacement, aspect: number, yaws: number[]): { left: number; right: number } {
+  let left = Infinity;
+  let right = -Infinity;
+  for (const yaw of yaws) {
+    for (const corner of boxCorners(min, max)) {
+      const ndc = projectedNdc(yawPoint(corner, yaw), placement, aspect);
+      left = Math.min(left, ndc.x);
+      right = Math.max(right, ndc.x);
+    }
+  }
+  return { left, right };
+}
+
+/**
+ * On a tablet the HUD covers the left of the viewport. Pull the camera back
+ * and slide the subject right until every given yaw stays 16px clear of the plate.
+ */
+export function clearBesideHud(min: Vec3, max: Vec3, aspect: number, canvasWidth: number, placement: CameraPlacement, yaw = 0, spin = false): CameraPlacement {
+  const clear = hudClearNdc(canvasWidth);
+  const rightLimit = 0.96;
+  const yaws = spin ? [yaw, yaw - 0.35, yaw + 0.35] : [yaw];
+  let scale = 1;
+  let current = placement;
+  for (let i = 0; i < 8; i++) {
+    const pulled = withDistance(placement, scale);
+    const ext = horizontalExtents(min, max, pulled, aspect, yaws);
+    const width = Math.max(ext.right - ext.left, 0.05);
+    const available = rightLimit - clear;
+    if (width > available) {
+      scale *= (width / available) * 1.06;
+      continue;
+    }
+    current = shiftSubject(pulled, aspect, clear - ext.left);
+    const after = horizontalExtents(min, max, current, aspect, yaws);
+    if (after.left >= clear - 0.02 && after.right <= rightLimit + 0.02) return current;
+    scale *= 1.1;
+  }
+  return current;
+}
+
 /** Normalized device coordinates for a perspective camera looking at its target. +Y is up. */
 export function projectedNdc(point: Vec3, placement: CameraPlacement, aspect: number): { x: number; y: number; depth: number } {
   const look = normalize({

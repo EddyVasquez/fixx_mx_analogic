@@ -26,7 +26,9 @@ import {
   CAMERA_FOV_DEG,
   HOUSE_MODEL_URL,
   OUTLINE_THRESHOLD_DEG,
+  clearBesideHud,
   fitCameraOnce,
+  shiftSubject,
   placeCamera,
   shouldAutoRotate,
   toNeutralGrey,
@@ -337,18 +339,16 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
     pivot.updateWorldMatrix(true, true);
     let toYaw = 0;
     let placement;
-    const hudBias = tablet ? (focus ? 0.22 : 0.14) : focus && wide ? 0.28 : 0;
+    const hudBias = tablet ? 0 : focus && wide ? 0.28 : 0;
+    let framedMin = { x: 0, y: 0, z: 0 };
+    let framedMax = { x: 0, y: 0, z: 0 };
     if (!focus) {
       clearHouseFocus(house);
       const box = new Box3();
       box.setFromObject(house);
-      placement = placeCamera(
-        { x: box.min.x, y: box.min.y, z: box.min.z },
-        { x: box.max.x, y: box.max.y, z: box.max.z },
-        aspect,
-        180,
-        hudBias
-      );
+      framedMin = { x: box.min.x, y: box.min.y, z: box.min.z };
+      framedMax = { x: box.max.x, y: box.max.y, z: box.max.z };
+      placement = placeCamera(framedMin, framedMax, aspect, 180, hudBias);
     } else {
       const frame = applyHouseFocus(house, focus, new Vector2(size.width, size.height));
       const local = frameBox(frame.meshes);
@@ -360,15 +360,28 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
       const world = frameBox(frame.meshes);
       if (focus === "bathrooms") world.expandByScalar(1.4);
       const box = world.isEmpty() ? new Box3().setFromObject(house) : world;
-      placement = fitCameraOnce(
-        { x: box.min.x, y: box.min.y, z: box.min.z },
-        { x: box.max.x, y: box.max.y, z: box.max.z },
+      framedMin = { x: box.min.x, y: box.min.y, z: box.min.z };
+      framedMax = { x: box.max.x, y: box.max.y, z: box.max.z };
+      if (focus === "built") {
+        const full = new Box3().setFromObject(house);
+        framedMin = { x: full.min.x, y: full.min.y, z: full.min.z };
+        framedMax = { x: full.max.x, y: full.max.y, z: full.max.z };
+      }
+      placement = fitCameraOnce(framedMin, framedMax, aspect, hudBias, {
+        distanceScale: focus === "minisplits" ? 1.15 : focus === "built" ? 1.25 : 1,
+        elevate: focus === "built" ? 0.45 : 0
+      });
+    }
+    if (tablet) {
+      const full = new Box3().setFromObject(house);
+      placement = clearBesideHud(
+        { x: full.min.x, y: full.min.y, z: full.min.z },
+        { x: full.max.x, y: full.max.y, z: full.max.z },
         aspect,
-        hudBias,
-        {
-          distanceScale: focus === "minisplits" ? 1.15 : 1,
-          elevate: focus === "built" ? 0.55 : 0
-        }
+        size.width,
+        placement,
+        0,
+        !focus
       );
     }
     pivot.rotation.y = savedYaw;

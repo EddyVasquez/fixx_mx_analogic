@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { focusMode, keepsFrontView, matchesFact } from "../src/features/customer/blueprint/houseFocus";
-import { fitCameraOnce, projectedNdc, yawToFace } from "../src/features/customer/blueprint/houseModel";
+import { clearBesideHud, fitCameraOnce, hudClearNdc, projectedNdc, yawPoint, yawToFace } from "../src/features/customer/blueprint/houseModel";
 
 const NAMES = [
   "GarageDoor_Panel_1", "Site_Driveway", "Ground_Wall_Interior_Garage",
@@ -51,5 +51,30 @@ describe("house fact focus", () => {
     expect(Math.abs(mid.x)).toBeLessThan(0.08);
     expect(side.x).toBeGreaterThan(0.2);
     expect(yawToFace({ x: 0, y: 1, z: 1 })).toBeTypeOf("number");
+  });
+
+  it("keeps a tablet subject 16px to the right of the HUD plate", () => {
+    const width = 700;
+    const aspect = width / 320;
+    const min = { x: -3.5, y: 0, z: -4 };
+    const max = { x: 3.5, y: 6, z: 4 };
+    const fitted = fitCameraOnce(min, max, aspect, 0);
+    const cleared = clearBesideHud(min, max, aspect, width, fitted, 0, true);
+    const clear = hudClearNdc(width);
+    let left = Infinity;
+    let right = -Infinity;
+    for (const yaw of [0, -0.35, 0.35]) {
+      for (const x of [min.x, max.x]) {
+        for (const y of [min.y, max.y]) {
+          for (const z of [min.z, max.z]) {
+            const ndc = projectedNdc(yawPoint({ x, y, z }, yaw), cleared, aspect);
+            left = Math.min(left, ndc.x);
+            right = Math.max(right, ndc.x);
+          }
+        }
+      }
+    }
+    expect(left).toBeGreaterThanOrEqual(clear - 0.03);
+    expect(right).toBeLessThanOrEqual(1);
   });
 });
