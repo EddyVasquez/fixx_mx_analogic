@@ -1,38 +1,75 @@
-import type { CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import type { Icon } from "@phosphor-icons/react";
+import { CalendarCheck } from "@phosphor-icons/react/CalendarCheck";
+import { CheckCircle } from "@phosphor-icons/react/CheckCircle";
 import { Clock } from "@phosphor-icons/react/Clock";
+import { Handshake } from "@phosphor-icons/react/Handshake";
 import { PaperPlaneTilt } from "@phosphor-icons/react/PaperPlaneTilt";
 import { Receipt } from "@phosphor-icons/react/Receipt";
+import { ShieldWarning } from "@phosphor-icons/react/ShieldWarning";
 import { Star } from "@phosphor-icons/react/Star";
+import { Tag } from "@phosphor-icons/react/Tag";
 import { Truck } from "@phosphor-icons/react/Truck";
+import { UserCheck } from "@phosphor-icons/react/UserCheck";
+import { Wallet } from "@phosphor-icons/react/Wallet";
+import { Wrench } from "@phosphor-icons/react/Wrench";
 import { formatDateTime } from "@/core/clock/clock";
 import type { Lang } from "@/core/config/fixx.config";
 import { JOB_STATUS_ORDER, type JobStatus } from "@/core/types/jobStatus";
 import { localeFor } from "@/i18n";
 import { colors } from "@/ui/tokens";
 import {
+  CAPTION_MAX_PX,
   CURRENT_LINE_GAP_PX,
-  PHASES,
-  type PhaseId,
+  NODE_PX,
+  RAIL_FULL_MAX_PX,
+  STRIP_GAP_PX,
+  STRIP_INSET_PX,
+  STRIP_STRIDE_PX,
+  VIEWPORT_FULL_MIN_PX,
+  captionAlign,
+  edgeFadeVisibility,
   meterStatus,
   meterStep,
-  phaseIndexForStep
+  meterUsesFullRow,
+  stripContentWidth,
+  stripFits,
+  stripScrollLeft
 } from "./jobPhases";
 import "./jobStatusBar.css";
 
-const PHASE_ICONS: Record<PhaseId, Icon> = {
-  request: PaperPlaneTilt,
-  quote: Receipt,
-  visit: Truck,
-  finish: Star
+/** Phosphor bold, one icon per real step. Lime is never the glyph. */
+export const STEP_ICONS: Record<JobStatus, Icon> = {
+  requestSubmitted: PaperPlaneTilt,
+  estimated: Tag,
+  professionalSelected: UserCheck,
+  quoteSent: Receipt,
+  quoteAccepted: Handshake,
+  scheduled: CalendarCheck,
+  onTheWay: Truck,
+  inProgress: Wrench,
+  markedComplete: CheckCircle,
+  issueWindow: ShieldWarning,
+  paymentReleased: Wallet,
+  rated: Star
 };
 
 const NEXT_MARK = "\u2063";
+const WIDE_QUERY = `(min-width: ${VIEWPORT_FULL_MIN_PX}px)`;
+const REDUCE_QUERY = "(prefers-reduced-motion: reduce)";
 
 function languageOf(code: string): Lang {
   const base = code.toLowerCase().split("-")[0];
   return base === "es" || base === "ko" ? base : "en";
+}
+
+function reducedMotion(): boolean {
+  return typeof window.matchMedia === "function" && window.matchMedia(REDUCE_QUERY).matches;
+}
+
+function viewportIsWide(): boolean {
+  return typeof window.matchMedia === "function" && window.matchMedia(WIDE_QUERY).matches;
 }
 
 function NextLine({ step }: { step: string }) {
@@ -47,9 +84,86 @@ function NextLine({ step }: { step: string }) {
   );
 }
 
+type Fades = { start: boolean; end: boolean };
+
 /**
- * Grouped phase meter. Progress is the step name, the step count, and the charcoal line.
- * High Viz Lime is only the current node's ring or glow — never text, and never a fill.
+ * Strip below 768px, and also when the rail itself is under 674px.
+ * Crossing either threshold re-centers the strip on the current step.
+ * A strip with nothing to scroll is centered, and both edge fades stay hidden.
+ */
+function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: number): { full: boolean; fades: Fades; fits: boolean } {
+  const [full, setFull] = useState(false);
+  const [fits, setFits] = useState(false);
+  const [fades, setFades] = useState<Fades>({ start: false, end: false });
+
+  useLayoutEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const wideMedia = typeof window.matchMedia === "function" ? window.matchMedia(WIDE_QUERY) : null;
+
+    const contentWidth = () => (el.scrollWidth > el.clientWidth ? el.scrollWidth : stripContentWidth());
+
+    const paintFades = (scrollLeft: number, hideBoth: boolean) => {
+      const next = hideBoth
+        ? { start: false, end: false }
+        : edgeFadeVisibility(scrollLeft, el.clientWidth, contentWidth());
+      setFades((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
+    };
+
+    const onScroll = () => {
+      const width = el.clientWidth;
+      if (meterUsesFullRow(wideMedia?.matches ?? false, width) || stripFits(width)) return;
+      paintFades(el.scrollLeft, false);
+    };
+
+    let aimed = -1;
+    const place = () => {
+      const width = el.clientWidth;
+      const nextFull = meterUsesFullRow(wideMedia?.matches ?? viewportIsWide(), width);
+      const nextFits = !nextFull && stripFits(width);
+      setFull((prev) => (prev === nextFull ? prev : nextFull));
+      setFits((prev) => (prev === nextFits ? prev : nextFits));
+      if (nextFull || width <= 0 || nextFits) {
+        aimed = -1;
+        if (nextFits && el.scrollLeft > 1) el.scrollLeft = 0;
+        paintFades(0, true);
+        return;
+      }
+      const left = stripScrollLeft(current, width);
+      const alreadyThere = Math.abs(el.scrollLeft - left) <= 1;
+      const alreadyAimed = Math.abs(aimed - left) <= 1;
+      if (!alreadyThere && !alreadyAimed) {
+        aimed = left;
+        const behavior = reducedMotion() ? "auto" : "smooth";
+        if (typeof el.scrollTo === "function") el.scrollTo({ left, behavior });
+        else el.scrollLeft = left;
+      } else if (alreadyThere) {
+        aimed = left;
+      }
+      paintFades(left, false);
+    };
+
+    place();
+    const observer = typeof ResizeObserver === "function" ? new ResizeObserver(() => place()) : null;
+    observer?.observe(el);
+    wideMedia?.addEventListener("change", place);
+    window.addEventListener("resize", place);
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer?.disconnect();
+      wideMedia?.removeEventListener("change", place);
+      window.removeEventListener("resize", place);
+      el.removeEventListener("scroll", onScroll);
+    };
+  }, [current, railRef]);
+
+  return { full, fades, fits };
+}
+
+/**
+ * Twelve-step meter. Progress is the step name, the step count, and the charcoal line.
+ * High Viz Lime is only the current node's ring — never text, and never a fill.
+ * Nodes are decorative. The strip may be swiped; it is not a control.
  */
 export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
   status: JobStatus;
@@ -63,14 +177,22 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
   const shown = meterStatus(status, pendingReview);
   const current = meterStep(status, pendingReview);
   const total = JOB_STATUS_ORDER.length;
-  const phaseIndex = phaseIndexForStep(current);
   const label = t(`status.${shown}`);
   const nextKey = pendingReview ? undefined : JOB_STATUS_ORDER[current];
   const nextLabel = nextKey ? t(`status.${nextKey}`) : undefined;
   const hasSchedule = !pendingReview && scheduledAt != null && scheduledAt.getTime() > 0;
+  const railRef = useRef<HTMLDivElement>(null);
+  const { full, fades, fits } = useMeterLayout(railRef, current);
+  const index = current - 1;
   const railStyle = {
-    "--to-current": `${phaseIndex * 25}%`,
-    "--line-gap": `${CURRENT_LINE_GAP_PX}px`
+    "--index": String(index),
+    "--line-gap": `${CURRENT_LINE_GAP_PX}px`,
+    "--node": `${NODE_PX}px`,
+    "--stride": `${STRIP_STRIDE_PX}px`,
+    "--strip-gap": `${STRIP_GAP_PX}px`,
+    "--strip-inset": `${STRIP_INSET_PX}px`,
+    "--rail-max": `${RAIL_FULL_MAX_PX}px`,
+    "--caption-max": `${CAPTION_MAX_PX}px`
   } as CSSProperties;
 
   return (
@@ -85,59 +207,74 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
         <p className={lang === "ko" ? "job-meter-title job-meter-title-ko" : "job-meter-title"}>{label}</p>
         <p className="job-meter-step">{t("status.step", { current, total })}</p>
         <div
-          className="job-meter-rail"
-          style={railStyle}
+          className="job-meter-frame"
+          data-layout={full ? "full" : "strip"}
           role="progressbar"
           aria-valuemin={1}
           aria-valuemax={total}
           aria-valuenow={current}
           aria-valuetext={label}
         >
-          {phaseIndex > 0 && <span className="job-meter-line job-meter-line-done" aria-hidden="true" />}
-          {phaseIndex < PHASES.length - 1 && <span className="job-meter-line job-meter-line-rest" aria-hidden="true" />}
-          {PHASES.map((phase, index) => {
-            const state = index < phaseIndex ? "done" : index === phaseIndex ? "current" : "upcoming";
-            const PhaseIcon = PHASE_ICONS[phase.id];
-            return (
-              <div className="job-meter-slot" key={phase.id} aria-hidden="true">
-                <div className={`job-meter-node job-meter-node-${state}`} data-phase={phase.id}>
-                  {state === "current" && (
-                    <>
-                      <svg className="job-meter-arc" viewBox="0 0 48 48" aria-hidden="true">
-                        <circle
-                          cx="24"
-                          cy="24"
-                          r="21"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                          strokeLinecap="round"
-                          strokeDasharray="98.96 32.99"
-                          transform="rotate(-30 24 24)"
-                        />
-                      </svg>
-                      <span className="job-meter-r1" aria-hidden="true">
-                        <span className="job-meter-r1-gap" />
-                        <span className="job-meter-r1-ring" />
-                      </span>
-                    </>
-                  )}
-                  <PhaseIcon
-                    className="job-meter-icon"
-                    aria-hidden="true"
-                    size={16}
-                    weight="bold"
-                    color={state === "upcoming" ? colors.ink : colors.mist}
-                  />
-                </div>
+          <div
+            className="job-meter-rail"
+            ref={railRef}
+            style={railStyle}
+            data-layout={full ? "full" : "strip"}
+            data-fits={!full && fits ? "true" : "false"}
+            tabIndex={full ? undefined : -1}
+          >
+            <div className="job-meter-track">
+              <div className="job-meter-nodes" aria-hidden="true">
+                {index > 0 && <span className="job-meter-line job-meter-line-done" />}
+                {index < total - 1 && <span className="job-meter-line job-meter-line-rest" />}
+                {JOB_STATUS_ORDER.map((stepStatus, stepIndex) => {
+                  const step = stepIndex + 1;
+                  const state = step < current ? "done" : step === current ? "current" : "upcoming";
+                  const Glyph = STEP_ICONS[stepStatus];
+                  return (
+                    <div
+                      className={`job-meter-node job-meter-node-${state}`}
+                      data-status={stepStatus}
+                      data-step={step}
+                      key={stepStatus}
+                    >
+                      {state === "current" && (
+                        <>
+                          <svg className="job-meter-arc" viewBox="0 0 48 48" aria-hidden="true">
+                            <circle
+                              cx="24"
+                              cy="24"
+                              r="21"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeDasharray="98.96 32.99"
+                              transform="rotate(-30 24 24)"
+                            />
+                          </svg>
+                          <span className="job-meter-r1" aria-hidden="true">
+                            <span className="job-meter-r1-gap" />
+                            <span className="job-meter-r1-ring" />
+                          </span>
+                          <p className="job-meter-caption" data-align={captionAlign(step)}>{label}</p>
+                        </>
+                      )}
+                      <Glyph
+                        className="job-meter-icon"
+                        aria-hidden="true"
+                        size={16}
+                        weight="bold"
+                        color={state === "upcoming" ? colors.ink : colors.mist}
+                      />
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-        <div className="job-meter-labels">
-          {PHASES.map((phase, index) => (
-            <span key={phase.id} className={index === phaseIndex ? "is-now" : undefined}>{t(`status.phase.${phase.id}`)}</span>
-          ))}
+            </div>
+          </div>
+          {!full && fades.start && <span className="job-meter-fade job-meter-fade-start" aria-hidden="true" />}
+          {!full && fades.end && <span className="job-meter-fade job-meter-fade-end" aria-hidden="true" />}
         </div>
       </div>
       {nextLabel && <NextLine step={nextLabel} />}
