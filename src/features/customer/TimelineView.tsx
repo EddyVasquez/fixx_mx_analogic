@@ -49,11 +49,11 @@ export function TimelineView({ state, ctx, onEvent, onSend }: { state: JobState;
   return (
     <div className="flex flex-col gap-4">
       <h2 ref={headingRef} tabIndex={-1} className={`text-2xl font-bold ${focusTargetClass}`}>{t("timeline.title")}</h2>
-      <p className="font-semibold"><TradeName categoryId={session.draft.categoryId} lang={lang} /></p>
+      <p className="font-semibold"><TradeName categoryId={session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || ""} lang={lang} /></p>
       {status && <JobStatusBar status={status} scheduledAt={ctx.jobStart} />}
       {state === "issueWindow" && ctx.issueWindowEndsAt && (
         <>
-          <CompletionCheck ctx={ctx} categoryId={session.draft.categoryId} now={now} lang={lang} onToggle={force}
+          <CompletionCheck ctx={ctx} categoryId={session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || ""} now={now} lang={lang} onToggle={force}
             onApprove={() => onEvent("APPROVE_COMPLETION")} />
           <p className="text-inkSoft">{t("rating.pending")}</p>
           <CloseWindowAction rt={rt} jobId={JOB_ID} />

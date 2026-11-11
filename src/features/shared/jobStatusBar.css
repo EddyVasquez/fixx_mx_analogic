@@ -178,6 +178,22 @@
   background: theme("colors.line");
 }
 
+/* Sub-step fill on the connector from the current node to the next. Lime only here and on the current ring. */
+.job-meter-line-partial {
+  background: theme("colors.accent");
+  transition: width 300ms ease;
+}
+
+.job-meter-rail[data-layout="strip"] .job-meter-line-partial {
+  left: calc(var(--strip-inset) + var(--node) / 2 + var(--index) * var(--stride) + var(--line-gap));
+  width: calc(var(--progress) * (var(--stride) - var(--line-gap) - var(--node) / 2));
+}
+
+.job-meter-rail[data-layout="full"] .job-meter-line-partial {
+  left: calc(var(--node) / 2 + var(--index) * (100% - var(--node)) / 11 + var(--line-gap));
+  width: calc(var(--progress) * ((100% - var(--node)) / 11 - var(--line-gap) - var(--node) / 2));
+}
+
 .job-meter-node {
   position: relative;
   z-index: 1;
@@ -316,6 +332,7 @@
 @media (prefers-reduced-motion: reduce) {
   .job-meter-arc { display: none !important; animation: none !important; }
   .job-meter-r1 { display: block !important; }
+  .job-meter-line-partial { transition: none; }
 }
 
 /* 24px paper fades. Hidden on a side that is at its scroll end. Never white. */

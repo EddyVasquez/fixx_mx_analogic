@@ -101,7 +101,9 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
       onUrgent={() => { setAutoFocusDescription(false); setDraft({ emergency: true }); setPre("request"); }} />;
   }
 
-  const quote = buildQuote(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
+  const categoryId = draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || "";
+  const jobDraft = categoryId === draft.categoryId ? draft : { ...draft, categoryId };
+  const quote = buildQuote(categoryId, jobDraft.emergency, quoteScopeFromDraft(jobDraft));
   const proEvent = (type: string) => {
     if (type === "SEND_QUOTE" && pro) {
       if (quote.pendingPrice) return;
@@ -134,7 +136,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
         </div>
       );
     case "estimated":
-      return <EstimateView draft={draft} onNext={() => send({ type: "RECOMMENDATIONS_READY" })} />;
+      return <EstimateView draft={jobDraft} onNext={() => send({ type: "RECOMMENDATIONS_READY" })} />;
     case "recommendations": {
       const recs = recommend({ categoryId: draft.categoryId, customerZoneId: draft.zoneId === "outside" ? null : draft.zoneId, customerLang: lang, professionals: professionals.filter((p) => !session.excluded.includes(p.id)), zones });
       return <Recommendations recs={recs} onChoose={(id) => {
@@ -155,7 +157,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
       );
     case "pendingReview":
     case "quoteSent":
-      return <QuoteView ctx={ctx} draft={draft} professionalName={pro?.name ?? ""} now={rt.clock.now()}
+      return <QuoteView ctx={ctx} draft={jobDraft} professionalName={pro?.name ?? ""} now={rt.clock.now()}
         awaitingApproval={state === "pendingReview"}
         slotHours={session.slotHours} method={session.method} onSlot={(h) => update({ slotHours: h })} onMethod={(m) => update({ method: m })}
         onAccept={(jobStart) => send({ type: "ACCEPT_QUOTE", method: session.method, jobStart })} />;

@@ -28,7 +28,8 @@ export const emptyDraft = (over: Partial<Draft> = {}): Draft => {
   const profile = getHomeProfile();
   const facts = profile.model ? quoteFactsFromModel(profile.model) : blankQuoteFacts();
   return {
-    categoryId: "painting", description: "", photos: 0, measurements: "", zoneId: "z1",
+    // No trade until the customer taps one. A hardcoded trade used to light up the home grid.
+    categoryId: "", description: "", photos: 0, measurements: "", zoneId: "z1",
     homeownerName: profile.homeownerName, community: profile.community, street: profile.address, emergency: false,
     ...facts,
     selectedJobIds: [], descriptionEdited: false,

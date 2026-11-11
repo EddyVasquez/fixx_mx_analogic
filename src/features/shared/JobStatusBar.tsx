@@ -30,6 +30,7 @@ import {
   VIEWPORT_FULL_MIN_PX,
   captionAlign,
   edgeFadeVisibility,
+  clampProgress,
   meterStatus,
   meterStep,
   meterUsesFullRow,
@@ -165,12 +166,18 @@ function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: numb
  * High Viz Lime is only the current node's ring — never text, and never a fill.
  * Nodes are decorative. The strip may be swiped; it is not a control.
  */
-export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
+export function JobStatusBar({ status, pendingReview = false, scheduledAt, progress }: {
   status: JobStatus;
   /** Regulated job. Holds the meter at step 1 and hides the date and the Next line. */
   pendingReview?: boolean;
   /** Appointment. Omitted while a regulated job is still pending review. */
   scheduledAt?: Date;
+  /**
+   * Fraction of this step's sub-steps that are done (0..1).
+   * Fills the connector toward the next step. Omitted, the bar stays on the step count.
+   * Ignored while a regulated job is held for review.
+   */
+  progress?: number;
 }) {
   const { t, i18n } = useTranslation();
   const lang = languageOf(i18n.language);
@@ -181,11 +188,15 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
   const nextKey = pendingReview ? undefined : JOB_STATUS_ORDER[current];
   const nextLabel = nextKey ? t(`status.${nextKey}`) : undefined;
   const hasSchedule = !pendingReview && scheduledAt != null && scheduledAt.getTime() > 0;
+  const fraction = pendingReview || progress == null ? undefined : clampProgress(progress);
+  const percent = fraction == null ? undefined : Math.round(fraction * 100);
   const railRef = useRef<HTMLDivElement>(null);
   const { full, fades, fits } = useMeterLayout(railRef, current);
   const index = current - 1;
+  const showPartial = fraction != null && fraction > 0 && index < total - 1;
   const railStyle = {
     "--index": String(index),
+    "--progress": String(fraction ?? 0),
     "--line-gap": `${CURRENT_LINE_GAP_PX}px`,
     "--node": `${NODE_PX}px`,
     "--stride": `${STRIP_STRIDE_PX}px`,
@@ -210,10 +221,10 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
           className="job-meter-frame"
           data-layout={full ? "full" : "strip"}
           role="progressbar"
-          aria-valuemin={1}
-          aria-valuemax={total}
-          aria-valuenow={current}
-          aria-valuetext={label}
+          aria-valuemin={percent == null ? 1 : 0}
+          aria-valuemax={percent == null ? total : 100}
+          aria-valuenow={percent == null ? current : percent}
+          aria-valuetext={percent == null ? label : t("status.stepProgress", { step: label, percent })}
         >
           <div
             className="job-meter-rail"
@@ -227,6 +238,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt }: {
               <div className="job-meter-nodes" aria-hidden="true">
                 {index > 0 && <span className="job-meter-line job-meter-line-done" />}
                 {index < total - 1 && <span className="job-meter-line job-meter-line-rest" />}
+                {showPartial && <span className="job-meter-line job-meter-line-partial" />}
                 {JOB_STATUS_ORDER.map((stepStatus, stepIndex) => {
                   const step = stepIndex + 1;
                   const state = step < current ? "done" : step === current ? "current" : "upcoming";

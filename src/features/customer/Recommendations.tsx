@@ -1,19 +1,22 @@
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import type { Recommendation } from "@/core/matching/recommend";
+import { useRuntime } from "@/demo/runtime";
 import { languageNames } from "@/i18n";
 import { Button } from "@/ui/Button";
 import { professionals } from "./data";
-import { session } from "./session";
+import { JOB_ID, session } from "./session";
 import { TradeName } from "./tradeIcons";
 
 export function Recommendations({ recs, onChoose }: { recs: Recommendation[]; onChoose: (professionalId: string) => void }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
+  const rt = useRuntime();
+  const categoryId = session.draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || "";
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("recs.title")}</h2>
-      <p className="font-semibold"><TradeName categoryId={session.draft.categoryId} lang={lang} /></p>
+      <p className="font-semibold"><TradeName categoryId={categoryId} lang={lang} /></p>
       {recs.length === 0 && <p>{t("recs.empty")}</p>}
       <ul className="flex flex-col gap-3">
         {recs.map((r) => {
