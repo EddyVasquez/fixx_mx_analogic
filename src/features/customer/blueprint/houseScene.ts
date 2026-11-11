@@ -27,7 +27,7 @@ import { FACT_EFFECTS, cutawayFor, pickableIds, type Cutaway } from "./houseEffe
 import type { FactId } from "./houseFocus";
 import { deriveRooms, type Aabb, type RoomVolume } from "./houseRooms";
 
-const EXPLODE: Record<string, number> = { Ground: -0.7, Upper: 0.55, Roof: 1.45 };
+const EXPLODE: Record<string, number> = { Ground: -1.15, Upper: 0.9, Roof: 2.2 };
 const DETAIL_WITH_UPPER = /^(Balcony_|Minisplit_)/;
 
 interface SavedMat {
@@ -463,7 +463,37 @@ export function buildHouseRig(scene: Group, cars: number): HouseRig {
   }
 
   function applyExplode(amount: number): void {
-    for (const mover of movers) mover.obj.position.y = mover.base + mover.lift * amount;
+    for (const mover of movers) {
+      mover.obj.position.y = mover.base + mover.lift * amount;
+      mover.obj.updateMatrix();
+    }
+    explode = amount;
+  }
+
+  let floorLines: LineSegments2[] = [];
+
+  function clearFloorGuide(): void {
+    for (const line of floorLines) {
+      line.removeFromParent();
+      line.geometry.dispose();
+      (line.material as Material).dispose();
+    }
+    floorLines = [];
+  }
+
+  function showFloorGuide(): void {
+    clearFloorGuide();
+    for (const name of ["Ground", "Upper", "Roof"]) {
+      const host = scene.getObjectByName(name);
+      if (!host) continue;
+      host.updateWorldMatrix(true, true);
+      const world = new Box3().setFromObject(host);
+      if (world.isEmpty()) continue;
+      const local = world.clone().applyMatrix4(host.matrixWorld.clone().invert());
+      const drawn = fatLines(boxPositions(local), resolution, false);
+      for (const line of drawn.lines) host.add(line);
+      floorLines.push(...drawn.lines);
+    }
   }
 
   function applyCutaway(level: Cutaway): void {
@@ -571,6 +601,7 @@ export function buildHouseRig(scene: Group, cars: number): HouseRig {
   const rig: HouseRig = {
     dispose: () => {
       clearXray();
+      clearFloorGuide();
       for (const volume of volumeMeshes) volume.mesh.removeFromParent();
       measure.removeFromParent();
       for (const pin of pins) pin.removeFromParent();
@@ -597,12 +628,18 @@ export function buildHouseRig(scene: Group, cars: number): HouseRig {
       }
       if (!zoomId) applyCutaway(null);
       showVolumes();
+      if (next === "stories" && !zoomId) showFloorGuide();
+      else clearFloorGuide();
+      applyExplode(next === "stories" && !zoomId ? 1 : 0);
       if (!pointerId) clearXray();
     },
     setZoom: (id) => {
       zoomId = id;
       applyCutaway(id ? cutawayFor(id) : null);
       showVolumes();
+      if (fact === "stories" && !id) showFloorGuide();
+      else if (id) clearFloorGuide();
+      applyExplode(fact === "stories" && !id ? 1 : 0);
     },
     setPointer: (id, label, anchor, reduced) => {
       pointerId = id;
