@@ -133,6 +133,15 @@ export function fitCameraOnce(min: Vec3, max: Vec3, aspect: number, ndcBiasX = 0
   };
 }
 
+/** Dollhouse view: above the front edge, looking down into a cut-open room. */
+export function dollhousePlacement(min: Vec3, max: Vec3): CameraPlacement {
+  const center = { x: (min.x + max.x) / 2, y: min.y + (max.y - min.y) * 0.35, z: (min.z + max.z) / 2 };
+  const span = Math.max(max.x - min.x, max.z - min.z, 1.4);
+  const position = { x: center.x, y: center.y + span * 1.15, z: center.z + span * 1.05 };
+  const dist = Math.hypot(position.x - center.x, position.y - center.y, position.z - center.z);
+  return { position, target: center, near: 0.05, far: dist + 40, fov: CAMERA_FOV_DEG };
+}
+
 export function placeCamera(min: Vec3, max: Vec3, aspect: number, samples = 180, ndcBiasX = 0): CameraPlacement {
   const pivot: Vec3 = { x: 0, y: (min.y + max.y) / 2, z: 0 };
   const dir = normalize(VIEW_DIRECTION);

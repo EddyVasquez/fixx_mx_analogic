@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bathtub } from "@phosphor-icons/react/Bathtub";
 import { Bed } from "@phosphor-icons/react/Bed";
@@ -171,9 +171,16 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
   const now = rt.clock.now();
   const locale = localeFor[lang];
 
-  const openRequest = (categoryId: string | null) => {
+  const openRequest = (categoryId: string | null, roomLabel?: string) => {
     if (categoryId) {
-      session.draft = { ...session.draft, categoryId, emergency: false, selectedJobIds: [], description: "", descriptionEdited: false };
+      session.draft = {
+        ...session.draft,
+        categoryId,
+        emergency: false,
+        selectedJobIds: [],
+        description: roomLabel ?? "",
+        descriptionEdited: Boolean(roomLabel)
+      };
       session.openBuilder = true;
     } else session.openBuilder = false;
     session.tab = "request";
@@ -188,7 +195,10 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
   const tablet = useMatch("(min-width: 768px) and (max-width: 1023.98px)");
   const [pressed, setPressed] = useState<FactId | null>(null);
   const [hover, setHover] = useState<FactId | null>(null);
+  const [spaceText, setSpaceText] = useState("");
   const shown = pressed ?? hover;
+  const announce = useCallback((text: string) => setSpaceText(text), []);
+  useEffect(() => { setSpaceText(""); }, [shown]);
   const [roomsOpen, setRoomsOpen] = useState(wide);
   useEffect(() => { setRoomsOpen(wide); }, [wide]);
   useEffect(() => {
@@ -212,15 +222,24 @@ export function MyHomeTab({ lang, onNavigate }: { lang: Lang; onNavigate: () => 
             className="cockpit-viewport"
             onClick={(event) => {
               const target = event.target as HTMLElement;
-              if (target.closest(".cockpit-callout")) return;
+              if (target.closest(".cockpit-callout, .cockpit-stage, .cockpit-back, .cockpit-request")) return;
               setPressed(null);
             }}
           >
             <div className="cockpit-ticks" aria-hidden="true"><span /><span /><span /><span /></div>
-            <div className="cockpit-stage" aria-hidden="true">
-              <BlueprintSlot label={t("myhome.hub.blueprint")} focus={shown} wide={wide} tablet={tablet} onClear={() => setPressed(null)} />
+            <div className="cockpit-stage">
+              <BlueprintSlot
+                label={t("myhome.hub.blueprint")}
+                focus={shown}
+                wide={wide}
+                tablet={tablet}
+                cars={model?.garageCarsMax ?? 1}
+                onClear={() => setPressed(null)}
+                onAnnounce={announce}
+                onRequest={(categoryId, roomLabel) => openRequest(categoryId, roomLabel)}
+              />
             </div>
-            <p className="cockpit-callout" aria-live="polite" data-empty={model && shown ? "false" : "true"}>{model && shown ? calloutText(t, shown, model) : ""}</p>
+            <p className="cockpit-callout" aria-live="polite" data-empty={spaceText || (model && shown) ? "false" : "true"}>{spaceText || (model && shown ? calloutText(t, shown, model) : "")}</p>
           </div>
           {model && (
             <Readouts

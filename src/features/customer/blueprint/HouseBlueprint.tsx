@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject } from "react";
 import { Canvas, useThree, useFrame, useLoader } from "@react-three/fiber";
 import {
   Box3,
@@ -27,16 +27,20 @@ import {
   HOUSE_MODEL_URL,
   OUTLINE_THRESHOLD_DEG,
   clearBesideHud,
+  dollhousePlacement,
   fitCameraOnce,
-  shiftSubject,
   placeCamera,
   shouldAutoRotate,
   toNeutralGrey,
-  yawToFace,
   type Vec3
 } from "./houseModel";
-import { applyHouseFocus, clearHouseFocus, frameBox } from "./houseHighlight";
-import { keepsFrontView, type FactId } from "./houseFocus";
+import { buildHouseRig, keepSingleHouse, type HouseRig, type PickHit } from "./houseScene";
+import { labelKey, tradeForSpace } from "./houseEffects";
+import type { FactId } from "./houseFocus";
+import { categories } from "../data";
+import { ArrowLeft } from "@phosphor-icons/react/ArrowLeft";
+import { useTranslation } from "react-i18next";
+import type { Lang } from "@/core/config/fixx.config";
 
 const OUTLINE = "#404040";
 
@@ -75,12 +79,14 @@ function tuneMaterial(source: Material): Material {
 
 interface Dressed {
   scene: Group;
+  rig: HouseRig;
   bounds: { min: Vec3; max: Vec3 };
   dispose: () => void;
 }
 
-function dress(source: Group): Dressed {
+function dress(source: Group, cars: number): Dressed {
   const scene = source.clone(true);
+  keepSingleHouse(scene);
   const outline = new LineBasicMaterial({ color: OUTLINE, toneMapped: false });
   const disposables: { dispose: () => void }[] = [outline];
   scene.traverse((obj) => {
@@ -105,14 +111,19 @@ function dress(source: Group): Dressed {
     obj.add(lines);
   });
   scene.updateWorldMatrix(true, true);
+  const rig = buildHouseRig(scene, cars);
   const box = new Box3().setFromObject(scene);
   return {
     scene,
+    rig,
     bounds: {
       min: { x: box.min.x, y: box.min.y, z: box.min.z },
       max: { x: box.max.x, y: box.max.y, z: box.max.z }
     },
-    dispose: () => { disposables.forEach((item) => item.dispose()); }
+    dispose: () => {
+      rig.dispose();
+      disposables.forEach((item) => item.dispose());
+    }
   };
 }
 
@@ -143,7 +154,7 @@ function KeyLight() {
   );
 }
 
-function FadingGrid() {
+function FadingGrid({ y }: { y: number }) {
   const material = useMemo(() => new ShaderMaterial({
     transparent: true,
     depthWrite: false,
@@ -183,13 +194,13 @@ function FadingGrid() {
   }), []);
   useEffect(() => () => { material.dispose(); }, [material]);
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]} material={material} renderOrder={1}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0]} material={material} renderOrder={1}>
       <planeGeometry args={[48, 48]} />
     </mesh>
   );
 }
 
-function ContactShadow() {
+function ContactShadow({ y }: { y: number }) {
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 256;
@@ -210,18 +221,18 @@ function ContactShadow() {
   useEffect(() => () => { texture?.dispose(); }, [texture]);
   if (!texture) return null;
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.046, 1.1]} renderOrder={2}>
-      <planeGeometry args={[11, 15]} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, y, 0.4]} renderOrder={2}>
+      <planeGeometry args={[8, 14]} />
       <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
     </mesh>
   );
 }
 
-function HouseModel({ onScene }: { onScene: (scene: Group | null) => void }) {
+function HouseModel({ cars, onScene }: { cars: number; onScene: (scene: Dressed | null) => void }) {
   const gltf = useLoader(GLTFLoader, HOUSE_MODEL_URL);
-  const dressed = useMemo(() => dress(gltf.scene), [gltf]);
+  const dressed = useMemo(() => dress(gltf.scene, cars), [cars, gltf]);
   useEffect(() => {
-    onScene(dressed.scene);
+    onScene(dressed);
     return () => {
       onScene(null);
       dressed.dispose();
@@ -230,7 +241,7 @@ function HouseModel({ onScene }: { onScene: (scene: Group | null) => void }) {
   return (
     <group>
       <primitive object={dressed.scene} />
-      <ContactShadow />
+      <ContactShadow y={dressed.bounds.min.y + 0.02} />
     </group>
   );
 }
@@ -254,18 +265,24 @@ function lerpAngle(from: number, to: number, t: number): number {
   return from + delta * t;
 }
 
-function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
+function Scene({ motion, reduced, draw, focus, zoom, pointer, pointerLabel, cars, wide, tablet, onClear, onZoom, onHover }: {
   motion: MutableRefObject<Motion>;
   reduced: boolean;
   draw: MutableRefObject<() => void>;
   focus: FactId | null;
+  zoom: PickHit | null;
+  pointer: PickHit | null;
+  pointerLabel: string;
+  cars: number;
   wide: boolean;
   /** 768–1023. The HUD covers the house here, so the default view shifts right too. */
   tablet: boolean;
   onClear?: () => void;
+  onZoom: (hit: PickHit | null) => void;
+  onHover: (hit: PickHit | null) => void;
 }) {
   const group = useRef<Group>(null);
-  const [house, setHouse] = useState<Group | null>(null);
+  const [house, setHouse] = useState<Dressed | null>(null);
   const shot = useRef<Shot | null>(null);
   const framed = useRef(false);
   const invalidate = useThree((s) => s.invalidate);
@@ -274,9 +291,24 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
   const gl = useThree((s) => s.gl);
   const idleRef = useRef(motion);
   const clearRef = useRef(onClear);
+  const zoomRef = useRef(onZoom);
+  const hoverRef = useRef(onHover);
+  const focusRef = useRef(focus);
+  const houseRef = useRef(house);
+  const zoomedRef = useRef(zoom);
   clearRef.current = onClear;
+  zoomRef.current = onZoom;
+  hoverRef.current = onHover;
+  focusRef.current = focus;
+  houseRef.current = house;
+  zoomedRef.current = zoom;
 
   useEffect(() => { draw.current = invalidate; }, [draw, invalidate]);
+
+  useLayoutEffect(() => {
+    house?.rig.setPointer(pointer?.id ?? null, pointerLabel, pointer?.anchor ?? null, reduced);
+    invalidate();
+  }, [house, invalidate, pointer, pointerLabel, reduced]);
 
   useEffect(() => {
     gl.shadowMap.type = PCFSoftShadowMap;
@@ -285,6 +317,14 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
     gl.domElement.style.touchAction = "none";
     invalidate();
   }, [gl, invalidate]);
+
+  const ndcOf = (event: PointerEvent) => {
+    const rect = gl.domElement.getBoundingClientRect();
+    return new Vector2(
+      ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1,
+      -((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1
+    );
+  };
 
   useEffect(() => {
     const el = gl.domElement;
@@ -301,6 +341,10 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
     };
     const move = (event: PointerEvent) => {
       const current = idleRef.current.current;
+      if (event.pointerType === "mouse" && !current.dragging && focusRef.current) {
+        const hit = houseRef.current?.rig.pick(ndcOf(event), camera) ?? null;
+        hoverRef.current(hit);
+      }
       if (!current.dragging) return;
       const dx = event.clientX - lastX;
       lastX = event.clientX;
@@ -314,79 +358,60 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
       current.dragging = false;
       if (el.hasPointerCapture(event.pointerId)) el.releasePointerCapture(event.pointerId);
       const token = ++resume;
-      if (moved < 6) clearRef.current?.();
-      window.setTimeout(() => { if (token === resume && !focus) current.idle = true; }, focus ? 4000 : 1600);
+      if (moved < 6 && focusRef.current) {
+        const hit = houseRef.current?.rig.pick(ndcOf(event), camera) ?? null;
+        if (hit) zoomRef.current(hit);
+        else if (zoomedRef.current) zoomRef.current(null);
+        else clearRef.current?.();
+      } else if (moved < 6) clearRef.current?.();
+      window.setTimeout(() => { if (token === resume && !focusRef.current) current.idle = true; }, focusRef.current ? 4000 : 1600);
       invalidate();
     };
+    const leave = () => hoverRef.current(null);
     el.addEventListener("pointerdown", down);
     el.addEventListener("pointermove", move);
     el.addEventListener("pointerup", up);
     el.addEventListener("pointercancel", up);
+    el.addEventListener("pointerleave", leave);
     return () => {
       el.removeEventListener("pointerdown", down);
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerup", up);
       el.removeEventListener("pointercancel", up);
+      el.removeEventListener("pointerleave", leave);
     };
-  }, [gl, invalidate, focus]);
+  }, [camera, gl, invalidate]);
 
   useLayoutEffect(() => {
     const pivot = group.current;
     if (!house || !pivot || size.width < 2 || size.height < 2) return;
     const aspect = size.width / size.height;
+    const resolution = new Vector2(size.width, size.height);
+    house.rig.setEffect(focus, resolution);
+    house.rig.setZoom(zoom?.id ?? null);
     const savedYaw = pivot.rotation.y;
     pivot.rotation.y = 0;
     pivot.updateWorldMatrix(true, true);
-    let toYaw = 0;
-    let placement;
-    const hudBias = tablet ? 0 : focus && wide ? 0.28 : 0;
-    let framedMin = { x: 0, y: 0, z: 0 };
-    let framedMax = { x: 0, y: 0, z: 0 };
-    if (!focus) {
-      clearHouseFocus(house);
-      const box = new Box3();
-      box.setFromObject(house);
-      framedMin = { x: box.min.x, y: box.min.y, z: box.min.z };
-      framedMax = { x: box.max.x, y: box.max.y, z: box.max.z };
-      placement = placeCamera(framedMin, framedMax, aspect, 180, hudBias);
-    } else {
-      const frame = applyHouseFocus(house, focus, new Vector2(size.width, size.height));
-      const local = frameBox(frame.meshes);
-      if (focus === "bathrooms") local.expandByScalar(1.4);
-      const center = local.getCenter(new Vector3());
-      toYaw = local.isEmpty() || keepsFrontView(focus) ? 0 : yawToFace({ x: center.x, y: center.y, z: center.z });
-      pivot.rotation.y = toYaw;
-      pivot.updateWorldMatrix(true, true);
-      const world = frameBox(frame.meshes);
-      if (focus === "bathrooms") world.expandByScalar(1.4);
-      const box = world.isEmpty() ? new Box3().setFromObject(house) : world;
-      framedMin = { x: box.min.x, y: box.min.y, z: box.min.z };
-      framedMax = { x: box.max.x, y: box.max.y, z: box.max.z };
-      if (focus === "built") {
-        const full = new Box3().setFromObject(house);
-        framedMin = { x: full.min.x, y: full.min.y, z: full.min.z };
-        framedMax = { x: full.max.x, y: full.max.y, z: full.max.z };
-      }
-      placement = fitCameraOnce(framedMin, framedMax, aspect, hudBias, {
-        distanceScale: focus === "minisplits" ? 1.15 : focus === "built" ? 1.25 : 1,
-        elevate: focus === "built" ? 0.45 : 0
-      });
-    }
+    const toYaw = 0;
+    const hudBias = tablet ? 0 : focus && wide && !zoom ? 0.28 : 0;
+    const box = house.rig.frame(zoom?.id ?? null, focus);
+    if (!zoom && (focus === "bathrooms" || focus === "bedrooms")) box.expandByScalar(0.8);
+    const framedMin = { x: box.min.x, y: box.min.y, z: box.min.z };
+    const framedMax = { x: box.max.x, y: box.max.y, z: box.max.z };
+    let placement = zoom
+      ? dollhousePlacement(framedMin, framedMax)
+      : focus
+        ? fitCameraOnce(framedMin, framedMax, aspect, hudBias, {
+          distanceScale: focus === "minisplits" ? 1.15 : focus === "built" ? 1.35 : focus === "stories" ? 1.15 : 1,
+          elevate: focus === "built" ? 0.55 : 0
+        })
+        : placeCamera(framedMin, framedMax, aspect, 180, hudBias);
     if (tablet) {
-      const full = new Box3().setFromObject(house);
-      placement = clearBesideHud(
-        { x: full.min.x, y: full.min.y, z: full.min.z },
-        { x: full.max.x, y: full.max.y, z: full.max.z },
-        aspect,
-        size.width,
-        placement,
-        0,
-        !focus
-      );
+      placement = clearBesideHud(framedMin, framedMax, aspect, size.width, placement, 0, !focus && !zoom);
     }
     pivot.rotation.y = savedYaw;
     pivot.updateWorldMatrix(true, true);
-    const ms = !framed.current || reduced ? 0 : 400;
+    const ms = !framed.current || reduced ? 0 : 700;
     framed.current = true;
     const fromPos = camera.position.clone();
     const fromLook = new Vector3();
@@ -408,7 +433,7 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
       shot.current = { fromYaw: motion.current.yaw, toYaw, fromPos, toPos, fromLook: lookNow, toLook, start: performance.now(), ms, done: false };
     }
     invalidate();
-  }, [camera, focus, house, invalidate, motion, reduced, size.height, size.width, tablet, wide]);
+  }, [camera, focus, house, invalidate, motion, reduced, size.height, size.width, tablet, wide, zoom]);
 
   useFrame((_, delta) => {
     const current = motion.current;
@@ -424,6 +449,7 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
       current.yaw += delta * AUTO_YAW_PER_SEC;
     }
     if (group.current) group.current.rotation.y = current.yaw;
+    house?.rig.tick(delta, reduced);
   });
 
   return (
@@ -431,17 +457,17 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
       <color attach="background" args={[colors.paper]} />
       <hemisphereLight args={[colors.mist, colors.paper, 2.05]} />
       <KeyLight />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.08, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, (house?.bounds.min.y ?? -0.4) - 0.04, 0]}>
         <planeGeometry args={[80, 80]} />
         <meshBasicMaterial color={colors.paper} toneMapped={false} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.034, 0]} receiveShadow renderOrder={1}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, (house?.bounds.min.y ?? -0.4) - 0.02, 0]} receiveShadow renderOrder={1}>
         <planeGeometry args={[40, 40]} />
         <shadowMaterial opacity={0.28} transparent />
       </mesh>
-      <FadingGrid />
+      <FadingGrid y={(house?.bounds.min.y ?? -0.4) - 0.01} />
       <group ref={group}>
-        <HouseModel onScene={setHouse} />
+        <HouseModel cars={cars} onScene={setHouse} />
       </group>
     </>
   );
@@ -449,17 +475,35 @@ function Scene({ motion, reduced, draw, focus, wide, tablet, onClear }: {
 
 useLoader.preload(GLTFLoader, HOUSE_MODEL_URL);
 
-export default function HouseBlueprint({ label, focus = null, wide = false, tablet = false, onClear }: {
+export default function HouseBlueprint({ label, focus = null, wide = false, tablet = false, cars = 1, onClear, onAnnounce, onRequest }: {
   label: string;
   focus?: FactId | null;
   /** 768 and up. A selected fact is framed to the right of the HUD. */
   wide?: boolean;
   /** 768–1023. The default view is framed to the right of the HUD as well. */
   tablet?: boolean;
+  /** Parking spaces drawn inside the garage. */
+  cars?: number;
   onClear?: () => void;
+  onAnnounce?: (text: string) => void;
+  onRequest?: (categoryId: string, roomLabel: string) => void;
 }) {
+  const { t, i18n } = useTranslation();
+  const lang = (i18n.language || "en") as Lang;
   const motion = useRef<Motion>({ yaw: 0, dragging: false, idle: true });
   const draw = useRef<() => void>(() => {});
+  const [zoom, setZoom] = useState<PickHit | null>(null);
+  const [hot, setHot] = useState<PickHit | null>(null);
+  const onHover = useCallback((hit: PickHit | null) => {
+    setHot((current) => (current?.id === hit?.id ? current : hit));
+  }, []);
+  const pointer = zoom ?? hot;
+  const pointerLabel = pointer ? t(labelKey(pointer.id)) : "";
+  const trade = zoom ? tradeForSpace(zoom.id) : null;
+  const tradeName = categories.find((item) => item.id === trade)?.names[lang] ?? trade ?? "";
+
+  useEffect(() => { setZoom(null); setHot(null); }, [focus]);
+  useEffect(() => { onAnnounce?.(pointerLabel); }, [onAnnounce, pointerLabel]);
   const [reduced, setReduced] = useState(() => {
     if (typeof window.matchMedia !== "function") return false;
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -513,9 +557,24 @@ export default function HouseBlueprint({ label, focus = null, wide = false, tabl
       aria-label={label}
       tabIndex={0}
       data-blueprint="live"
-      className="h-full w-full touch-none bg-paper"
+      className="relative h-full w-full touch-none bg-paper"
       onKeyDown={onKey}
     >
+      {zoom && (
+        <button type="button" className="cockpit-back min-h-touch" onClick={() => setZoom(null)}>
+          <ArrowLeft size={18} aria-hidden="true" />
+          {t("myhome.hub.backHome")}
+        </button>
+      )}
+      {zoom && trade && (
+        <button
+          type="button"
+          className="cockpit-request min-h-touch"
+          onClick={() => onRequest?.(trade, t(labelKey(zoom.id)))}
+        >
+          {t("myhome.hub.requestHere", { trade: tradeName })}
+        </button>
+      )}
       <Canvas
         flat
         frameloop={reduced || hidden ? "demand" : "always"}
@@ -524,7 +583,21 @@ export default function HouseBlueprint({ label, focus = null, wide = false, tabl
         camera={{ fov: CAMERA_FOV_DEG, position: [-8, 5, 14], near: 0.05, far: 200 }}
         gl={{ antialias: true, powerPreference: "low-power", alpha: false }}
       >
-        <Scene motion={motion} reduced={reduced || hidden} draw={draw} focus={focus} wide={wide} tablet={tablet} onClear={onClear} />
+        <Scene
+          motion={motion}
+          reduced={reduced || hidden}
+          draw={draw}
+          focus={focus}
+          zoom={zoom}
+          pointer={pointer}
+          pointerLabel={pointerLabel}
+          cars={cars}
+          wide={wide}
+          tablet={tablet}
+          onClear={onClear}
+          onZoom={setZoom}
+          onHover={onHover}
+        />
       </Canvas>
     </div>
   );

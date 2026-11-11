@@ -399,6 +399,23 @@
     "text": "Cochera",
     "status": "draft"
   },
+  "myhome.room.garage": { "text": "Cochera", "status": "draft" },
+  "myhome.room.kitchen": { "text": "Cocina", "status": "draft" },
+  "myhome.room.laundry": { "text": "Lavandería", "status": "draft" },
+  "myhome.room.bathGround": { "text": "Baño de planta baja", "status": "draft" },
+  "myhome.room.bathUpper": { "text": "Baño de planta alta", "status": "draft" },
+  "myhome.room.mainBed": { "text": "Recámara principal", "status": "draft" },
+  "myhome.room.bed2": { "text": "Recámara 2", "status": "draft" },
+  "myhome.room.bed3": { "text": "Recámara 3", "status": "draft" },
+  "myhome.room.hall": { "text": "Pasillo", "status": "draft" },
+  "myhome.room.ground": { "text": "Planta baja", "status": "draft" },
+  "myhome.room.upper": { "text": "Planta alta", "status": "draft" },
+  "myhome.room.roof": { "text": "Azotea", "status": "draft" },
+  "myhome.room.footprint": { "text": "Huella", "status": "draft" },
+  "myhome.room.condenser": { "text": "Minisplit exterior", "status": "draft" },
+  "myhome.room.indoor": { "text": "Minisplit interior", "status": "draft" },
+  "myhome.hub.requestHere": { "text": "Pedir {trade} aquí", "status": "draft" },
+  "myhome.hub.backHome": { "text": "Volver", "status": "draft" },
   "myhome.hub.areaValue": {
     "text": "{area} m²",
     "status": "draft"

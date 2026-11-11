@@ -273,7 +273,8 @@ describe("My Home hub", () => {
 describe("blueprint folder stays free of three on the static path", () => {
   it("keeps the 3D module behind the lazy import only", () => {
     const dir = join(process.cwd(), "src/features/customer/blueprint");
-    const eager = readdirSync(dir).filter((name) => name !== "HouseBlueprint.tsx" && name !== "houseHighlight.ts");
+    const lazyThree = new Set(["HouseBlueprint.tsx", "houseHighlight.ts", "houseScene.ts"]);
+    const eager = readdirSync(dir).filter((name) => !lazyThree.has(name));
     const slot = readFileSync(join(dir, "BlueprintSlot.tsx"), "utf8");
     expect(slot).not.toMatch(/houseHighlight/);
     for (const name of eager) {
