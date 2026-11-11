@@ -71,6 +71,9 @@ describe("job progress phases", () => {
     expect(css).toContain(".job-meter-line-partial { transition: none; }");
     expect(css).toContain("var(--progress) * (var(--stride) - var(--line-gap) - var(--node) / 2)");
     expect(css).toContain("var(--progress) * ((100% - var(--node)) / 11 - var(--line-gap) - var(--node) / 2)");
+    expect(css).toContain('.job-meter-rail[data-stage="choose"][data-layout="full"] .job-meter-line-rest');
+    expect(css).toContain("position: sticky");
+    expect(css).toContain(".job-meter-sticky { top: 80px; }");
     expect(css).not.toMatch(/#fff\b|#ffffff/i);
   });
 });
@@ -408,6 +411,69 @@ describe("sub-step line fill", () => {
     expect(bar.getAttribute("aria-valuenow")).toBe("1");
     expect(bar.getAttribute("aria-valuetext")).toBe("Request sent");
     expect(document.querySelector(".job-meter-line-partial")).toBeNull();
+  });
+
+  it("fills halfway when the step has no sub-steps, and keeps the step count", () => {
+    for (const [status, step, name] of [
+      ["estimated", "2", "Price range ready"],
+      ["onTheWay", "7", "On the way"]
+    ] as const) {
+      cleanup();
+      render(<JobStatusBar status={status} />);
+      const bar = screen.getByRole("progressbar");
+      expect(bar.getAttribute("aria-valuemin")).toBe("1");
+      expect(bar.getAttribute("aria-valuemax")).toBe("12");
+      expect(bar.getAttribute("aria-valuenow")).toBe(step);
+      expect(bar.getAttribute("aria-valuetext")).toBe(name);
+      expect(document.querySelector<HTMLElement>(".job-meter-rail")?.style.getPropertyValue("--progress")).toBe("0.5");
+      expect(document.querySelector(".job-meter-line-partial")).toBeTruthy();
+    }
+  });
+
+  it("draws no connector on the last step when progress is omitted", () => {
+    render(<JobStatusBar status="rated" />);
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("12");
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuetext")).toBe("Rated");
+    expect(document.querySelector(".job-meter-line-partial")).toBeNull();
+  });
+
+  it("draws no lime before a trade is chosen", () => {
+    render(<JobStatusBar status="requestSubmitted" stage="choose" progress={0.5} />);
+    const bar = screen.getByRole("progressbar");
+    expect(bar.getAttribute("aria-valuenow")).toBe("1");
+    expect(bar.getAttribute("aria-valuetext")).toBe("Choose your service");
+    expect(document.querySelector(".job-meter-node-current")).toBeNull();
+    expect(document.querySelector(".job-meter-caption")).toBeNull();
+    expect(document.querySelector(".job-meter-line-partial")).toBeNull();
+    expect(document.querySelector(".job-meter-line-done")).toBeNull();
+    expect(screen.queryByText("Request sent")).toBeNull();
+    expect(screen.queryByText(/Next:/)).toBeNull();
+  });
+
+  it("translates the placing stages", async () => {
+    await i18n.changeLanguage("es");
+    const es = render(<JobStatusBar status="requestSubmitted" stage="requesting" tradeName="Electricidad" progress={0.25} />);
+    expect(screen.getByText("Servicio de Electricidad elegido")).toBeTruthy();
+    expect(screen.getByText("Solicitando")).toBeTruthy();
+    es.unmount();
+    await i18n.changeLanguage("ko");
+    render(<JobStatusBar status="requestSubmitted" stage="choose" />);
+    expect(screen.getByText("서비스를 선택하세요")).toBeTruthy();
+    cleanup();
+    render(<JobStatusBar status="requestSubmitted" stage="requesting" tradeName="전기" progress={0.25} />);
+    expect(screen.getByText("전기 서비스 선택됨")).toBeTruthy();
+    expect(screen.getByText("요청 중")).toBeTruthy();
+  });
+
+  it("names a chosen trade while the request is still being placed", () => {
+    render(<JobStatusBar status="requestSubmitted" stage="requesting" tradeName="Electrical" progress={0.25} />);
+    expect(screen.getByText("Electrical service chosen")).toBeTruthy();
+    expect(screen.getByText("Requesting")).toBeTruthy();
+    expect(screen.queryByText("Request sent")).toBeNull();
+    expect(document.querySelector(".job-meter-node-current")?.getAttribute("data-status")).toBe("requestSubmitted");
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("25");
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuetext")).toBe("Requesting, 25% of this step");
+    expect(document.querySelector(".job-meter-line-partial")).toBeTruthy();
   });
 
   it("uses the Spanish and Korean percent strings", async () => {

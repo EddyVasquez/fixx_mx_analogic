@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { config } from "@/core/config/fixx.config";
@@ -10,7 +10,7 @@ import { formatDateTime } from "@/core/clock/clock";
 import { localeFor } from "@/i18n";
 import { HlDate } from "@/ui/Highlights";
 import { jobMachine, newJobCtx, statusFor, type JobCtx, type JobState } from "@/core/machines";
-import { JobStatusBar } from "@/features/shared/JobStatusBar";
+import { JobStatusBar, StickyJobMeter } from "@/features/shared/JobStatusBar";
 import { Button } from "@/ui/Button";
 import { runtime, useRuntime } from "@/demo/runtime";
 import { SignIn } from "./SignIn";
@@ -32,7 +32,8 @@ import { SupportChatView } from "@/features/support/SupportChatView";
 import { TimelineView } from "./TimelineView";
 import { RatingView } from "./RatingView";
 import { descriptionForJobs } from "./catalogJobs";
-import { professionals, zones } from "./data";
+import { categories, professionals, zones } from "./data";
+import { requestSubProgress } from "./requestProgress";
 import { CustomerNav, useCustomerWide } from "./CustomerTabBar";
 import { useHomeProfile } from "./homeProfile";
 import { ChatView } from "@/features/chat/ChatView";
@@ -66,17 +67,29 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
 
   if (!session.signedIn) return <SignIn onDone={(email) => update({ signedIn: true, email })} />;
 
+  const tradeName = categories.find((item) => item.id === draft.categoryId)?.names[lang] ?? "";
+  const liveStatus = state === "pendingReview" ? "requestSubmitted" : state ? statusFor(state) : null;
+  const meter = !job || !state || !ctx
+    ? draft.categoryId
+      ? <JobStatusBar status="requestSubmitted" stage="requesting" tradeName={tradeName} progress={requestSubProgress(draft, pre === "review")} />
+      : <JobStatusBar status="requestSubmitted" stage="choose" />
+    : state === "pendingReview"
+      ? <JobStatusBar status="requestSubmitted" pendingReview />
+      : liveStatus
+        ? <JobStatusBar status={liveStatus} scheduledAt={ctx.jobStart} />
+        : null;
+
+  let body: React.ReactNode;
   if (!job || !state || !ctx) {
-    if (pre === "request") return <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} onEditHome={onEditHome} autoFocusDescription={autoFocusDescription} />;
-    if (pre === "review") {
-      return <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
+    if (pre === "request") body = <RequestBuilder draft={draft} onChange={setDraft} onReview={() => setPre("review")} onEditHome={onEditHome} autoFocusDescription={autoFocusDescription} />;
+    else if (pre === "review") {
+      body = <RequestReview draft={draft} onEdit={() => setPre("request")} onSubmit={() => {
         rt.languages.customer = lang;
         rt.spawn(JOB_ID, "job", jobMachine, newJobCtx({ needsReview: humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0 }), { categoryId: draft.categoryId });
         send({ type: draft.zoneId === "outside" ? "OUT_OF_AREA" : "ESTIMATE_READY" });
         force();
       }} />;
-    }
-    return <Home name={profile.homeownerName} email={session.email}
+    } else body = <Home name={profile.homeownerName} email={session.email}
       onPick={(id) => {
         setAutoFocusDescription(false);
         setDraft({ categoryId: id, emergency: false, selectedJobIds: [], description: "", descriptionEdited: false });
@@ -99,6 +112,12 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
         setPre("request");
       }}
       onUrgent={() => { setAutoFocusDescription(false); setDraft({ emergency: true }); setPre("request"); }} />;
+    return (
+      <>
+        <StickyJobMeter>{meter}</StickyJobMeter>
+        {body}
+      </>
+    );
   }
 
   const categoryId = draft.categoryId || rt.get(JOB_ID)?.meta.categoryId || "";
@@ -121,9 +140,16 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
     </div>
   );
 
+  const frame = (content: ReactNode) => (
+    <>
+      {meter && <StickyJobMeter>{meter}</StickyJobMeter>}
+      {content}
+    </>
+  );
+
   switch (state) {
     case "manualReview":
-      return (
+      return frame(
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold">{t("manual.title")}</h2>
           <p>{t("manual.body", { hours: config.outOfAreaFollowUpHours })}</p>
@@ -136,18 +162,18 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
         </div>
       );
     case "estimated":
-      return <EstimateView draft={jobDraft} onNext={() => send({ type: "RECOMMENDATIONS_READY" })} />;
+      return frame(<EstimateView draft={jobDraft} onNext={() => send({ type: "RECOMMENDATIONS_READY" })} />);
     case "recommendations": {
-      const recs = recommend({ categoryId: draft.categoryId, customerZoneId: draft.zoneId === "outside" ? null : draft.zoneId, customerLang: lang, professionals: professionals.filter((p) => !session.excluded.includes(p.id)), zones });
-      return <Recommendations recs={recs} onChoose={(id) => {
+      const recs = recommend({ categoryId: categoryId, customerZoneId: draft.zoneId === "outside" ? null : draft.zoneId, customerLang: lang, professionals: professionals.filter((p) => !session.excluded.includes(p.id)), zones });
+      return frame(<Recommendations recs={recs} onChoose={(id) => {
         const p = professionals.find((x) => x.id === id);
         rt.languages.professional = (p?.languages[0] ?? "es") as Lang;
         update({ proId: id });
         send({ type: "SELECT_PROFESSIONAL", professionalId: id });
-      }} />;
+      }} />);
     }
     case "professionalSelected":
-      return (
+      return frame(
         <div className="flex flex-col gap-4">
           <h2 className="text-2xl font-bold">{t("wait.title")}</h2>
           <p>{t("wait.body", { name: pro?.name ?? "" })}</p>
@@ -157,12 +183,12 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
       );
     case "pendingReview":
     case "quoteSent":
-      return <QuoteView ctx={ctx} draft={jobDraft} professionalName={pro?.name ?? ""} now={rt.clock.now()}
+      return frame(<QuoteView ctx={ctx} draft={jobDraft} professionalName={pro?.name ?? ""} now={rt.clock.now()}
         awaitingApproval={state === "pendingReview"}
         slotHours={session.slotHours} method={session.method} onSlot={(h) => update({ slotHours: h })} onMethod={(m) => update({ method: m })}
-        onAccept={(jobStart) => send({ type: "ACCEPT_QUOTE", method: session.method, jobStart })} />;
+        onAccept={(jobStart) => send({ type: "ACCEPT_QUOTE", method: session.method, jobStart })} />);
     case "awaitingDeposit":
-      return (
+      return frame(
         <div className="flex flex-col gap-4">
           <PaymentView ctx={ctx} method={session.method} rt={rt} onPaid={(amount) => send({ type: "PAYMENT_SATISFIED", amount })} />
           <CancelSection state={state} ctx={ctx} onCancel={() => send({ type: "CUSTOMER_CANCELS" })} />
@@ -172,10 +198,8 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
     case "rated": {
       const w = rt.get(`warranty:${JOB_ID}`)?.snap.ctx as { endsAt: Date } | undefined;
       const refund = rt.refunds.find((r) => r.actorId === JOB_ID);
-      const status = statusFor(state);
-      return (
+      return frame(
         <div className="flex flex-col gap-4">
-          {status && <JobStatusBar status={status} />}
           <RatingView rated={state === "rated"} warrantyEndsAt={w?.endsAt ?? null} onSubmit={(values) => { ratings.push({ proId: session.proId ?? "", values }); send({ type: "RATE" }); }} />
           <Button variant="secondary" onClick={startOver}>{t("btn.startOver")}</Button>
           <CaseCard rt={rt} jobId={JOB_ID} role="customer" lang={lang} />
@@ -186,14 +210,14 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
     case "professionalCancelled":
     case "noShow":
     case "rescheduleUnanswered":
-      return <ChoiceView state={state} paid={ctx.paid}
+      return frame(<ChoiceView state={state} paid={ctx.paid}
         onReplace={() => { update({ excluded: [...session.excluded, ...(session.proId ? [session.proId] : [])], proId: null }); send({ type: "CHOOSE_REPLACEMENT" }); }}
-        onRefund={() => send({ type: "CHOOSE_REFUND" })} />;
+        onRefund={() => send({ type: "CHOOSE_REFUND" })} />);
     case "cancelled":
     case "refunded": {
       const refund = rt.refunds.find((r) => r.actorId === JOB_ID);
       if (refund) {
-        return <RefundView refund={refund} issued={state === "refunded"} onStartOver={startOver}
+        return frame(<RefundView refund={refund} issued={state === "refunded"} onStartOver={startOver}
           onClabe={async (c) => {
             const result = settleClabe(c, (digits) => rt.provideClabe(refund.id, digits));
             if (result.ok) send({ type: "REFUND_ISSUED" });
@@ -204,13 +228,13 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
             const result = send({ type: "REFUND_ISSUED" });
             if (result.ok || rt.get(JOB_ID)?.snap.state === "refunded") return { ok: true };
             return { ok: false, reason: "failed" };
-          }} />;
+          }} />);
       }
-      return branchView;
+      return frame(branchView);
     }
     default:
-      if (BRANCH.includes(state)) return branchView;
-      return <TimelineView state={state} ctx={ctx} onEvent={proEvent} onSend={send} />;
+      if (BRANCH.includes(state)) return frame(branchView);
+      return frame(<TimelineView state={state} ctx={ctx} onEvent={proEvent} onSend={send} />);
   }
 }
 

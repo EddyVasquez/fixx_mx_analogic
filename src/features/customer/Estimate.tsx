@@ -7,7 +7,6 @@ import { estimateRange, humanReviewForCategory } from "@/core/pricing/quote";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import { quoteScopeFromDraft } from "./homeModel";
 import type { Draft } from "./session";
-import { JobStatusBar } from "@/features/shared/JobStatusBar";
 import { PendingReviewBanner } from "./PendingReviewBanner";
 import { TradeName } from "./tradeIcons";
 
@@ -19,7 +18,6 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
   const needsReview = humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0;
   return (
     <div className="flex min-w-0 flex-col gap-4 max-md:pb-16">
-      <JobStatusBar status="estimated" progress={0} />
       {needsReview && <PendingReviewBanner />}
       <h2 className="text-2xl font-bold">{t("estimate.title")}</h2>
       <p className="text-lg font-semibold"><TradeName categoryId={draft.categoryId} lang={lang} /></p>

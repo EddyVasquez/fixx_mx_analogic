@@ -127,6 +127,18 @@
     "text": "{step}, {percent}% of this step",
     "status": "draft"
   },
+  "status.chooseService": {
+    "text": "Choose your service",
+    "status": "draft"
+  },
+  "status.serviceChosen": {
+    "text": "{trade} service chosen",
+    "status": "draft"
+  },
+  "status.requesting": {
+    "text": "Requesting",
+    "status": "draft"
+  },
   "status.phase.request": {
     "text": "Request",
     "status": "draft"

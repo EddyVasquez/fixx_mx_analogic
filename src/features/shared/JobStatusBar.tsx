@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import type { Icon } from "@phosphor-icons/react";
 import { CalendarCheck } from "@phosphor-icons/react/CalendarCheck";
@@ -163,10 +163,10 @@ function useMeterLayout(railRef: RefObject<HTMLDivElement | null>, current: numb
 
 /**
  * Twelve-step meter. Progress is the step name, the step count, and the charcoal line.
- * High Viz Lime is only the current node's ring — never text, and never a fill.
- * Nodes are decorative. The strip may be swiped; it is not a control.
+ * High Viz Lime is the current ring, and the partial connector while a step is underway.
+ * It is never text. Nodes are decorative. The strip may be swiped; it is not a control.
  */
-export function JobStatusBar({ status, pendingReview = false, scheduledAt, progress }: {
+export function JobStatusBar({ status, pendingReview = false, scheduledAt, progress, stage, tradeName }: {
   status: JobStatus;
   /** Regulated job. Holds the meter at step 1 and hides the date and the Next line. */
   pendingReview?: boolean;
@@ -174,26 +174,43 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
   scheduledAt?: Date;
   /**
    * Fraction of this step's sub-steps that are done (0..1).
-   * Fills the connector toward the next step. Omitted, the bar stays on the step count.
-   * Ignored while a regulated job is held for review.
+   * Omit it when the step has no sub-steps: the connector then fills halfway.
+   * Ignored before a trade is chosen and while a regulated job is held for review.
    */
   progress?: number;
+  /** Before submit: "choose" until a trade is picked, then "requesting" until Send request. */
+  stage?: "choose" | "requesting";
+  /** Localized trade name for the requesting heading. */
+  tradeName?: string;
 }) {
   const { t, i18n } = useTranslation();
   const lang = languageOf(i18n.language);
   const shown = meterStatus(status, pendingReview);
-  const current = meterStep(status, pendingReview);
+  const placing = stage === "choose" || stage === "requesting";
+  const current = placing ? 1 : meterStep(status, pendingReview);
   const total = JOB_STATUS_ORDER.length;
   const label = t(`status.${shown}`);
-  const nextKey = pendingReview ? undefined : JOB_STATUS_ORDER[current];
+  const title = stage === "choose"
+    ? t("status.chooseService")
+    : stage === "requesting"
+      ? t("status.serviceChosen", { trade: tradeName ?? "" })
+      : label;
+  const caption = stage === "requesting" ? t("status.requesting") : label;
+  const nextKey = pendingReview || stage === "choose" ? undefined : JOB_STATUS_ORDER[current];
   const nextLabel = nextKey ? t(`status.${nextKey}`) : undefined;
-  const hasSchedule = !pendingReview && scheduledAt != null && scheduledAt.getTime() > 0;
-  const fraction = pendingReview || progress == null ? undefined : clampProgress(progress);
-  const percent = fraction == null ? undefined : Math.round(fraction * 100);
+  const hasSchedule = !pendingReview && stage == null && scheduledAt != null && scheduledAt.getTime() > 0;
+  const index = current - 1;
+  const fraction = pendingReview || stage === "choose"
+    ? undefined
+    : progress != null
+      ? clampProgress(progress)
+      : index < total - 1 ? 0.5 : undefined;
+  const percentMode = progress != null && !pendingReview && stage !== "choose";
+  const percent = percentMode && fraction != null ? Math.round(fraction * 100) : undefined;
+  const ariaStep = stage === "requesting" ? caption : stage === "choose" ? title : label;
   const railRef = useRef<HTMLDivElement>(null);
   const { full, fades, fits } = useMeterLayout(railRef, current);
-  const index = current - 1;
-  const showPartial = fraction != null && fraction > 0 && index < total - 1;
+  const showPartial = fraction != null && fraction > 0 && index < total - 1 && stage !== "choose";
   const railStyle = {
     "--index": String(index),
     "--progress": String(fraction ?? 0),
@@ -215,7 +232,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
         </p>
       )}
       <div className="job-meter-panel">
-        <p className={lang === "ko" ? "job-meter-title job-meter-title-ko" : "job-meter-title"}>{label}</p>
+        <p className={lang === "ko" ? "job-meter-title job-meter-title-ko" : "job-meter-title"}>{title}</p>
         <p className="job-meter-step">{t("status.step", { current, total })}</p>
         <div
           className="job-meter-frame"
@@ -224,13 +241,14 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
           aria-valuemin={percent == null ? 1 : 0}
           aria-valuemax={percent == null ? total : 100}
           aria-valuenow={percent == null ? current : percent}
-          aria-valuetext={percent == null ? label : t("status.stepProgress", { step: label, percent })}
+          aria-valuetext={percent == null ? ariaStep : t("status.stepProgress", { step: ariaStep, percent })}
         >
           <div
             className="job-meter-rail"
             ref={railRef}
             style={railStyle}
             data-layout={full ? "full" : "strip"}
+            data-stage={stage ?? "status"}
             data-fits={!full && fits ? "true" : "false"}
             tabIndex={full ? undefined : -1}
           >
@@ -241,7 +259,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
                 {showPartial && <span className="job-meter-line job-meter-line-partial" />}
                 {JOB_STATUS_ORDER.map((stepStatus, stepIndex) => {
                   const step = stepIndex + 1;
-                  const state = step < current ? "done" : step === current ? "current" : "upcoming";
+                  const state = stage === "choose" ? "upcoming" : step < current ? "done" : step === current ? "current" : "upcoming";
                   const Glyph = STEP_ICONS[stepStatus];
                   return (
                     <div
@@ -269,7 +287,7 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
                             <span className="job-meter-r1-gap" />
                             <span className="job-meter-r1-ring" />
                           </span>
-                          <p className="job-meter-caption" data-align={captionAlign(step)}>{label}</p>
+                          <p className="job-meter-caption" data-align={captionAlign(step)}>{caption}</p>
                         </>
                       )}
                       <Glyph
@@ -295,5 +313,32 @@ export function JobStatusBar({ status, pendingReview = false, scheduledAt, progr
       )}
       {pendingReview && <p className="job-meter-help">{t("review.pending.body")}</p>}
     </div>
+  );
+}
+
+function useStuck(ref: RefObject<HTMLElement | null>): boolean {
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver !== "function") return;
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry) setStuck(!entry.isIntersecting);
+    }, { threshold: 1 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+  return stuck;
+}
+
+/** Keeps the meter pinned under the tablet header, and at the top of the phone, while the journey scrolls. */
+export function StickyJobMeter({ children }: { children: ReactNode }) {
+  const sentinel = useRef<HTMLDivElement>(null);
+  const stuck = useStuck(sentinel);
+  return (
+    <>
+      <div className="job-meter-sentinel" ref={sentinel} aria-hidden="true" />
+      <div className={stuck ? "job-meter-sticky is-stuck" : "job-meter-sticky"}>{children}</div>
+    </>
   );
 }
