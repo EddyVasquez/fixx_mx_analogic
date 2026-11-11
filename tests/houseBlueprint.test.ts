@@ -19,6 +19,7 @@ import {
   yawPoint,
   type Vec3
 } from "../src/features/customer/blueprint/houseModel";
+import { keepSingleHouse } from "../src/features/customer/blueprint/houseScene";
 
 const ASPECTS = [1.05, 1.25, 1.6, 2.2];
 const YAWS = [0, Math.PI / 6, Math.PI / 2, Math.PI, -Math.PI / 3];
@@ -37,7 +38,8 @@ function expectBoxOnScreen(min: Vec3, max: Vec3): void {
         limiting = Math.max(limiting, Math.abs(ndc.x), Math.abs(ndc.y));
       }
     }
-    expect(limiting).toBeGreaterThan(1 / FIT_PAD - 0.08);
+    // The lot is longer than it is tall, so a spun footprint sits a little inside the frame.
+    expect(limiting).toBeGreaterThan(1 / FIT_PAD - 0.12);
   }
 }
 
@@ -82,6 +84,7 @@ describe("Santa Sofía house model", () => {
     const gltf = await new Promise<GLTF>((resolve, reject) => {
       new GLTFLoader().parse(buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), "", resolve, reject);
     });
+    keepSingleHouse(gltf.scene);
     const names = new Set<string>();
     let tris = 0;
     gltf.scene.traverse((obj) => {
@@ -91,11 +94,13 @@ describe("Santa Sofía house model", () => {
       const list = Array.isArray(obj.material) ? obj.material : [obj.material];
       list.forEach((mat) => names.add(mat.name));
     });
+    expect(gltf.scene.getObjectByName("santa-sofia-house_2")).toBeUndefined();
+    expect(gltf.scene.getObjectByName("Ground_Window_Kitchen_Glass")).toBeTruthy();
     expect(tris).toBeGreaterThan(1000);
-    expect(tris).toBeLessThan(50_000);
-    expect(names.has("Wall_Grey")).toBe(true);
-    expect(names.has("Trim_Charcoal")).toBe(true);
-    expect(names.has("Glass")).toBe(true);
+    expect(tris).toBeLessThan(20_000);
+    // This export does not name materials. Lime stays out of the file either way.
+    expect(names.has("Wall_Grey")).toBe(false);
+    expect(names.has("Trim_Charcoal")).toBe(false);
     expect(names.has("Accent_Lime")).toBe(false);
 
     gltf.scene.updateWorldMatrix(true, true);
@@ -104,10 +109,13 @@ describe("Santa Sofía house model", () => {
     expect(box.max.x).toBeGreaterThan(0);
     expect(box.min.z).toBeLessThan(0);
     expect(box.max.z).toBeGreaterThan(0);
-    expect(box.min.y).toBeLessThanOrEqual(0.05);
-    expect(box.max.y).toBeGreaterThan(5);
-    expect(box.max.x - box.min.x).toBeGreaterThan(6);
+    expect(box.min.y).toBeLessThan(0);
+    expect(box.max.y).toBeGreaterThan(4);
+    expect(box.max.y).toBeLessThan(8);
+    expect(box.max.x - box.min.x).toBeGreaterThan(4);
     expect(box.max.x - box.min.x).toBeLessThan(8);
+    expect(box.max.z - box.min.z).toBeGreaterThan(8);
+    expect(box.max.z - box.min.z).toBeLessThan(14);
     expectBoxOnScreen(
       { x: box.min.x, y: box.min.y, z: box.min.z },
       { x: box.max.x, y: box.max.y, z: box.max.z }
