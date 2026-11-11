@@ -172,3 +172,9 @@ export function edgeFadeVisibility(scrollLeft: number, clientWidth: number, scro
 function clampStep(step: number): number {
   return Math.min(STEP_COUNT, Math.max(1, Math.round(step)));
 }
+
+/** Sub-step fraction for the current node. Values outside 0..1 are clamped. */
+export function clampProgress(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.min(1, Math.max(0, value));
+}

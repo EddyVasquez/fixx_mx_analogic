@@ -123,6 +123,10 @@
     "text": "Next: {step}",
     "status": "draft"
   },
+  "status.stepProgress": {
+    "text": "{step}, {percent}% of this step",
+    "status": "draft"
+  },
   "status.phase.request": {
     "text": "Request",
     "status": "draft"

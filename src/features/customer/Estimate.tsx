@@ -7,6 +7,7 @@ import { estimateRange, humanReviewForCategory } from "@/core/pricing/quote";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import { quoteScopeFromDraft } from "./homeModel";
 import type { Draft } from "./session";
+import { JobStatusBar } from "@/features/shared/JobStatusBar";
 import { PendingReviewBanner } from "./PendingReviewBanner";
 import { TradeName } from "./tradeIcons";
 
@@ -17,7 +18,8 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
   const r = estimateRange(draft.categoryId, draft.emergency, quoteScopeFromDraft(draft));
   const needsReview = humanReviewForCategory(draft.categoryId, draft.selectedJobIds.length ? draft.selectedJobIds : undefined).length > 0;
   return (
-    <div className="flex min-w-0 flex-col gap-4">
+    <div className="flex min-w-0 flex-col gap-4 max-md:pb-16">
+      <JobStatusBar status="estimated" progress={0} />
       {needsReview && <PendingReviewBanner />}
       <h2 className="text-2xl font-bold">{t("estimate.title")}</h2>
       <p className="text-lg font-semibold"><TradeName categoryId={draft.categoryId} lang={lang} /></p>
@@ -31,7 +33,9 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
       )}
       <HomeQuoteFacts draft={draft} />
       <p className="text-inkSoft">{t("estimate.note")}</p>
-      <Button onClick={onNext}>{t("btn.seeProfessionals")}</Button>
+      <div className="max-md:fixed max-md:inset-x-0 max-md:bottom-[5.75rem] max-md:z-20 max-md:border-t max-md:border-line max-md:bg-mist max-md:px-4 max-md:py-2">
+        <Button className="max-md:w-full" onClick={onNext}>{t("btn.seeProfessionals")}</Button>
+      </div>
     </div>
   );
 }

@@ -67,6 +67,10 @@ describe("job progress phases", () => {
     expect(css).toContain("var(--index) * (100% - var(--node)) / 11 + var(--line-gap)");
     expect(css).toMatch(/prefers-reduced-motion:\s*reduce/);
     expect(css).toContain(".job-meter-r1 { display: block !important; }");
+    expect(css).toContain("transition: width 300ms ease");
+    expect(css).toContain(".job-meter-line-partial { transition: none; }");
+    expect(css).toContain("var(--progress) * (var(--stride) - var(--line-gap) - var(--node) / 2)");
+    expect(css).toContain("var(--progress) * ((100% - var(--node)) / 11 - var(--line-gap) - var(--node) / 2)");
     expect(css).not.toMatch(/#fff\b|#ffffff/i);
   });
 });
@@ -358,5 +362,61 @@ describe("meter layout switch", () => {
     rerender(<JobStatusBar status="scheduled" />);
     expect(document.querySelector(".job-meter-fade-start")).toBeTruthy();
     expect(document.querySelector(".job-meter-fade-end")).toBeTruthy();
+  });
+});
+
+describe("sub-step line fill", () => {
+  afterEach(async () => {
+    cleanup();
+    await i18n.changeLanguage("en");
+  });
+
+  it("draws no lime when the current step is 0% done", () => {
+    render(<JobStatusBar status="requestSubmitted" progress={0} />);
+    const bar = screen.getByRole("progressbar");
+    expect(bar.getAttribute("aria-valuemin")).toBe("0");
+    expect(bar.getAttribute("aria-valuemax")).toBe("100");
+    expect(bar.getAttribute("aria-valuenow")).toBe("0");
+    expect(bar.getAttribute("aria-valuetext")).toBe("Request sent, 0% of this step");
+    expect(document.querySelector(".job-meter-line-partial")).toBeNull();
+    expect(document.querySelector(".job-meter-line-rest")).toBeTruthy();
+  });
+
+  it("fills half the connector to the next step at 50%", () => {
+    render(<JobStatusBar status="requestSubmitted" progress={0.5} />);
+    const bar = screen.getByRole("progressbar");
+    expect(bar.getAttribute("aria-valuenow")).toBe("50");
+    expect(bar.getAttribute("aria-valuetext")).toBe("Request sent, 50% of this step");
+    expect(document.querySelector<HTMLElement>(".job-meter-rail")?.style.getPropertyValue("--progress")).toBe("0.5");
+    expect(document.querySelector(".job-meter-line-partial")).toBeTruthy();
+    expect(document.querySelector(".job-meter-line-rest")).toBeTruthy();
+  });
+
+  it("fills the connector to the next node at 100%", () => {
+    render(<JobStatusBar status="scheduled" progress={1} />);
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("100");
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuetext")).toBe("Scheduled, 100% of this step");
+    expect(document.querySelector<HTMLElement>(".job-meter-rail")?.style.getPropertyValue("--progress")).toBe("1");
+    expect(document.querySelector(".job-meter-line-partial")).toBeTruthy();
+  });
+
+  it("drops the partial fill while a regulated job is held for review", () => {
+    render(<JobStatusBar status="onTheWay" pendingReview progress={0.5} />);
+    const bar = screen.getByRole("progressbar");
+    expect(bar.getAttribute("aria-valuemin")).toBe("1");
+    expect(bar.getAttribute("aria-valuemax")).toBe("12");
+    expect(bar.getAttribute("aria-valuenow")).toBe("1");
+    expect(bar.getAttribute("aria-valuetext")).toBe("Request sent");
+    expect(document.querySelector(".job-meter-line-partial")).toBeNull();
+  });
+
+  it("uses the Spanish and Korean percent strings", async () => {
+    await i18n.changeLanguage("es");
+    const es = render(<JobStatusBar status="requestSubmitted" progress={0.5} />);
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuetext")).toBe("Solicitud enviada, 50% de este paso");
+    es.unmount();
+    await i18n.changeLanguage("ko");
+    render(<JobStatusBar status="requestSubmitted" progress={0.5} />);
+    expect(screen.getByRole("progressbar").getAttribute("aria-valuetext")).toBe("요청 전송됨, 이 단계의 50%");
   });
 });

@@ -10,6 +10,8 @@ import { zoneNames, zones } from "./data";
 import { TradePicker } from "./tradePicker";
 import { TradeIcon, TradeName } from "./tradeIcons";
 import { descriptionForJobs, jobsForCategory } from "./catalogJobs";
+import { JobStatusBar } from "@/features/shared/JobStatusBar";
+import { requestSubProgress } from "./requestProgress";
 import { HomeQuoteFacts } from "./HomeQuoteFacts";
 import { HomeSummaryCard } from "./HomeSummaryCard";
 import { JobChips, type JobOption } from "./JobChips";
@@ -102,6 +104,7 @@ export function RequestBuilder({ draft, onChange, onReview, onEditHome, autoFocu
 
   return (
     <div className={`flex flex-col gap-4 ${chosenLabels.length > 0 ? "request-tray-pad" : ""}`}>
+      <JobStatusBar status="requestSubmitted" progress={requestSubProgress(draft)} />
       <h2 className="text-2xl font-bold">{t("request.title")}</h2>
       <HomeSummaryCard draft={draft} onEditHome={onEditHome} />
       <fieldset className="flex flex-col gap-3">
@@ -208,6 +211,7 @@ export function RequestReview({ draft, onEdit, onSubmit }: { draft: Draft; onEdi
   const where = draft.zoneId === "outside" ? t("request.outside") : zoneNames[draft.zoneId];
   return (
     <div className="flex flex-col gap-4">
+      <JobStatusBar status="requestSubmitted" progress={requestSubProgress(draft, true)} />
       <h2 className="text-2xl font-bold">{t("review.title")}</h2>
       <dl className="flex flex-col gap-2 rounded-2xl border border-line bg-paper p-4">
         <div><dt className="text-sm text-inkSoft">{t("request.homeownerName")}</dt><dd className="font-bold">{draft.homeownerName}</dd></div>

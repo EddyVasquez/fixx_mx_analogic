@@ -154,6 +154,11 @@
     "status": "draft",
     "needsNativeReview": true
   },
+  "status.stepProgress": {
+    "text": "{step}, 이 단계의 {percent}%",
+    "status": "draft",
+    "needsNativeReview": true
+  },
   "status.phase.request": {
     "text": "요청",
     "status": "draft",
