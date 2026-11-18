@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { config, type Lang } from "@/core/config/fixx.config";
 import { formatDateTime } from "@/core/clock/clock";
-import { hoursUntil, professionalPendingBalance, round2 } from "@/core/rules";
+import { customerAmountFromPayout, hoursUntil, professionalPendingBalance, round2 } from "@/core/rules";
 import { EXTRA_COPPER_LINE, MINISPLIT_TASK, extraCopperPrice } from "@/core/pricing/extraCopper";
 import { checklistFor } from "@/core/standards/checklist";
 import { cancelLowersQualityScore, statusFor, type JobCtx, type JobState } from "@/core/machines";
@@ -146,7 +146,7 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
               setAddError(false);
               customerSession.additionalNote = addNote.trim();
               customerSession.additionalLang = lang;
-              send({ type: "REQUEST_ADDITIONAL_WORK", amount: Math.round(p / ctx.payoutRatio / 10) * 10 });
+              send({ type: "REQUEST_ADDITIONAL_WORK", amount: customerAmountFromPayout(p, ctx.payoutRatio) });
             }}>{t("btn.requestAddl")}</Button>
           </section>
         </>

@@ -59,7 +59,7 @@ pro_payout     = labor                                                     # sam
 ```
 - These formulas match Quote_Builder column J (labor) = `MAX(H, floor) × I`, column K = `F + J`, and column L = column J.
 - Urgency multiplies labor only. Materials are never multiplied.
-- **Centavos everywhere (decided by Eduardo, Oct 24, 2026).** Show every customer price, line and pro payout to 2 decimals (e.g. $1,113.00, $472.47). Store exact values and round half up to the centavo only at display, and on each allocated line for multi-job visits.
+- **Centavos everywhere (decided by Eduardo, Oct 24, 2026).** Show every customer price, line and pro payout to 2 decimals (e.g. $1,113.00, $472.47). Store exact values and always ROUND UP to the next centavo (decided by Eduardo, Nov 18, 2026; replaces half-up): CEIL(x) = ROUNDUP(ROUND(x, 6), 2), so float noise cannot turn 887.50 into 887.51. Apply it at each money step (labor before the split, billed materials, pro share, booking fee, totals, payout) and on each allocated line for multi-job visits.
 - **Scaling with scope.** When the user's m² or quantity differs from Ref_Qty:
   - Scale prorated lines linearly.
   - Round whole-pack items up to whole packs.
@@ -79,7 +79,22 @@ total       = Σ materials_j + visit_labor (+ as-needed) (− credited diagnosis
 - A single-job visit reduces to §4.
 - **[ASSUMPTION]** Visit floor = highest trade daily minimum × ROUNDUP(Σ est_job_days). This is 1 day whenever the jobs together fit in one day.
 - **[ASSUMPTION]** One urgency level per visit.
-- **[ASSUMPTION]** Allocated labor is rounded to the centavo, and any rounding remainder goes to the largest job.
+- **[ASSUMPTION]** Allocated labor is rounded UP to the next centavo (Nov 18, 2026), and any rounding remainder goes to the largest job.
+
+### 4.2 Revenue split (applied by the app; decided by Eduardo, Nov 18, 2026)
+The export columns above stay raw (`pro_payout = labor`). The app then applies the revenue model once, with every money step rounded UP to the next centavo: `CEIL(x) = ROUNDUP(ROUND(x, 6), 2)` (6-decimal pre-round so float noise never turns 887.50 into 887.51).
+```
+labor_r        = CEIL(labor)
+commission     = CEIL(proCommission × labor_r)          # proCommission = 0.15; always rounded UP
+pro_share      = labor_r − commission                   # the pro gets the remainder (nothing is rounded up on the pro side)
+eff_floor      = CEIL(floor × Multiplier[urgency])
+pro_payout     = MAX(pro_share, eff_floor)              # never below the wage floor
+booking_fee    = CEIL(MAX(0, eff_floor − pro_share))    # covers any shortfall, billed to the customer
+materials_bill = CEIL(materials × (1 + materialsMarkup) ÷ (1 − cardFee × IVA))
+customer_total = CEIL(materials_bill + labor_r + booking_fee)
+```
+- pro_share + commission = labor_r exactly.
+- These are the Quote_Builder preview columns V–AB (not exported).
 
 ## 5. Example quotes (from the workbook)
 **FIXX-PLM-001 Toilet repair** (itemized kit, Oct 24, 2026; plumber; floor $349.84; typical labor $800, already above the floor)

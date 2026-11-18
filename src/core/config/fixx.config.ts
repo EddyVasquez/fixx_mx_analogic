@@ -27,6 +27,7 @@ export const config = {
   caseReviewDeadlineDays: 14,
 
   // Rules given in the brief (configurable, not hard-coded in logic):
+  // 20% is due up front and 80% stays on the balance. Approved increases use the same split via addToHold.
   deposit: { sharePct: 20 },
   payment: {
     farJobHours: 48, nearJobHours: 24,

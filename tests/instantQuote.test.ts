@@ -131,7 +131,7 @@ describe("spec examples", () => {
     expect(standard.bookingFee).toBe(bookingFee(standard.labor, standard.floor));
     expect(standard.materials).toBe(materialsPrice(standard.materialsRaw));
     expect(standard.total).toBe(roundMoney(standard.materials + standard.labor + standard.bookingFee));
-    expect(URG.map((u) => q("FIXX-CAR-001", "Standard", u).labor)).toEqual([363.44, 417.96, 472.47, 545.16]);
+    expect(URG.map((u) => q("FIXX-CAR-001", "Standard", u).labor)).toEqual([363.44, 417.96, 472.48, 545.16]);
   });
   it("multi-job visit CAR-001 Standard + LCK-002 at High: 897.00 labor split 312.00 / 585.00", () => {
     const lckTier = cat.tasks["FIXX-LCK-002"]!.tiers[0]!;
@@ -149,12 +149,12 @@ describe("spec examples", () => {
     expect(roundMoney(v.jobs.reduce((s, j) => s + j.payout, 0))).toBe(v.visitPayout);
     expect(v.jobs.reduce((s, j) => s + j.labor, 0)).toBe(v.visitLabor);
   });
-  it("a visit with only CAR-001 at High: the floor binds, labor 472.47", () => {
+  it("a visit with only CAR-001 at High: the floor binds, labor 472.48", () => {
     const v = quoteVisit(cat, [{ taskId: "FIXX-CAR-001", tier: "Standard" }], "HIGH");
-    expect(v.visitLabor).toBe(472.47);
+    expect(v.visitLabor).toBe(472.48);
     expect(v.materials).toBe(materialsPrice(v.materialsRaw));
     expect(v.total).toBe(roundMoney(v.materials + v.visitLabor + v.bookingFee));
-    expect(v.visitPayout).toBe(proLaborPayout(472.47, payoutFloor(v.visitFloor, v.multiplier)));
+    expect(v.visitPayout).toBe(proLaborPayout(472.48, payoutFloor(v.visitFloor, v.multiplier)));
   });
   it("the visit floor uses the highest trade floor among its jobs", () => {
     const v = quoteVisit(cat, [{ taskId: "FIXX-CAR-001", tier: "Standard" }, { taskId: "FIXX-LCK-002", tier: cat.tasks["FIXX-LCK-002"]!.tiers[0]! }], "STANDARD");
@@ -284,11 +284,11 @@ describe("workbook trades, job names and cleaning add-ons", () => {
     const bars = quoteTask(cat, { taskId: "FIXX-MTL-001", tier: "Budget", urgency: "STANDARD" });
     expect(bars.status).toBe("FIXED");
     expect(bars.needsHumanReview).toBe(false);
-    expect(bars.labor).toBe(887.5);
+    expect(bars.labor).toBe(887.51);
     expect(bars.total).toBe(roundMoney(bars.materials + bars.labor + bars.bookingFee));
     const gate = quoteTask(cat, { taskId: "FIXX-MTL-002", tier: "Budget", urgency: "STANDARD" });
-    expect(gate.labor).toBe(5407.58);
-    expect(gate.marketLabor).toBe(5407.58);
+    expect(gate.marketLabor).toBeCloseTo(5407.584, 5);
+    expect(gate.labor).toBe(5407.59);
     const carport = quoteTask(cat, { taskId: "FIXX-MTL-005", tier: "Budget", urgency: "STANDARD" });
     expect(carport.status).toBe("FIXED");
     expect(carport.needsHumanReview).toBe(true);
