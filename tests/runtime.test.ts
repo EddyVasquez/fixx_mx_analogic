@@ -54,26 +54,25 @@ describe("runtime: deadlines fire when the clock jumps", () => {
     const ch = new Set(rt.center.list().filter((r) => r.template === "booking.expired" && r.audience === "customer").map((r) => r.channel));
     expect(ch).toEqual(new Set(["push", "whatsapp", "inApp"]));
   });
-  it("cash, deposit paid but balance late: the job is cancelled and the deposit goes back to a CLABE", () => {
+  it("cash, full hold paid: there is no later balance deadline", () => {
     const rt = setup(); toQuote(rt); accept(rt, "cash", 72);
-    d(rt, { type: "PAYMENT_SATISFIED", amount: 840 });
+    d(rt, { type: "PAYMENT_SATISFIED", amount: 4200 });
     rt.advanceHours(49);
-    expect(state(rt)).toBe("cancelled");
-    expect(rt.refunds).toHaveLength(1);
-    expect(rt.refunds[0]).toMatchObject({ amount: 840, destination: "clabe" });
+    expect(state(rt)).toBe("scheduled");
+    expect(rt.refunds).toHaveLength(0);
+    expect(rt.scheduler.list("job").some((x) => x.event.type === "BALANCE_OVERDUE")).toBe(false);
   });
-  it("a reschedule moves the balance deadline", () => {
+  it("a reschedule does not add a balance deadline", () => {
     const rt = setup(); toQuote(rt); accept(rt, "cash", 72);
-    d(rt, { type: "PAYMENT_SATISFIED", amount: 840 });
+    d(rt, { type: "PAYMENT_SATISFIED", amount: 4200 });
     d(rt, { type: "RESCHEDULE_ACCEPTED", newStart: at(120) });
-    const times = rt.scheduler.list("job").filter((x) => x.event.type === "BALANCE_OVERDUE").map((x) => x.at.getTime());
-    expect(times).toEqual([at(96).getTime()]);
+    expect(rt.scheduler.list("job").some((x) => x.event.type === "BALANCE_OVERDUE")).toBe(false);
   });
   it("card job: runs to payment released, then the warranty starts and later ends", () => {
     const rt = setup(); toQuote(rt); accept(rt, "card", 72);
-    d(rt, { type: "PAYMENT_SATISFIED", amount: 840 });
+    d(rt, { type: "PAYMENT_SATISFIED", amount: 4200 });
     rt.advanceHours(72);
-    d(rt, { type: "ON_THE_WAY" }, { type: "CHECK_IN" }, { type: "START_WORK" }, { type: "CHECKLIST_COMPLETE" }, { type: "MARK_COMPLETE" }, { type: "BALANCE_PAID" });
+    d(rt, { type: "ON_THE_WAY" }, { type: "CHECK_IN" }, { type: "START_WORK" }, { type: "CHECKLIST_COMPLETE" }, { type: "MARK_COMPLETE" });
     const firstReminder = config.completionCheck.reminders[0]!.hours;
     rt.advanceHours(firstReminder);
     expect(rt.center.list().some((r) => r.template === "issueWindow.reminder" && r.audience === "customer")).toBe(true);
@@ -86,15 +85,15 @@ describe("runtime: deadlines fire when the clock jumps", () => {
   });
   it("an issue report opens a case with the held amount; a no-show records a penalty", () => {
     const rt = setup(); toQuote(rt); accept(rt, "card", 1);
-    d(rt, { type: "PAYMENT_SATISFIED", amount: 840 }, { type: "ON_THE_WAY" }, { type: "CHECK_IN" }, { type: "START_WORK" },
-      { type: "CHECKLIST_COMPLETE" }, { type: "MARK_COMPLETE" }, { type: "BALANCE_PAID" }, { type: "REPORT_ISSUE", selected: "wholeJob" });
+    d(rt, { type: "PAYMENT_SATISFIED", amount: 4200 }, { type: "ON_THE_WAY" }, { type: "CHECK_IN" }, { type: "START_WORK" },
+      { type: "CHECKLIST_COMPLETE" }, { type: "MARK_COMPLETE" }, { type: "REPORT_ISSUE", selected: "wholeJob" });
     expect(state(rt, "case:job")).toBe("reported");
     expect((rt.get("case:job")?.snap.ctx as { heldAmount: number }).heldAmount).toBe(4200);
     const rt2 = setup(); toQuote(rt2); accept(rt2, "card", 1);
-    d(rt2, { type: "PAYMENT_SATISFIED", amount: 840 }, { type: "PRO_NO_SHOW" });
+    d(rt2, { type: "PAYMENT_SATISFIED", amount: 4200 }, { type: "PRO_NO_SHOW" });
     expect(rt2.penalties[0]?.reason).toBe("noShow");
     d(rt2, { type: "CHOOSE_REFUND" });
-    expect(rt2.refunds[0]).toMatchObject({ amount: 840, destination: "original" });
+    expect(rt2.refunds[0]).toMatchObject({ amount: 4200, destination: "original" });
   });
 });
 

@@ -83,7 +83,7 @@ describe("customer happy path, headless (scenario 1)", () => {
     expect(chargeCard(DEMO_CARDS.approved, ctx().initialDue)).toEqual({ ok: true });
     go({ type: "PAYMENT_SATISFIED", amount: ctx().initialDue });
     rt.advanceHours(30);
-    for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE", "BALANCE_PAID"]) go({ type: e });
+    for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE"]) go({ type: e });
     rt.advanceHours(config.completionCheck.autoReleaseHours);
     expect(rt.get("job")?.snap.state).toBe("paymentReleased");
     go({ type: "RATE" });

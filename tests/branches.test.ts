@@ -87,7 +87,7 @@ describe("scenario 6: reschedule requests", () => {
     expect(acceptReschedule(rt, "job").ok).toBe(false);
     go({ type: "CHOOSE_REPLACEMENT" });
     expect(state()).toBe("recommendations");
-    expect(ctx().carryOver).toBe(840);
+    expect(ctx().carryOver).toBe(4200);
   });
   it("cannot be requested once the professional is on the way", () => {
     const { rt, go } = make("card");
@@ -101,13 +101,13 @@ describe("scenario 7: customer cancels", () => {
     const { rt, go, state } = make("card");
     go({ type: "CUSTOMER_CANCELS" });
     expect(state()).toBe("cancelled");
-    expect(rt.refunds[0]).toMatchObject({ amount: 840, destination: "original" });
+    expect(rt.refunds[0]).toMatchObject({ amount: 4200, destination: "original" });
   });
   it("after on the way: the travel fee goes to the professional", () => {
     const { rt, go, ctx } = make("card");
     rt.advanceHours(72); go({ type: "ON_THE_WAY" }); go({ type: "CUSTOMER_CANCELS" });
-    expect(ctx().refund).toMatchObject({ refund: 690, travelFeeCharged: 150, toProfessional: 150 });
-    expect(rt.refunds[0]?.amount).toBe(690);
+    expect(ctx().refund).toMatchObject({ refund: 4050, travelFeeCharged: 150, toProfessional: 150 });
+    expect(rt.refunds[0]?.amount).toBe(4050);
   });
   it("zero-refund case: the travel fee equals the payment, so no refund is created", () => {
     const { rt, go, ctx } = make("card");
@@ -128,8 +128,8 @@ describe("scenario 8: professional cancels or does not show", () => {
     quote(5000, "p2");
     go({ type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(rt.clock.now(), 30) });
     expect(state()).toBe("awaitingDeposit");
-    expect(ctx().initialDue - ctx().paid).toBe(160);
-    go({ type: "PAYMENT_SATISFIED", amount: 160 });
+    expect(ctx().initialDue - ctx().paid).toBe(800);
+    go({ type: "PAYMENT_SATISFIED", amount: 800 });
     expect(state()).toBe("scheduled");
   });
   it("a cheaper replacement is covered by the carried-over payment", () => {
@@ -146,7 +146,7 @@ describe("scenario 8: professional cancels or does not show", () => {
     go({ type: "PRO_CANCELS" });
     go({ type: "CHOOSE_REFUND" });
     expect(state()).toBe("refunded");
-    expect(rt.refunds[0]).toMatchObject({ amount: 840, destination: "original" });
+    expect(rt.refunds[0]).toMatchObject({ amount: 4200, destination: "original" });
   });
 });
 

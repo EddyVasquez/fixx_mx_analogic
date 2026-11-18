@@ -1,3 +1,4 @@
+import { roundMoney } from "../../config/revenue";
 import { config } from "../config/fixx.config";
 import { addHours, round2 } from "./time";
 
@@ -21,6 +22,29 @@ export function splitDepositBalance(total: number, depositPct: number = config.d
 }
 
 /**
+ * Demo booking hold. `quoted` is the full price held when the customer books.
+ * `increases` stays empty until an approved extra is added with addToHold.
+ */
+export interface BookingHold {
+  quoted: number;
+  increases: readonly number[];
+  held: number;
+}
+
+export function bookingHold(quoted: number, increases: readonly number[] = []): BookingHold {
+  const quotedAmount = roundMoney(quoted);
+  const extras = increases.map((amount) => roundMoney(amount));
+  const held = roundMoney(quotedAmount + extras.reduce((sum, amount) => sum + amount, 0));
+  return { quoted: quotedAmount, increases: extras, held };
+}
+
+/** Later step: an approved increase joins the same hold. It is not a second deposit. */
+export function addToHold(hold: BookingHold, increase: number): BookingHold {
+  if (!(increase > 0)) throw new RangeError("increase must be greater than 0");
+  return bookingHold(hold.quoted, [...hold.increases, increase]);
+}
+
+/**
  * Payment deadlines. Call again with the new job time (and the current time) after a reschedule:
  * deadlines recalculate from the new time.
  * ASSUMPTIONS (see DECISIONS.md G1): "far" = strictly more than 48 h away; "mid" = 24 h up to and including 48 h;
@@ -32,33 +56,29 @@ export function buildSchedule(
 ): Schedule {
   const { method, total, jobStart, now } = input;
   if (!(total > 0)) throw new RangeError("total must be greater than 0");
-  const { deposit, balance } = splitDepositBalance(total, cfg.deposit.sharePct);
+  const held = bookingHold(total).held;
   const p = cfg.payment;
 
   if (method === "card" || method === "wallet") {
     return { tier: "card", installments: [
-      { kind: "deposit", amount: deposit, dueAt: now, trigger: "quoteAccepted" },
-      { kind: "balance", amount: balance, dueAt: null, trigger: "jobComplete" }
+      { kind: "deposit", amount: held, dueAt: now, trigger: "quoteAccepted" }
     ] };
   }
 
   const hoursAway = (jobStart.getTime() - now.getTime()) / 3_600_000;
-  const before = addHours(jobStart, -p.balanceDueHoursBefore);
 
   if (hoursAway > p.farJobHours) {
     return { tier: "far", installments: [
-      { kind: "deposit", amount: deposit, dueAt: addHours(now, p.depositDueHoursFar), onMissed: "expireBooking" },
-      { kind: "balance", amount: balance, dueAt: before, onMissed: "cancelJobRefundDeposit" }
+      { kind: "deposit", amount: held, dueAt: addHours(now, p.depositDueHoursFar), onMissed: "expireBooking" }
     ] };
   }
   if (hoursAway >= p.nearJobHours) {
     return { tier: "mid", installments: [
-      { kind: "deposit", amount: deposit, dueAt: before, onMissed: "expireBooking" },
-      { kind: "balance", amount: balance, dueAt: before, onMissed: "cancelJobRefundDeposit" }
+      { kind: "deposit", amount: held, dueAt: addHours(jobStart, -p.balanceDueHoursBefore), onMissed: "expireBooking" }
     ] };
   }
   return { tier: "near", installments: [
-    { kind: "full", amount: round2(total), dueAt: addHours(now, p.fullDueHoursWithin24), onMissed: "expireRequest" }
+    { kind: "full", amount: held, dueAt: addHours(now, p.fullDueHoursWithin24), onMissed: "expireRequest" }
   ] };
 }
 

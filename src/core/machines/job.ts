@@ -207,8 +207,12 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
       APPROVE_ADDITIONAL_WORK: (c) => {
         if (!c.additional) return reject("no additional work to approve");
         const plan = planAdditionalWork(c.method, c.additional.amount);
+        const total = c.total + plan.amount;
+        // The booking hold already took the quoted price. An approved increase is still owed.
+        // addToHold is the pure hook for putting that increase on the same hold.
+        const balancePaid = plan.addedToBalance && c.paid + 0.001 < total ? false : c.balancePaid;
         return go("inProgress", [notify("additionalWork.approved", CP, "urgent", { amount: plan.amount })],
-          { total: c.total + plan.amount, lines: [...c.lines, { id: c.additional.lineId || "additional", amount: plan.amount }], additional: { ...c.additional, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
+          { total, balancePaid, lines: [...c.lines, { id: c.additional.lineId || "additional", amount: plan.amount }], additional: { ...c.additional, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
       },
       DECLINE_ADDITIONAL_WORK: (c) => go("inProgress", [notify("additionalWork.declined", P)],
         { additional: c.additional ? { ...c.additional, status: "declined" } : null })

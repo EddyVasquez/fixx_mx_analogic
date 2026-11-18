@@ -79,7 +79,7 @@ export function QuoteView(props: {
         {ctx.lines.map((l) => <Row key={l.id} left={t(`quote.line.${l.id}`)} right={money(l.amount)} />)}
         <Row left={<HlAmount>{t("quote.label.total")}</HlAmount>} right={<b>{money(ctx.total)}</b>} />
         <Row left={<HlAmount>{t("quote.label.deposit", { pct })}</HlAmount>} right={money(deposit)} />
-        <Row left={<HlAmount>{t("quote.label.balance", { pct: 100 - pct })}</HlAmount>} right={money(balance)} />
+        {balance > 0 && <Row left={<HlAmount>{t("quote.label.balance", { pct: 100 - pct })}</HlAmount>} right={money(balance)} />}
         <div className="border-b border-inkSoft/40 py-3 text-sm"><PaymentSchedule method={method} total={ctx.total} jobStart={slot(hoursSel)} basis={now} /></div>
         <Row left={<HlOk>{t("quote.label.travelFee")}</HlOk>} right={<DemoValue>{money(ctx.travelFee)}</DemoValue>} />
         <Note>{t("quote.travelTerms")}</Note>

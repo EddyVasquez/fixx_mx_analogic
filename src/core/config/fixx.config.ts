@@ -26,8 +26,9 @@ export const config = {
   // TODO(decision): case review deadline, days after the decision.
   caseReviewDeadlineDays: 14,
 
-  // Rules given in the brief (configurable, not hard-coded in logic):
-  deposit: { sharePct: 20 },
+  // Demo only. The booking hold is the full quoted price (the not-to-exceed total).
+  // Approved increases are added later with addToHold. They are not a second split.
+  deposit: { sharePct: 100 },
   payment: {
     farJobHours: 48, nearJobHours: 24,
     depositDueHoursFar: 24, balanceDueHoursBefore: 24,
@@ -58,7 +59,7 @@ export const config = {
 
   /**
    * Customer check after the professional marks the job complete.
-   * The balance (the 80% after the deposit) releases when the customer approves,
+   * The booking hold releases when the customer approves,
    * or on its own if nobody answers. Every number here is a labelled placeholder.
    */
   completionCheck: {

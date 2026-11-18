@@ -32,7 +32,7 @@ export function CompletionCheck({ ctx, categoryId, now, lang, onApprove, onToggl
         optionalNote={t("completion.checklistNote")}
       />
       <p className="font-semibold">{t("completion.deposit", { amount: money(customerDeposit(ctx.total)) })}</p>
-      <p className="text-xl font-bold">{t("completion.balance", { amount: money(customerBalance(ctx.total)) })}</p>
+      {customerBalance(ctx.total) > 0 && <p className="text-xl font-bold">{t("completion.balance", { amount: money(customerBalance(ctx.total)) })}</p>}
       {ctx.issueWindowEndsAt && (
         <p aria-live="polite">
           <DemoValue>
