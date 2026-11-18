@@ -212,7 +212,7 @@
     "status": "draft"
   },
   "decisions.estimate": {
-    "text": "Precio máximo garantizado, pintura: {price}",
+    "text": "{label}, pintura: {price}",
     "status": "draft"
   },
   "a11y.skip": {

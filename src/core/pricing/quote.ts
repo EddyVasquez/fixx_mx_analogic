@@ -21,7 +21,7 @@ const urgencyFor = (emergency: boolean): UrgencyLevel => (emergency ? "EMERGENCY
 /** Minisplit work is priced per unit. Tonnage stays the tier; the home's count is the quantity. */
 const MINISPLIT_TASKS = new Set(["FIXX-HVC-001", "FIXX-HVC-002", "FIXX-ELC-004"]);
 
-/** Optional home facts. Omitted, the quote stays the category median at catalog reference quantities. */
+/** Optional home facts. Omitted, the quote uses the whole trade at catalog reference quantities. */
 export interface QuoteScope {
   /** When set, only these catalog tasks are priced. An empty match falls back to the whole trade. */
   taskIds?: readonly string[];
