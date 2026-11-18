@@ -167,11 +167,11 @@ export function proLaborPayout(laborAfterUrgency: number, wageFloor: number): nu
 }
 
 /**
- * Urgency-scaled floor minus the professional's remainder, and never below zero.
+ * CEIL(MAX(0, eff_floor − pro_share)).
  * `wageFloor` is the floor used (already scaled by urgency when that rule applies).
- * Not a share of labor, and not shown as one.
+ * The fee covers the shortfall. It is not a share of labor and it is not the commission.
  */
 export function bookingFee(laborAfterUrgency: number, wageFloor: number): number {
-  const fee = toMinor(roundUpToCentavo(wageFloor)) - toMinor(proShare(laborAfterUrgency));
-  return fee > 0 ? fee / 100 : 0;
+  const shortfall = roundUpToCentavo(wageFloor) - proShare(laborAfterUrgency);
+  return shortfall > 0 ? roundUpToCentavo(shortfall) : 0;
 }
