@@ -463,6 +463,14 @@
     "text": "Cerrado",
     "status": "draft"
   },
+  "admin.unlisted.note": {
+    "text": "Solo demostración. Estas filas viven en este navegador hasta que las exportes.",
+    "status": "draft"
+  },
+  "admin.unlisted.export": {
+    "text": "Exportar registro no listado (CSV)",
+    "status": "draft"
+  },
   "admin.support.emergency": {
     "text": "Emergencia marcada: al cliente se le mostró la línea del 911.",
     "status": "draft"

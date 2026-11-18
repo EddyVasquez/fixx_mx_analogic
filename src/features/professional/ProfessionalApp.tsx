@@ -18,6 +18,7 @@ import { JobWork } from "./JobWork";
 import { ProfileTab } from "./ProfileTab";
 import { ScheduleTab } from "./ScheduleTab";
 import { psession } from "./session";
+import { logAgentReview } from "@/features/log/unlistedLog";
 
 const NEW = "new";
 const BRANCH: JobState[] = ["cancelled", "professionalCancelled", "noShow", "rescheduleUnanswered", "bookingExpired", "refunded"];
@@ -52,7 +53,18 @@ export function ProfessionalApp() {
   const jstate = job?.snap.state as JobState | undefined;
   const jctx = job?.snap.ctx as JobCtx | undefined;
   const mine = !!job && jctx?.professionalId === meId && !!me;
-  const sendJ = (e: { type: string } & Record<string, unknown>) => rt.dispatch(JOB_ID, e);
+  const sendJ = (e: { type: string } & Record<string, unknown>) => {
+    rt.dispatch(JOB_ID, e);
+    if (e.type === "SEND_QUOTE" && jctx?.needsReview) {
+      logAgentReview({
+        queryText: session.draft.description,
+        language: customerLang,
+        matchedTrade: session.draft.categoryId,
+        description: typeof e.taskId === "string" && e.taskId ? e.taskId : session.draft.description,
+        amount: typeof e.total === "number" ? e.total : null
+      });
+    }
+  };
   const customerLang = rt.languages.customer;
   const penalties = rt.penalties.filter((p) => p.professionalId === meId).length;
 
