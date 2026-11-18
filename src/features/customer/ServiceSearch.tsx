@@ -6,6 +6,7 @@ import { X } from "@phosphor-icons/react/X";
 import type { Lang } from "@/core/config/fixx.config";
 import { Button } from "@/ui/Button";
 import { colors } from "@/ui/tokens";
+import { recordSearchResult } from "@/features/log/unlistedLog";
 import { searchServices, type SearchChip } from "./searchIndex";
 import { TradePicker } from "./tradePicker";
 import "./serviceSearch.css";
@@ -48,6 +49,9 @@ export function ServiceSearch({ lang, onPick, onJob, onDescribe, onUrgent }: {
   };
 
   const result = searchServices(applied, lang);
+  useEffect(() => {
+    recordSearchResult(searchServices(applied, lang), lang, applied);
+  }, [applied, lang]);
   // Filler and a single letter stay idle: no dim, no count, no "No matches".
   const showHits = result.status === "hit";
   const showEmpty = result.status === "empty";

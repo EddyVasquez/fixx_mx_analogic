@@ -25,6 +25,16 @@ Try: finish a job, then during the issue window open "Report an issue", pick ite
 
 Switch the role to Admin (English or Spanish) to see the console; open the Help tab as a customer or professional and talk to the Assistant, ask for an Agent, then switch to Support to join the chat and use the macros.
 
+## Unlisted materials and labor log (demo only)
+
+This site is static on GitHub Pages. It has no backend, so it cannot collect a weekly report by itself.
+
+`data/unlisted_log.csv` is the file Scout reads every Monday. The committed file has the header only. While someone uses the demo, new rows stay in that visitor's browser (`localStorage`). They are not uploaded.
+
+To update the file in the repo, open the Admin console and choose "Export unlisted log (CSV)", then commit the exported rows into `data/unlisted_log.csv`. A real weekly collection needs a backend later.
+
+The log has three sources: a search that matches a trade but no catalog job (`search-miss`), a regulated job that was sent and is showing Pending review (`agent-review`), and an off-catalog item the pricing queue will record later (`off-catalog`). Amounts are the customer price in MXN, with centavos. The log does not store a FIXX margin, a commission, or a professional payout.
+
 ## Final checklist
 
     npm install
