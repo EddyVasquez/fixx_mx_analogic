@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import type { Lang } from "@/core/config/fixx.config";
 import { useRuntime } from "@/demo/runtime";
 import { inputClass } from "@/ui/Field";
+import { Button } from "@/ui/Button";
+import { downloadUnlistedLog } from "@/features/log/unlistedLog";
 import {
   CasesSection, HomeownersSection, JobsSection, NotesSection, ProfessionalsSection, QualitySection,
   QuotesSection, RefundsSection, RequestsSection, StandardsSection, VerificationSection, WarrantiesSection
@@ -24,6 +26,10 @@ export function AdminApp() {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("admin.title")}</h2>
+      <div className="flex flex-col items-start gap-2 rounded-2xl border-2 border-ink bg-paper p-3">
+        <p className="text-sm text-inkSoft">{t("admin.unlisted.note")}</p>
+        <Button onClick={() => downloadUnlistedLog()}>{t("admin.unlisted.export")}</Button>
+      </div>
       <label className="flex flex-col gap-1 text-sm font-semibold">
         {t("admin.section")}
         <select className={inputClass} value={section} onChange={(e) => setSection(e.target.value as Section)}>

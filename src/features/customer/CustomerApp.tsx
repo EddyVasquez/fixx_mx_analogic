@@ -39,6 +39,7 @@ import { useHomeProfile } from "./homeProfile";
 import { ChatView } from "@/features/chat/ChatView";
 import { settleClabe } from "./refundActions";
 import { JOB_ID, ratings, resetSession, session, type Draft } from "./session";
+import { logAgentReview } from "@/features/log/unlistedLog";
 
 type Pre = "home" | "request" | "review";
 const BRANCH: JobState[] = ["cancelled", "professionalCancelled", "noShow", "rescheduleUnanswered", "bookingExpired", "refunded"];
@@ -128,6 +129,15 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
       if (quote.pendingPrice) return;
       const fee = travelFeeFor(bandFor(pro.zoneId, draft.zoneId, zones));
       send({ type, total: quote.total, travelFee: fee, payoutRatio: config.demoPayoutRatio, lines: quote.lines, taskId: quote.taskId, tier: quote.tier });
+      if (ctx?.needsReview) {
+        logAgentReview({
+          queryText: draft.description,
+          language: lang,
+          matchedTrade: categoryId,
+          description: quote.taskId || draft.description,
+          amount: quote.total
+        });
+      }
     } else send({ type });
   };
 

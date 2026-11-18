@@ -466,5 +466,13 @@
   "admin.support.emergency": {
     "text": "Emergency flagged: the customer was shown the 911 line.",
     "status": "draft"
+  },
+  "admin.unlisted.note": {
+    "text": "Demo only. These rows stay in this browser until you export them.",
+    "status": "draft"
+  },
+  "admin.unlisted.export": {
+    "text": "Export unlisted log (CSV)",
+    "status": "draft"
   }
 }
