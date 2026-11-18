@@ -19,7 +19,7 @@ export function DecisionsPanel() {
     t("decisions.hours", { start: config.businessHours.start, end: config.businessHours.end }),
     t("decisions.signIn", { valid: config.signIn.codeValiditySec / 60, resend: config.signIn.resendSec, lockout: config.signIn.lockoutSec / 60 }),
     t("decisions.caseReview", { days: config.caseReviewDeadlineDays }),
-    t("decisions.estimate", { low: money(est.low), high: money(est.high) })
+    t("decisions.estimate", { price: money(est.nteTotal) })
   ];
   return (
     <div className="flex flex-col gap-2">

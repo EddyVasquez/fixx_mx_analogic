@@ -384,7 +384,7 @@
     "status": "draft"
   },
   "estimate.title": {
-    "text": "Tu rango de precio",
+    "text": "Tu precio",
     "status": "draft"
   },
   "estimate.range": {
@@ -533,6 +533,14 @@
   },
   "quote.label.total": {
     "text": "TOTAL",
+    "status": "draft"
+  },
+  "quote.nte": {
+    "text": "Precio máximo garantizado",
+    "status": "draft"
+  },
+  "quote.nteNote": {
+    "text": "La persona profesional no puede cobrar más sin tu aprobación.",
     "status": "draft"
   },
   "quote.label.deposit": {

@@ -384,7 +384,7 @@
     "status": "draft"
   },
   "estimate.title": {
-    "text": "Your price range",
+    "text": "Your price",
     "status": "draft"
   },
   "estimate.range": {
@@ -533,6 +533,14 @@
   },
   "quote.label.total": {
     "text": "TOTAL",
+    "status": "draft"
+  },
+  "quote.nte": {
+    "text": "Not-to-exceed price",
+    "status": "draft"
+  },
+  "quote.nteNote": {
+    "text": "The professional can't charge more without your approval.",
     "status": "draft"
   },
   "quote.label.deposit": {

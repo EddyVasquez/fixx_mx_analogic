@@ -23,14 +23,15 @@ export function EstimateView({ draft, onNext }: { draft: Draft; onNext: () => vo
       <p className="text-lg font-semibold"><TradeName categoryId={draft.categoryId} lang={lang} /></p>
       {r.priced ? (
         <>
-          <p className="min-w-0 break-words text-3xl font-bold"><DemoValue>{t("estimate.range", { low: money(r.low), high: money(r.high) })}</DemoValue></p>
+          <p className="font-semibold">{t("quote.nte")}</p>
+          <p className="min-w-0 break-words text-3xl font-bold"><DemoValue>{money(r.nteTotal)}</DemoValue></p>
+          <p>{t("quote.nteNote")}</p>
           {r.surcharge > 0 && <p className="font-semibold"><DemoValue>{t("estimate.urgent", { amount: money(r.surcharge) })}</DemoValue></p>}
         </>
       ) : (
         <p className="text-lg font-semibold">{t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending")}</p>
       )}
       <HomeQuoteFacts draft={draft} />
-      <p className="text-inkSoft">{t("estimate.note")}</p>
       <div className="max-md:fixed max-md:inset-x-0 max-md:bottom-[5.75rem] max-md:z-20 max-md:border-t max-md:border-line max-md:bg-mist max-md:px-4 max-md:py-2">
         <Button className="max-md:w-full" onClick={onNext}>{t("btn.seeProfessionals")}</Button>
       </div>

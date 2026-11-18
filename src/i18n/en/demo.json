@@ -212,7 +212,7 @@
     "status": "draft"
   },
   "decisions.estimate": {
-    "text": "Estimate range, painting: {low} to {high}",
+    "text": "Not-to-exceed price, painting: {price}",
     "status": "draft"
   },
   "a11y.skip": {
