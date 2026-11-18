@@ -110,12 +110,12 @@ describe("request journey meter", () => {
     openRequest();
     render(<CustomerApp />);
     const bar = screen.getByRole("progressbar");
-    expect(document.querySelector(".job-meter-title")?.textContent).toBe("Price range ready");
+    expect(document.querySelector(".job-meter-title")?.textContent).toBe("Estimate ready");
     expect(screen.getByText("Step 2 of 12")).toBeTruthy();
     expect(bar.getAttribute("aria-valuemin")).toBe("1");
     expect(bar.getAttribute("aria-valuemax")).toBe("12");
     expect(bar.getAttribute("aria-valuenow")).toBe("2");
-    expect(bar.getAttribute("aria-valuetext")).toBe("Price range ready");
+    expect(bar.getAttribute("aria-valuetext")).toBe("Estimate ready");
     expect(document.querySelector(".job-meter-node-current")?.getAttribute("data-status")).toBe("estimated");
     expect(document.querySelector<HTMLElement>(".job-meter-rail")?.style.getPropertyValue("--progress")).toBe("0.5");
     expect(document.querySelector(".job-meter-line-partial")).toBeTruthy();

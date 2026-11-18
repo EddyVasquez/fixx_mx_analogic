@@ -40,6 +40,7 @@ import { ChatView } from "@/features/chat/ChatView";
 import { settleClabe } from "./refundActions";
 import { JOB_ID, ratings, resetSession, session, type Draft } from "./session";
 import { logAgentReview } from "@/features/log/unlistedLog";
+import { ExtraWorkDemo } from "@/features/extraWork/ExtraWorkDemo";
 
 type Pre = "home" | "request" | "review";
 const BRANCH: JobState[] = ["cancelled", "professionalCancelled", "noShow", "rescheduleUnanswered", "bookingExpired", "refunded"];
@@ -154,6 +155,7 @@ function RequestFlow({ onEditHome }: { onEditHome: () => void }) {
     <>
       {meter && <StickyJobMeter>{meter}</StickyJobMeter>}
       {content}
+      <ExtraWorkDemo role="customer" originalNte={ctx?.total || quote.total || 1450} tradeId={categoryId} lang={lang} />
     </>
   );
 

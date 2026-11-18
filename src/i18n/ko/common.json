@@ -200,7 +200,7 @@
     "needsNativeReview": true
   },
   "status.estimated": {
-    "text": "예상 가격 범위 준비됨",
+    "text": "예상 견적 준비됨",
     "status": "draft",
     "needsNativeReview": true
   },

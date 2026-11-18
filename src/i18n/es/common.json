@@ -160,7 +160,7 @@
     "status": "draft"
   },
   "status.estimated": {
-    "text": "Rango de precio listo",
+    "text": "Estimado listo",
     "status": "draft"
   },
   "status.professionalSelected": {

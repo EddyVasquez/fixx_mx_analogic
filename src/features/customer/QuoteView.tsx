@@ -55,7 +55,6 @@ export function QuoteView(props: {
     );
   }
   const { deposit, balance } = splitDepositBalance(ctx.total);
-  const pct = config.deposit.sharePct;
   const warranty = config.warrantyDaysByCategory[draft.categoryId] ?? 0;
   const slotList = draft.emergency ? config.emergencySlotHours : config.scheduleSlotHours;
   const hoursSel = slotList.includes(slotHours) ? slotHours : slotList[0]!;
@@ -79,8 +78,10 @@ export function QuoteView(props: {
         {ctx.lines.map((l) => <Row key={l.id} left={t(`quote.line.${l.id}`)} right={money(l.amount)} />)}
         <Row left={<HlAmount>{t("quote.nte")}</HlAmount>} right={<b>{money(ctx.total)}</b>} />
         <Note>{t("quote.nteNote")}</Note>
-        <Row left={<HlAmount>{t("quote.label.deposit", { pct })}</HlAmount>} right={money(deposit)} />
-        <Row left={<HlAmount>{t("quote.label.balance", { pct: 100 - pct })}</HlAmount>} right={money(balance)} />
+        <Note>{t("quote.standardMaterials")}</Note>
+        <Note>{t("quote.cardSpei")}</Note>
+        <Row left={<HlAmount>{t("quote.payNow")}</HlAmount>} right={money(deposit)} />
+        <Row left={<HlAmount>{t("quote.payLater")}</HlAmount>} right={money(balance)} />
         <div className="border-b border-inkSoft/40 py-3 text-sm"><PaymentSchedule method={method} total={ctx.total} jobStart={slot(hoursSel)} basis={now} /></div>
         <Row left={<HlOk>{t("quote.label.travelFee")}</HlOk>} right={<DemoValue>{money(ctx.travelFee)}</DemoValue>} />
         <Note>{t("quote.travelTerms")}</Note>
@@ -105,7 +106,7 @@ export function QuoteView(props: {
       </Field>
       <Field label={t("payment.method")}>
         <select className={inputClass} value={method} onChange={(e) => props.onMethod(e.target.value as PayMethod)}>
-          {(["card", "wallet", "cash", "spei"] as const).map((m) => <option key={m} value={m}>{t(`method.${m}`)}</option>)}
+          {(["card", "spei"] as const).map((m) => <option key={m} value={m}>{t(`method.${m}`)}</option>)}
         </select>
       </Field>
       <Field label={t("sign.name")}>

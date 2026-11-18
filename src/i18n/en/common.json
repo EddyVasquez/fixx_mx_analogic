@@ -160,7 +160,7 @@
     "status": "draft"
   },
   "status.estimated": {
-    "text": "Price range ready",
+    "text": "Estimate ready",
     "status": "draft"
   },
   "status.professionalSelected": {

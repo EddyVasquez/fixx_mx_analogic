@@ -415,7 +415,7 @@ describe("sub-step line fill", () => {
 
   it("fills halfway when the step has no sub-steps, and keeps the step count", () => {
     for (const [status, step, name] of [
-      ["estimated", "2", "Price range ready"],
+      ["estimated", "2", "Estimate ready"],
       ["onTheWay", "7", "On the way"]
     ] as const) {
       cleanup();

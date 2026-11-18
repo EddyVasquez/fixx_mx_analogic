@@ -5,6 +5,7 @@ import { useRuntime } from "@/demo/runtime";
 import { inputClass } from "@/ui/Field";
 import { Button } from "@/ui/Button";
 import { downloadUnlistedLog } from "@/features/log/unlistedLog";
+import { ExtraWorkDemo } from "@/features/extraWork/ExtraWorkDemo";
 import {
   CasesSection, HomeownersSection, JobsSection, NotesSection, ProfessionalsSection, QualitySection,
   QuotesSection, RefundsSection, RequestsSection, StandardsSection, VerificationSection, WarrantiesSection
@@ -30,6 +31,7 @@ export function AdminApp() {
         <p className="text-sm text-inkSoft">{t("admin.unlisted.note")}</p>
         <Button onClick={() => downloadUnlistedLog()}>{t("admin.unlisted.export")}</Button>
       </div>
+      <ExtraWorkDemo role="agent" originalNte={1450} tradeId="plumbing" lang={i18n.language as Lang} />
       <label className="flex flex-col gap-1 text-sm font-semibold">
         {t("admin.section")}
         <select className={inputClass} value={section} onChange={(e) => setSection(e.target.value as Section)}>

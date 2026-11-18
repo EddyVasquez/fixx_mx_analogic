@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 export function PendingReviewBanner() {
   const { t } = useTranslation();
   return (
-    <div id="pending-review-banner" role="status" className="flex min-w-0 gap-3 rounded-2xl border-2 border-warnAmberInk bg-warnAmberBg p-3 text-warnAmberInk">
+    <div id="pending-review-banner" role="status" className="flex min-w-0 gap-3 rounded-2xl border-2 border-ink bg-paper p-3 text-ink">
       <svg aria-hidden="true" viewBox="0 0 24 24" className="mt-1 h-6 w-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="9" />
         <path d="M12 10.5v6" strokeLinecap="round" />

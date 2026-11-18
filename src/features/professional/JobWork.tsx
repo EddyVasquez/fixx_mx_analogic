@@ -22,6 +22,7 @@ import { CompletionChecklist } from "@/features/shared/CompletionChecklist";
 import { JobPhotos, usePhotoQueue } from "@/features/shared/JobPhotos";
 import { DemoValue } from "@/ui/DemoBadge";
 import { psession } from "./session";
+import { ExtraWorkDemo } from "@/features/extraWork/ExtraWorkDemo";
 
 type Send = (e: { type: string } & Record<string, unknown>) => void;
 
@@ -135,6 +136,7 @@ export function JobWork({ rt, state, ctx, categoryId, lang, payoutReleased, send
               }}>{t("btn.requestAddl")}</Button>
             </section>
           )}
+          <ExtraWorkDemo role="pro" originalNte={ctx.total || 1450} tradeId={categoryId} lang={lang} />
           <section className="flex flex-col gap-3 rounded-2xl border border-line bg-paper p-3">
             <h3 className="font-bold">{t("addl.pro.request")}</h3>
             <Field label={t("addl.note")}><input className={inputClass} value={addNote} onChange={(e) => setAddNote(e.target.value)} /></Field>
