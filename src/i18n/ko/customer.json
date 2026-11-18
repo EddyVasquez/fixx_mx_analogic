@@ -480,7 +480,7 @@
     "needsNativeReview": true
   },
   "estimate.title": {
-    "text": "예상 가격 범위",
+    "text": "가격",
     "status": "draft",
     "needsNativeReview": true
   },
@@ -666,6 +666,16 @@
   },
   "quote.label.total": {
     "text": "합계",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "quote.nte": {
+    "text": "상한 가격",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "quote.nteNote": {
+    "text": "승인 없이는 전문가가 더 받을 수 없어요.",
     "status": "draft",
     "needsNativeReview": true
   },

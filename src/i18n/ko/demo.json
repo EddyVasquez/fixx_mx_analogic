@@ -265,7 +265,7 @@
     "needsNativeReview": true
   },
   "decisions.estimate": {
-    "text": "예상 범위, 도장: {low} ~ {high}",
+    "text": "{label}, 도장: {price}",
     "status": "draft",
     "needsNativeReview": true
   },

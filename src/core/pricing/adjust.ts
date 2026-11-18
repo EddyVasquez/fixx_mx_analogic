@@ -5,6 +5,8 @@ import { customerLines } from "./quote";
 
 export interface AdjustableQuote {
   total: number;
+  /** Moves with the customer total when labor is adjusted. Omitted on older callers. */
+  nteTotal?: number;
   lines: QuoteLine[];
   labor: number;
   materials: number;
@@ -45,6 +47,7 @@ export function adjustQuote(
     labor,
     lines,
     total,
+    nteTotal: total,
     payout,
     bookingFee: fee,
     factor: base.payout === 0 ? 1 : proposed / base.payout

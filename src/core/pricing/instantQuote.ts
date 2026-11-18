@@ -63,7 +63,7 @@ export interface TaskQuote {
   total: number; displayTotal: number;
 }
 
-/** Money rounded with the rule in the revenue config (half-up to the centavo). */
+/** Money rounded with the workbook rule in the revenue config (round up to the centavo). */
 export const round2 = (n: number): number => roundMoney(n);
 /** Half up to a whole peso. Customer-facing prices use round2 so centavos stay visible. */
 export const roundHalfUp = (n: number): number => Math.floor(n + 0.5);
@@ -200,7 +200,7 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   if (unknownPick.length) throw new RangeError(`not an as-needed line of this task and tier: ${unknownPick.join(", ")}`);
   const asNeededOptions = lines.filter((l) => l.type === "as-needed").map((l) => lineOut(cat, l, scale));
   const selected = asNeededOptions.filter((l) => wanted.has(l.lineId) && l.cost != null);
-  const addonLabor = round2(selected.reduce((s, l) => s + addonLaborAmount(cat, taskId, l.basis), 0));
+  const addonLabor = selected.reduce((s, l) => s + addonLaborAmount(cat, taskId, l.basis), 0);
 
   // materials: base lines only
   const base = lines.filter((l) => l.type === "base");
@@ -214,14 +214,15 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
     }
   }
   // Unit prices already include IVA. Items quoted before tax were grossed up once in the workbook. Do not add 16% again.
-  const materialsRaw = round2(base.reduce((s, l) => s + (l.unitPrice == null ? 0 : scaledQty(l, scale) * l.unitPrice), 0));
+  // The workbook ceils the marked-up materials once. Do not ceil the raw sum first.
+  const materialsRaw = base.reduce((s, l) => s + (l.unitPrice == null ? 0 : scaledQty(l, scale) * l.unitPrice), 0);
   const materials = materialsPrice(materialsRaw);
 
   // labor. Add-on labor (oven, fridge, balcony, pet stain) is market labor. Urgency multiplies customer labor.
   // The catalog floor stays unscaled. Payout and the booking fee use that floor times the urgency multiplier.
   const estDays = (lab.estJobDays ?? 1) * scale;
   const floor = wageFloorForLabor(cat, lab, estDays, scale);
-  const marketLabor = round2(lab.rateTypical * qtyForLabor + addonLabor);
+  const marketLabor = lab.rateTypical * qtyForLabor + addonLabor;
   const laborBasis = Math.max(marketLabor, floor);
   // Round the customer labor after urgency. The split uses this same product, before that centavo round.
   const laborAfterUrgency = laborBasis * mult;
@@ -239,7 +240,10 @@ export function quoteTask(cat: Catalog, input: QuoteInput, opts: { now?: Date } 
   const choicePrices = choice.filter((l) => l.unitPrice != null).map((l) => l.unitPrice as number);
   const unpriced = [...lines.filter((l) => l.type !== "base" && l.unitPrice == null).map((l) => lineOut(cat, l, scale)), ...unpricedBase.map((l) => lineOut(cat, l, scale))];
 
-  const selectedRaw = round2(selected.reduce((s, l) => s + (l.cost ?? 0), 0));
+  const selectedRaw = selected.reduce((s, l) => {
+    const line = lines.find((item) => item.id === l.lineId);
+    return s + (line?.unitPrice == null ? 0 : scaledQty(line, scale) * line.unitPrice);
+  }, 0);
   const selectedTotal = selectedRaw === 0 ? 0 : materialsPrice(selectedRaw);
   const diagnosisFee = input.withDiagnosis ? diagnosisFeeFor(cat, task.category, input.urgency) : null;
   if (input.withDiagnosis && diagnosisFee == null) reasons.push("no-diagnosis-fee-data");

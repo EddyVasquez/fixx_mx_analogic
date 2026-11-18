@@ -18,6 +18,7 @@ export interface Draft {
   /** Copied from the home profile when a request starts. The form shows name and community read-only. */
   homeownerName: string; community: string; street: string; emergency: boolean;
   /** Copied from the home model. Cleaning size is a catalog m² band. The form shows these read-only; the quote still uses them. */
+  homeModelId: string;
   cleaningTier: string; minisplits: number; bathrooms: number; bedrooms: number;
   /** Catalog task ids, in the order the customer selected them. */
   selectedJobIds: string[];
@@ -31,6 +32,7 @@ export const emptyDraft = (over: Partial<Draft> = {}): Draft => {
     // No trade until the customer taps one. A hardcoded trade used to light up the home grid.
     categoryId: "", description: "", photos: 0, measurements: "", zoneId: "z1",
     homeownerName: profile.homeownerName, community: profile.community, street: profile.address, emergency: false,
+    homeModelId: profile.model?.id ?? "",
     ...facts,
     selectedJobIds: [], descriptionEdited: false,
     ...over

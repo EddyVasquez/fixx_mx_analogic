@@ -8,5 +8,15 @@
     "text": "전문가가 이 작업을 승인해야 고객이 예약할 수 있어요.",
     "status": "draft",
     "needsNativeReview": true
+  },
+  "admin.unlisted.note": {
+    "text": "데모 전용. 이 기록은 내보내기 전까지 이 브라우저에만 남아요.",
+    "status": "draft",
+    "needsNativeReview": true
+  },
+  "admin.unlisted.export": {
+    "text": "미등록 기록 내보내기 (CSV)",
+    "status": "draft",
+    "needsNativeReview": true
   }
 }
