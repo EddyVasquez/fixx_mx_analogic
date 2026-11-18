@@ -1,6 +1,7 @@
 import catalogJson from "../../seed/pricing/catalog.json";
 import type { QuoteLine } from "../rules";
 import { payoutFloor } from "../../config/revenue";
+import { measurementsFromHome } from "../../features/customer/homeModel";
 import { isAreaTierList } from "./areaTier";
 import { quoteTask, type Catalog, type CatalogTask, type TaskQuote, type UrgencyLevel } from "./instantQuote";
 
@@ -20,7 +21,7 @@ const urgencyFor = (emergency: boolean): UrgencyLevel => (emergency ? "EMERGENCY
 /** Minisplit work is priced per unit. Tonnage stays the tier; the home's count is the quantity. */
 const MINISPLIT_TASKS = new Set(["FIXX-HVC-001", "FIXX-HVC-002", "FIXX-ELC-004"]);
 
-/** Optional home facts. Omitted, the quote stays the category median at catalog reference quantities. */
+/** Optional home facts. Omitted, the quote uses the whole trade at catalog reference quantities. */
 export interface QuoteScope {
   /** When set, only these catalog tasks are priced. An empty match falls back to the whole trade. */
   taskIds?: readonly string[];
@@ -28,6 +29,11 @@ export interface QuoteScope {
   cleaningTier?: string;
   /** Unit count for minisplit tasks. 1 matches the catalog reference. */
   minisplits?: number;
+  /**
+   * Home plan that supplies built area and the minisplit count.
+   * A real plan replaces those two fields. A TODO plan does not.
+   */
+  homeModelId?: string;
 }
 
 const derivedRanges = new Map<string, [number, number]>();
@@ -59,6 +65,18 @@ function scopeQtyFor(task: CatalogTask, scope: QuoteScope | undefined, selected:
   // Scaling every electrical task would move the median when the customer did not ask for a circuit.
   if (!selected && task.category !== "HVAC") return undefined;
   return scope.minisplits;
+}
+
+/** Built area and unit counts come from the home plan when that plan has real measurements. */
+export function scopeWithHome(scope?: QuoteScope): QuoteScope | undefined {
+  if (!scope?.homeModelId) return scope;
+  const measured = measurementsFromHome(scope.homeModelId);
+  if (!measured) return scope;
+  return {
+    ...scope,
+    ...(measured.cleaningTier ? { cleaningTier: measured.cleaningTier } : {}),
+    minisplits: measured.minisplits
+  };
 }
 
 function scopeKey(scope?: QuoteScope): string {
@@ -99,6 +117,8 @@ export interface EstimateRange {
   low: number;
   high: number;
   surcharge: number;
+  /** Top of this scope. This is the single not-to-exceed price. */
+  nteTotal: number;
   /** False when this trade is in the catalog but has no fixed price yet (quote on the visit). */
   priced: boolean;
   /** True when labor is waiting on quotes and must not be booked or priced. */
@@ -110,12 +130,13 @@ function categoryHasPendingQuotes(categoryId: string): boolean {
 }
 
 export function estimateRange(categoryId: string, emergency: boolean, scope?: QuoteScope): EstimateRange {
-  const r = rangeFromCatalog(categoryId, urgencyFor(emergency), scope);
+  const measured = scopeWithHome(scope);
+  const r = rangeFromCatalog(categoryId, urgencyFor(emergency), measured);
   if (!r) {
     if (!CATALOG_CATEGORY[categoryId]) throw new Error(`No estimate range configured for ${categoryId}`);
-    return { low: 0, high: 0, surcharge: 0, priced: false, pendingQuotes: categoryHasPendingQuotes(categoryId) };
+    return { low: 0, high: 0, nteTotal: 0, surcharge: 0, priced: false, pendingQuotes: categoryHasPendingQuotes(categoryId) };
   }
-  return { low: r[0], high: r[1], surcharge: 0, priced: true, pendingQuotes: false };
+  return { low: r[0], high: r[1], nteTotal: r[1], surcharge: 0, priced: true, pendingQuotes: false };
 }
 
 const reviewByCategory = new Map<string, TaskQuote["humanReview"]>();
@@ -161,6 +182,11 @@ export interface BookedQuote {
   payout: number;
   taskId: string;
   tier: string;
+  /**
+   * Not-to-exceed total for this scope: the highest fixed catalog total.
+   * Equal to `total`, which is that same top quote. There is no low/high price on the quote.
+   */
+  nteTotal: number;
   /** True when the catalog has no fixed price. Totals are not a customer price. */
   pendingPrice: boolean;
   /** True when the trade is waiting on quotes and must not be booked. */
@@ -178,17 +204,19 @@ export function customerLines(parts: { materials: number; labor: number; booking
 }
 
 /**
- * Demo quote for a trade: one real catalog job near the middle of that trade's fixed totals.
- * Lines are materials, labor, and a booking fee when that fee is above zero. They add up to the customer total.
+ * Not-to-exceed quote for a trade: the highest fixed catalog total in the scope.
+ * Lines are materials, labor, and a booking fee when that fee is above zero. They add up to that one price.
  */
 export function buildQuote(categoryId: string, emergency: boolean, scope?: QuoteScope): BookedQuote {
-  const quotes = fixedQuotes(categoryId, urgencyFor(emergency), scope);
+  const measured = scopeWithHome(scope);
+  const quotes = fixedQuotes(categoryId, urgencyFor(emergency), measured);
   if (quotes.length === 0) {
     if (!CATALOG_CATEGORY[categoryId]) throw new Error(`No estimate range configured for ${categoryId}`);
     const category = CATALOG_CATEGORY[categoryId];
     const task = Object.values(catalog.tasks).find((item) => item.category === category);
     return {
       total: 0,
+      nteTotal: 0,
       lines: [],
       labor: 0,
       materials: 0,
@@ -201,11 +229,12 @@ export function buildQuote(categoryId: string, emergency: boolean, scope?: Quote
       pendingQuotes: categoryHasPendingQuotes(categoryId)
     };
   }
-  const sorted = [...quotes].sort((a, b) => a.total - b.total || a.taskId.localeCompare(b.taskId) || a.tier.localeCompare(b.tier));
-  const quote = sorted[Math.floor((sorted.length - 1) / 2)]!;
+  const sorted = [...quotes].sort((a, b) => b.total - a.total || a.taskId.localeCompare(b.taskId) || a.tier.localeCompare(b.tier));
+  const quote = sorted[0]!;
   const wageFloor = payoutFloor(quote.floor, quote.multiplier);
   return {
     total: quote.total,
+    nteTotal: quote.total,
     lines: customerLines({ materials: quote.materials, labor: quote.labor, bookingFee: quote.bookingFee }),
     labor: quote.labor,
     materials: quote.materials,

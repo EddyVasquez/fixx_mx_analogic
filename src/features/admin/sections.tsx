@@ -136,7 +136,7 @@ export function QuotesSection({ rt, lang }: P) {
   if (!c || !c.total) return <Table caption={t("admin.s.quotes")} head={[]} rows={[]} />;
   return (
     <div className="flex flex-col gap-3">
-      <Table caption={t("admin.s.quotes")} head={[t("admin.col.line"), t("admin.col.amount")]} rows={[...c.lines.map((l) => [t(`quote.line.${l.id}`), money(l.amount)]), [<b key="t">{t("quote.label.total")}</b>, <b key="a">{money(c.total)}</b>]]} />
+      <Table caption={t("admin.s.quotes")} head={[t("admin.col.line"), t("admin.col.amount")]} rows={[...c.lines.map((l) => [t(`quote.line.${l.id}`), money(l.amount)]), [<b key="t">{t("quote.nte")}</b>, <b key="a">{money(c.total)}</b>]]} />
       <Table caption={t("admin.col.payout")} head={[t("admin.col.payout"), t("admin.col.travelFee"), t("admin.col.adjustment"), t("admin.col.official")]}
         rows={[[money(round2(c.total * c.payoutRatio)), <DemoValue key="f">{money(c.travelFee)}</DemoValue>, c.adjustmentReason ?? "—", languageNames[rt.languages.customer]]]} />
     </div>
@@ -148,7 +148,7 @@ export function StandardsSection({ lang }: P) {
   const money = useMoney();
   const rows = categories.map((c) => {
     const r = estimateRange(c.id, false);
-    const range = r.priced ? `${money(r.low)} – ${money(r.high)}` : t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending");
+    const range = r.priced ? money(r.nteTotal) : t(r.pendingQuotes ? "estimate.pendingQuotes" : "estimate.pending");
     return [<TradeName key={c.id} categoryId={c.id} lang={lang} />, c.lineType, <DemoValue key="w">{t("quote.warrantyDays", { days: config.warrantyDaysByCategory[c.id] ?? 0 })}</DemoValue>,
       r.priced ? <DemoValue key="r">{range}</DemoValue> : <span key="r">{range}</span>, String(CHECKLIST_ITEMS.length)];
   });

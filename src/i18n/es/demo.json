@@ -212,7 +212,7 @@
     "status": "draft"
   },
   "decisions.estimate": {
-    "text": "Rango estimado, pintura: de {low} a {high}",
+    "text": "{label}, pintura: {price}",
     "status": "draft"
   },
   "a11y.skip": {
