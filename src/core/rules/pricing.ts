@@ -1,3 +1,4 @@
+import { roundUpToCentavo } from "../../config/revenue";
 import { config } from "../config/fixx.config";
 import { round2 } from "./time";
 
@@ -18,14 +19,9 @@ export const emergencyTotal = (base: number, _cfg: typeof config = config): numb
 
 /**
  * Round up to the next centavo. An exact centavo stays put.
- * 1234.561 becomes 1234.57.
+ * 1234.561 becomes 1234.57. 887.50 stays 887.50.
  */
-export function ceilToCentavo(amount: number): number {
-  if (!Number.isFinite(amount)) return amount;
-  const sign = amount < 0 ? -1 : 1;
-  const minor = Math.ceil(Math.abs(amount) * 100 - 1e-8);
-  return (sign * minor) / 100;
-}
+export const ceilToCentavo = roundUpToCentavo;
 
 /**
  * Customer amount for a payout the professional typed.

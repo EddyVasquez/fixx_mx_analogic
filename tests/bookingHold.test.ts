@@ -37,6 +37,8 @@ describe("centavo rounding", () => {
   it("always rounds up to the next centavo", () => {
     expect(ceilToCentavo(1234.561)).toBe(1234.57);
     expect(ceilToCentavo(1234.56)).toBe(1234.56);
+    expect(ceilToCentavo(887.5)).toBe(887.5);
+    expect(ceilToCentavo(887.5000004)).toBe(887.5);
     expect(customerAmountFromPayout(1234.561, 1)).toBe(1234.57);
     expect(customerAmountFromPayout(196.84, 0.8)).toBe(246.05);
     expect(customerAmountFromPayout(196.84, 0.8)).not.toBe(Math.round(196.84 / 0.8 / 10) * 10);

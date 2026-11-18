@@ -31,12 +31,13 @@ export const revenue = {
   floorScalesWithUrgency: true,
 
   /**
-   * Confirmed: half-up to the centavo on every money amount.
+   * Confirmed: round up to the next centavo on every money amount.
+   * Same rule as the workbook: ROUNDUP(ROUND(x, 6), 2).
    * Labor is rounded after urgency, and only then split.
    */
   rounding: {
     decimals: 2,
-    mode: "half-up" as const
+    mode: "round-up" as const
   },
 
   /**
@@ -75,23 +76,27 @@ export const revenue = {
 export const CARD_FEE_IVA = 1.16;
 
 /**
- * Half-up to the centavo, computed in integer minor units.
- * A 1e-8 bias lifts binary values that land just under an exact half
- * (1.005 × 100 is 100.49999999999999; 534.285 must become 534.29).
+ * Workbook money round, used for every price: ROUNDUP(ROUND(amount, 6), 2).
+ * The 6-decimal round drops binary noise so an exact centavo such as 887.50 stays 887.50.
+ * Anything past that centavo rounds up, away from zero. 1234.561 becomes 1234.57.
  */
-export function roundHalfUp(amount: number, decimals: number = revenue.rounding.decimals): number {
-  if (!Number.isFinite(amount)) return amount;
+export function roundUpToCentavo(amount: number): number {
+  if (!Number.isFinite(amount) || amount === 0) return amount;
   const sign = amount < 0 ? -1 : 1;
-  const factor = 10 ** decimals;
-  const minor = Math.floor(Math.abs(amount) * factor + 1e-8 + 0.5);
-  return (sign * minor) / factor;
+  const [whole = "0", frac = ""] = Math.abs(amount).toFixed(10).split(".");
+  const digits = frac.padEnd(10, "0");
+  let micro = BigInt(whole) * 1_000_000n + BigInt(digits.slice(0, 6));
+  if (digits[6]! >= "5") micro += 1n;
+  const pastCentavo = micro % 10_000n;
+  if (pastCentavo !== 0n) micro += 10_000n - pastCentavo;
+  return (sign * Number(micro / 10_000n)) / 100;
 }
 
-/** Half-up to the configured number of decimals. The centavo is the default. */
-export const roundMoney = roundHalfUp;
+/** Round up to the next centavo. Every catalog price, fee, total, and deposit uses this. */
+export const roundMoney = roundUpToCentavo;
 
 function toMinor(amount: number): number {
-  return Math.round(roundHalfUp(amount) * 100);
+  return Math.round(roundUpToCentavo(amount) * 100);
 }
 
 /**
@@ -105,16 +110,16 @@ export function materialsPrice(rawMaterialCost: number): number {
 
 /**
  * Urgency-applied labor before the customer centavo round.
- * Customer labor is roundHalfUp of this. The professional's share is roundHalfUp of this times (1 − proCommission).
- * Rounding the customer labor first, then multiplying again, would move a fraction of a centavo twice.
+ * Customer labor is roundUpToCentavo of this, before the split.
+ * The professional's share is roundUpToCentavo of that already rounded labor times (1 − proCommission).
  */
 export function proShare(laborAfterUrgency: number): number {
-  return roundHalfUp(laborAfterUrgency * (1 - revenue.proCommission));
+  return roundUpToCentavo(customerLabor(laborAfterUrgency) * (1 - revenue.proCommission));
 }
 
-/** Customer labor: half-up to the centavo after urgency, before the split. */
+/** Customer labor: round up to the centavo after urgency, before the split. */
 export function customerLabor(laborAfterUrgency: number): number {
-  return roundHalfUp(laborAfterUrgency);
+  return roundUpToCentavo(laborAfterUrgency);
 }
 
 /**
@@ -159,15 +164,15 @@ export function payoutFloor(
  * Pure function: storing and releasing this amount is a later change.
  */
 export function proLaborPayout(laborAfterUrgency: number, wageFloor: number): number {
-  return Math.max(toMinor(proShare(laborAfterUrgency)), toMinor(roundHalfUp(wageFloor))) / 100;
+  return Math.max(toMinor(proShare(laborAfterUrgency)), toMinor(roundUpToCentavo(wageFloor))) / 100;
 }
 
 /**
- * roundHalfUp(effective floor) − proShare, and never below zero.
+ * roundUpToCentavo(effective floor) − proShare, and never below zero.
  * `wageFloor` is the floor used (already scaled by urgency when that rule applies).
  * Not a share of labor, and not shown as one.
  */
 export function bookingFee(laborAfterUrgency: number, wageFloor: number): number {
-  const fee = toMinor(roundHalfUp(wageFloor)) - toMinor(proShare(laborAfterUrgency));
+  const fee = toMinor(roundUpToCentavo(wageFloor)) - toMinor(proShare(laborAfterUrgency));
   return fee > 0 ? fee / 100 : 0;
 }

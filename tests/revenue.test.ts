@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { formatMXN } from "../src/core/clock/clock";
 import {
-  bookingFee, CARD_FEE_IVA, customerLabor, laborAfterCommission, laborCommission, materialsPrice, payoutFloor, proLaborPayout, proShare, revenue, roundHalfUp, roundMoney, wageFloorForDays
+  bookingFee, CARD_FEE_IVA, customerLabor, laborAfterCommission, laborCommission, materialsPrice, payoutFloor, proLaborPayout, proShare, revenue, roundMoney, roundUpToCentavo, wageFloorForDays
 } from "../src/config/revenue";
 import { quoteTask, quoteVisit, type Catalog } from "../src/core/pricing/instantQuote";
 import { customerLines } from "../src/core/pricing/quote";
@@ -18,7 +18,7 @@ describe("revenue rates", () => {
     expect(revenue.cardFeePct).toBe(0.036);
     expect(CARD_FEE_IVA).toBe(1.16);
     expect(revenue.floorScalesWithUrgency).toBe(true);
-    expect(revenue.rounding).toEqual({ decimals: 2, mode: "half-up" });
+    expect(revenue.rounding).toEqual({ decimals: 2, mode: "round-up" });
     expect(cat.urgency.map((u) => u.multiplier)).toEqual([1, 1.15, 1.3, 1.5]);
   });
 
@@ -93,14 +93,17 @@ describe("revenue rates", () => {
     expect(customerLines(outlet)).toContainEqual({ id: "booking", amount: 37.44 });
   });
 
-  it("rounds half-up to the centavo, including values that land on 5", () => {
-    expect(roundHalfUp(534.285)).toBe(534.29);
-    expect(roundHalfUp(356.19 * 1.5)).toBe(534.29);
-    expect(roundHalfUp(1.005)).toBe(1.01);
-    expect(roundHalfUp(1.015)).toBe(1.02);
-    expect(roundHalfUp(2.675)).toBe(2.68);
-    expect(roundHalfUp(10.225)).toBe(10.23);
-    expect(roundHalfUp(1.004)).toBe(1);
+  it("rounds up to the next centavo after clearing float noise at 6 decimals", () => {
+    expect(roundUpToCentavo(887.5)).toBe(887.5);
+    expect(roundUpToCentavo(887.5000004)).toBe(887.5);
+    expect(roundUpToCentavo(1234.561)).toBe(1234.57);
+    expect(roundUpToCentavo(534.285)).toBe(534.29);
+    expect(roundUpToCentavo(356.19 * 1.5)).toBe(534.29);
+    expect(roundUpToCentavo(1.005)).toBe(1.01);
+    expect(roundUpToCentavo(1.015)).toBe(1.02);
+    expect(roundUpToCentavo(2.675)).toBe(2.68);
+    expect(roundUpToCentavo(10.225)).toBe(10.23);
+    expect(roundUpToCentavo(1.004)).toBe(1.01);
     expect(roundMoney(478.125)).toBe(478.13);
   });
 
@@ -129,8 +132,8 @@ describe("revenue rates", () => {
     const raw = x.laborBasis * x.multiplier;
     expect(raw).toBeCloseTo(417.956, 3);
     expect(x.labor).toBe(417.96);
-    expect(proShare(raw)).toBe(355.26);
-    expect(laborCommission(raw)).toBe(62.7);
+    expect(proShare(raw)).toBe(355.27);
+    expect(laborCommission(raw)).toBe(62.69);
     expect(roundMoney(proShare(raw) + laborCommission(raw))).toBe(417.96);
     expect(customerLines(x).find((l) => l.id === "work")?.amount).toBe(417.96);
     for (const taskId of ["FIXX-CLN-001", "FIXX-CLN-002", "FIXX-CLN-003", "FIXX-CLN-004"]) {

@@ -1,10 +1,12 @@
+import { roundUpToCentavo } from "../../config/revenue";
 import { config } from "../config/fixx.config";
 
 export const HOUR = 3_600_000;
 export const DAY = 24 * HOUR;
 export const addHours = (d: Date, h: number): Date => new Date(d.getTime() + h * HOUR);
 export const addDays = (d: Date, n: number): Date => new Date(d.getTime() + n * DAY);
-export const round2 = (n: number): number => Math.round(n * 100) / 100;
+/** Same centavo round as the pricing workbook. Exact centavos stay; anything past them rounds up. */
+export const round2 = (n: number): number => roundUpToCentavo(n);
 
 const local = (d: Date, off: number): Date => new Date(d.getTime() + off * HOUR);
 

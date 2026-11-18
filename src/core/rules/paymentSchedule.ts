@@ -1,5 +1,5 @@
+import { roundUpToCentavo } from "../../config/revenue";
 import { config } from "../config/fixx.config";
-import { ceilToCentavo } from "./pricing";
 import { addHours, round2 } from "./time";
 
 export type PayMethod = "card" | "wallet" | "cash" | "spei";
@@ -22,11 +22,11 @@ export interface Schedule { tier: Tier; installments: Installment[] }
  * A total that is already a centavo keeps its original number.
  */
 export function splitDepositBalance(total: number, depositPct: number = config.deposit.sharePct) {
-  const pricedMinor = Math.ceil(Math.abs(total) * 100 - 1e-8);
-  const priced = Math.round(total * 100) === pricedMinor ? total : pricedMinor / 100;
-  const depositMinor = Math.ceil(pricedMinor * depositPct / 100 - 1e-8);
-  const balanceMinor = pricedMinor - depositMinor;
-  return { total: priced, deposit: depositMinor / 100, balance: balanceMinor / 100 };
+  const rounded = roundUpToCentavo(total);
+  const priced = Math.round(total * 100) === Math.round(rounded * 100) ? total : rounded;
+  const deposit = roundUpToCentavo(rounded * depositPct / 100);
+  const balance = (Math.round(rounded * 100) - Math.round(deposit * 100)) / 100;
+  return { total: priced, deposit, balance };
 }
 
 export interface IncreaseShare {
@@ -57,9 +57,9 @@ function shareOf(amount: number, depositPct: number): IncreaseShare {
 export function bookingHold(quoted: number, increases: readonly number[] = [], depositPct: number = config.deposit.sharePct): BookingHold {
   const quote = shareOf(quoted, depositPct);
   const shares = increases.map((amount) => shareOf(amount, depositPct));
-  const upfront = Math.round((quote.upfront + shares.reduce((sum, item) => sum + item.upfront, 0)) * 100) / 100;
-  const balance = Math.round((quote.balance + shares.reduce((sum, item) => sum + item.balance, 0)) * 100) / 100;
-  return { quoted: quote.total, increases: shares, upfront, balance, total: Math.round((upfront + balance) * 100) / 100 };
+  const upfront = roundUpToCentavo(quote.upfront + shares.reduce((sum, item) => sum + item.upfront, 0));
+  const balance = roundUpToCentavo(quote.balance + shares.reduce((sum, item) => sum + item.balance, 0));
+  return { quoted: quote.total, increases: shares, upfront, balance, total: roundUpToCentavo(upfront + balance) };
 }
 
 /** An approved increase joins the hold with the same 20/80 split. The full increase is in the new total. */
