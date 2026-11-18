@@ -729,7 +729,7 @@
     "needsNativeReview": true
   },
   "quote.cardTiming": {
-    "text": "카드 또는 간편결제: 예약금은 수락할 때 결제돼요.",
+    "text": "카드 또는 간편결제: 예약금은 수락할 때, 잔금은 전문가가 작업 완료로 표시할 때 결제돼요.",
     "status": "draft",
     "needsNativeReview": true
   },

@@ -27,7 +27,7 @@ function atIssueWindow() {
   go({ type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(rt.clock.now(), 30) });
   const due = (rt.get("job")!.snap.ctx as JobCtx).initialDue;
   go({ type: "PAYMENT_SATISFIED", amount: due });
-  for (const type of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE"]) go({ type });
+  for (const type of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE", "BALANCE_PAID"]) go({ type });
   return rt;
 }
 

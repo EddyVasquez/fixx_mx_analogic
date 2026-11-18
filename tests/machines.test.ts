@@ -42,7 +42,7 @@ const scheduled = (method: "card" | "cash" = "card", hours = 72): JS => {
 const working = (method: "card" | "cash" = "card"): JS =>
   run(scheduled(method), [{ type: "ON_THE_WAY", }, at(72)], [{ type: "CHECK_IN" }], [{ type: "START_WORK" }]);
 const issueWindow = (): JS =>
-  run(working(), [{ type: "CHECKLIST_COMPLETE" }], [{ type: "MARK_COMPLETE" }, at(75)]);
+  run(working(), [{ type: "CHECKLIST_COMPLETE" }], [{ type: "MARK_COMPLETE" }, at(75)], [{ type: "BALANCE_PAID" }, at(75)]);
 
 describe("job: happy path with a card (scenario 1)", () => {
   it("walks from request to rated, with the status bar mapping at each step", () => {
@@ -52,10 +52,12 @@ describe("job: happy path with a card (scenario 1)", () => {
     expect(statusFor(s.state)).toBe("quoteSent");
     s = scheduled("card", 72);
     expect(s.state).toBe("scheduled");
-    expect(s.ctx.paid).toBe(4200);
+    expect(s.ctx.paid).toBe(840);
     s = working();
     expect(statusFor(s.state)).toBe("inProgress");
     s = run(s, [{ type: "CHECKLIST_COMPLETE" }], [{ type: "MARK_COMPLETE" }, at(75)]);
+    expect(s.state).toBe("markedComplete");
+    s = run(s, [{ type: "BALANCE_PAID" }, at(75)]);
     expect(s.state).toBe("issueWindow");
     const releaseAt = 75 + config.completionCheck.autoReleaseHours;
     expect(s.ctx.issueWindowEndsAt?.getTime()).toBe(at(releaseAt).getTime());
@@ -78,7 +80,7 @@ describe("job: happy path with a card (scenario 1)", () => {
     const all = [
       ...effectsOf(quoteSent(), { type: "ACCEPT_QUOTE", method: "cash", jobStart: at(72) }),
       ...effectsOf(working(), { type: "CHECKLIST_COMPLETE" }),
-      ...effectsOf(run(working(), [{ type: "CHECKLIST_COMPLETE" }]), { type: "MARK_COMPLETE" }, at(75))
+      ...effectsOf(run(working(), [{ type: "CHECKLIST_COMPLETE" }], [{ type: "MARK_COMPLETE" }, at(75)]), { type: "BALANCE_PAID" }, at(75))
     ];
     const timers = all.filter((f): f is Extract<Effect, { type: "timer" }> => f.type === "timer");
     expect(timers.length).toBeGreaterThan(0);
@@ -87,11 +89,11 @@ describe("job: happy path with a card (scenario 1)", () => {
 });
 
 describe("job: cash/SPEI deadlines (scenarios 2 and 4)", () => {
-  it("far: the full hold is due in 24h, with no later balance timer", () => {
+  it("far: deposit timer at +24h, balance timer 24h before the job", () => {
     const fx = effectsOf(quoteSent(), { type: "ACCEPT_QUOTE", method: "cash", jobStart: at(72) });
     const timers = fx.filter((f): f is Extract<Effect, { type: "timer" }> => f.type === "timer");
     expect(timers.find((x) => x.event.type === "BOOKING_EXPIRED")?.at.getTime()).toBe(at(24).getTime());
-    expect(timers.find((x) => x.event.type === "BALANCE_OVERDUE")).toBeUndefined();
+    expect(timers.find((x) => x.event.type === "BALANCE_OVERDUE")?.at.getTime()).toBe(at(48).getTime());
   });
   it("unpaid deposit expires the booking", () => {
     const s = run(accepted("cash", 72), [{ type: "BOOKING_EXPIRED" }, at(24)]);
@@ -99,14 +101,14 @@ describe("job: cash/SPEI deadlines (scenarios 2 and 4)", () => {
   });
   it("a partial payment keeps waiting; the full deposit schedules the job", () => {
     const a = accepted("cash", 72);
-    const p = run(a, [{ type: "PAYMENT_SATISFIED", amount: 2000 }]);
+    const p = run(a, [{ type: "PAYMENT_SATISFIED", amount: 400 }]);
     expect(p.state).toBe("awaitingDeposit");
-    expect(run(p, [{ type: "PAYMENT_SATISFIED", amount: 2200 }]).state).toBe("scheduled");
+    expect(run(p, [{ type: "PAYMENT_SATISFIED", amount: 440 }]).state).toBe("scheduled");
   });
-  it("a paid hold rejects a later balance cancellation", () => {
-    const result = send(jobMachine, scheduled("cash", 72), { type: "BALANCE_OVERDUE" }, at(48));
-    expect(result.ok).toBe(false);
-    expect(result.snapshot.state).toBe("scheduled");
+  it("unpaid balance cancels the job and refunds the deposit to a CLABE", () => {
+    const fx = effectsOf(scheduled("cash", 72), { type: "BALANCE_OVERDUE" }, at(48));
+    expect(fx).toContainEqual({ type: "createRefund", amount: 840, destination: "clabe" });
+    expect(run(scheduled("cash", 72), [{ type: "BALANCE_OVERDUE" }, at(48)]).state).toBe("cancelled");
   });
   it("within 24h the full amount is due in 3 hours", () => {
     const a = accepted("cash", 10);
@@ -132,7 +134,7 @@ describe("job: additional work (scenario 3)", () => {
     const s = run(working("cash"), [{ type: "REQUEST_ADDITIONAL_WORK", amount: 500 }], [{ type: "APPROVE_ADDITIONAL_WORK" }], [{ type: "CHECKLIST_COMPLETE" }]);
     const blocked = send(jobMachine, s, { type: "MARK_COMPLETE" }, at(75));
     expect(blocked.ok).toBe(false);
-    expect(run(s, [{ type: "ADDITIONAL_WORK_PAID" }], [{ type: "MARK_COMPLETE" }, at(75)]).state).toBe("issueWindow");
+    expect(run(s, [{ type: "ADDITIONAL_WORK_PAID" }], [{ type: "MARK_COMPLETE" }, at(75)]).state).toBe("markedComplete");
   });
   it("a declined request changes nothing about the price", () => {
     const s = run(working("card"), [{ type: "REQUEST_ADDITIONAL_WORK", amount: 500 }], [{ type: "DECLINE_ADDITIONAL_WORK" }]);
@@ -161,8 +163,8 @@ describe("job: reschedule (scenario 6)", () => {
     expect(u.state).toBe("rescheduleUnanswered");
     const r = run(u, [{ type: "CHOOSE_REPLACEMENT" }]);
     expect(r.state).toBe("recommendations");
-    expect(r.ctx.carryOver).toBe(4200);
-    expect(effectsOf(u, { type: "CHOOSE_REFUND" })).toContainEqual({ type: "createRefund", amount: 4200, destination: "original" });
+    expect(r.ctx.carryOver).toBe(840);
+    expect(effectsOf(u, { type: "CHOOSE_REFUND" })).toContainEqual({ type: "createRefund", amount: 840, destination: "original" });
   });
   it("the reschedule request itself: 12-hour window", () => {
     const base = { ctx: newReschedule(t0, at(100)), state: "pending" as const, history: [] };
@@ -177,13 +179,13 @@ describe("job: reschedule (scenario 6)", () => {
 describe("job: cancellations (scenarios 7 and 8)", () => {
   it("customer cancels before on the way: free, full refund", () => {
     const fx = effectsOf(scheduled(), { type: "CUSTOMER_CANCELS" });
-    expect(fx).toContainEqual({ type: "createRefund", amount: 4200, destination: "original" });
+    expect(fx).toContainEqual({ type: "createRefund", amount: 840, destination: "original" });
     const s = run(scheduled(), [{ type: "CUSTOMER_CANCELS" }], [{ type: "REFUND_ISSUED" }]);
     expect(s.state).toBe("refunded");
   });
   it("customer cancels after on the way: refund minus the travel fee", () => {
     const s = run(scheduled(), [{ type: "ON_THE_WAY" }, at(72)], [{ type: "CUSTOMER_CANCELS" }, at(72)]);
-    expect(s.ctx.refund).toMatchObject({ refund: 4050, travelFeeCharged: 150, toProfessional: 150 });
+    expect(s.ctx.refund).toMatchObject({ refund: 690, travelFeeCharged: 150, toProfessional: 150 });
   });
   it("travel fee equal to the payment: no refund is created", () => {
     const base = run(scheduled(), [{ type: "ON_THE_WAY" }, at(72)]);

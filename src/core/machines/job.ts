@@ -38,7 +38,7 @@ export interface JobCtx {
   taskId: string | null; tier: string | null;
   paid: number; initialDue: number; balancePaid: boolean;
   onTheWayAt: Date | null; checklistDone: boolean;
-  additional: { amount: number; status: "pending" | "approved" | "declined"; blocks: boolean; paid: boolean; lineId: string; meters: number | null } | null;
+  additional: { amount: number; upfront: number; balancePart: number; status: "pending" | "approved" | "declined"; blocks: boolean; paid: boolean; lineId: string; meters: number | null } | null;
   issueWindowEndsAt: Date | null; heldAmount: number; heldPayout: number;
   cancelledBy: "customer" | "professional" | "fixx" | null; refund: CancelOutcome | null; carryOver: number;
   adjustmentReason: string | null;
@@ -197,7 +197,7 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
     inProgress: {
       REQUEST_ADDITIONAL_WORK: (_c, e) => e.amount > 0
         ? go("additionalWorkPending", [notify("additionalWork.requested", C, "urgent", { amount: e.amount })],
-          { additional: { amount: e.amount, status: "pending", blocks: false, paid: false, lineId: e.lineId && e.lineId.trim() ? e.lineId : "additional", meters: e.meters != null && e.meters > 0 ? e.meters : null } })
+          { additional: { amount: e.amount, upfront: 0, balancePart: 0, status: "pending", blocks: false, paid: false, lineId: e.lineId && e.lineId.trim() ? e.lineId : "additional", meters: e.meters != null && e.meters > 0 ? e.meters : null } })
         : reject("additional work amount must be greater than 0"),
       ADDITIONAL_WORK_PAID: (c) => go("inProgress", [notify("payment.additionalReceived", CP, "record")],
         { additional: c.additional ? { ...c.additional, paid: true } : null }),
@@ -207,12 +207,8 @@ export const jobMachine: MachineDef<JobState, JobEvent, JobCtx> = {
       APPROVE_ADDITIONAL_WORK: (c) => {
         if (!c.additional) return reject("no additional work to approve");
         const plan = planAdditionalWork(c.method, c.additional.amount);
-        const total = c.total + plan.amount;
-        // The booking hold already took the quoted price. An approved increase is still owed.
-        // addToHold is the pure hook for putting that increase on the same hold.
-        const balancePaid = plan.addedToBalance && c.paid + 0.001 < total ? false : c.balancePaid;
         return go("inProgress", [notify("additionalWork.approved", CP, "urgent", { amount: plan.amount })],
-          { total, balancePaid, lines: [...c.lines, { id: c.additional.lineId || "additional", amount: plan.amount }], additional: { ...c.additional, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
+          { total: c.total + plan.amount, lines: [...c.lines, { id: c.additional.lineId || "additional", amount: plan.amount }], additional: { ...c.additional, amount: plan.amount, upfront: plan.upfront, balancePart: plan.balance, status: "approved", blocks: plan.blocksCompletion, paid: !plan.blocksCompletion } });
       },
       DECLINE_ADDITIONAL_WORK: (c) => go("inProgress", [notify("additionalWork.declined", P)],
         { additional: c.additional ? { ...c.additional, status: "declined" } : null })

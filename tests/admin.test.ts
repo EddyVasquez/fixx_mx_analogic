@@ -93,9 +93,9 @@ describe("Admin actions", () => {
     const lines = [{ id: "prep", amount: 600 }, { id: "mat", amount: 1400 }, { id: "work", amount: 2200 }];
     for (const e of [{ type: "ESTIMATE_READY" }, { type: "RECOMMENDATIONS_READY" }, { type: "SELECT_PROFESSIONAL", professionalId: "p6" },
       { type: "SEND_QUOTE", total: 4200, travelFee: 150, payoutRatio: 0.8, lines },
-      { type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(inHours, 30) }, { type: "PAYMENT_SATISFIED", amount: 4200 }]) go(e);
+      { type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(inHours, 30) }, { type: "PAYMENT_SATISFIED", amount: 840 }]) go(e);
     rt.advanceHours(30);
-    for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE"]) go({ type: e });
+    for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE", "BALANCE_PAID"]) go({ type: e });
     go({ type: "REPORT_ISSUE", selected: ["mat"] });
     expect(rt.setCaseHeld("job", 0)).toBe(false);
     expect(rt.setCaseHeld("job", 5000)).toBe(false);

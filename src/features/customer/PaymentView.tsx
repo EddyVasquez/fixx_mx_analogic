@@ -186,7 +186,7 @@ export function PaymentView({ ctx, method, rt, onPaid }: { ctx: JobCtx; method: 
     <div className="flex flex-col gap-4">
       <h2 className="text-2xl font-bold">{t("pay.title")}</h2>
       <p className="text-3xl font-bold">{t("pay.amount", { amount })}</p>
-      {balance > 0 && <p className="text-inkSoft">{t("pay.balanceLater", { amount: formatCustomerMXN(balance) })}</p>}
+      <p className="text-inkSoft">{t("pay.balanceLater", { amount: formatCustomerMXN(balance) })}</p>
       {method === "card" && (
         <>
           <Field label={t("pay.cardNumber")}>

@@ -1,4 +1,3 @@
-import { roundMoney } from "../../config/revenue";
 import { config } from "../config/fixx.config";
 import { round2 } from "./time";
 
@@ -18,10 +17,21 @@ export const clampPrice = (suggested: number, proposed: number, pct?: number): n
 export const emergencyTotal = (base: number, _cfg: typeof config = config): number => round2(base);
 
 /**
+ * Round up to the next centavo. An exact centavo stays put.
+ * 1234.561 becomes 1234.57.
+ */
+export function ceilToCentavo(amount: number): number {
+  if (!Number.isFinite(amount)) return amount;
+  const sign = amount < 0 ? -1 : 1;
+  const minor = Math.ceil(Math.abs(amount) * 100 - 1e-8);
+  return (sign * minor) / 100;
+}
+
+/**
  * Customer amount for a payout the professional typed.
- * Half-up to the centavo. Not rounded to the nearest ten.
+ * Rounded up to the next centavo, never to the nearest ten.
  */
 export function customerAmountFromPayout(payout: number, payoutRatio: number): number {
   if (!(payoutRatio > 0 && payoutRatio <= 1)) throw new RangeError("payoutRatio must be between 0 and 1");
-  return roundMoney(payout / payoutRatio);
+  return ceilToCentavo(payout / payoutRatio);
 }

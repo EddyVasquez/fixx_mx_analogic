@@ -11,12 +11,13 @@ const startIn = (h: number) => addHours(now, h);
 const at = (h: number) => addHours(now, h).getTime();
 
 describe("payment schedule: cash/SPEI tiers", () => {
-  it("far (>48h): the full hold is due in 24h", () => {
+  it("far (>48h): deposit in 24h, balance 24h before the job", () => {
     const s = buildSchedule({ method: "cash", total: 4200, jobStart: startIn(72), now });
     expect(s.tier).toBe("far");
-    expect(s.installments).toHaveLength(1);
-    expect(s.installments[0]).toMatchObject({ kind: "deposit", amount: 4200, onMissed: "expireBooking" });
+    expect(s.installments[0]).toMatchObject({ kind: "deposit", amount: 840, onMissed: "expireBooking" });
     expect(s.installments[0]?.dueAt?.getTime()).toBe(at(24));
+    expect(s.installments[1]).toMatchObject({ kind: "balance", amount: 3360, onMissed: "cancelJobRefundDeposit" });
+    expect(s.installments[1]?.dueAt?.getTime()).toBe(at(48));
   });
   it("mid (24-48h): deposit and balance both due 24h before the job", () => {
     const s = buildSchedule({ method: "spei", total: 4200, jobStart: startIn(36), now });
@@ -39,21 +40,20 @@ describe("payment schedule: cash/SPEI tiers", () => {
   it("recalculates from the new time after a reschedule", () => {
     const a = buildSchedule({ method: "cash", total: 4200, jobStart: startIn(72), now });
     const b = buildSchedule({ method: "cash", total: 4200, jobStart: startIn(120), now });
-    expect(b.installments[0]?.dueAt?.getTime()).toBe(a.installments[0]?.dueAt?.getTime());
+    expect(b.installments[1]?.dueAt?.getTime()).toBeGreaterThan(a.installments[1]?.dueAt?.getTime() ?? 0);
   });
 });
 
 describe("payment schedule: cards and wallets", () => {
-  it("charges the full hold when the quote is accepted", () => {
+  it("charges the deposit at acceptance and the balance at completion", () => {
     const s = buildSchedule({ method: "card", total: 4200, jobStart: startIn(10), now });
     expect(s.tier).toBe("card");
-    expect(s.installments).toHaveLength(1);
-    expect(s.installments[0]).toMatchObject({ kind: "deposit", amount: 4200, trigger: "quoteAccepted" });
+    expect(s.installments[0]).toMatchObject({ kind: "deposit", amount: 840, trigger: "quoteAccepted" });
+    expect(s.installments[1]).toMatchObject({ kind: "balance", amount: 3360, trigger: "jobComplete", dueAt: null });
   });
-  it("the hold is the whole total, so there is no balance left", () => {
+  it("deposit + balance always equal the total", () => {
     const { deposit, balance } = splitDepositBalance(1001);
-    expect(deposit).toBe(1001);
-    expect(balance).toBe(0);
+    expect(deposit).toBe(200.2); expect(balance).toBe(800.8);
   });
   it("rejects a non-positive total", () => {
     expect(() => buildSchedule({ method: "card", total: 0, jobStart: startIn(5), now })).toThrow();

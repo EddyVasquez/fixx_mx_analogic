@@ -36,14 +36,14 @@ const ready = (): JS => {
   const scheduled = run(accepted, [{ type: "PAYMENT_SATISFIED", amount: accepted.ctx.initialDue }]);
   return run(scheduled,
     [{ type: "ON_THE_WAY" }, at(72)], [{ type: "CHECK_IN" }, at(72)], [{ type: "START_WORK" }, at(72)],
-    [{ type: "CHECKLIST_COMPLETE" }, at(75)], [{ type: "MARK_COMPLETE" }, at(75)]);
+    [{ type: "CHECKLIST_COMPLETE" }, at(75)], [{ type: "MARK_COMPLETE" }, at(75)], [{ type: "BALANCE_PAID" }, at(75)]);
 };
 
 describe("completion check config", () => {
-  it("holds the full quoted price at booking, with labelled reminder and release times", () => {
-    expect(config.deposit.sharePct).toBe(100);
-    expect(customerDeposit(4200)).toBe(4200);
-    expect(customerBalance(4200)).toBe(0);
+  it("keeps the 20% deposit and 80% balance, with labelled reminder and release times", () => {
+    expect(config.deposit.sharePct).toBe(20);
+    expect(customerDeposit(4200)).toBe(840);
+    expect(customerBalance(4200)).toBe(3360);
     expect(config.completionCheck.autoReleaseHours).toBe(48);
     expect(config.completionCheck.reminders.map((r) => r.hours)).toEqual([2, 24, 44]);
     expect(config.completionCheck.reminders.map((r) => r.label)).toEqual(["first reminder", "second reminder", "last reminder"]);
@@ -96,9 +96,9 @@ describe("completion check transitions", () => {
     s = run(s, [{ type: "PAYMENT_SATISFIED", amount: s.ctx.initialDue }]);
     s = run(s, [{ type: "ON_THE_WAY" }, at(72)], [{ type: "CHECK_IN" }], [{ type: "START_WORK" }], [{ type: "CHECKLIST_COMPLETE" }]);
     const fx = effectsOf(s, { type: "MARK_COMPLETE" }, at(75));
-    // The full price was already held, so marking complete opens the window.
-    expect(fx.some((f) => f.type === "timer")).toBe(true);
-    const opened = fx;
+    // Card jobs wait for the balance before the window opens.
+    expect(fx.some((f) => f.type === "timer")).toBe(false);
+    const opened = effectsOf(run(s, [{ type: "MARK_COMPLETE" }, at(75)]), { type: "BALANCE_PAID" }, at(75));
     const timers = opened.filter((f): f is Extract<Effect, { type: "timer" }> => f.type === "timer");
     expect(timers.map((t) => t.label)).toEqual(["first reminder", "second reminder", "last reminder", "balance auto-release"]);
     expect(timers.map((t) => t.at.getTime())).toEqual([at(77).getTime(), at(99).getTime(), at(119).getTime(), at(123).getTime()]);

@@ -32,34 +32,44 @@ describe("scenario 2: cash/SPEI with deadlines, expiry and balance before start"
     expect(state()).toBe("bookingExpired");
     expect(rt.center.list().some((r) => r.template === "payment.expired")).toBe(true);
   });
-  it("the full hold is paid once, then the job runs to the issue window", () => {
+  it("deposit paid, then the balance before the job: the job runs to the issue window", () => {
     const { rt, go, sch, state } = cashJob("spei", 72);
-    const dep = sch().installments[0]!;
-    expect(sch().installments.some((item) => item.kind === "balance")).toBe(false);
-    ensureReference(rt, "job", "deposit", "spei", dep.amount, dep.dueAt!);
+    const [dep, bal] = sch().installments;
+    ensureReference(rt, "job", "deposit", "spei", dep!.amount, dep!.dueAt!);
     confirmPayment(rt, "job", "deposit");
-    go({ type: "PAYMENT_SATISFIED", amount: dep.amount });
+    go({ type: "PAYMENT_SATISFIED", amount: dep!.amount });
     expect(state()).toBe("scheduled");
-    rt.advanceHours(72);
+    ensureReference(rt, "job", "balance", "spei", bal!.amount, bal!.dueAt!);
+    rt.advanceHours(30);
+    confirmPayment(rt, "job", "balance");
+    go({ type: "BALANCE_PAID" });
+    rt.advanceHours(42);
     work(go);
     expect(state()).toBe("issueWindow");
   });
-  it("a paid hold is not cancelled when the old balance deadline passes", () => {
+  it("balance not paid in time: the job is cancelled and the refund waits for a CLABE", () => {
     const { rt, go, sch, state } = cashJob("cash", 72);
     const dep = sch().installments[0]!;
     go({ type: "PAYMENT_SATISFIED", amount: dep.amount });
-    expect(dep.amount).toBe(4200);
     rt.advanceHours(49);
-    expect(state()).toBe("scheduled");
-    expect(rt.refunds).toHaveLength(0);
+    expect(state()).toBe("cancelled");
+    const refund = rt.refunds[0]!;
+    expect(refund).toMatchObject({ amount: 840, destination: "clabe" });
+    expect(rt.provideClabe(refund.id, "1234")).toBe(false);
+    expect(rt.provideClabe(refund.id, "0123 4567 8901 2345 67")).toBe(true);
+    expect(rt.refunds[0]?.clabe).toBe("012345678901234567");
+    go({ type: "REFUND_ISSUED" });
+    expect(state()).toBe("refunded");
   });
-  it("a reschedule keeps a single deposit and does not create a balance payment", () => {
+  it("a reschedule drops the old references so they are re-created from the new deadlines", () => {
     const { rt, go, sch } = cashJob("cash", 72);
     const dep = sch().installments[0]!;
     go({ type: "PAYMENT_SATISFIED", amount: dep.amount });
+    const bal = sch().installments[1]!;
+    ensureReference(rt, "job", "balance", "cash", bal.amount, bal.dueAt!);
     go({ type: "RESCHEDULE_ACCEPTED", newStart: addHours(t0, 120) });
     expect(rt.get("pay:job:balance")).toBe(undefined);
-    expect(sch().installments.map((item) => item.kind)).toEqual(["deposit"]);
+    expect(sch().installments[1]!.dueAt!.getTime()).toBe(addHours(t0, 96).getTime());
   });
 });
 

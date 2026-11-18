@@ -14,9 +14,11 @@ function reported(selected: string[] | "wholeJob", method: "card" | "cash" = "ca
   const go = (e: object) => { const r = rt.dispatch("job", e as { type: string }); if (!r.ok) throw new Error((e as { type: string }).type + ": " + r.error); };
   for (const e of [{ type: "ESTIMATE_READY" }, { type: "RECOMMENDATIONS_READY" }, { type: "SELECT_PROFESSIONAL", professionalId: "p6" },
     { type: "SEND_QUOTE", total: 4200, travelFee: 150, payoutRatio: 0.8, lines: LINES },
-    { type: "ACCEPT_QUOTE", method, jobStart: addHours(t0, 30) }, { type: "PAYMENT_SATISFIED", amount: 4200 }]) go(e);
+    { type: "ACCEPT_QUOTE", method, jobStart: addHours(t0, 30) }, { type: "PAYMENT_SATISFIED", amount: 840 }]) go(e);
+  if (method === "cash") go({ type: "BALANCE_PAID" });
   rt.advanceHours(30);
   for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK", "CHECKLIST_COMPLETE", "MARK_COMPLETE"]) go({ type: e });
+  if (method === "card") go({ type: "BALANCE_PAID" });
   rt.advanceHours(2);
   go({ type: "REPORT_ISSUE", selected });
   const kase = (e: object) => { const r = rt.dispatch("case:job", e as { type: string }); if (!r.ok) throw new Error((e as { type: string }).type + ": " + r.error); };
@@ -96,7 +98,7 @@ describe("approved additional work can be reported like any other line (G6)", ()
     const go = (e: object) => { const r = rt.dispatch("job", e as { type: string }); if (!r.ok) throw new Error(r.error); };
     for (const e of [{ type: "ESTIMATE_READY" }, { type: "RECOMMENDATIONS_READY" }, { type: "SELECT_PROFESSIONAL", professionalId: "p6" },
       { type: "SEND_QUOTE", total: 4200, travelFee: 150, payoutRatio: 0.8, lines: LINES },
-      { type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(t0, 30) }, { type: "PAYMENT_SATISFIED", amount: 4200 }]) go(e);
+      { type: "ACCEPT_QUOTE", method: "card", jobStart: addHours(t0, 30) }, { type: "PAYMENT_SATISFIED", amount: 840 }]) go(e);
     rt.advanceHours(30);
     for (const e of ["ON_THE_WAY", "CHECK_IN", "START_WORK"]) go({ type: e });
     go({ type: "REQUEST_ADDITIONAL_WORK", amount: 500 }); go({ type: "APPROVE_ADDITIONAL_WORK" });
