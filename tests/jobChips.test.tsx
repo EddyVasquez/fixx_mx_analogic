@@ -210,7 +210,7 @@ describe("job chip selection", () => {
     render(<EstimateView draft={emptyDraft({ categoryId: "pest_control" })} onNext={() => undefined} />);
     expect(screen.getByText("Pending review")).toBeTruthy();
     expect(screen.getByText("Not-to-exceed price")).toBeTruthy();
-    expect(screen.getByText("Any extra work needs your approval first.")).toBeTruthy();
+    expect(screen.getByText("The pro can't charge more without your approval.")).toBeTruthy();
     expect(screen.getByText(/^\$[\d,]+\.\d{2} MXN$/)).toBeTruthy();
     expect(document.body.textContent).not.toMatch(/\$[\d,]+\.\d{2} MXN to \$/);
     expect(document.body.textContent).not.toMatch(/commission|comisi[oó]n|수수료|\bmargin\b/i);
