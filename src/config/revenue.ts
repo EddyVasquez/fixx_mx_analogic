@@ -108,26 +108,25 @@ export function materialsPrice(rawMaterialCost: number): number {
   return roundMoney(rawMaterialCost * (1 + revenue.materialsMarkup) / divisor);
 }
 
-/**
- * Urgency-applied labor before the customer centavo round.
- * Customer labor is roundUpToCentavo of this, before the split.
- * The professional's share is roundUpToCentavo of that already rounded labor times (1 − proCommission).
- */
-export function proShare(laborAfterUrgency: number): number {
-  return roundUpToCentavo(customerLabor(laborAfterUrgency) * (1 - revenue.proCommission));
-}
-
 /** Customer labor: round up to the centavo after urgency, before the split. */
 export function customerLabor(laborAfterUrgency: number): number {
   return roundUpToCentavo(laborAfterUrgency);
 }
 
 /**
- * FIXX's share of the customer labor line. It is the remainder after proShare,
- * so the two parts add up to the rounded labor. It is not round(labor × proCommission).
+ * FIXX's commission: round up 15% of the customer labor.
+ * It stays inside the labor line. It is never a customer line.
  */
 export function laborCommission(laborAfterUrgency: number): number {
-  return (toMinor(customerLabor(laborAfterUrgency)) - toMinor(proShare(laborAfterUrgency))) / 100;
+  return roundUpToCentavo(customerLabor(laborAfterUrgency) * revenue.proCommission);
+}
+
+/**
+ * Professional's labor before the wage floor.
+ * The remainder after the rounded commission, not a separate round of 85%.
+ */
+export function proShare(laborAfterUrgency: number): number {
+  return (toMinor(customerLabor(laborAfterUrgency)) - toMinor(laborCommission(laborAfterUrgency))) / 100;
 }
 
 /** Labor after FIXX's share, before the wage floor. */
@@ -159,7 +158,7 @@ export function payoutFloor(
 
 /**
  * What the professional is owed for labor.
- * FIXX's share comes out of labor. The wage floor wins when that would pay less than the floor.
+ * FIXX's commission comes out of labor. The wage floor wins when the remainder would pay less than the floor.
  * `wageFloor` must already be the floor used (see payoutFloor).
  * Pure function: storing and releasing this amount is a later change.
  */
@@ -168,7 +167,7 @@ export function proLaborPayout(laborAfterUrgency: number, wageFloor: number): nu
 }
 
 /**
- * roundUpToCentavo(effective floor) − proShare, and never below zero.
+ * Urgency-scaled floor minus the professional's remainder, and never below zero.
  * `wageFloor` is the floor used (already scaled by urgency when that rule applies).
  * Not a share of labor, and not shown as one.
  */

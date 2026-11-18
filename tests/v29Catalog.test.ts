@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { payoutFloor, roundUpToCentavo } from "../src/config/revenue";
 import { quoteTask, type Catalog, type UrgencyLevel } from "../src/core/pricing/instantQuote";
 
 const cat = JSON.parse(readFileSync(join(process.cwd(), "src/seed/pricing/catalog.json"), "utf8")) as Catalog;
@@ -31,10 +32,22 @@ describe("catalog v29", () => {
   it("matches every billed total the v29 workbook changed", () => {
     const rows = readFileSync(csvPath, "utf8").trim().split(/\r?\n/).slice(1);
     expect(rows.length).toBeGreaterThan(300);
+    const cents = (amount: number) => Math.round(amount * 100);
     const wrong = rows.flatMap((line) => {
       const [taskId, tier, urgency, , after] = line.split(",");
       const quote = quoteTask(cat, { taskId: taskId!, tier: tier!, urgency: urgency as UrgencyLevel });
-      return quote.total === Number(after) ? [] : [`${taskId}|${tier}|${urgency} got ${quote.total} want ${after}`];
+      const labor = quote.labor;
+      const floor = payoutFloor(quote.floor, quote.multiplier);
+      // The workbook rounded 85% up. Commission is now round-up of 15%, and the
+      // professional gets the remainder, so a binding floor can add one centavo to the booking fee.
+      const oldShare = roundUpToCentavo(labor * 0.85);
+      const newShare = (cents(labor) - cents(roundUpToCentavo(labor * 0.15))) / 100;
+      const oldFee = Math.max(0, cents(floor) - cents(oldShare));
+      const newFee = Math.max(0, cents(floor) - cents(newShare));
+      const want = cents(Number(after)) - oldFee + newFee;
+      return cents(quote.total) === want && cents(quote.bookingFee) === newFee
+        ? []
+        : [`${taskId}|${tier}|${urgency} got ${quote.total} want ${(want / 100).toFixed(2)}`];
     });
     expect(wrong).toEqual([]);
   });

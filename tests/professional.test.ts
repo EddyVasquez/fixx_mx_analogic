@@ -38,7 +38,7 @@ describe("professional quote adjustment", () => {
     expect(u.labor).toBeGreaterThan(base.labor);
     const q = adjustQuote(u, u.payout * 0.9);
     expect(q.lines.find((l) => l.id === "mat")?.amount).toBe(u.materials);
-    expect(q.lines.reduce((a, l) => a + l.amount, 0)).toBe(q.total);
+    expect(roundMoney(q.lines.reduce((a, l) => a + l.amount, 0))).toBe(q.total);
   });
   it("has a checklist for every category", () => {
     expect(checklistFor("painting").length).toBeGreaterThan(0);

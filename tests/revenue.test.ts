@@ -115,16 +115,26 @@ describe("revenue rates", () => {
     expect(x.floor).toBe(cat.labor[x.laborKey]!.floor);
     expect(x.labor).toBe(562.5);
     expect(customerLabor(raw)).toBe(562.5);
-    expect(proShare(raw)).toBe(478.13);
-    expect(laborCommission(raw)).toBe(84.37);
-    expect(roundMoney(proShare(raw) + laborCommission(raw))).toBe(x.labor);
+    expect(laborCommission(raw)).toBe(84.38);
+    expect(proShare(raw)).toBe(478.12);
+    expect(proShare(raw) + laborCommission(raw)).toBe(x.labor);
     expect(payoutFloor(x.floor, x.multiplier)).toBe(534.29);
     expect(x.payout).toBe(534.29);
-    expect(x.bookingFee).toBe(56.16);
+    expect(x.bookingFee).toBe(56.17);
     expect(x.bookingFee).toBe(bookingFee(raw, x.payout));
     expect(customerLines(x).find((l) => l.id === "work")?.amount).toBe(562.5);
-    expect(customerLines(x)).toContainEqual({ id: "booking", amount: 56.16 });
+    expect(customerLines(x)).toContainEqual({ id: "booking", amount: 56.17 });
     expect(x.total).toBe(roundMoney(x.materials + x.labor + x.bookingFee));
+  });
+
+  it("rounds 15% of labor up and leaves the professional the exact remainder", () => {
+    expect(customerLabor(100.01)).toBe(100.01);
+    expect(100.01 * revenue.proCommission).toBeCloseTo(15.0015, 4);
+    expect(laborCommission(100.01)).toBe(15.01);
+    expect(proShare(100.01)).toBe(85);
+    expect(proShare(100.01) + laborCommission(100.01)).toBe(100.01);
+    const lines = customerLines({ materials: 10, labor: 100.01, bookingFee: 0 });
+    expect(lines.map((line) => line.id)).toEqual(["mat", "work"]);
   });
 
   it("rounds CAR-001 Medium labor before the split, and the shares add up to that labor", () => {
@@ -132,9 +142,11 @@ describe("revenue rates", () => {
     const raw = x.laborBasis * x.multiplier;
     expect(raw).toBeCloseTo(417.956, 3);
     expect(x.labor).toBe(417.96);
-    expect(proShare(raw)).toBe(355.27);
-    expect(laborCommission(raw)).toBe(62.69);
-    expect(roundMoney(proShare(raw) + laborCommission(raw))).toBe(417.96);
+    expect(x.labor * revenue.proCommission).toBeCloseTo(62.694, 3);
+    expect(laborCommission(raw)).toBe(62.7);
+    expect(proShare(raw)).toBe(355.26);
+    expect(proShare(raw) + laborCommission(raw)).toBe(417.96);
+    expect(customerLines(x).map((line) => line.id)).not.toContain("commission");
     expect(customerLines(x).find((l) => l.id === "work")?.amount).toBe(417.96);
     for (const taskId of ["FIXX-CLN-001", "FIXX-CLN-002", "FIXX-CLN-003", "FIXX-CLN-004"]) {
       for (const urgency of ["MEDIUM", "HIGH", "EMERGENCY"] as const) {
